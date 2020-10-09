@@ -5,6 +5,12 @@
     // Класс констант (некий аналог enum), содержит основные URL интернет магазина на каждый товар 
     class GoodType {
         const CPU = 'https://brain.com.ua/category/Processory-c1097-128/';
+        const GS = 'https://brain.com.ua/category/Vydeokarty-c1403/';
+        const HDD = 'https://brain.com.ua/category/Vynchestery_HDD-c1361-260/';
+        const SSD = 'https://brain.com.ua/category/SSD_dysky-c1484/';
+        const RAM = 'https://brain.com.ua/category/Moduly_pamyaty-c1334/';
+        const MB = 'https://brain.com.ua/category/Systemnye_materynskye_platy-c1264-226/';
+        const PS = 'https://brain.com.ua/category/Bloky_pytanyya-c1442-221/';
     }
 
     class GoodDownloader {
@@ -73,7 +79,7 @@
             $fp = fopen($imgPath, 'rb');
             header("Content-Type: image/png");
             header("Content-Length: " . filesize($imgPath));
-            echo fpassthru($fp);
+            return fpassthru($fp);
         }
 
     }
