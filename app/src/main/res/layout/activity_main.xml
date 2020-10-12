@@ -7,6 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:weightSum="1"
     android:orientation="vertical"
+    android:background="#060B28"
     tools:context=".MainActivity">
 
     <ImageView
@@ -16,53 +17,249 @@
         android:src ="@drawable/app_icon"
         android:background="#1B2A95"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#000319"
-        android:layout_weight="0.8">
+        <!--
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#000319"
+            android:layout_weight="0.8">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    tools:context=".MainActivity">
+
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/activity_main_float_bt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="24dp"
+                android:layout_marginEnd="24dp"
+                android:src="@drawable/ic_add_24"
+                app:backgroundTint="@color/floating_button_color"
+                android:clickable="true"
+                android:focusable="true"/>
+
+        </RelativeLayout>
+    -->
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="0.8">
 
-            <LinearLayout
+            <TableLayout
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                tools:context=".MainActivity">
+                android:layout_height="0dp"
+                android:layout_weight="0.8"
+                android:weightSum="1">
 
-          
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1">
 
-            </LinearLayout>
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.33"
+                        android:layout_margin="5dp"
+                        android:maxEms="1"
+                        android:text="Материнские платы"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:paddingBottom="10dp"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        app:backgroundTint="#1a2e53"
+                        app:icon="@drawable/ic_motherboard_24"
+                        app:iconGravity="textTop"
+                        app:iconPadding="20dp"
+                        app:iconSize="@dimen/icon_size" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.33"
+                        android:layout_margin="5dp"
+                        android:minEms="1"
+                        android:text="Процессоры"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:paddingBottom="10dp"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        app:backgroundTint="#1a2e53"
+                        app:icon="@drawable/ic_processor_24"
+                        app:iconGravity="textTop"
+                        app:iconPadding="20dp"
+                        app:iconSize="@dimen/icon_size" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.33"
+                        android:layout_margin="5dp"
+                        android:minEms="1"
+                        android:text="Видеокарты"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:paddingBottom="10dp"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        app:backgroundTint="#1a2e53"
+                        app:icon="@drawable/ic_gpu_24"
+                        app:iconGravity="textTop"
+                        app:iconPadding="20dp"
+                        app:iconSize="@dimen/icon_size" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.33"
+                        android:layout_margin="5dp"
+                        android:minEms="1"
+                        android:text="Накопители HDD"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:paddingBottom="10dp"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        app:backgroundTint="#1a2e53"
+                        app:icon="@drawable/ic_hdd_24"
+                        app:iconGravity="textTop"
+                        app:iconPadding="20dp"
+                        app:iconSize="@dimen/icon_size" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.33"
+                        android:layout_margin="5dp"
+                        android:minEms="1"
+                        android:text="Накопители SSD"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:paddingBottom="10dp"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        app:backgroundTint="#1a2e53"
+                        app:icon="@drawable/ic_ssd_24"
+                        app:iconGravity="textTop"
+                        app:iconPadding="20dp"
+                        app:iconSize="@dimen/icon_size" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.33"
+                        android:layout_margin="5dp"
+                        android:minEms="1"
+                        android:text="Память"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:paddingBottom="10dp"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        app:backgroundTint="#1a2e53"
+                        app:icon="@drawable/ic_gpu_24"
+                        app:iconGravity="textTop"
+                        app:iconPadding="20dp"
+                        app:iconSize="@dimen/icon_size" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.33"
+                        android:layout_margin="5dp"
+                        android:minEms="1"
+                        android:text="Блоки питания"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:paddingBottom="10dp"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        app:backgroundTint="#1a2e53"
+                        app:icon="@drawable/ic_power_supply_24"
+                        app:iconGravity="textTop"
+                        app:iconPadding="20dp"
+                        app:iconSize="@dimen/icon_size" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:visibility="invisible"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.33"
+                        android:layout_margin="5dp"
+                        android:minEms="1"
+                        android:text="Видеокарты"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:paddingBottom="10dp"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        app:backgroundTint="#1a2e53"
+                        app:icon="@drawable/ic_gpu_24"
+                        app:iconGravity="textTop"
+                        app:iconPadding="20dp"
+                        app:iconSize="@dimen/icon_size" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:visibility="invisible"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.33"
+                        android:layout_margin="5dp"
+                        android:minEms="1"
+                        android:text="Видеокарты"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:paddingBottom="10dp"
+                        android:theme="@style/Theme.MaterialComponents.Light"
+                        app:backgroundTint="#1a2e53"
+                        app:icon="@drawable/ic_gpu_24"
+                        app:iconGravity="textTop"
+                        app:iconPadding="20dp"
+                        app:iconSize="@dimen/icon_size" />
+
+                </TableRow>
+
+
+
+            </TableLayout>
 
         </ScrollView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/activity_main_float_bt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="24dp"
-            android:layout_marginEnd="24dp"
-            android:src="@drawable/ic_add_24"
-            app:backgroundTint="@color/floating_button_color"
-            android:clickable="true"
-            android:focusable="true"/>
 
-    </RelativeLayout>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            app:menu="@menu/bottom_navigation"
+            style="@style/Widget.Design.BottomNavigationView"
+            app:itemIconTint="@color/white"
+            app:itemTextColor="@color/white"
+            android:background="#1B2A95"/>
 
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
-        app:menu="@menu/bottom_navigation"
-        style="@style/Widget.Design.BottomNavigationView"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
-        android:background="#1B2A95"/>
-
-
-</LinearLayout>
+    </LinearLayout>
