@@ -1,9 +1,11 @@
 package com.derlados.computerconf;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
-import android.view.Window;
+
+
+import com.derlados.computerconf.PageFragment.MenuPageAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -11,5 +13,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ViewPager pager=(ViewPager)findViewById(R.id.activity_main_pager);
+        pager.setAdapter(new MenuPageAdapter(getSupportFragmentManager()));
+
     }
 }
