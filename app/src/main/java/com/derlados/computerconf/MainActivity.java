@@ -3,6 +3,7 @@ package com.derlados.computerconf;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.view.View;
 
 import com.derlados.computerconf.Fragments.MainMenuFragment;
 import com.derlados.computerconf.Fragments.OnFragmentInteractionListener;
-import com.derlados.computerconf.Managers.FragmentChanger;
 import com.derlados.computerconf.PageFragment.MenuPageAdapter;
 
 public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
         // Инициализация менеджера смены фрагментов
         Fragment mainMenuFragment = new MainMenuFragment();
-        FragmentChanger.init(mainMenuFragment, fragmentManager, R.id.activity_main_ll_container);
 
         // Открытие фрагмента главного меню
         fragmentManager.beginTransaction()
@@ -33,20 +32,34 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
-    public void onFragmentInteraction(View fragment, Action action) {
+    public void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReciver, Bundle data, Action action) {
+        FragmentTransaction fTrans = fragmentManager.beginTransaction();
+
         switch (action)
         {
-            case SET_PAGER:
-                ViewPager pager=(ViewPager)fragment.findViewById(R.id.activity_main_pager);
-                pager.setAdapter(new MenuPageAdapter(getSupportFragmentManager()));
+            case NEXT_FRAGMENT_HIDE:
+                fTrans.hide(fragmentSource);
+                fTrans.add(R.id.activity_main_ll_container, fragmentReciver);
+
+                fTrans.addToBackStack(null);   // Добавление изменнений в стек
+                fTrans.commit();
+                break;
+            case NEXT_FRAGMENT_REPLACE:
+                fTrans.replace(R.id.activity_main_ll_container, fragmentReciver);
+                fTrans.addToBackStack(null);   // Добавление изменнений в стек
+                fTrans.commit();
                 break;
         }
     }
 
     @Override
-    public void onBackPressed() {
-        if (fragmentManager.getBackStackEntryCount() > 0)
-            FragmentChanger.backFragment();
-        super.onBackPressed();
+    public void onActivityInteraction(Fragment fragmentSource, Action action) {
+        switch (action)
+        {
+            case SET_PAGER:
+                ViewPager pager = fragmentSource.getView().findViewById(R.id.fragment_main_menu_pager);
+                pager.setAdapter(new MenuPageAdapter(getSupportFragmentManager()));
+                break;
+        }
     }
 }

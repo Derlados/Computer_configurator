@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.derlados.computerconf.Fragments.OnFragmentInteractionListener;
-import com.derlados.computerconf.Managers.FragmentChanger;
 import com.derlados.computerconf.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
