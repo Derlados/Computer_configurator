@@ -5,6 +5,6 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="white">#FFFFFF</color>
     <color name="floating_button_color">#FF4C5B</color>
-    <color name="background_color">#000319</color>
     <color name="invisible">#00FFFFFF</color>
+    <color name="background">#000319</color>
 </resources>

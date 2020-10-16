@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     android:weightSum="1"
     android:orientation="vertical"
-    android:background="#060B28"
+    android:background="@color/background"
     tools:context=".MainActivity">
 
     <ImageView

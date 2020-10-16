@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:layout_margin="10dp"
-    android:background="#21213E">
+    android:background="#1a2e53">
 
     <ImageView
         android:layout_width="107dp"
@@ -153,7 +153,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="2454 ГРН"
+            android:text="*  *  *  *  *"
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="@color/white"/>
@@ -162,7 +162,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="*  *  *  *  *"
+            android:text="2454 ГРН"
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="@color/white"/>

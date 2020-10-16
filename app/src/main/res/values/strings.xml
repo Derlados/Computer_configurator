@@ -3,4 +3,11 @@
     <string name="shop">shop</string>
     <string name="builds">builds</string>
     <string name="info">info</string>
+    <string name="motherboard">Материнские платы</string>
+    <string name="CPU">Процессоры</string>
+    <string name="GPU">Видеокарты</string>
+    <string name="HDD">Накопители HDD</string>
+    <string name="SSD">Накопители SSD</string>
+    <string name="RAM">Память</string>
+    <string name="power_supply">Блоки питания</string>
 </resources>
