@@ -1,40 +1,36 @@
 package com.derlados.computerconf.Good;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.widget.Toast;
+
+import com.derlados.computerconf.Managers.RequestHelper;
+
+import java.util.HashMap;
 
 public class Good {
-    private String[] previewStats = new String[]{"Сокет", "Ядер", "Потоков", "Частота", "Техпроцесс", "Кєш"};
-
     private String name;
-    private double rating;
+    private String imageUrl; // ссылка на скачивание
     private double price;
-    private Bitmap img;
 
-    public Good(String name, double rating, double cost) {
-        this.name = name;
-        this.rating = rating;
-        this.price = cost;
-    }
-
-    public String[] getPreviewStats() {
-        return previewStats;
-    }
+    // Ассоциативный массив (характеристика:значение), превью и полные данные соответственно
+    private HashMap<String, String> stats;
+    private transient HashMap<String, String> fullStats;
 
     public String getName() {
         return name;
-    }
-
-    public double getRating() {
-        return rating;
     }
 
     public double getPrice() {
         return price;
     }
 
-    public Bitmap getImg() {
-        return img;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
+    public HashMap<String, String> getStats() {
+        return stats;
+    }
 
 }

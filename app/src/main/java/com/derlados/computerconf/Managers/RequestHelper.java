@@ -49,7 +49,7 @@ public class RequestHelper {
     public static<T> void getRequest(Context appContext, String apiUrl, TypeRequest typeRequest, final CallBack<T> callBack) {
         if (requestQueue == null)
             requestQueue = Volley.newRequestQueue(appContext);
-        String url = MAIN_URL + apiUrl;
+        String url = apiUrl;
 
         switch (typeRequest) {
             case STRING:
