@@ -48,13 +48,11 @@
                     // По хорошему надо бы ошибку тут выдавать, не забыть посмотреть 
                     echo "404 not found";
                     return;
-            
             }
-
             echo $data;
         }
-        else
-            echo "invalid method";
-    }
+    }   
+    else
+        echo str_get_html(file_get_contents('test.html'));
 
 ?>

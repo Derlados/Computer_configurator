@@ -16,6 +16,18 @@
 
     class GoodDownloader {
 
+        private static function forHTTPS( $url ) {
+
+            $arrContextOptions=array(
+                "ssl"=>array(
+                    "verify_peer"=>false,
+                    "verify_peer_name"=>false,
+                ),
+            );  
+            $sw=file_get_contents('https://telemart.ua/processor/', false, stream_context_create($arrContextOptions));
+            return $sw;
+          }
+
         private static $MAIN_URL = "https://brain.com.ua";
 
         /* Функция для парсинга страницы сайта и извлечения из нее массива товаров
@@ -28,7 +40,7 @@
         public static function downloadGoods($goodType, $goodTypeUrl, int $page) {
              
             // Парсинг страницы и Извлечение товаров
-            $html = file_get_html($goodTypeUrl . "page=$page/"); 
+            $html = file_get_html($goodTypeUrl . "page=$page/");
             $goodsHtml = $html->find('div[class="br-pp br-pp-ex goods-block__item br-pcg br-series"]');
            
             // Создаание товаров

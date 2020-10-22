@@ -18,16 +18,17 @@
                 case GoodType::CPU:
                     return new CPU($name, $image, $price, $htmlShortStats);
                 case GoodType::GPU:
-                    break;
+                    return new GPU($name, $image, $price, $htmlShortStats);
                 case GoodType::HDD:
-                    break;
+                    return new HDD($name, $image, $price, $htmlShortStats);
                 case GoodType::SSD:
-                    break; 
+                    return new SSD($name, $image, $price, $htmlShortStats);
                 case GoodType::RAM:
-                    break;
+                    return new RAM($name, $image, $price, $htmlShortStats);
                 case GoodType::MB:
-                    break;  
+                    return new MB($name, $image, $price, $htmlShortStats);
                 case GoodType::PS:
+                    return new PS($name, $image, $price, $htmlShortStats);
                     break;                   
             }
         }

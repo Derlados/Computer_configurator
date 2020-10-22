@@ -10,7 +10,8 @@
         const PS = 'PS';
     }
 
-    class Good {
+    class Good 
+    {
         private $name;
         private $image;
         private $price;
