@@ -1,0 +1,94 @@
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="0.8"
+    android:background="@color/background"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TableLayout
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
+        android:weightSum="1">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fragment_shop_motherboard"
+                style="@style/ButtonShop"
+                android:text="@string/motherboard"
+                app:icon="@drawable/ic_motherboard_24"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fragment_shop_cpu"
+                style="@style/ButtonShop"
+                android:text="@string/CPU"
+                app:icon="@drawable/ic_processor_24" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fragment_shop_gpu"
+                style="@style/ButtonShop"
+                android:text="@string/GPU"
+                app:icon="@drawable/ic_gpu_24" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fragment_shop_hdd"
+                style="@style/ButtonShop"
+                android:text="@string/HDD"
+                app:icon="@drawable/ic_hdd_24"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fragment_shop_ssd"
+                style="@style/ButtonShop"
+                android:text="@string/SSD"
+                app:icon="@drawable/ic_ssd_24" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fragment_shop_ram"
+                style="@style/ButtonShop"
+                android:text="@string/RAM"
+                app:icon="@drawable/ic_ram_24"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fragment_shop_power_supply"
+                style="@style/ButtonShop"
+                android:text="@string/power_supply"
+                app:icon="@drawable/ic_power_supply_24"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/ButtonShop"
+                android:visibility="invisible"
+                android:text=""
+                app:icon="@drawable/ic_gpu_24" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/ButtonShop"
+                android:visibility="invisible"
+                android:text=""
+                app:icon="@drawable/ic_gpu_24"/>
+
+        </TableRow>
+
+    </TableLayout>
+
+</ScrollView>
