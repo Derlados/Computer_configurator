@@ -65,7 +65,11 @@
                 $goods[] = (GoodsFactory::createGood($goodType, $name, $img, $price, $shortStats[0]->innertext))->toJson();
             }
 
-            $data = json_encode($goods);
+            // Поиск максимального количества страниц в разделе магазина
+            $HtmlPages = $html->find('div[class="page-goods__pager"]')[0]->find('li');
+            $maxPages = $HtmlPages[count($HtmlPages) - 1]->find('a')[0]->innertext;
+
+            $data = json_encode(['goods' => $goods, 'maxPages' => $maxPages]);
 
             return $data;
         }

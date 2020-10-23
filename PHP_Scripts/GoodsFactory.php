@@ -28,8 +28,7 @@
                 case GoodType::MB:
                     return new MB($name, $image, $price, $htmlShortStats);
                 case GoodType::PS:
-                    return new PS($name, $image, $price, $htmlShortStats);
-                    break;                   
+                    return new PS($name, $image, $price, $htmlShortStats);               
             }
         }
     }

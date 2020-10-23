@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.derlados.computerconf.Good.Good;
@@ -26,23 +27,28 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ShopSearchFragment extends Fragment implements View.OnClickListener {
 
     LinearLayout goodsContainer;
-    int currentPage = 1;
+    LinearLayout flipPager = null;
+    String typeGood;
+    int currentPage = 1, maxPages;
 
     enum Direction {
         NEXT,
         BACK,
         START,
-        CURRENT
+        CURRENT,
+        CHOSEN_PAGE
     }
     ArrayList<Good> goodsList = new ArrayList<>();
 
@@ -50,13 +56,15 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.fragment_shop_search, container, false);
         goodsContainer = fragment.findViewById(R.id.fragment_shop_search_goods_container);
-        DownloadPage(getArguments().getString("typeGood"), Direction.CURRENT);
+        typeGood = getArguments().getString("typeGood");
+        downloadPage(typeGood, Direction.CURRENT, null);
         return fragment;
     }
 
-    //TODO
-    // Вынести в сервис
-    private void DownloadPage(String typeGood, Direction dir) {
+    // Загрузка страницы (загрузка всех превью данных для отображения на странице)
+    private void downloadPage(String typeGood, Direction dir, Integer page) {
+         goodsContainer.removeAllViews();// Очистка фрагмента фрагмента
+
         // Выбор страницы которую необходимо загрузить
         switch (dir) {
             case BACK:
@@ -68,6 +76,10 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
             case START:
                 currentPage = 1;
                 break;
+            case CHOSEN_PAGE:
+                currentPage = page;
+                break;
+
         }
 
         // Загрузка страницы
@@ -78,7 +90,10 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
             public void call(String response) {
                 // Парсинг всех товаров на страницы
                 try {
-                    JSONArray jsonArray = new JSONArray(response);
+                    JSONObject jsonObject = new JSONObject(response);
+                    maxPages = jsonObject.getInt("maxPages");
+                    JSONArray jsonArray = jsonObject.getJSONArray("goods");
+
                     Gson gson = new Gson();
                     for (int i = 0; i < jsonArray.length(); ++i)
                     {
@@ -87,6 +102,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                         goodsList.add(good);
                         createGoodUI(good);
                     }
+                    createGoodsFlipPager();
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
@@ -103,7 +119,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     }
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
-    public void createGoodUI(Good good) {
+    private void createGoodUI(Good good) {
         RelativeLayout blank = (RelativeLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
         blank.setOnClickListener(this);
         //Взятие основной таблицы информации об комплектующем
@@ -145,6 +161,60 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         goodsContainer.addView(blank);
     }
 
+    /* Загрузка панели для выбора страниц и её настройка
+    * Вид панели для выбора страницы:
+    * 1 и последний элемент - кнопки '<', '>'
+    * 2 и предпоследний жлемент - текстовые поля, начальная страница и последняя соответственно
+    * остальные - промежуточные страницы
+    * */
+    private void createGoodsFlipPager() {
+        LinearLayout flipPager = (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_flip_page_navigator, goodsContainer, false);
+        final int COUNT_ELEMENTS = 7;
+        String[] texts = new String[COUNT_ELEMENTS];
+
+        texts[0] = "1";
+        texts[COUNT_ELEMENTS - 1] = Integer.toString(maxPages);
+
+        // Если текущая страница меньше 5, нужно показать страницы без ".." с левой части
+        if (currentPage < 5) {
+            for (int i = 2; i <= 5; ++i)
+                texts[i - 1] = Integer.toString(i);
+            texts[COUNT_ELEMENTS - 2] = "..";
+        }
+        else if (maxPages - currentPage < 4) { // Если текущая страница отличается менее чем на 4, нужно показать страницы без ".." с правой части
+            texts[1] = "..";
+            for (int i = 1; i < 5; ++i)
+                texts[COUNT_ELEMENTS - i - 1] = Integer.toString(maxPages - i);
+        }
+        else { // если страница в середине всего количеста, показывается в стандартном виде с двумя пропусками ".." на обоих сторонах
+            texts[1] = "..";
+            texts[2] = Integer.toString(currentPage - 1);
+            texts[3] = Integer.toString(currentPage);
+            texts[4] = Integer.toString(currentPage + 1);
+            texts[COUNT_ELEMENTS - 2] = "..";
+        }
+
+        // Установка всего текста в соответствующие поля и обработчиков нажатия
+        for (int i = 1; i < flipPager.getChildCount() - 1; ++i) {
+            TextView tv = ((TextView) flipPager.getChildAt(i));
+            tv.setText(texts[i - 1]);
+            tv.setOnClickListener(this);
+
+            // Выделение страницы которая была выделена соответствующим цветом
+            if (texts[i - 1].equals(Integer.toString(currentPage)))
+                tv.setBackgroundColor(ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.main_theme_1));
+        }
+        flipPager.findViewById(R.id.inflate_flip_page_navigator_ibt_back).setOnClickListener(this);
+        flipPager.findViewById(R.id.inflate_flip_page_navigator_ibt_next).setOnClickListener(this);
+
+        // Если текущая страница находится на краю списка (слева или справа), в одноий из кнопок для движения впереж/назад нету необходимости
+        if (currentPage == 1)
+            flipPager.removeViewAt(0);
+        else if (currentPage == maxPages)
+            flipPager.removeViewAt(flipPager.getChildCount() - 1);
+
+        goodsContainer.addView(flipPager);
+    }
     //TODO
     // Загрузку нужно будет вынести в сервис
     public void loadImage(final ImageView imageView, Good good) {
@@ -162,11 +232,34 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         });
     }
 
-    //TODO
-    // Здесь должен быть переход для просмотра подробной информации о комплектующем
+
+    /* Обработчик нажатий. Есть два места для обработки - один из бланков комплектующего и панель прокрутки страниц
+    * Нажатие на бланк - вызов подробной информации о комплектующем в новом фрагменте
+    * Нажатие на панель страниц - загрузка страницы в соответствии с выбором пользователя
+    * */
     @Override
     public void onClick(View view) {
-        Toast.makeText(getContext(), "Clicable", Toast.LENGTH_SHORT).show();
+        switch (view.getId())
+        {
+            case R.id.inflate_good_blank_rl_blank:
+                //TODO
+                // Здесь должен быть переход для просмотра подробной информации о комплектующем
+                Toast.makeText(getContext(), "Clicable", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.inflate_flip_page_navigator_ibt_next:
+                downloadPage(typeGood, Direction.NEXT, null);
+                break;
+            case R.id.inflate_flip_page_navigator_ibt_back:
+                downloadPage(typeGood, Direction.BACK, null);
+                break;
+            default:
+                String numPage = ((TextView)view).getText().toString();
+                // Если нажатое поле является "..", это событие никак не должно обрабатываться
+                if (!numPage.equals(".."))
+                    downloadPage(typeGood, Direction.CHOSEN_PAGE, Integer.parseInt(numPage));
+                break;
+            //TODO
+            // Возможно можно будет добавить прямой выбор страницы
+        }
     }
-
 }

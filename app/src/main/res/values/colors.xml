@@ -7,4 +7,5 @@
     <color name="floating_button_color">#FF4C5B</color>
     <color name="invisible">#00FFFFFF</color>
     <color name="background">#000319</color>
+    <color name="main_theme_1">#1B2A95</color>
 </resources>

@@ -1,5 +1,6 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/inflate_good_blank_rl_blank"
     android:layout_width="match_parent"
     android:layout_height="180dp"
     android:layout_margin="10dp"
