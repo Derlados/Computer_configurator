@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     FragmentManager fragmentManager = getSupportFragmentManager();
     Fragment mainMenuFragment;
+    ViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,10 +30,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_ll_container, mainMenuFragment)
                 .commit();
+
+
     }
 
     @Override
-    public void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReciver, Bundle data, Action action) {
+    public void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReciver,  Action action, Bundle data) {
         FragmentTransaction fTrans = fragmentManager.beginTransaction();
         fragmentReciver.setArguments(data);
 
@@ -54,12 +57,19 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
-    public void onActivityInteraction(Fragment fragmentSource, Action action) {
+    public void onActivityInteraction(Fragment fragmentSource, Action action, Bundle data) {
         switch (action)
         {
             case SET_PAGER:
-                ViewPager pager = fragmentSource.getView().findViewById(R.id.fragment_main_menu_pager);
+                pager = fragmentSource.getView().findViewById(R.id.fragment_main_menu_pager);
                 pager.setAdapter(new MenuPageAdapter(getSupportFragmentManager()));
+                break;
+            case OPEN_SELECTED_PAGE:
+                int page = data.getInt("page");
+                if (Math.abs(page - pager.getCurrentItem()) > 1)
+                    pager.setCurrentItem(data.getInt("page"), false);
+                else
+                    pager.setCurrentItem(data.getInt("page"), true);
                 break;
         }
     }

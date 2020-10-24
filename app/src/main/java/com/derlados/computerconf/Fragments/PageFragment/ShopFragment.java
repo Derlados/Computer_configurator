@@ -78,6 +78,6 @@ public class ShopFragment extends PageFragment implements View.OnClickListener {
                 return;
         }
 
-        frListener.onFragmentInteraction(this, new ShopSearchFragment(), data, OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE);
+        frListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data);
     }
 }

@@ -12,7 +12,6 @@ public class MenuPageAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
-
     @Override
     public Fragment getItem(int position) {
         return PageFragment.newInstanse(position);

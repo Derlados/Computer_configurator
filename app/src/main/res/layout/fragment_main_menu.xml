@@ -16,6 +16,7 @@
         android:layout_weight="0.8"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/fragment_main_menu_bottom_navigator"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"
