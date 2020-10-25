@@ -16,8 +16,9 @@
 
     class GoodDownloader {
 
-        private static function forHTTPS( $url ) {
-
+        // Для парсинга https 
+        private static function forHTTPS( $url ) 
+        {
             $arrContextOptions=array(
                 "ssl"=>array(
                     "verify_peer"=>false,
@@ -26,7 +27,7 @@
             );  
             $sw=file_get_contents('https://telemart.ua/processor/', false, stream_context_create($arrContextOptions));
             return $sw;
-          }
+        }
 
         private static $MAIN_URL = "https://brain.com.ua";
 
@@ -49,20 +50,21 @@
             $size = count($goodsHtml);
             for ($i = 0; $i < $size; ++$i) 
             {          
-                // Получение всех необходимы аттрибутов товаров
-                $imgAttrs = $goodsHtml[$i]->find('img[itemprop="image"]');
-                $urlStats = $goodsHtml[$i]->find('a[itemprop="url"]')[0]->{'href'}; 
+                // Получение всех необходимы аттрибутов товаров:
+                // Аттрибуты тега изображения в котором лежит ссылка, URL для скачиванния полных характеристик, цена и превью данные (короткое описание характеристик)
+                $imgAttrs = $goodsHtml[$i]->find('img[itemprop="image"]');       
+                $urlFullData = $goodsHtml[$i]->find('a[itemprop="url"]')[0]->{'href'}; 
                 $prices = $goodsHtml[$i]->find('div[class="br-pp-price br-pp-price-grid"]')[0]
                                         ->find('span=[itemprop="price"]');
                 $shortStats = $goodsHtml[$i]->find('div[class="br-pp-i br-pp-i-grid"]');
 
                 //self::downloadStats($urlStats);
 
-                // Добавление товара в массив
+                // Взятие основных данных о товаре с аттрибутов и добавление товара в массив
                 $name = $imgAttrs[0]->{'alt'};
-                $img = $imgAttrs[0]->{'data-observe-src'};
-                $price = $prices[0]->innertext;
-                $goods[] = (GoodsFactory::createGood($goodType, $name, $img, $price, $shortStats[0]->innertext))->toJson();
+                $img = $imgAttrs[0]->{'data-observe-src'}; 
+                $price = $prices[0]->innertext; 
+                $goods[] = (GoodsFactory::createGood($goodType, $name, $img, $price, $shortStats[0]->innertext, $urlFullData))->toJson();
             }
 
             // Поиск максимального количества страниц в разделе магазина
@@ -75,14 +77,34 @@
         }
 
 
-        public static function downloadStats($urlStats) 
+        /* Функция для парсинга всей информации о комплектующем 
+        * Параметры:
+        * urlFullData - часть адреса по которому можно получить полную информацию, является одноименным полем в классе Good
+        * Возврат:
+        * Json строка с полной информацией
+        */
+        public static function downloadFullData($urlFullData) 
         {
-            $fullUrl = self::$MAIN_URL . $urlStats;
+            $fullUrl = self::$MAIN_URL . $urlFullData;
             $html = file_get_html($fullUrl); 
 
-            $mainStats = $html->find('div[class="br-pr-chr-item"]'); 
-            echo $mainStats[0];
-            echo "<BR><BR>";
+            $allDataHtml = $html->find('div[class="br-pr-chr"]')[0]->find('div[class="br-pr-chr-item"]');  // Блоки информации (Осн. характеристик, Другие ...)
+
+            $allData = array(); // Ассоциативный массив в котором данные находятся в виде <название блока> - <данные блока> (тоже ассоциативный массив)
+            for ($i = 0; $i < count($allDataHtml); ++$i)
+            {
+                $headerBlock = $allDataHtml[$i]->find('p')[0]->innertext; // Название блока
+                $dataBlockBody = $allDataHtml[$i]->find('span'); // Данные в блоке
+                
+                // Данные в блоках на сайте представлены как ключ-значение, следовательно нечетные - ключи, четные - значения
+                $dataBlock = array();
+                for ($j = 0; $j < count($dataBlockBody); $j += 2)
+                    $dataBlock[$dataBlockBody[$j]->innertext] = $dataBlockBody[$j + 1]->innertext;
+
+                $allData[$headerBlock] = $dataBlock; 
+            }
+
+            return json_encode($allData);
         }
 
         // На случай если надо будет что то делать с изображением, пока что достаточно напрямую скачивать по URL
