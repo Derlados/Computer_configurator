@@ -18,7 +18,6 @@
         android:src ="@drawable/app_icon"
         android:background="@color/main_theme_1"/>
 
-
 </LinearLayout>
 
 
