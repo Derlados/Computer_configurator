@@ -6,6 +6,7 @@
     android:layout_weight="0.9">
 
     <LinearLayout
+        android:id="@+id/fragment_full_data_main_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -37,16 +38,19 @@
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
                     android:textAlignment="center"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textColor="#FFFFFF"/>
 
                 <TextView
                     android:id="@+id/fragment_full_data_price"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="5dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:textAlignment="center"
-                    android:textSize="28sp"
+                    android:textSize="20sp"
                     android:textColor="#2AFAD0"/>
 
                 <Button
@@ -54,13 +58,12 @@
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
                     android:text="@string/add_to_build"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:background="@color/light_blue"/>
 
 
 
             </LinearLayout>
-
 
         </LinearLayout>
 

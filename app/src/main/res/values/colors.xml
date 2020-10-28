@@ -9,4 +9,5 @@
     <color name="background">#000319</color>
     <color name="main_theme_1">#1B2A95</color>
     <color name="light_blue">#1690D1</color>
+    <color name="green_price">#00FF0C</color>
 </resources>
