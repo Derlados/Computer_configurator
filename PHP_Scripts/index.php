@@ -2,6 +2,11 @@
     require_once('GoodDownloader.php');
     require_once('Good/Good.php');
 
+
+    /* API:
+    * GET <домен>/goods - получение всех товаров на конкретной странице. Тип товара и страница передаются в GET запросе
+    * GET <домен>/goods/fullData - получение полной информации о комплектующем. В гет запросе передается ссылка на страницу (без домена)
+    */
     
     if ($_SERVER['REQUEST_METHOD'] != "GET")
     {
@@ -52,8 +57,15 @@
             }
             echo $data;
         }
+        else if (array_shift($requestUri) == "fullData")
+        {
+            $urlFullData = $_GET['urlFullData'];
+            echo GoodDownloader::downloadFullData($urlFullData);
+        }   
+        else
+            echo "invalid method";
     }   
     else
-        echo str_get_html(file_get_contents('test.html'));
+        echo "invalid method";
 
 ?>

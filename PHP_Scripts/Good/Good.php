@@ -15,13 +15,15 @@
         private $name;
         private $image;
         private $price;
+        private $urlFullData;
 
 
-        public function __construct($name, $image, $price)
+        public function __construct($name, $image, $price, $urlFullData)
         {
             $this->name = $name;
             $this->image = $image;
             $this->price = $price;
+            $this->$urlFullData = $urlFullData;
         }
 
         public function toJson()
@@ -29,13 +31,9 @@
             return array(
                 'name' => $this->name,
                 'imageUrl' => $this->image,
-                'price' => $this->price
+                'price' => $this->price,
+                'urlFullData' => $this->urlFullData
             );
-        }
-
-        public function fullStatsToJson()
-        {
-            
         }
     }
 ?>

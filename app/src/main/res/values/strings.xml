@@ -10,4 +10,5 @@
     <string name="SSD">Накопители SSD</string>
     <string name="RAM">Память</string>
     <string name="power_supply">Блоки питания</string>
+    <string name="add_to_build">+ ADD TO BUILD</string>
 </resources>

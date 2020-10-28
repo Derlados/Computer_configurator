@@ -42,7 +42,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         switch (action)
         {
             case NEXT_FRAGMENT_HIDE:
-                fTrans.hide(mainMenuFragment);
+                if (mainMenuFragment.isVisible())
+                    fTrans.hide(mainMenuFragment);
+                else
+                    fTrans.hide(fragmentSource);
+
                 fTrans.add(R.id.activity_main_ll_container, fragmentReciver);
 
                 fTrans.addToBackStack(null);   // Добавление изменнений в стек

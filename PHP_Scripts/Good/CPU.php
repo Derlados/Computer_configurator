@@ -9,9 +9,9 @@
         private $frequency;
         private $TDP;
 
-        public function __construct($name, $image, $price, $htmlShortStats)
+        public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)
         {
-            parent::__construct($name, $image, $price);
+            parent::__construct($name, $image, $price, $urlFullData);
 
             // Создание превью данных
             $shortStats = explode(',', $htmlShortStats);

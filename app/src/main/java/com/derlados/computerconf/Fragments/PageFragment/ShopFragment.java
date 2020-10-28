@@ -60,7 +60,7 @@ public class ShopFragment extends PageFragment implements View.OnClickListener {
                 data.putString("typeGood", "GPU");
                 break;
             case R.id.fragment_shop_motherboard:
-                data.putString("typeGood", "MOTHERBOARD");
+                data.putString("typeGood", "MB");
                 break;
             case R.id.fragment_shop_hdd:
                 data.putString("typeGood", "HDD");
@@ -72,7 +72,7 @@ public class ShopFragment extends PageFragment implements View.OnClickListener {
                 data.putString("typeGood", "RAM");
                 break;
             case R.id.fragment_shop_power_supply:
-                data.putString("typeGood", "POWER_SUPPLY");
+                data.putString("typeGood", "PS");
                 break;
             default:
                 return;

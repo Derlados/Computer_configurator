@@ -1,6 +1,7 @@
 package com.derlados.computerconf.Fragments;
 
 import android.app.DownloadManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -38,11 +40,7 @@ import java.util.Objects;
 
 public class ShopSearchFragment extends Fragment implements View.OnClickListener {
 
-    LinearLayout goodsContainer;
-    LinearLayout flipPager = null;
-    String typeGood;
-    int currentPage = 1, maxPages;
-
+    // Направление движения по страницам
     enum Direction {
         NEXT,
         BACK,
@@ -50,7 +48,20 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         CURRENT,
         CHOSEN_PAGE
     }
-    ArrayList<Good> goodsList = new ArrayList<>();
+    int currentPage = 1, maxPages;
+
+    LinearLayout goodsContainer; // XML контейнер (лаяут) в который ложаться все товары
+    String typeGood; // Тип комплектующего на текущей странице
+    ArrayList<Good> goodsList = new ArrayList<>(); // Список с комплектующими
+
+    OnFragmentInteractionListener fragmentListener;
+
+    @Override
+    public void onAttach(@NonNull Context context)
+    {
+        super.onAttach(context);
+        fragmentListener = (OnFragmentInteractionListener) context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -131,7 +142,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
         // Установка самих характеристик
         // Preview - таблица 5x2 (1 строка - название, 2 и 4 - характеристики, 3 и 5 - значения)
-        HashMap<String, String> previewStats = good.getStats();
+        HashMap<String, String> previewData = good.getPreviewData();
         TableRow row1 = ((TableRow)tableData.getChildAt(1));
         TableRow row2 = ((TableRow)tableData.getChildAt(2));
         TableRow row3 = ((TableRow)tableData.getChildAt(3));
@@ -139,7 +150,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
         // key - характеристика, value - значение
         int count = 0;
-        for (HashMap.Entry<String, String> entry: previewStats.entrySet()) {
+        for (HashMap.Entry<String, String> entry: previewData.entrySet()) {
 
             if (count < 2) {
                 ((TextView) row1.getChildAt(count)).setText(entry.getKey());
@@ -216,12 +227,13 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         goodsContainer.addView(flipPager);
     }
     //TODO
-    // Загрузку нужно будет вынести в сервис
-    public void loadImage(final ImageView imageView, Good good) {
+    // Загрузку нужно будет вынести в отдельный класс с потоками
+    public void loadImage(final ImageView imageView, final Good good) {
         RequestHelper.getRequest(getContext(), good.getImageUrl(), RequestHelper.TypeRequest.IMAGE, new RequestHelper.CallBack<Bitmap>() {
 
             @Override
             public void call(Bitmap response) {
+                good.setImage(response);
                 imageView.setImageBitmap(response);
             }
 
@@ -232,7 +244,6 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         });
     }
 
-
     /* Обработчик нажатий. Есть два места для обработки - один из бланков комплектующего и панель прокрутки страниц
     * Нажатие на бланк - вызов подробной информации о комплектующем в новом фрагменте
     * Нажатие на панель страниц - загрузка страницы в соответствии с выбором пользователя
@@ -242,9 +253,9 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         switch (view.getId())
         {
             case R.id.inflate_good_blank_rl_blank:
-                //TODO
-                // Здесь должен быть переход для просмотра подробной информации о комплектующем
-                Toast.makeText(getContext(), "Clicable", Toast.LENGTH_SHORT).show();
+                Bundle data = new Bundle();
+                data.putString("good", (new Gson()).toJson(goodsList.get(0)));
+                fragmentListener.onFragmentInteraction(this, new FullDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data);
                 break;
             case R.id.inflate_flip_page_navigator_ibt_next:
                 downloadPage(typeGood, Direction.NEXT, null);

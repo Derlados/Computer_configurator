@@ -41,7 +41,6 @@ public class MainMenuFragment extends Fragment implements BottomNavigationView.O
         ((BottomNavigationView)getView().findViewById(R.id.fragment_main_menu_bottom_navigator)).setOnNavigationItemSelectedListener(this);
     }
 
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Bundle data = new Bundle(); // Данные о переходе на другую страницу, здесь должен хранится с ключом "page" номер страницы
