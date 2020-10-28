@@ -1,0 +1,230 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    android:background="@color/dark_blue_2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/fragment_full_data_img"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:layout_weight="0.3"
+            android:src="@drawable/ic_processor_24"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.33"
+                android:layout_margin="5dp"
+                android:text="name_build"
+                android:gravity="start|center"
+                android:paddingStart="20dp"
+                android:paddingEnd="0dp"
+                android:textSize="20sp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.33"
+                android:layout_margin="5dp"
+                android:text="price_build"
+                android:textSize="20sp"
+                android:gravity="start|center"
+                android:paddingStart="20dp"
+                android:paddingEnd="0dp"
+                android:textColor="@color/green"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.33"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:text="@string/status"
+                    android:gravity="start|center"
+                    android:textSize="16sp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="0dp"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:text="status_value"
+                    android:gravity="center"
+                    android:textSize="16sp"
+
+                    android:textColor="@color/floating_button_color"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#102651"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                style="@style/build_desc_text_name"
+                android:layout_weight="0.35"
+                android:text="@string/cpu"/>
+
+            <TextView
+                android:id="@+id/inflate_build_tv_chosen_CPU"
+                style="@style/build_desc_text_value"
+                android:layout_weight="0.65"
+                android:text="@string/not_chosen"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                style="@style/build_desc_text_name"
+                android:layout_weight="0.35"
+                android:text="@string/motherboard"/>
+
+            <TextView
+                android:id="@+id/inflate_build_tv_chosen_MB"
+                style="@style/build_desc_text_value"
+                android:layout_weight="0.65"
+                android:text="@string/not_chosen"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                style="@style/build_desc_text_name"
+                android:layout_weight="0.35"
+                android:text="@string/gpu"/>
+
+            <TextView
+                android:id="@+id/inflate_build_tv_chosen_GPU"
+                style="@style/build_desc_text_value"
+                android:layout_weight="0.65"
+                android:text="@string/not_chosen"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                style="@style/build_desc_text_name"
+                android:layout_weight="0.35"
+                android:text="@string/ram"/>
+
+            <TextView
+                android:id="@+id/inflate_build_tv_chosen_RAM"
+                style="@style/build_desc_text_value"
+                android:layout_weight="0.65"
+                android:text="@string/not_chosen"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                style="@style/build_desc_text_name"
+                android:layout_weight="0.35"
+                android:text="@string/hdd"/>
+
+            <TextView
+                android:id="@+id/inflate_build_tv_chosen_HDD"
+                style="@style/build_desc_text_value"
+                android:layout_weight="0.65"
+                android:text="@string/not_chosen"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                style="@style/build_desc_text_name"
+                android:layout_weight="0.35"
+                android:text="@string/ssd"/>
+
+            <TextView
+                android:id="@+id/inflate_build_tv_chosen_SSD"
+                style="@style/build_desc_text_value"
+                android:layout_weight="0.65"
+                android:text="@string/not_chosen"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp">
+
+            <TextView
+                style="@style/build_desc_text_name"
+                android:layout_weight="0.35"
+                android:text="@string/power_supply"/>
+
+            <TextView
+                android:id="@+id/inflate_build_tv_chosen_PS"
+                style="@style/build_desc_text_value"
+                android:layout_weight="0.65"
+                android:text="@string/not_chosen"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/style_bt_expand"
+        android:src="@drawable/ic_arrow_up_24"/>
+
+</LinearLayout>

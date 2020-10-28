@@ -22,19 +22,19 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_shop_motherboard"
                 style="@style/ButtonShop"
-                android:text="@string/motherboard"
+                android:text="@string/motherboards"
                 app:icon="@drawable/ic_motherboard_24"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_shop_cpu"
                 style="@style/ButtonShop"
-                android:text="@string/CPU"
+                android:text="@string/CPUs"
                 app:icon="@drawable/ic_processor_24" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_shop_gpu"
                 style="@style/ButtonShop"
-                android:text="@string/GPU"
+                android:text="@string/GPUs"
                 app:icon="@drawable/ic_gpu_24" />
 
         </TableRow>
@@ -47,19 +47,19 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_shop_hdd"
                 style="@style/ButtonShop"
-                android:text="@string/HDD"
+                android:text="@string/HDDs"
                 app:icon="@drawable/ic_hdd_24"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_shop_ssd"
                 style="@style/ButtonShop"
-                android:text="@string/SSD"
+                android:text="@string/SSDs"
                 app:icon="@drawable/ic_ssd_24" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_shop_ram"
                 style="@style/ButtonShop"
-                android:text="@string/RAM"
+                android:text="@string/RAMs"
                 app:icon="@drawable/ic_ram_24"/>
 
         </TableRow>
@@ -72,7 +72,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_shop_power_supply"
                 style="@style/ButtonShop"
-                android:text="@string/power_supply"
+                android:text="@string/power_supplies"
                 app:icon="@drawable/ic_power_supply_24"/>
 
             <com.google.android.material.button.MaterialButton
