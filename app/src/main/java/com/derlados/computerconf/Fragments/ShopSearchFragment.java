@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,7 +94,8 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
         }
 
-        // Загрузка страницы
+        //TODO
+        // Загрузка страницы, вынести в отдельный класс с потоками
         String apiUrl = RequestHelper.MAIN_URL + String.format("goods?typeGood=%s&page=%d", typeGood, currentPage);
         RequestHelper.getRequest(getContext(), apiUrl, RequestHelper.TypeRequest.STRING, new RequestHelper.CallBack<String>() {
 
@@ -117,14 +119,24 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Проблемы с сервером", Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(getContext(), "Проблемы с сервером", Toast.LENGTH_SHORT).show();
+                    }
+                    catch (Exception ex) {
+                        Log.e("error", ex.toString());
+                    }
                 }
 
             }
 
             @Override
             public void fail(String message) {
-                Toast.makeText(getContext(), "Проблемы с сервером", Toast.LENGTH_SHORT).show();
+                try {
+                    Toast.makeText(getContext(), "Проблемы с сервером", Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e) {
+                    Log.e("error", e.toString());
+                }
             }
         });
     }
@@ -254,6 +266,8 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         {
             case R.id.inflate_good_blank_rl_blank:
                 Bundle data = new Bundle();
+                //TODO
+                // Доделать корректный выбор товара
                 data.putString("good", (new Gson()).toJson(goodsList.get(0)));
                 fragmentListener.onFragmentInteraction(this, new FullDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data);
                 break;

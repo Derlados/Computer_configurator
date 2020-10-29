@@ -26,22 +26,36 @@
             android:layout_weight="0.7"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.33"
-                android:layout_margin="5dp"
-                android:text="name_build"
-                android:gravity="start|center"
-                android:paddingStart="20dp"
-                android:paddingEnd="0dp"
-                android:textSize="20sp"
-                android:textColor="@color/white"/>
+                android:layout_weight="0.4"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.85"
+                    android:layout_margin="5dp"
+                    android:text="name_build"
+                    android:gravity="start|center"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="0dp"
+                    android:textSize="20sp"
+                    android:textColor="@color/turquoise"/>
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15"/>
+
+            </LinearLayout>
+
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.33"
+                android:layout_weight="0.3"
                 android:layout_margin="5dp"
                 android:text="price_build"
                 android:textSize="20sp"
@@ -53,7 +67,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.33"
+                android:layout_weight="0.3"
                 android:orientation="horizontal">
 
                 <TextView
@@ -118,7 +132,7 @@
             <TextView
                 style="@style/build_desc_text_name"
                 android:layout_weight="0.35"
-                android:text="@string/motherboard"/>
+                android:text="@string/motherboard_reduction"/>
 
             <TextView
                 android:id="@+id/inflate_build_tv_chosen_MB"
@@ -154,7 +168,7 @@
             <TextView
                 style="@style/build_desc_text_name"
                 android:layout_weight="0.35"
-                android:text="@string/ram"/>
+                android:text="@string/ram_reduction"/>
 
             <TextView
                 android:id="@+id/inflate_build_tv_chosen_RAM"
@@ -225,6 +239,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/style_bt_expand"
-        android:src="@drawable/ic_arrow_up_24"/>
+        android:src="@drawable/ic_arrow_up_36"/>
 
 </LinearLayout>

@@ -15,11 +15,17 @@
     <string name="not_complete">Не закончена</string>
     <string name="complete">Закончена</string>
     <string name="cpu">Процессор :</string>
-    <string name="motherboard">Мат. плата :</string>
+    <string name="motherboard_reduction">Мат. плата :</string>
     <string name="gpu">Видеокарта :</string>
-    <string name="ram">ОЗУ :</string>
+    <string name="ram_reduction">ОЗУ :</string>
     <string name="hdd">Жесткий диск :</string>
     <string name="ssd">SSD :</string>
     <string name="power_supply">Блок питания :</string>
     <string name="not_chosen">Не выбрано</string>
+    <string name="description">Описание :</string>
+    <string name="motherboard">Материнская плата :</string>
+    <string name="storage">Жетский диски / SSD :</string>
+    <string name="ram">Оперативная память :</string>
+    <string name="go_brain_com">Go brain.com</string>
+    <string name="save">Save</string>
 </resources>
