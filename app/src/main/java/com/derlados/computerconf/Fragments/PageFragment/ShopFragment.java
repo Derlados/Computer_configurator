@@ -8,21 +8,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.derlados.computerconf.Constants.TypeGood;
 import com.derlados.computerconf.Fragments.OnFragmentInteractionListener;
 import com.derlados.computerconf.Fragments.ShopSearchFragment;
 import com.derlados.computerconf.R;
 
 public class ShopFragment extends PageFragment implements View.OnClickListener {
 
-    enum TypeGood {
-        CPU,
-        GPU,
-        MOTHERBOARD,
-        HHD,
-        SSD,
-        RAM,
-        POWER_SUPPLY
-    }
     OnFragmentInteractionListener frListener;
 
     @Override
@@ -54,25 +46,25 @@ public class ShopFragment extends PageFragment implements View.OnClickListener {
         switch (view.getId())
         {
             case R.id.fragment_shop_cpu:
-                data.putString("typeGood", "CPU");
+                data.putString("typeGood", TypeGood.CPU.toString());
                 break;
             case R.id.fragment_shop_gpu:
-                data.putString("typeGood", "GPU");
+                data.putString("typeGood", TypeGood.GPU.toString());
                 break;
             case R.id.fragment_shop_motherboard:
-                data.putString("typeGood", "MB");
+                data.putString("typeGood", TypeGood.MOTHERBOARD.toString());
                 break;
             case R.id.fragment_shop_hdd:
-                data.putString("typeGood", "HDD");
+                data.putString("typeGood", TypeGood.HDD.toString());
                 break;
             case R.id.fragment_shop_ssd:
-                data.putString("typeGood", "SSD");
+                data.putString("typeGood", TypeGood.SSD.toString());
                 break;
             case R.id.fragment_shop_ram:
-                data.putString("typeGood", "RAM");
+                data.putString("typeGood", TypeGood.RAM.toString());
                 break;
             case R.id.fragment_shop_power_supply:
-                data.putString("typeGood", "PS");
+                data.putString("typeGood", TypeGood.POWER_SUPPLY.toString());
                 break;
             default:
                 return;

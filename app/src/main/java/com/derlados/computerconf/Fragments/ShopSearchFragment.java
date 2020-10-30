@@ -1,9 +1,7 @@
 package com.derlados.computerconf.Fragments;
 
-import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,11 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.derlados.computerconf.Good.Good;
+import com.derlados.computerconf.Objects.Good;
 import com.derlados.computerconf.Managers.RequestHelper;
 import com.derlados.computerconf.R;
 import com.google.gson.Gson;
@@ -30,12 +27,9 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Objects;
 

@@ -1,17 +1,11 @@
-package com.derlados.computerconf.Good;
+package com.derlados.computerconf.Objects;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.widget.Toast;
-
-import com.derlados.computerconf.Managers.RequestHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Good {
-
-
 
     private String name;
     private String imageUrl; // ссылка на скачивание изображения

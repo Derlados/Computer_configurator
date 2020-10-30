@@ -6,21 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.derlados.computerconf.Good.Good;
+import com.derlados.computerconf.Objects.Good;
 import com.derlados.computerconf.Managers.RequestHelper;
 import com.derlados.computerconf.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-
-import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
