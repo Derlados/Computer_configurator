@@ -34,8 +34,11 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
         return fragment;
     }
 
+
     @Override
     public void onClick(View view) {
-        frListener.onFragmentInteraction(this, new BuildFullFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, null);
+        // Переход на страницу создания/редактирования сборки
+        if (view.getId() == R.id.fragment_builds_float_bt)
+            frListener.onFragmentInteraction(this, new BuildFullFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, null);
     }
 }

@@ -96,6 +96,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/fragment_build_full_ll_full_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -188,11 +189,28 @@
 
                 <Button
                     style="@style/block_header"
-                    android:text="@string/storage"
+                    android:text="@string/hdd"
                     android:drawableEnd="@drawable/ic_arrow_right_36"/>
 
                 <LinearLayout
-                    android:id="@+id/fragment_build_full_ll_hdd_ssd"
+                    android:id="@+id/fragment_build_full_ll_hdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <Button
+                        style="@style/find_good_bt"/>
+
+                </LinearLayout>
+
+                <Button
+                    style="@style/block_header"
+                    android:text="@string/ssd"
+                    android:drawableEnd="@drawable/ic_arrow_right_36"/>
+
+                <LinearLayout
+                    android:id="@+id/fragment_build_full_ll_ssd"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"

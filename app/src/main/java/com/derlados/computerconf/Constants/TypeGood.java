@@ -7,5 +7,6 @@ public enum TypeGood {
     HDD,
     SSD,
     RAM,
-    POWER_SUPPLY
+    POWER_SUPPLY,
+    OTHERS
 }

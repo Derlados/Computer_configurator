@@ -1,25 +1,33 @@
 package com.derlados.computerconf.Objects;
 
+import android.animation.TypeEvaluator;
 import android.util.TypedValue;
 
 import com.derlados.computerconf.Constants.TypeGood;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Build {
 
-    // Комплектующие
-    private Good cpu;
-    private Good motherboard;
-    private Good gpu;
-    private ArrayList<Good> ram = new ArrayList<>();
-    private ArrayList<Good> hdd = new ArrayList<>(), ssd = new ArrayList<>();
-    private Good powerSupply;
-    private ArrayList<Good> others = new ArrayList<>();
-
+    /* Комплектующие, сделаны одного типа ArrayList<Good> и помещены в HashMap, так как проблематично разделить возврат объекта одного или массива.
+    * Для мобильности кода выгодно чтобы они были ArrayList<Good>, хоть к примеру материнку можно взять только одну.
+    * В будущем можно улучшить сборки где будут участвовать материнки на два процессора, на несколько видокарт
+    * Опять же помещено в хеш мап, так как нету простых ассоциативных массивов*/
+    private HashMap<TypeGood, ArrayList<Good>> goods = new HashMap<>();
     private double price = 0; // Цена сборки
 
-    // Добавление и удаление сделаны одними методом так как можно будет вызвать его для любого типа товара, передав лишь аргумент который и так будет искаться
+    // Инициализация всех типов товаров
+    public Build() {
+        goods.put(TypeGood.CPU, new ArrayList<Good>());
+        goods.put(TypeGood.GPU, new ArrayList<Good>());
+        goods.put(TypeGood.MOTHERBOARD, new ArrayList<Good>());
+        goods.put(TypeGood.HDD, new ArrayList<Good>());
+        goods.put(TypeGood.SSD, new ArrayList<Good>());
+        goods.put(TypeGood.POWER_SUPPLY, new ArrayList<Good>());
+        goods.put(TypeGood.RAM, new ArrayList<Good>());
+        goods.put(TypeGood.OTHERS, new ArrayList<Good>());
+    }
 
     /* Добавление товара в сборку
     * Параметры:
@@ -27,84 +35,45 @@ public class Build {
     * typeGood - тип комплектующего
     * */
     public void addToBuild(TypeGood typeGood, Good good) {
-        // Добавление комплектующего в соответствующее поле, если переданный объект не основной для сборки - он попадает в "другие"
-        switch (typeGood) {
-            case CPU:
-                this.cpu = good;
-                break;
-            case GPU:
-                this.gpu = good;
-                break;
-            case HDD:
-                this.hdd.add(good);
-                break;
-            case RAM:
-                this.ram.add(good);
-                break;
-            case SSD:
-                this.ssd.add(good);
-                break;
-            case MOTHERBOARD:
-                this.motherboard = good;
-                break;
-            case POWER_SUPPLY:
-                this.powerSupply = good;
-                break;
-            default:
-                this.others.add(good);
-                break;
-        }
+        ArrayList<Good> current = getGoodList(typeGood);
 
-        // Подсчет общей цены
-        this.price += good.getPrice();
+        current.add(good);
+        this.price += good.getPrice(); // Подсчет общей цены
     }
 
-    /* Добавление товара в сборку. Сделано одним методом так как можно будет вызвать его для любого типа товара
+    /* Добавление товара в сборку
      * Параметры:
      * typeGood - тип комплектующего
      * index - индекс комплектующего, если в разделе есть список
      * */
     public void deleteFromBuild(TypeGood typeGood, int index) {
-        // Удаление комплектующего в соответствующее поле
-        switch (typeGood) {
-            case CPU:
-                price -= cpu.getPrice();
-                cpu = null;
-                break;
-            case GPU:
-                price -= gpu.getPrice();
-                gpu = null;
-                break;
-            case HDD:
-                price -= hdd.get(index).getPrice();
-                hdd.remove(index);
-                break;
-            case RAM:
-                price -= ram.get(index).getPrice();
-                ram.remove(index);
-                break;
-            case SSD:
-                price -= ssd.get(index).getPrice();
-                ssd.remove(index);
-                break;
-            case MOTHERBOARD:
-                price -= motherboard.getPrice();
-                motherboard = null;
-                break;
-            case POWER_SUPPLY:
-                price -= powerSupply.getPrice();
-                powerSupply = null;
-                break;
-            default:
-                price -= others.get(index).getPrice();
-                others.remove(index);
-                break;
-        }
+        ArrayList<Good> current = goods.get(typeGood);
+
+        if (current == null)
+            return;
+
+        price -= current.get(index).getPrice();
+        current.remove(index);
+    }
+
+    public ArrayList<Good> getGoodList(TypeGood typeGood) {
+        return goods.get(typeGood);
+    }
+
+    public Good getGoodByIndex(TypeGood typeGood, int index) {
+        ArrayList<Good> current = goods.get(typeGood);
+        return current.get(index);
+    }
+
+    public double getPrice() {
+        return price;
     }
 
     // Проверка полной сборки
     public boolean isComplete() {
-        return cpu != null && motherboard != null && gpu != null && powerSupply != null && ram.size() != 0 && (hdd.size() != 0 || ssd.size() != 0);
+        return goods.get(TypeGood.CPU).size() != 0 && goods.get(TypeGood.MOTHERBOARD).size() != 0 && goods.get(TypeGood.GPU).size() != 0
+                && goods.get(TypeGood.POWER_SUPPLY).size() != 0 && goods.get(TypeGood.RAM).size() != 0
+                && (goods.get(TypeGood.HDD).size() != 0 || goods.get(TypeGood.SSD).size() != 0);
     }
 
     //TODO
@@ -112,39 +81,4 @@ public class Build {
         return false;
     }
 
-    public Good getCpu() {
-        return cpu;
-    }
-
-    public Good getMotherboard() {
-        return motherboard;
-    }
-
-    public Good getGpu() {
-        return gpu;
-    }
-
-    public ArrayList<Good> getRam() {
-        return ram;
-    }
-
-    public ArrayList<Good> getHdd() {
-        return hdd;
-    }
-
-    public ArrayList<Good> getSsd() {
-        return ssd;
-    }
-
-    public ArrayList<Good> getOthers() {
-        return others;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public Good getPowerSupply() {
-        return powerSupply;
-    }
 }

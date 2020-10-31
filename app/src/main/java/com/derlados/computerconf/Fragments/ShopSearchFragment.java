@@ -52,8 +52,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     OnFragmentInteractionListener fragmentListener;
 
     @Override
-    public void onAttach(@NonNull Context context)
-    {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         fragmentListener = (OnFragmentInteractionListener) context;
     }
