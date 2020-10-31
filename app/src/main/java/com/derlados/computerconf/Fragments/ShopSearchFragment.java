@@ -140,7 +140,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         RelativeLayout blank = (RelativeLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
         blank.setOnClickListener(this);
         //Взятие основной таблицы информации об комплектующем
-        TableLayout tableData = (TableLayout)blank.getChildAt(1);
+        TableLayout tableData = (TableLayout)blank.findViewById(R.id.inflate_good_blank_tr_data);
 
         // Установка имени
         TextView nameText = (TextView) ((TableRow)tableData.getChildAt(0)).getChildAt(0);
@@ -171,9 +171,9 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         }
 
         // Установка рейтинга и цены
-        ((TextView) blank.getChildAt(2)).setText(String.format(Locale.getDefault(), "%.2f ГРН", good.getPrice()));
+        ((TextView) blank.findViewById(R.id.inflate_good_blank_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", good.getPrice()));
 
-        loadImage((ImageView) blank.getChildAt(0), good);
+        loadImage((ImageView) blank.findViewById(R.id.inflate_good_blank_img), good);
 
         goodsContainer.addView(blank);
     }

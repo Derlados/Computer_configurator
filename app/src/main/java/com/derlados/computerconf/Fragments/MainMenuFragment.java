@@ -22,8 +22,7 @@ public class MainMenuFragment extends Fragment implements BottomNavigationView.O
     OnFragmentInteractionListener fragmentListener;
 
     @Override
-    public void onAttach(@NonNull  Context context)
-    {
+    public void onAttach(@NonNull  Context context) {
         super.onAttach(context);
         fragmentListener = (OnFragmentInteractionListener) context;
     }

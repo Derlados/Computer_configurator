@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.derlados.computerconf.Fragments.BuildFullFragment;
 import com.derlados.computerconf.Fragments.OnFragmentInteractionListener;
 import com.derlados.computerconf.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,6 +36,6 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-
+        frListener.onFragmentInteraction(this, new BuildFullFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, null);
     }
 }

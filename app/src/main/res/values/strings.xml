@@ -28,4 +28,7 @@
     <string name="ram">Оперативная память :</string>
     <string name="go_brain_com">Go brain.com</string>
     <string name="save">Save</string>
+    <string name="plus">+</string>
+    <string name="build_desc">Описание сборки</string>
+    <string name="build_name">Имя сборки</string>
 </resources>
