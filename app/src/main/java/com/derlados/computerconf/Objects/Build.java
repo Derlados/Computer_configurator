@@ -16,6 +16,7 @@ public class Build {
     * Опять же помещено в хеш мап, так как нету простых ассоциативных массивов*/
     private HashMap<TypeGood, ArrayList<Good>> goods = new HashMap<>();
     private double price = 0; // Цена сборки
+    private String name = "", description = ""; // Имя и описание в сборке
 
     // Инициализация всех типов товаров
     public Build() {
@@ -29,13 +30,18 @@ public class Build {
         goods.put(TypeGood.OTHERS, new ArrayList<Good>());
     }
 
+    //TODO
+    public boolean checkCompatibility() {
+        return false;
+    }
+
     /* Добавление товара в сборку
-    * Параметры:
-    * good - само комплектующее
-    * typeGood - тип комплектующего
-    * */
+     * Параметры:
+     * good - само комплектующее
+     * typeGood - тип комплектующего
+     * */
     public void addToBuild(TypeGood typeGood, Good good) {
-        ArrayList<Good> current = getGoodList(typeGood);
+        ArrayList<Good> current = goods.get(typeGood);
 
         current.add(good);
         this.price += good.getPrice(); // Подсчет общей цены
@@ -56,6 +62,13 @@ public class Build {
         current.remove(index);
     }
 
+    // Проверка полной сборки
+    public boolean isComplete() {
+        return goods.get(TypeGood.CPU).size() != 0 && goods.get(TypeGood.MOTHERBOARD).size() != 0 && goods.get(TypeGood.GPU).size() != 0
+                && goods.get(TypeGood.POWER_SUPPLY).size() != 0 && goods.get(TypeGood.RAM).size() != 0
+                && (goods.get(TypeGood.HDD).size() != 0 || goods.get(TypeGood.SSD).size() != 0);
+    }
+
     public ArrayList<Good> getGoodList(TypeGood typeGood) {
         return goods.get(typeGood);
     }
@@ -65,20 +78,24 @@ public class Build {
         return current.get(index);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public double getPrice() {
         return price;
     }
 
-    // Проверка полной сборки
-    public boolean isComplete() {
-        return goods.get(TypeGood.CPU).size() != 0 && goods.get(TypeGood.MOTHERBOARD).size() != 0 && goods.get(TypeGood.GPU).size() != 0
-                && goods.get(TypeGood.POWER_SUPPLY).size() != 0 && goods.get(TypeGood.RAM).size() != 0
-                && (goods.get(TypeGood.HDD).size() != 0 || goods.get(TypeGood.SSD).size() != 0);
+    public void setName(String name) {
+        this.name = name;
     }
 
-    //TODO
-    public boolean checkCompatibility() {
-        return false;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

@@ -12,6 +12,8 @@ import com.derlados.computerconf.Fragments.MainMenuFragment;
 import com.derlados.computerconf.Fragments.OnFragmentInteractionListener;
 import com.derlados.computerconf.Fragments.PageFragment.MenuPageAdapter;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
-    public void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReciver,  Action action, Bundle data) {
+    public void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReciver,  Action action, Bundle data, String backStackTag) {
         FragmentTransaction fTrans = fragmentManager.beginTransaction();
         fragmentReciver.setArguments(data);
 
@@ -48,13 +50,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
                     fTrans.hide(fragmentSource);
 
                 fTrans.add(R.id.activity_main_ll_container, fragmentReciver);
-
-                fTrans.addToBackStack(null);   // Добавление изменнений в стек
+                fTrans.addToBackStack(backStackTag);   // Добавление изменнений в стек
                 fTrans.commit();
                 break;
             case NEXT_FRAGMENT_REPLACE:
                 fTrans.replace(R.id.activity_main_ll_container, fragmentReciver);
-                fTrans.addToBackStack(null);   // Добавление изменнений в стек
+                fTrans.addToBackStack(backStackTag);   // Добавление изменнений в стек
                 fTrans.commit();
                 break;
         }
@@ -62,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     @Override
     public void onActivityInteraction(Fragment fragmentSource, Action action, Bundle data) {
+        FragmentTransaction fTrans = fragmentManager.beginTransaction();
+
         switch (action)
         {
             case SET_PAGER:
@@ -74,6 +77,15 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
                     pager.setCurrentItem(data.getInt("page"), false);
                 else
                     pager.setCurrentItem(data.getInt("page"), true);
+                break;
+            case RETURN_FRAGMENT_BY_TAG:
+                String tag = data.getString("tag");
+                for (int i = fragmentManager.getBackStackEntryCount() - 1; i >= 1; --i) {
+                    if (fragmentManager.getBackStackEntryAt(i).getName() == null || !fragmentManager.getBackStackEntryAt(i).getName().equalsIgnoreCase(tag))
+                        fragmentManager.popBackStack();
+                    else
+                        break;
+                }
                 break;
         }
     }

@@ -38,6 +38,7 @@
                     android:orientation="vertical">
 
                     <EditText
+                        android:id="@+id/fragment_build_full_et_name_build"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="0.4"
@@ -51,6 +52,7 @@
 
 
                     <TextView
+                        android:id="@+id/fragment_build_full_tv_price"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="0.3"
@@ -80,6 +82,7 @@
                             android:textColor="@color/white"/>
 
                         <TextView
+                            android:id="@+id/fragment_build_full_tv_complete_status"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -228,6 +231,23 @@
 
                 <LinearLayout
                     android:id="@+id/fragment_build_full_ll_power_supply"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <Button
+                        style="@style/find_good_bt"/>
+
+                </LinearLayout>
+
+                <Button
+                    style="@style/block_header"
+                    android:text="@string/other"
+                    android:drawableEnd="@drawable/ic_arrow_right_36"/>
+
+                <LinearLayout
+                    android:id="@+id/fragment_build_full_ll_other"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"

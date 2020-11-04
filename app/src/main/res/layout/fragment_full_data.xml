@@ -54,6 +54,7 @@
                     android:textColor="#2AFAD0"/>
 
                 <Button
+                    android:id="@+id/fragment_full_data_bt_add_to_build"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"

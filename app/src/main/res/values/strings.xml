@@ -31,4 +31,5 @@
     <string name="plus">+</string>
     <string name="build_desc">Описание сборки</string>
     <string name="build_name">Имя сборки</string>
+    <string name="other">Другое</string>
 </resources>

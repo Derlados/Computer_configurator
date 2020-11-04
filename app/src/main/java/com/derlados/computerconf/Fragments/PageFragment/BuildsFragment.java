@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.derlados.computerconf.Fragments.BuildFullFragment;
 import com.derlados.computerconf.Fragments.OnFragmentInteractionListener;
+import com.derlados.computerconf.Objects.UserData;
 import com.derlados.computerconf.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -38,7 +39,9 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
     @Override
     public void onClick(View view) {
         // Переход на страницу создания/редактирования сборки
-        if (view.getId() == R.id.fragment_builds_float_bt)
-            frListener.onFragmentInteraction(this, new BuildFullFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, null);
+        if (view.getId() == R.id.fragment_builds_float_bt) {
+            frListener.onFragmentInteraction(this, new BuildFullFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, null, "Build");
+            UserData.getUserData().addBuild();
+        }
     }
 }

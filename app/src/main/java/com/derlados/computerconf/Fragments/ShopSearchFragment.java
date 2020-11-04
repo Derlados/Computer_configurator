@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.derlados.computerconf.Constants.TypeGood;
 import com.derlados.computerconf.Objects.Good;
 import com.derlados.computerconf.Managers.RequestHelper;
 import com.derlados.computerconf.R;
@@ -28,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -46,7 +48,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     int currentPage = 1, maxPages;
 
     LinearLayout goodsContainer; // XML контейнер (лаяут) в который ложаться все товары
-    String typeGood; // Тип комплектующего на текущей странице
+    TypeGood typeGood; // Тип комплектующего на текущей странице
     ArrayList<Good> goodsList = new ArrayList<>(); // Список с комплектующими
 
     OnFragmentInteractionListener fragmentListener;
@@ -61,13 +63,13 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.fragment_shop_search, container, false);
         goodsContainer = fragment.findViewById(R.id.fragment_shop_search_goods_container);
-        typeGood = getArguments().getString("typeGood");
+        typeGood = (TypeGood) getArguments().get("typeGood");
         downloadPage(typeGood, Direction.CURRENT, null);
         return fragment;
     }
 
     // Загрузка страницы (загрузка всех превью данных для отображения на странице)
-    private void downloadPage(String typeGood, Direction dir, Integer page) {
+    private void downloadPage(TypeGood typeGood, Direction dir, Integer page) {
          goodsContainer.removeAllViews();// Очистка фрагмента фрагмента
 
         // Выбор страницы которую необходимо загрузить
@@ -89,7 +91,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
         //TODO
         // Загрузка страницы, вынести в отдельный класс с потоками
-        String apiUrl = RequestHelper.MAIN_URL + String.format("goods?typeGood=%s&page=%d", typeGood, currentPage);
+        String apiUrl = RequestHelper.MAIN_URL + String.format("goods?typeGood=%s&page=%d", typeGood.toString(), currentPage);
         RequestHelper.getRequest(getContext(), apiUrl, RequestHelper.TypeRequest.STRING, new RequestHelper.CallBack<String>() {
 
             @Override
@@ -177,6 +179,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         goodsContainer.addView(blank);
     }
 
+
     /* Загрузка панели для выбора страниц и её настройка
     * Вид панели для выбора страницы:
     * 1 и последний элемент - кнопки '<', '>'
@@ -259,10 +262,9 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         {
             case R.id.inflate_good_blank_rl_blank:
                 Bundle data = new Bundle();
-                //TODO
-                // Доделать корректный выбор товара
-                data.putString("good", (new Gson()).toJson(goodsList.get(0)));
-                fragmentListener.onFragmentInteraction(this, new FullDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data);
+                data.putString("good", (new Gson()).toJson(goodsList.get(goodsContainer.indexOfChild(view)))); // Объект передается в виде json строки, сам берется относительно его положения в контейнере
+                data.putSerializable("typeGood", typeGood);
+                fragmentListener.onFragmentInteraction(this, new FullDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
                 break;
             case R.id.inflate_flip_page_navigator_ibt_next:
                 downloadPage(typeGood, Direction.NEXT, null);

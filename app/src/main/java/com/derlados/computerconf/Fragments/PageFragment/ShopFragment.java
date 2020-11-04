@@ -41,35 +41,37 @@ public class ShopFragment extends PageFragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         Bundle data = new Bundle(); // Данные которые будут переданы другому фрагменту
+        TypeGood typeGood = null;
 
         // Определение типа товара который хочет найти пользователь
         switch (view.getId())
         {
             case R.id.fragment_shop_cpu:
-                data.putString("typeGood", TypeGood.CPU.toString());
+                typeGood = TypeGood.CPU;
                 break;
             case R.id.fragment_shop_gpu:
-                data.putString("typeGood", TypeGood.GPU.toString());
+                typeGood = TypeGood.GPU;
                 break;
             case R.id.fragment_shop_motherboard:
-                data.putString("typeGood", TypeGood.MOTHERBOARD.toString());
+                typeGood = TypeGood.MOTHERBOARD;
                 break;
             case R.id.fragment_shop_hdd:
-                data.putString("typeGood", TypeGood.HDD.toString());
+                typeGood = TypeGood.HDD;
                 break;
             case R.id.fragment_shop_ssd:
-                data.putString("typeGood", TypeGood.SSD.toString());
+                typeGood = TypeGood.SSD;
                 break;
             case R.id.fragment_shop_ram:
-                data.putString("typeGood", TypeGood.RAM.toString());
+                typeGood = TypeGood.RAM;
                 break;
             case R.id.fragment_shop_power_supply:
-                data.putString("typeGood", TypeGood.POWER_SUPPLY.toString());
+                typeGood = TypeGood.POWER_SUPPLY;
                 break;
             default:
                 return;
         }
 
-        frListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data);
+        data.putSerializable("typeGood", typeGood);
+        frListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
     }
 }

@@ -19,7 +19,8 @@ public interface OnFragmentInteractionListener {
         SET_PAGER,
         OPEN_SELECTED_PAGE,
         NEXT_FRAGMENT_HIDE,
-        NEXT_FRAGMENT_REPLACE
+        NEXT_FRAGMENT_REPLACE,
+        RETURN_FRAGMENT_BY_TAG
     }
 
     /* Метод для общения с активити
@@ -36,6 +37,7 @@ public interface OnFragmentInteractionListener {
      * fragmentReceiver - Фрагмент с которым хотят взаимодействовать
      * data - данные, если они необходимы
      * action - одна из констант действий
+     * backStackTag - тег для стека вызовов фрагментов
      * */
-    void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReceiver, Action action,  Bundle data);
+    void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReceiver, Action action,  Bundle data, String backStackTag);
 }

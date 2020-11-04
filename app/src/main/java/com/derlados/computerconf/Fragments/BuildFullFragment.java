@@ -1,11 +1,16 @@
 package com.derlados.computerconf.Fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -17,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.derlados.computerconf.Constants.TypeGood;
+import com.derlados.computerconf.Objects.Build;
 import com.derlados.computerconf.Objects.Good;
 import com.derlados.computerconf.Objects.UserData;
 import com.derlados.computerconf.R;
@@ -25,11 +31,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class BuildFullFragment extends Fragment {
+public class BuildFullFragment extends Fragment implements TextWatcher {
 
     private final String DATA_TYPE_GOOD_KEY = "typeGood";
     private OnFragmentInteractionListener fragmentListener;
-    private View fragment;
+    private View currentFragment;
+    private UserData userData;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -39,18 +46,31 @@ public class BuildFullFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragment = inflater.inflate(R.layout.fragment_build_full, container, false);
+        currentFragment = inflater.inflate(R.layout.fragment_build_full, container, false);
+        userData = UserData.getUserData();
         setBuildContent();
-        return fragment;
+        return currentFragment;
     }
 
     // Установка всего контента который находится в сборке, установка всех обработчиков нажатий
     private void setBuildContent() {
 
+        // Установка значений в текстовые поля (имя сборки, цена, описание, статус завершенности)
+        ((EditText) currentFragment.findViewById(R.id.fragment_build_full_et_name_build)).setText(userData.getCurrentBuild().getName());
+        ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", userData.getCurrentBuild().getPrice()));
+        ((EditText) currentFragment.findViewById(R.id.fragment_build_full_et_desc)).setText(userData.getCurrentBuild().getDescription());
+
+        // Установка статуса завершенности сборки
+        if (userData.getCurrentBuild().isComplete())
+            ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_complete_status)).setText(getResources().getString(R.string.complete));
+        else
+            ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_complete_status)).setText(getResources().getString(R.string.not_complete));
+
+
         // Установка обработчиков для кнопок скрытия/раскрытия блоков (невозможно прямо прописать в xml, так как это всё реализовано на фрагменте)
 
         // Структура блока описания (0 - текст "Описание", 1 - поле для ввода описания. Далее четные кнопки хедеры блоков, нечетные - содержание каждого блока (Linear layout))
-        LinearLayout fullDesc = fragment.findViewById(R.id.fragment_build_full_ll_full_desc);
+        LinearLayout fullDesc = currentFragment.findViewById(R.id.fragment_build_full_ll_full_desc);
         for (int i = 2; i < fullDesc.getChildCount(); i += 2)
             fullDesc.getChildAt(i).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -63,11 +83,12 @@ public class BuildFullFragment extends Fragment {
         for (int i = 3; i < fullDesc.getChildCount(); i += 2) {
             LinearLayout block = (LinearLayout) fullDesc.getChildAt(i);
             TypeGood type = getTypeGood(block.getId());
-            ArrayList<Good> goodList = UserData.getUserData().addBuild().getGoodList(type);
+            ArrayList<Good> goodList = UserData.getUserData().getCurrentBuild().getGoodList(type);
 
             for (int j = 0; j < goodList.size(); ++j)
-                createGoodUI(goodList.get(j), block);
+                createGoodUI(goodList.get(j), block, j);
 
+            // Кнопка на добавление нового комплектующего (ереводит на магазин)
             block.getChildAt(block.getChildCount() - 1).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -75,10 +96,12 @@ public class BuildFullFragment extends Fragment {
                 }
             });
         }
+
+
     }
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
-    private void createGoodUI(Good good, LinearLayout goodsContainer) {
+    private void createGoodUI(Good good, LinearLayout goodsContainer, int index) {
         RelativeLayout blank = (RelativeLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
 
         //TODO
@@ -119,8 +142,9 @@ public class BuildFullFragment extends Fragment {
         ((TextView) blank.findViewById(R.id.inflate_good_blank_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", good.getPrice()));
 
         // Установка изображения
-        ((ImageView) blank.findViewById(R.id.inflate_good_blank_img)).setImageBitmap(good.getImage());
-        goodsContainer.addView(blank);
+        Bitmap bitmap = good.getImage();
+        ((ImageView) blank.findViewById(R.id.inflate_good_blank_img)).setImageBitmap(bitmap);
+        goodsContainer.addView(blank, index);
     }
 
     // Обработчик кнопок на визуальное отображения блока комплектующих (раскрыть/скрыть)
@@ -145,9 +169,9 @@ public class BuildFullFragment extends Fragment {
     public void pickGood(View view) {
         LinearLayout block = (LinearLayout) view.getParent();
         Bundle data = new Bundle();
-        data.putString(DATA_TYPE_GOOD_KEY, getTypeGood(block.getId()).toString());
+        data.putSerializable(DATA_TYPE_GOOD_KEY, getTypeGood(block.getId()));
 
-        fragmentListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data);
+        fragmentListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_REPLACE, data, null);
     }
 
     // Получение типа комплектующего с которым происходит взаимодействие
@@ -176,8 +200,38 @@ public class BuildFullFragment extends Fragment {
             case R.id.fragment_build_full_ll_power_supply:
                 typeGood = TypeGood.POWER_SUPPLY;
                 break;
+            case R.id.fragment_build_full_ll_other:
+                typeGood = TypeGood.OTHERS;
+                break;
         }
 
         return typeGood;
+    }
+
+    //TODO
+    // Для отслеживания изменений в текстовых поля Описани и названия сборки
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+        // Нахождение нужного EditText
+        View view = getActivity().getCurrentFocus();
+        String text = ((EditText) view).getText().toString();
+
+        // Определение того, какое поле меняет юзер
+        if (view.getId() == R.id.fragment_build_full_et_desc)
+            userData.getCurrentBuild().setDescription(text);
+        else if (view.getId() == R.id.fragment_build_full_et_name_build) {
+            userData.getCurrentBuild().setDescription(text);
+        }
     }
 }
