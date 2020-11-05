@@ -126,5 +126,6 @@ public class FullDataFragment extends Fragment {
     private void backToBuild() {
         Bundle data = new Bundle();
         data.putString("tag", "Build");
+        fragmentListener.onActivityInteraction(this, OnFragmentInteractionListener.Action.RETURN_FRAGMENT_BY_TAG, data);
     }
 }

@@ -38,6 +38,9 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     private View currentFragment;
     private UserData userData;
 
+    private TypeGood typeGoodToModify;
+    private LinearLayout containerToModify;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -50,6 +53,14 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         userData = UserData.getUserData();
         setBuildContent();
         return currentFragment;
+    }
+
+    //TODO
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (typeGoodToModify != null && containerToModify != null && !hidden)
+            modifyBuildContent(typeGoodToModify, containerToModify);
     }
 
     // Установка всего контента который находится в сборке, установка всех обработчиков нажатий
@@ -100,6 +111,16 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
 
     }
 
+    private void modifyBuildContent(TypeGood typeGoodToModify, LinearLayout containerToModify) {
+        while (containerToModify.getChildCount() != 1)
+            containerToModify.removeViewAt(0);
+
+        ArrayList<Good> goodList = UserData.getUserData().getCurrentBuild().getGoodList(typeGoodToModify);
+
+        for (int j = 0; j < goodList.size(); ++j)
+            createGoodUI(goodList.get(j), containerToModify, j);
+    }
+
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
     private void createGoodUI(Good good, LinearLayout goodsContainer, int index) {
         RelativeLayout blank = (RelativeLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
@@ -142,8 +163,9 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         ((TextView) blank.findViewById(R.id.inflate_good_blank_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", good.getPrice()));
 
         // Установка изображения
-        Bitmap bitmap = good.getImage();
-        ((ImageView) blank.findViewById(R.id.inflate_good_blank_img)).setImageBitmap(bitmap);
+        //TODO
+        // Попробовать качать из памяти битмап
+        ((ImageView) blank.findViewById(R.id.inflate_good_blank_img)).setImageBitmap(good.getImage());
         goodsContainer.addView(blank, index);
     }
 
@@ -167,11 +189,13 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
 
     // Обработчик кнопок на добавление комплектующих - переходит на страницу поиска товаров. Тип комплектующего выбирается по id отцовского контейнера
     public void pickGood(View view) {
-        LinearLayout block = (LinearLayout) view.getParent();
-        Bundle data = new Bundle();
-        data.putSerializable(DATA_TYPE_GOOD_KEY, getTypeGood(block.getId()));
+        containerToModify = (LinearLayout) view.getParent();
+        typeGoodToModify = getTypeGood(containerToModify.getId());
 
-        fragmentListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_REPLACE, data, null);
+        Bundle data = new Bundle();
+        data.putSerializable(DATA_TYPE_GOOD_KEY, typeGoodToModify);
+
+        fragmentListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
     }
 
     // Получение типа комплектующего с которым происходит взаимодействие

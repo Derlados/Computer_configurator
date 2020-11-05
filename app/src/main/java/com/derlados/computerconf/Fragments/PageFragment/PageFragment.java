@@ -21,8 +21,7 @@ public abstract class PageFragment extends Fragment {
     * Параметры:
     * numPage - номер страницы
     * */
-    public static PageFragment newInstanse(int numPage)
-    {
+    public static PageFragment newInstanse(int numPage) {
         PageFragment pageFragment = null;
 
         // Взятие нужной константы (для читабельности кода и легкости изменений меню)
