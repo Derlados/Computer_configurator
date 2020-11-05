@@ -8,9 +8,10 @@ import java.util.HashMap;
 public class Good {
 
     private String name;
-    private String imageUrl; // ссылка на скачивание изображения
     private double price;
     private String urlFullData; // ссылка на скачивание полных данных о комплектующем
+    private String imageUrl; // ссылка на скачивание изображения
+    private Bitmap image; // скачанное изображение
 
     /* Ассоциативные массивы
      * previewData - превью данные (характеристика:значение)
@@ -27,8 +28,6 @@ public class Good {
     private ArrayList<dataBlock> fullData;
 
 
-
-    private Bitmap image; // скачанное изображение
 
     public String getName() {
         return name;

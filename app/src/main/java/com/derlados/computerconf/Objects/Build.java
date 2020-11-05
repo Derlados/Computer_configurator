@@ -1,6 +1,7 @@
 package com.derlados.computerconf.Objects;
 
 import android.animation.TypeEvaluator;
+import android.graphics.Bitmap;
 import android.util.TypedValue;
 
 import com.derlados.computerconf.Constants.TypeGood;
@@ -98,4 +99,7 @@ public class Build {
         this.description = description;
     }
 
+    public HashMap<TypeGood, ArrayList<Good>> getGoods() {
+        return goods;
+    }
 }

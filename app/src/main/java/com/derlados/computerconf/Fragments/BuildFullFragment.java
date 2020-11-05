@@ -1,11 +1,9 @@
 package com.derlados.computerconf.Fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.derlados.computerconf.Constants.TypeGood;
-import com.derlados.computerconf.Objects.Build;
 import com.derlados.computerconf.Objects.Good;
 import com.derlados.computerconf.Objects.UserData;
 import com.derlados.computerconf.R;
@@ -36,10 +33,12 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     private final String DATA_TYPE_GOOD_KEY = "typeGood";
     private OnFragmentInteractionListener fragmentListener;
     private View currentFragment;
-    private UserData userData;
+    private UserData userData; // Данные пользователя, чтобы не вызывать много раз getInstance()
 
+    // Поля для модифицакции после возврата с меню выбора комплектующего
     private TypeGood typeGoodToModify;
     private LinearLayout containerToModify;
+    private TextView tvPtice; // Текстовое поле с ценой
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -55,12 +54,21 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         return currentFragment;
     }
 
-    //TODO
+    @Override
+    public void onDestroy() {
+        userData.saveCurrentBuild(getActivity().getApplicationContext()); // Сохранение сборки перед выходом
+        super.onDestroy();
+    }
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (typeGoodToModify != null && containerToModify != null && !hidden)
-            modifyBuildContent(typeGoodToModify, containerToModify);
+
+        // Изменение данных сборки после возврата с меню Shop. Изменения должны происходить если окно было показано и это не первый заход в данное окно
+        if (typeGoodToModify != null && containerToModify != null && !hidden) {
+            tvPtice.setText(String.format(Locale.getDefault(), "%.2f ГРН", userData.getCurrentBuild().getPrice()));
+            setBuildBlockContent(typeGoodToModify, containerToModify);
+        }
     }
 
     // Установка всего контента который находится в сборке, установка всех обработчиков нажатий
@@ -68,7 +76,8 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
 
         // Установка значений в текстовые поля (имя сборки, цена, описание, статус завершенности)
         ((EditText) currentFragment.findViewById(R.id.fragment_build_full_et_name_build)).setText(userData.getCurrentBuild().getName());
-        ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", userData.getCurrentBuild().getPrice()));
+        tvPtice = ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_price));
+        tvPtice.setText(String.format(Locale.getDefault(), "%.2f ГРН", userData.getCurrentBuild().getPrice()));
         ((EditText) currentFragment.findViewById(R.id.fragment_build_full_et_desc)).setText(userData.getCurrentBuild().getDescription());
 
         // Установка статуса завершенности сборки
@@ -94,10 +103,8 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         for (int i = 3; i < fullDesc.getChildCount(); i += 2) {
             LinearLayout block = (LinearLayout) fullDesc.getChildAt(i);
             TypeGood type = getTypeGood(block.getId());
-            ArrayList<Good> goodList = UserData.getUserData().getCurrentBuild().getGoodList(type);
 
-            for (int j = 0; j < goodList.size(); ++j)
-                createGoodUI(goodList.get(j), block, j);
+            setBuildBlockContent(type, block);
 
             // Кнопка на добавление нового комплектующего (ереводит на магазин)
             block.getChildAt(block.getChildCount() - 1).setOnClickListener(new View.OnClickListener() {
@@ -107,18 +114,18 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
                 }
             });
         }
-
-
     }
 
-    private void modifyBuildContent(TypeGood typeGoodToModify, LinearLayout containerToModify) {
-        while (containerToModify.getChildCount() != 1)
-            containerToModify.removeViewAt(0);
+    // Добавление списка выбранных комплектующих в небходимый блок
+    private void setBuildBlockContent(TypeGood typeGood, LinearLayout container) {
+        // Очистка от старых данные сли они есть
+        while (container.getChildCount() != 1)
+            container.removeViewAt(0);
 
-        ArrayList<Good> goodList = UserData.getUserData().getCurrentBuild().getGoodList(typeGoodToModify);
-
+        // Добавление комплектующих
+        ArrayList<Good> goodList = UserData.getUserData().getCurrentBuild().getGoodList(typeGood);
         for (int j = 0; j < goodList.size(); ++j)
-            createGoodUI(goodList.get(j), containerToModify, j);
+            createGoodUI(goodList.get(j), container, j);
     }
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
@@ -233,7 +240,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     }
 
     //TODO
-    // Для отслеживания изменений в текстовых поля Описани и названия сборки
+    // Может необходимо производить контроль и ограничить количество символов для имени сборки
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
