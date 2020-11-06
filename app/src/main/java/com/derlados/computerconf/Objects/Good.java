@@ -9,9 +9,10 @@ public class Good {
 
     private String name;
     private double price;
-    private String urlFullData; // ссылка на скачивание полных данных о комплектующем
-    private String imageUrl; // ссылка на скачивание изображения
-    private Bitmap image; // скачанное изображение
+    private String urlFullData; // Ссылка на скачивание полных данных о комплектующем
+    private String imageUrl; // Ссылка на скачивание изображения
+    private String imageName; // Название изображения
+    transient private  Bitmap image; // Скачанное изображение
 
     /* Ассоциативные массивы
      * previewData - превью данные (характеристика:значение)
@@ -57,6 +58,10 @@ public class Good {
         return image;
     }
 
+    public String getImageName() {
+        return imageName;
+    }
+
     public void setFullData(ArrayList<dataBlock>  fullData) {
         this.fullData = fullData;
     }
@@ -64,4 +69,5 @@ public class Good {
     public void setImage(Bitmap image) {
         this.image = image;
     }
+
 }

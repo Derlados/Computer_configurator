@@ -1,6 +1,7 @@
 package com.derlados.computerconf.Fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class FullDataFragment extends Fragment {
+public class FullGoodDataFragment extends Fragment {
 
     Good currentGood; // Текущий товар который отображается
     LinearLayout dataContainer; // Контейнер в который помещается все характеристики товара
@@ -49,7 +50,9 @@ public class FullDataFragment extends Fragment {
 
         if (getArguments() != null) {
             String jsonGood = getArguments().getString("good");
+            String jsonBmp = getArguments().getString("imageGood");
             currentGood = (new Gson()).fromJson(jsonGood, Good.class);
+            currentGood.setImage((new Gson()).fromJson(jsonBmp, Bitmap.class));
             dataContainer = fragment.findViewById(R.id.fragment_full_data_main_container);
             typeGood = (TypeGood) getArguments().get("typeGood");
         }
@@ -67,7 +70,7 @@ public class FullDataFragment extends Fragment {
         getView().findViewById(R.id.fragment_full_data_bt_add_to_build).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserData.getUserData().getCurrentBuild().addToBuild(typeGood, currentGood);
+                UserData.getUserData(getActivity().getApplicationContext()).getCurrentBuild().addToBuild(typeGood, currentGood);
                 Toast.makeText(getActivity().getApplicationContext(), "Добавлено в сборку", Toast.LENGTH_SHORT).show();
                 backToBuild();
             }

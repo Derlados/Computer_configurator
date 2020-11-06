@@ -49,14 +49,14 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         currentFragment = inflater.inflate(R.layout.fragment_build_full, container, false);
-        userData = UserData.getUserData();
+        userData = UserData.getUserData(getActivity().getApplicationContext());
         setBuildContent();
         return currentFragment;
     }
 
     @Override
     public void onDestroy() {
-        userData.saveCurrentBuild(getActivity().getApplicationContext()); // Сохранение сборки перед выходом
+        userData.saveCurrentBuild(); // Сохранение сборки перед выходом
         super.onDestroy();
     }
 
@@ -75,10 +75,16 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     private void setBuildContent() {
 
         // Установка значений в текстовые поля (имя сборки, цена, описание, статус завершенности)
-        ((EditText) currentFragment.findViewById(R.id.fragment_build_full_et_name_build)).setText(userData.getCurrentBuild().getName());
+        EditText tvName = ((EditText) currentFragment.findViewById(R.id.fragment_build_full_et_name_build));
+        tvName.setText(userData.getCurrentBuild().getName());
+        tvName.addTextChangedListener(this);
+
         tvPtice = ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_price));
         tvPtice.setText(String.format(Locale.getDefault(), "%.2f ГРН", userData.getCurrentBuild().getPrice()));
-        ((EditText) currentFragment.findViewById(R.id.fragment_build_full_et_desc)).setText(userData.getCurrentBuild().getDescription());
+
+        EditText tvDesc = ((EditText) currentFragment.findViewById(R.id.fragment_build_full_et_desc));
+        tvDesc.setText(userData.getCurrentBuild().getDescription());
+        tvDesc.addTextChangedListener(this);
 
         // Установка статуса завершенности сборки
         if (userData.getCurrentBuild().isComplete())
@@ -123,7 +129,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
             container.removeViewAt(0);
 
         // Добавление комплектующих
-        ArrayList<Good> goodList = UserData.getUserData().getCurrentBuild().getGoodList(typeGood);
+        ArrayList<Good> goodList = UserData.getUserData(getActivity().getApplicationContext()).getCurrentBuild().getGoodList(typeGood);
         for (int j = 0; j < goodList.size(); ++j)
             createGoodUI(goodList.get(j), container, j);
     }
@@ -262,7 +268,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         if (view.getId() == R.id.fragment_build_full_et_desc)
             userData.getCurrentBuild().setDescription(text);
         else if (view.getId() == R.id.fragment_build_full_et_name_build) {
-            userData.getCurrentBuild().setDescription(text);
+            userData.getCurrentBuild().setName(text);
         }
     }
 }

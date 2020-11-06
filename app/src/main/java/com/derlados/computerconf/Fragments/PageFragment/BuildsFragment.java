@@ -41,7 +41,7 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
         // Переход на страницу создания/редактирования сборки
         if (view.getId() == R.id.fragment_builds_float_bt) {
             frListener.onFragmentInteraction(this, new BuildFullFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, null, "Build");
-            UserData.getUserData().addBuild();
+            UserData.getUserData(getActivity().getApplicationContext()).addBuild();
         }
     }
 }

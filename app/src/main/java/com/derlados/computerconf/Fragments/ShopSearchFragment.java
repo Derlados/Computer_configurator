@@ -29,7 +29,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -70,7 +69,8 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
     // Загрузка страницы (загрузка всех превью данных для отображения на странице)
     private void downloadPage(TypeGood typeGood, Direction dir, Integer page) {
-         goodsContainer.removeAllViews();// Очистка фрагмента фрагмента
+        goodsContainer.removeAllViews();// Очистка фрагмента фрагмента
+        goodsList.clear();
 
         // Выбор страницы которую необходимо загрузить
         switch (dir) {
@@ -261,10 +261,15 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         switch (view.getId())
         {
             case R.id.inflate_good_blank_rl_blank:
+                // Отправка объекта в следующий фрагмет для отображения полной информации о нем
                 Bundle data = new Bundle();
-                data.putString("good", (new Gson()).toJson(goodsList.get(goodsContainer.indexOfChild(view)))); // Объект передается в виде json строки, сам берется относительно его положения в контейнере
+                Gson gson = new Gson();
+                Good sendGood = goodsList.get(goodsContainer.indexOfChild(view)); // Объект получается по индексу вьюшки бланка в списке
+                data.putString("good", gson.toJson(sendGood)); // Объект передается в виде json строки, сам берется относительно его положения в контейнере
+                data.putString("imageGood", gson.toJson(sendGood.getImage())); // Изображение отправляется отдельно так как не серализуется в классе
                 data.putSerializable("typeGood", typeGood);
-                fragmentListener.onFragmentInteraction(this, new FullDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
+
+                fragmentListener.onFragmentInteraction(this, new FullGoodDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
                 break;
             case R.id.inflate_flip_page_navigator_ibt_next:
                 downloadPage(typeGood, Direction.NEXT, null);
