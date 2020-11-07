@@ -40,7 +40,7 @@
         public function toJson()
         {
             $arrayData = parent::toJson();
-            $previewData = array('stats' => [
+            $previewData = array('previewData' => [
                 'Сокет' => $this->socket,
                 'Ядер(потоков)' => ($this->cores . '(' . $this->threads . ')'),
                 'Частота' => ($this->frequency . ' ГГц'),

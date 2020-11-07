@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_bottom_navigator_action_builds"
+        android:title="@string/go_brain_com"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_redo_24"/>
+
+    <item
+        android:id="@+id/menu_bottom_navigator_action_shop"
+        android:title="@string/save"
+        android:enabled="true"
+        android:icon="@drawable/ic_save_24"/>
+
+</menu>

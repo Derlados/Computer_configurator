@@ -1,10 +1,10 @@
 package com.derlados.computerconf.Fragments;
 
-import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.pdf.PdfDocument;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.derlados.computerconf.Good.Good;
+import com.derlados.computerconf.Constants.TypeGood;
+import com.derlados.computerconf.Objects.Good;
 import com.derlados.computerconf.Managers.RequestHelper;
 import com.derlados.computerconf.R;
 import com.google.gson.Gson;
@@ -29,12 +29,9 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -51,14 +48,13 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     int currentPage = 1, maxPages;
 
     LinearLayout goodsContainer; // XML контейнер (лаяут) в который ложаться все товары
-    String typeGood; // Тип комплектующего на текущей странице
+    TypeGood typeGood; // Тип комплектующего на текущей странице
     ArrayList<Good> goodsList = new ArrayList<>(); // Список с комплектующими
 
     OnFragmentInteractionListener fragmentListener;
 
     @Override
-    public void onAttach(@NonNull Context context)
-    {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         fragmentListener = (OnFragmentInteractionListener) context;
     }
@@ -67,14 +63,15 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.fragment_shop_search, container, false);
         goodsContainer = fragment.findViewById(R.id.fragment_shop_search_goods_container);
-        typeGood = getArguments().getString("typeGood");
+        typeGood = (TypeGood) getArguments().get("typeGood");
         downloadPage(typeGood, Direction.CURRENT, null);
         return fragment;
     }
 
     // Загрузка страницы (загрузка всех превью данных для отображения на странице)
-    private void downloadPage(String typeGood, Direction dir, Integer page) {
-         goodsContainer.removeAllViews();// Очистка фрагмента фрагмента
+    private void downloadPage(TypeGood typeGood, Direction dir, Integer page) {
+        goodsContainer.removeAllViews();// Очистка фрагмента фрагмента
+        goodsList.clear();
 
         // Выбор страницы которую необходимо загрузить
         switch (dir) {
@@ -93,8 +90,9 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
         }
 
-        // Загрузка страницы
-        String apiUrl = RequestHelper.MAIN_URL + String.format("goods?typeGood=%s&page=%d", typeGood, currentPage);
+        //TODO
+        // Загрузка страницы, вынести в отдельный класс с потоками
+        String apiUrl = RequestHelper.MAIN_URL + String.format("goods?typeGood=%s&page=%d", typeGood.toString(), currentPage);
         RequestHelper.getRequest(getContext(), apiUrl, RequestHelper.TypeRequest.STRING, new RequestHelper.CallBack<String>() {
 
             @Override
@@ -117,14 +115,24 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Проблемы с сервером", Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(getContext(), "Проблемы с сервером", Toast.LENGTH_SHORT).show();
+                    }
+                    catch (Exception ex) {
+                        Log.e("error", ex.toString());
+                    }
                 }
 
             }
 
             @Override
             public void fail(String message) {
-                Toast.makeText(getContext(), "Проблемы с сервером", Toast.LENGTH_SHORT).show();
+                try {
+                    Toast.makeText(getContext(), "Проблемы с сервером", Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e) {
+                    Log.e("error", e.toString());
+                }
             }
         });
     }
@@ -134,7 +142,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         RelativeLayout blank = (RelativeLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
         blank.setOnClickListener(this);
         //Взятие основной таблицы информации об комплектующем
-        TableLayout tableData = (TableLayout)blank.getChildAt(1);
+        TableLayout tableData = (TableLayout)blank.findViewById(R.id.inflate_good_blank_tr_data);
 
         // Установка имени
         TextView nameText = (TextView) ((TableRow)tableData.getChildAt(0)).getChildAt(0);
@@ -165,12 +173,13 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         }
 
         // Установка рейтинга и цены
-        ((TextView) blank.getChildAt(2)).setText(String.format(Locale.getDefault(), "%.2f ГРН", good.getPrice()));
+        ((TextView) blank.findViewById(R.id.inflate_good_blank_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", good.getPrice()));
 
-        loadImage((ImageView) blank.getChildAt(0), good);
+        loadImage((ImageView) blank.findViewById(R.id.inflate_good_blank_img), good);
 
         goodsContainer.addView(blank);
     }
+
 
     /* Загрузка панели для выбора страниц и её настройка
     * Вид панели для выбора страницы:
@@ -228,12 +237,11 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     }
     //TODO
     // Загрузку нужно будет вынести в отдельный класс с потоками
-    public void loadImage(final ImageView imageView, final Good good) {
+    public void loadImage(final ImageView imageView, Good good) {
         RequestHelper.getRequest(getContext(), good.getImageUrl(), RequestHelper.TypeRequest.IMAGE, new RequestHelper.CallBack<Bitmap>() {
 
             @Override
             public void call(Bitmap response) {
-                good.setImage(response);
                 imageView.setImageBitmap(response);
             }
 
@@ -253,9 +261,17 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         switch (view.getId())
         {
             case R.id.inflate_good_blank_rl_blank:
+                ImageView iv = view.findViewById(R.id.inflate_good_blank_img);
+                Bitmap image = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+
+                // Отправка объекта в следующий фрагмет для отображения полной информации о нем
                 Bundle data = new Bundle();
-                data.putString("good", (new Gson()).toJson(goodsList.get(0)));
-                fragmentListener.onFragmentInteraction(this, new FullDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data);
+                Gson gson = new Gson();
+                Good sendGood = goodsList.get(goodsContainer.indexOfChild(view)); // Объект получается по индексу вьюшки бланка в списке
+                sendGood.setImage(image); // Добавление изображения //TODO надо что то с этим конкретно сделать
+                data.putString("good", gson.toJson(sendGood)); // Объект передается в виде json строки, сам берется относительно его положения в контейнере
+                data.putSerializable("typeGood", typeGood);
+                fragmentListener.onFragmentInteraction(this, new FullGoodDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
                 break;
             case R.id.inflate_flip_page_navigator_ibt_next:
                 downloadPage(typeGood, Direction.NEXT, null);

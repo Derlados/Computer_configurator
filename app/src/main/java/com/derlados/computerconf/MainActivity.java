@@ -1,5 +1,6 @@
 package com.derlados.computerconf;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -12,11 +13,12 @@ import com.derlados.computerconf.Fragments.MainMenuFragment;
 import com.derlados.computerconf.Fragments.OnFragmentInteractionListener;
 import com.derlados.computerconf.Fragments.PageFragment.MenuPageAdapter;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
     FragmentManager fragmentManager = getSupportFragmentManager();
     Fragment mainMenuFragment;
-    ViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +37,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
-    public void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReciver,  Action action, Bundle data) {
+    public void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReceiver, Action action, Bundle data, String backStackTag) {
         FragmentTransaction fTrans = fragmentManager.beginTransaction();
-        fragmentReciver.setArguments(data);
+        if (fragmentReceiver != null)
+            fragmentReceiver.setArguments(data);
 
         switch (action)
         {
@@ -47,33 +50,22 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
                 else
                     fTrans.hide(fragmentSource);
 
-                fTrans.add(R.id.activity_main_ll_container, fragmentReciver);
-
-                fTrans.addToBackStack(null);   // Добавление изменнений в стек
+                fTrans.add(R.id.activity_main_ll_container, fragmentReceiver);
+                fTrans.addToBackStack(backStackTag);   // Добавление изменнений в стек
                 fTrans.commit();
                 break;
             case NEXT_FRAGMENT_REPLACE:
-                fTrans.replace(R.id.activity_main_ll_container, fragmentReciver);
-                fTrans.addToBackStack(null);   // Добавление изменнений в стек
+                fTrans.replace(R.id.activity_main_ll_container, fragmentReceiver);
+                fTrans.addToBackStack(backStackTag);   // Добавление изменнений в стек
                 fTrans.commit();
                 break;
-        }
-    }
-
-    @Override
-    public void onActivityInteraction(Fragment fragmentSource, Action action, Bundle data) {
-        switch (action)
-        {
-            case SET_PAGER:
-                pager = fragmentSource.getView().findViewById(R.id.fragment_main_menu_pager);
-                pager.setAdapter(new MenuPageAdapter(getSupportFragmentManager()));
-                break;
-            case OPEN_SELECTED_PAGE:
-                int page = data.getInt("page");
-                if (Math.abs(page - pager.getCurrentItem()) > 1)
-                    pager.setCurrentItem(data.getInt("page"), false);
-                else
-                    pager.setCurrentItem(data.getInt("page"), true);
+            case RETURN_FRAGMENT_BY_TAG:
+                for (int i = fragmentManager.getBackStackEntryCount() - 1; i >= 1; --i) {
+                    if (fragmentManager.getBackStackEntryAt(i).getName() == null || !fragmentManager.getBackStackEntryAt(i).getName().equalsIgnoreCase(backStackTag))
+                        fragmentManager.popBackStack();
+                    else
+                        break;
+                }
                 break;
         }
     }

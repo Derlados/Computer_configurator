@@ -6,31 +6,37 @@
         const HDD = 'HDD';
         const SSD = 'SSD';
         const RAM = 'RAM';
-        const MB = 'MB';
-        const PS = 'PS';
+        const MB = 'MOTHERBOARD';
+        const PS = 'POWER_SUPPLY';
     }
 
     class Good 
     {
         private $name;
-        private $image;
+        private $imageUrl;
+        private $imageName;
         private $price;
         private $urlFullData;
 
 
-        public function __construct($name, $image, $price, $urlFullData)
+        public function __construct($name, $imageUrl, $price, $urlFullData)
         {
             $this->name = $name;
-            $this->image = $image;
+            $this->imageUrl = $imageUrl;
             $this->price = $price;
-            $this->$urlFullData = $urlFullData;
+            $this->urlFullData = $urlFullData;
+
+            // Имя является последним параметром URL
+            $splitUrl = explode('/', $imageUrl);
+            $this->imageName = $splitUrl[count($splitUrl) - 1];
         }
 
         public function toJson()
         {
             return array(
                 'name' => $this->name,
-                'imageUrl' => $this->image,
+                'imageUrl' => $this->imageUrl,
+                'imageName' => $this->imageName,
                 'price' => $this->price,
                 'urlFullData' => $this->urlFullData
             );

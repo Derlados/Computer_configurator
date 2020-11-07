@@ -8,21 +8,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.derlados.computerconf.Constants.TypeGood;
 import com.derlados.computerconf.Fragments.OnFragmentInteractionListener;
 import com.derlados.computerconf.Fragments.ShopSearchFragment;
 import com.derlados.computerconf.R;
 
 public class ShopFragment extends PageFragment implements View.OnClickListener {
 
-    enum TypeGood {
-        CPU,
-        GPU,
-        MOTHERBOARD,
-        HHD,
-        SSD,
-        RAM,
-        POWER_SUPPLY
-    }
     OnFragmentInteractionListener frListener;
 
     @Override
@@ -49,35 +41,37 @@ public class ShopFragment extends PageFragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         Bundle data = new Bundle(); // Данные которые будут переданы другому фрагменту
+        TypeGood typeGood = null;
 
         // Определение типа товара который хочет найти пользователь
         switch (view.getId())
         {
             case R.id.fragment_shop_cpu:
-                data.putString("typeGood", "CPU");
+                typeGood = TypeGood.CPU;
                 break;
             case R.id.fragment_shop_gpu:
-                data.putString("typeGood", "GPU");
+                typeGood = TypeGood.GPU;
                 break;
             case R.id.fragment_shop_motherboard:
-                data.putString("typeGood", "MB");
+                typeGood = TypeGood.MOTHERBOARD;
                 break;
             case R.id.fragment_shop_hdd:
-                data.putString("typeGood", "HDD");
+                typeGood = TypeGood.HDD;
                 break;
             case R.id.fragment_shop_ssd:
-                data.putString("typeGood", "SSD");
+                typeGood = TypeGood.SSD;
                 break;
             case R.id.fragment_shop_ram:
-                data.putString("typeGood", "RAM");
+                typeGood = TypeGood.RAM;
                 break;
             case R.id.fragment_shop_power_supply:
-                data.putString("typeGood", "PS");
+                typeGood = TypeGood.POWER_SUPPLY;
                 break;
             default:
                 return;
         }
 
-        frListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data);
+        data.putSerializable("typeGood", typeGood);
+        frListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
     }
 }
