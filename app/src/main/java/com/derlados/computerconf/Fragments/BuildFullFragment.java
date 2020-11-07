@@ -38,7 +38,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     // Поля для модифицакции после возврата с меню выбора комплектующего
     private TypeGood typeGoodToModify;
     private LinearLayout containerToModify;
-    private TextView tvPtice; // Текстовое поле с ценой
+    private TextView tvPrice; // Текстовое поле с ценой
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -49,7 +49,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         currentFragment = inflater.inflate(R.layout.fragment_build_full, container, false);
-        userData = UserData.getUserData(getActivity().getApplicationContext());
+        userData = UserData.getUserData();
         setBuildContent();
         return currentFragment;
     }
@@ -66,8 +66,9 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
 
         // Изменение данных сборки после возврата с меню Shop. Изменения должны происходить если окно было показано и это не первый заход в данное окно
         if (typeGoodToModify != null && containerToModify != null && !hidden) {
-            tvPtice.setText(String.format(Locale.getDefault(), "%.2f ГРН", userData.getCurrentBuild().getPrice()));
-            setBuildBlockContent(typeGoodToModify, containerToModify);
+            tvPrice.setText(String.format(Locale.getDefault(), "%.2f ГРН", userData.getCurrentBuild().getPrice()));
+            Good goodToModify = userData.getCurrentBuild().getGoodByIndex(typeGoodToModify, containerToModify.getChildCount() - 1);
+            createGoodUI(goodToModify, containerToModify, containerToModify.getChildCount() - 1);
         }
     }
 
@@ -79,8 +80,8 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         tvName.setText(userData.getCurrentBuild().getName());
         tvName.addTextChangedListener(this);
 
-        tvPtice = ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_price));
-        tvPtice.setText(String.format(Locale.getDefault(), "%.2f ГРН", userData.getCurrentBuild().getPrice()));
+        tvPrice = ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_price));
+        tvPrice.setText(String.format(Locale.getDefault(), "%.2f ГРН", userData.getCurrentBuild().getPrice()));
 
         EditText tvDesc = ((EditText) currentFragment.findViewById(R.id.fragment_build_full_et_desc));
         tvDesc.setText(userData.getCurrentBuild().getDescription());
@@ -108,9 +109,12 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         // Загрузка всех данных сборки в каждый блок комплектующих
         for (int i = 3; i < fullDesc.getChildCount(); i += 2) {
             LinearLayout block = (LinearLayout) fullDesc.getChildAt(i);
-            TypeGood type = getTypeGood(block.getId());
+            TypeGood typeGood = getTypeGood(block.getId());
 
-            setBuildBlockContent(type, block);
+            // Добавление комплектующих
+            ArrayList<Good> goodList = UserData.getUserData().getCurrentBuild().getGoodList(typeGood);
+            for (int j = 0; j < goodList.size(); ++j)
+                createGoodUI(goodList.get(j), block, block.getChildCount() - 1);
 
             // Кнопка на добавление нового комплектующего (ереводит на магазин)
             block.getChildAt(block.getChildCount() - 1).setOnClickListener(new View.OnClickListener() {
@@ -122,23 +126,12 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         }
     }
 
-    // Добавление списка выбранных комплектующих в небходимый блок
-    private void setBuildBlockContent(TypeGood typeGood, LinearLayout container) {
-        // Очистка от старых данные сли они есть
-        while (container.getChildCount() != 1)
-            container.removeViewAt(0);
-
-        // Добавление комплектующих
-        ArrayList<Good> goodList = UserData.getUserData(getActivity().getApplicationContext()).getCurrentBuild().getGoodList(typeGood);
-        for (int j = 0; j < goodList.size(); ++j)
-            createGoodUI(goodList.get(j), container, j);
-    }
-
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
     private void createGoodUI(Good good, LinearLayout goodsContainer, int index) {
         RelativeLayout blank = (RelativeLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
 
         //TODO
+        // Сделать отображение полной статистики при нажатии на бланк комплектующего
         //blank.setOnClickListener(this);
 
         //Взятие основной таблицы информации об комплектующем
@@ -177,8 +170,8 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
 
         // Установка изображения
         //TODO
-        // Попробовать качать из памяти битмап
-        ((ImageView) blank.findViewById(R.id.inflate_good_blank_img)).setImageBitmap(good.getImage());
+        // Придумать какой то более явный интерфейс для скачивания изображения с памяти
+        ((ImageView) blank.findViewById(R.id.inflate_good_blank_img)).setImageBitmap(userData.restoreImageFromDevice(good.getImageName()));
         goodsContainer.addView(blank, index);
     }
 

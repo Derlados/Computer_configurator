@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
+import com.derlados.computerconf.App;
 import com.derlados.computerconf.Constants.LogsKeys;
 import com.derlados.computerconf.Constants.TypeGood;
 import com.google.gson.Gson;
@@ -35,13 +36,13 @@ public class UserData {
 
     static UserData instance;
     private UserData() {}
-    public static UserData getUserData(Context context) {
+    public static UserData getUserData() {
         if (instance == null) {
             instance = new UserData();
-            instance.context = context;
+            instance.context = App.getApp().getApplicationContext();
             // Создание ссылок на основные дериктории
-            instance.rootImages = context.getDir(instance.IMAGES_DIR, Context.MODE_PRIVATE);
-            instance.rootBuilds = context.getDir(instance.BUILDS_DIR, Context.MODE_PRIVATE);
+            instance.rootImages = instance.context.getDir(instance.IMAGES_DIR, Context.MODE_PRIVATE);
+            instance.rootBuilds = instance.context.getDir(instance.BUILDS_DIR, Context.MODE_PRIVATE);
 
             // Чтение сохраненных сборок
             instance.restoreBuildsFromDevice();
@@ -49,7 +50,7 @@ public class UserData {
         return instance;
     }
 
-    public Build addBuild() {
+    public Build addNewBuild() {
         builds.add(new Build());
         currentBuild = builds.get(builds.size() - 1);
         return currentBuild;
@@ -59,22 +60,35 @@ public class UserData {
         return builds;
     }
 
+    public Build getBuildByIndex(int i) {
+        return builds.get(i);
+    }
+
     public Build getCurrentBuild() {
         return currentBuild;
     }
 
+    public void setCurrentBuild(Build currentBuild) {
+        this.currentBuild = currentBuild;
+    }
+
+    public void discardCurrentBuild() {
+        currentBuild = null;
+    }
+
     // Сохранение изображений
-    public void saveImageOnDevice (Bitmap img, String imgName) {
+    public void saveImageOnDevice(Bitmap img, String imgName) {
         try {
             // Создание файла изображения
             File jpgImage = new File(rootImages, imgName);
-            if (!jpgImage.exists())
+            if (!jpgImage.exists()) {
                 jpgImage.createNewFile();
-            FileOutputStream fout = new FileOutputStream(jpgImage);
+                FileOutputStream fout = new FileOutputStream(jpgImage);
 
-            // Запись изображения
-            BitmapDrawable bmpDraw = new BitmapDrawable(context.getResources(), img);
-            bmpDraw.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, fout);
+                // Запись изображения
+                BitmapDrawable bmpDraw = new BitmapDrawable(context.getResources(), img);
+                bmpDraw.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, fout);
+            }
         }
         catch (Exception e) {
             Log.e(LogsKeys.ERROR_LOG.toString(), String.format(Locale.getDefault(),"Image %s cannot be save. Error: %s", imgName, e.toString()));
@@ -82,7 +96,7 @@ public class UserData {
     }
 
     // Сохранение всех сборок в память
-    public void saveCurrentBuild () {
+    public void saveCurrentBuild() {
         Gson gson = new Gson();
 
         // Сохраненние изображений всех комплектующих
@@ -120,7 +134,6 @@ public class UserData {
                 try {
                     BufferedReader br = new BufferedReader(new FileReader(file));
                     Build build = gson.fromJson(br, Build.class);
-                    restoreImagesInBuild(build);
                     builds.add(build);
                 }
                 catch (FileNotFoundException e) {
@@ -130,20 +143,8 @@ public class UserData {
         }
     }
 
-    // Чтение всех необходимых изображений для сборки
-    private void restoreImagesInBuild(Build build) {
-        HashMap<TypeGood, ArrayList<Good>> goodsList = build.getGoods();
-
-        for (HashMap.Entry<TypeGood, ArrayList<Good>> entry : goodsList.entrySet()) {
-            ArrayList<Good> goods = entry.getValue();
-
-            // Загрузка изображений комплектующих
-            for (int i = 0; i < goods.size(); ++i) {
-                Good good = goods.get(i);
-                Bitmap image = BitmapFactory.decodeFile(rootImages.getPath() + '/' + good.getImageName());
-                good.setImage(image);
-            }
-        }
+    // Чтение изображения с устройства
+    public Bitmap restoreImageFromDevice(String imgName) {
+        return BitmapFactory.decodeFile(rootImages.getPath() + '/' + imgName);
     }
-
 }

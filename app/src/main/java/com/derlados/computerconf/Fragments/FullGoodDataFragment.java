@@ -30,12 +30,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class FullGoodDataFragment extends Fragment {
+public class FullGoodDataFragment extends Fragment implements View.OnClickListener {
 
     Good currentGood; // Текущий товар который отображается
     LinearLayout dataContainer; // Контейнер в который помещается все характеристики товара
     TypeGood typeGood; // Тип товара
     OnFragmentInteractionListener fragmentListener;
+    UserData userData;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -47,6 +48,7 @@ public class FullGoodDataFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.fragment_full_data, container, false);
+        userData =  UserData.getUserData();
 
         if (getArguments() != null) {
             String jsonGood = getArguments().getString("good");
@@ -67,14 +69,7 @@ public class FullGoodDataFragment extends Fragment {
         setPreviewData(); // Установка превью характеристик
 
         // Обработчик нажатий кнопки
-        getView().findViewById(R.id.fragment_full_data_bt_add_to_build).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserData.getUserData(getActivity().getApplicationContext()).getCurrentBuild().addToBuild(typeGood, currentGood);
-                Toast.makeText(getActivity().getApplicationContext(), "Добавлено в сборку", Toast.LENGTH_SHORT).show();
-                backToBuild();
-            }
-        });
+        getView().findViewById(R.id.fragment_full_data_bt_add_to_build).setOnClickListener(this);
     }
 
     //TODO
@@ -126,9 +121,11 @@ public class FullGoodDataFragment extends Fragment {
         }
     }
 
-    private void backToBuild() {
-        Bundle data = new Bundle();
-        data.putString("tag", "Build");
-        fragmentListener.onActivityInteraction(this, OnFragmentInteractionListener.Action.RETURN_FRAGMENT_BY_TAG, data);
+    @Override
+    public void onClick(View view) {
+        userData.getCurrentBuild().addToBuild(typeGood, currentGood);
+        userData.saveImageOnDevice(currentGood.getImage(), currentGood.getImageName());
+        Toast.makeText(getActivity().getApplicationContext(), "Добавлено в сборку", Toast.LENGTH_SHORT).show();
+        fragmentListener.onFragmentInteraction(this, null, OnFragmentInteractionListener.Action.RETURN_FRAGMENT_BY_TAG, new Bundle(), "Build");
     }
 }

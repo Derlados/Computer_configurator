@@ -256,6 +256,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     * Нажатие на бланк - вызов подробной информации о комплектующем в новом фрагменте
     * Нажатие на панель страниц - загрузка страницы в соответствии с выбором пользователя
     * */
+
     @Override
     public void onClick(View view) {
         switch (view.getId())
@@ -268,7 +269,6 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                 data.putString("good", gson.toJson(sendGood)); // Объект передается в виде json строки, сам берется относительно его положения в контейнере
                 data.putString("imageGood", gson.toJson(sendGood.getImage())); // Изображение отправляется отдельно так как не серализуется в классе
                 data.putSerializable("typeGood", typeGood);
-
                 fragmentListener.onFragmentInteraction(this, new FullGoodDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
                 break;
             case R.id.inflate_flip_page_navigator_ibt_next:

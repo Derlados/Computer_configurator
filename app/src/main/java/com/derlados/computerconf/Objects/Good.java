@@ -1,7 +1,10 @@
 package com.derlados.computerconf.Objects;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,7 +15,7 @@ public class Good {
     private String urlFullData; // Ссылка на скачивание полных данных о комплектующем
     private String imageUrl; // Ссылка на скачивание изображения
     private String imageName; // Название изображения
-    transient private  Bitmap image; // Скачанное изображение
+    transient private Bitmap image; // Скачанное изображение
 
     /* Ассоциативные массивы
      * previewData - превью данные (характеристика:значение)
@@ -27,8 +30,6 @@ public class Good {
         public HashMap<String, String> data;
     }
     private ArrayList<dataBlock> fullData;
-
-
 
     public String getName() {
         return name;
@@ -55,7 +56,7 @@ public class Good {
     }
 
     public Bitmap getImage() {
-        return image;
+        return this.image;
     }
 
     public String getImageName() {
@@ -69,5 +70,4 @@ public class Good {
     public void setImage(Bitmap image) {
         this.image = image;
     }
-
 }

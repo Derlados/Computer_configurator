@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+
 
 public abstract class PageFragment extends Fragment {
 
@@ -28,8 +30,7 @@ public abstract class PageFragment extends Fragment {
         PageMenu page = PageMenu.values()[numPage];
 
         // Выбор подходящего фрагмента
-        switch (page)
-        {
+        switch (page) {
             case BUILDS:
                 pageFragment = new BuildsFragment();
                 break;

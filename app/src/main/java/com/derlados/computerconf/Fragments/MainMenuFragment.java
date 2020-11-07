@@ -10,54 +10,60 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
+import com.derlados.computerconf.Fragments.PageFragment.MenuPageAdapter;
 import com.derlados.computerconf.Fragments.PageFragment.PageFragment;
 import com.derlados.computerconf.R;
-import com.google.android.material.bottomnavigation.BottomNavigationPresenter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 
 public class MainMenuFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    OnFragmentInteractionListener fragmentListener;
-
-    @Override
-    public void onAttach(@NonNull  Context context) {
-        super.onAttach(context);
-        fragmentListener = (OnFragmentInteractionListener) context;
-    }
+    ViewPager pager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main_menu, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_main_menu, container, false);
+    }
+
+    // По скольку дочерние фрагменты не реагируют на изменения видимости родителя - необходимо чтобы родителя сам их оповещал
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        for (int i = 0; i < pager.getAdapter().getCount(); ++i) {
+            Fragment fragment = ((MenuPageAdapter) pager.getAdapter()).getPageFragment(i);
+            // Необходимо проверять создался ли объект, ибо создаются они лишь заранее на 1 влево и вправо в viewPager
+            if (fragment != null)
+                fragment.onHiddenChanged(hidden);
+        }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fragmentListener.onActivityInteraction(this, OnFragmentInteractionListener.Action.SET_PAGER, null); // Установка viewPager-а, это может сделать только активити
+
+        // Настройка ViewPager-а для просмотра
+        pager = this.getView().findViewById(R.id.fragment_main_menu_pager);
+        pager.setAdapter(new MenuPageAdapter(getFragmentManager()));
         ((BottomNavigationView)getView().findViewById(R.id.fragment_main_menu_bottom_navigator)).setOnNavigationItemSelectedListener(this);
     }
 
+    // Переход между страницами при помощи меню в нижней части экрана
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Bundle data = new Bundle(); // Данные о переходе на другую страницу, здесь должен хранится с ключом "page" номер страницы
-
         switch (item.getItemId())
         {
             case R.id.menu_bottom_navigator_action_builds:
-                data.putInt("page", PageFragment.PageMenu.BUILDS.ordinal());
+                pager.setCurrentItem(PageFragment.PageMenu.BUILDS.ordinal());
                 break;
             case R.id.menu_bottom_navigator_action_shop:
-                data.putInt("page", PageFragment.PageMenu.SHOP.ordinal());
+                pager.setCurrentItem(PageFragment.PageMenu.SHOP.ordinal());
                 break;
             case R.id.menu_bottom_navigator_action_info:
-                data.putInt("page", PageFragment.PageMenu.INFO.ordinal());
+                pager.setCurrentItem(PageFragment.PageMenu.INFO.ordinal());
                 break;
         }
-
-        fragmentListener.onActivityInteraction(this, OnFragmentInteractionListener.Action.OPEN_SELECTED_PAGE, data);
         return false;
     }
 }
