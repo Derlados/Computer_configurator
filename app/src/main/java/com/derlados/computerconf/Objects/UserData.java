@@ -77,7 +77,7 @@ public class UserData {
     }
 
     // Сохранение изображений
-    public void saveImageOnDevice(Bitmap img, String imgName) {
+    protected void saveImageOnDevice(Bitmap img, String imgName) {
         try {
             // Создание файла изображения
             File jpgImage = new File(rootImages, imgName);
@@ -144,7 +144,18 @@ public class UserData {
     }
 
     // Чтение изображения с устройства
-    public Bitmap restoreImageFromDevice(String imgName) {
-        return BitmapFactory.decodeFile(rootImages.getPath() + '/' + imgName);
+    protected Bitmap restoreImageFromDevice(String imgName) {
+        File imgFile = new File(rootImages.getPath() + '/' + imgName);
+        if (imgFile.exists())
+            return BitmapFactory.decodeFile(imgFile.getPath());
+        else
+            return null;
+    }
+
+    // Удаление сборки
+    public void deleteBuildByIndex(int index) {
+        File file = new File(rootBuilds + "/" + builds.get(index).getName());
+        file.delete();
+        builds.remove(index);
     }
 }

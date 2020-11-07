@@ -102,4 +102,15 @@ public class Build {
     public HashMap<TypeGood, ArrayList<Good>> getGoods() {
         return goods;
     }
+
+    /* Удаление комплектующего по индексу
+    * Параметры:
+    * typeGood - тип комплектующего
+    * index - его индекс
+    * */
+    public void deleteGoodByIndex(TypeGood typeGood, int index) {
+        Good good = goods.get(typeGood).get(index);
+        this.price -= good.getPrice();
+        goods.get(typeGood).remove(index);
+    }
 }

@@ -47,9 +47,12 @@
                     android:textColor="@color/turquoise"/>
 
                 <ImageButton
+                    android:id="@+id/inflate_build_blank_ibt_delete"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.15"/>
+                    android:layout_weight="0.15"
+                    android:src="@drawable/ic_trash"
+                    android:background="@color/invisible"/>
 
             </LinearLayout>
 
@@ -95,7 +98,7 @@
                     android:gravity="center"
                     android:textSize="16sp"
 
-                    android:textColor="@color/floating_button_color"/>
+                    android:textColor="@color/red"/>
 
             </LinearLayout>
 

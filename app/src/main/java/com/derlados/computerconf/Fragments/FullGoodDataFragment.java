@@ -52,9 +52,7 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
 
         if (getArguments() != null) {
             String jsonGood = getArguments().getString("good");
-            String jsonBmp = getArguments().getString("imageGood");
             currentGood = (new Gson()).fromJson(jsonGood, Good.class);
-            currentGood.setImage((new Gson()).fromJson(jsonBmp, Bitmap.class));
             dataContainer = fragment.findViewById(R.id.fragment_full_data_main_container);
             typeGood = (TypeGood) getArguments().get("typeGood");
         }
@@ -65,8 +63,12 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        downloadFullData(); // Загрузка всех характеристик товара
         setPreviewData(); // Установка превью характеристик
+        // Если данных полных нету - они загружаются, иначе можно сразу же их отрисовывать
+        if (currentGood.getFullData() == null)
+            downloadFullData();
+        else
+            setFullData();
 
         // Обработчик нажатий кнопки
         getView().findViewById(R.id.fragment_full_data_bt_add_to_build).setOnClickListener(this);
@@ -124,7 +126,6 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
         userData.getCurrentBuild().addToBuild(typeGood, currentGood);
-        userData.saveImageOnDevice(currentGood.getImage(), currentGood.getImageName());
         Toast.makeText(getActivity().getApplicationContext(), "Добавлено в сборку", Toast.LENGTH_SHORT).show();
         fragmentListener.onFragmentInteraction(this, null, OnFragmentInteractionListener.Action.RETURN_FRAGMENT_BY_TAG, new Bundle(), "Build");
     }

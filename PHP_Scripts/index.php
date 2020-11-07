@@ -51,8 +51,7 @@
                     $data = GoodDownloader::downloadGoods(GoodType::PS, GoodTypeUri::PS, $page);
                     break;                   
                 default:
-                    // По хорошему надо бы ошибку тут выдавать, не забыть посмотреть 
-                    echo "404 not found";
+                    http_response_code(404);
                     return;
             }
             echo $data;

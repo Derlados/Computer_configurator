@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -17,12 +18,16 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
+import com.derlados.computerconf.App;
 import com.derlados.computerconf.Constants.TypeGood;
+import com.derlados.computerconf.Objects.Build;
 import com.derlados.computerconf.Objects.Good;
 import com.derlados.computerconf.Objects.UserData;
 import com.derlados.computerconf.R;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,12 +38,14 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     private final String DATA_TYPE_GOOD_KEY = "typeGood";
     private OnFragmentInteractionListener fragmentListener;
     private View currentFragment;
-    private UserData userData; // Данные пользователя, чтобы не вызывать много раз getInstance()
+    private Build currentBuild;
 
     // Поля для модифицакции после возврата с меню выбора комплектующего
     private TypeGood typeGoodToModify;
     private LinearLayout containerToModify;
     private TextView tvPrice; // Текстовое поле с ценой
+    private TextView tvComplete;
+    private ImageView imageBuild; //TODO
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -49,14 +56,14 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         currentFragment = inflater.inflate(R.layout.fragment_build_full, container, false);
-        userData = UserData.getUserData();
+        currentBuild = UserData.getUserData().getCurrentBuild();
         setBuildContent();
         return currentFragment;
     }
 
     @Override
     public void onDestroy() {
-        userData.saveCurrentBuild(); // Сохранение сборки перед выходом
+        UserData.getUserData().saveCurrentBuild(); // Сохранение сборки перед выходом
         super.onDestroy();
     }
 
@@ -64,11 +71,15 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
-        // Изменение данных сборки после возврата с меню Shop. Изменения должны происходить если окно было показано и это не первый заход в данное окно
-        if (typeGoodToModify != null && containerToModify != null && !hidden) {
-            tvPrice.setText(String.format(Locale.getDefault(), "%.2f ГРН", userData.getCurrentBuild().getPrice()));
-            Good goodToModify = userData.getCurrentBuild().getGoodByIndex(typeGoodToModify, containerToModify.getChildCount() - 1);
-            createGoodUI(goodToModify, containerToModify, containerToModify.getChildCount() - 1);
+        // Изменения должны происходить если окно было показано и это не первый заход в данное окно
+        if (!hidden) {
+            int countGoodInList = containerToModify.getChildCount() - 1;
+            // Если количество товаров в сборке изменилось - пользователь вернулся выбрав товар, иначе ничего не выбрал
+            if (countGoodInList !=  currentBuild.getGoodList(typeGoodToModify).size()) {
+                setHeaderData(); // В заголовке данные могли изменится, потому их надо обновить
+                Good goodToModify =  currentBuild.getGoodByIndex(typeGoodToModify, containerToModify.getChildCount() - 1);
+                createGoodUI(goodToModify, containerToModify, containerToModify.getChildCount() - 1);
+            }
         }
     }
 
@@ -77,24 +88,19 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
 
         // Установка значений в текстовые поля (имя сборки, цена, описание, статус завершенности)
         EditText tvName = ((EditText) currentFragment.findViewById(R.id.fragment_build_full_et_name_build));
-        tvName.setText(userData.getCurrentBuild().getName());
+        tvName.setText(currentBuild.getName());
         tvName.addTextChangedListener(this);
 
-        tvPrice = ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_price));
-        tvPrice.setText(String.format(Locale.getDefault(), "%.2f ГРН", userData.getCurrentBuild().getPrice()));
-
         EditText tvDesc = ((EditText) currentFragment.findViewById(R.id.fragment_build_full_et_desc));
-        tvDesc.setText(userData.getCurrentBuild().getDescription());
+        tvDesc.setText(currentBuild.getDescription());
         tvDesc.addTextChangedListener(this);
 
-        // Установка статуса завершенности сборки
-        if (userData.getCurrentBuild().isComplete())
-            ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_complete_status)).setText(getResources().getString(R.string.complete));
-        else
-            ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_complete_status)).setText(getResources().getString(R.string.not_complete));
+        // Установка данных заголовка (нахождение полей и запись в них значения)
+        tvComplete = currentFragment.findViewById(R.id.fragment_build_full_tv_complete_status);
+        tvPrice = ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_price));
+        setHeaderData();
 
-
-        // Установка обработчиков для кнопок скрытия/раскрытия блоков (невозможно прямо прописать в xml, так как это всё реализовано на фрагменте)
+        // Установка обработчиков для кнопок скрытия/раскрытия блоков (невозможно прямо прописать в xml, так как это всё реализовано на фрагменте), следовательно обработчики вызывают функцию
 
         // Структура блока описания (0 - текст "Описание", 1 - поле для ввода описания. Далее четные кнопки хедеры блоков, нечетные - содержание каждого блока (Linear layout))
         LinearLayout fullDesc = currentFragment.findViewById(R.id.fragment_build_full_ll_full_desc);
@@ -126,13 +132,26 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         }
     }
 
-    // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
-    private void createGoodUI(Good good, LinearLayout goodsContainer, int index) {
-        RelativeLayout blank = (RelativeLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
+    // Установка всех данных в заголовке (цена сборки, статус завершенности, изображение)
+    private void setHeaderData() {
+        tvPrice.setText(String.format(Locale.getDefault(), "%.2f ГРН",  currentBuild.getPrice()));
+        if (currentBuild.isComplete())
+            tvComplete.setText(getResources().getString(R.string.complete));
+        else
+            tvComplete.setText(getResources().getString(R.string.not_complete));
+    }
 
-        //TODO
-        // Сделать отображение полной статистики при нажатии на бланк комплектующего
-        //blank.setOnClickListener(this);
+    // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
+    private void createGoodUI(Good good, final LinearLayout goodsContainer, int index) {
+        final RelativeLayout blank = (RelativeLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
+
+        // Отображение полной статистики при нажатии на бланк комплектующего
+        blank.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openFullGoodData(view);
+            }
+        });
 
         //Взятие основной таблицы информации об комплектующем
         TableLayout tableData = (TableLayout)blank.findViewById(R.id.inflate_good_blank_tr_data);
@@ -171,37 +190,22 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         // Установка изображения
         //TODO
         // Придумать какой то более явный интерфейс для скачивания изображения с памяти
-        ((ImageView) blank.findViewById(R.id.inflate_good_blank_img)).setImageBitmap(userData.restoreImageFromDevice(good.getImageName()));
+        ((ImageView) blank.findViewById(R.id.inflate_good_blank_img)).setImageBitmap(good.getImage());
+
+        // Кнопка удалить комплектующее
+        ImageButton ibtDelete = blank.findViewById(R.id.inflate_good_blank_ibt_corner);
+        ibtDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentBuild.deleteGoodByIndex(getTypeGood(goodsContainer.getId()), goodsContainer.indexOfChild(blank)); // Удаление идет относительно текущего положения в списке
+                goodsContainer.removeView(blank); // Удаление комплектующего
+                setHeaderData(); // Данные заголовка необходимо обновить
+            }
+        });
+        ibtDelete.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_trash, App.getApp().getTheme())); // Отрисовка значка
+
+
         goodsContainer.addView(blank, index);
-    }
-
-    // Обработчик кнопок на визуальное отображения блока комплектующих (раскрыть/скрыть)
-    public void openBlockList(View view) {
-        // Получение необходимого списка, он находится сразу под кнопкой, потому сначала находится индекс кнопки и потом контейне как <индекс> + 1
-        LinearLayout mainList = (LinearLayout) view.getParent();
-        int index = ((LinearLayout) view.getParent()).indexOfChild(view);
-        LinearLayout blockList = (LinearLayout) mainList.getChildAt(index + 1);
-
-        // Если блок скрыт - он открывается, иначе скрывается
-        if (blockList.getVisibility() == View.GONE) {
-            blockList.setVisibility(View.VISIBLE);
-            ((Button)view).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0);
-        }
-        else {
-            blockList.setVisibility(View.GONE);
-            ((Button)view).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_right_36, 0);
-        }
-    }
-
-    // Обработчик кнопок на добавление комплектующих - переходит на страницу поиска товаров. Тип комплектующего выбирается по id отцовского контейнера
-    public void pickGood(View view) {
-        containerToModify = (LinearLayout) view.getParent();
-        typeGoodToModify = getTypeGood(containerToModify.getId());
-
-        Bundle data = new Bundle();
-        data.putSerializable(DATA_TYPE_GOOD_KEY, typeGoodToModify);
-
-        fragmentListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
     }
 
     // Получение типа комплектующего с которым происходит взаимодействие
@@ -238,6 +242,59 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         return typeGood;
     }
 
+    ////////////////////////////////////////////////////////////////////////////// Обработчиков кнопок //////////////////////////////////////////////////////////////////////////////
+
+    // Обработчик кнопок на визуальное отображения блока комплектующих (раскрыть/скрыть)
+    public void openBlockList(View view) {
+        // Получение необходимого списка, он находится сразу под кнопкой, потому сначала находится индекс кнопки и потом контейне как <индекс> + 1
+        LinearLayout mainList = (LinearLayout) view.getParent();
+        int index = ((LinearLayout) view.getParent()).indexOfChild(view);
+        LinearLayout blockList = (LinearLayout) mainList.getChildAt(index + 1);
+
+        // Если блок скрыт - он открывается, иначе скрывается
+        if (blockList.getVisibility() == View.GONE) {
+            blockList.setVisibility(View.VISIBLE);
+            ((Button)view).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0);
+        }
+        else {
+            blockList.setVisibility(View.GONE);
+            ((Button)view).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_right_36, 0);
+        }
+    }
+
+    // Обработчик кнопок на добавление комплектующих - переходит на страницу поиска товаров. Тип комплектующего выбирается по id отцовского контейнера
+    public void pickGood(View view) {
+        // Данные для модификации
+        containerToModify = (LinearLayout) view.getParent();
+        typeGoodToModify = getTypeGood(containerToModify.getId());
+
+        // Подготовка данных
+        Bundle data = new Bundle();
+        data.putSerializable(DATA_TYPE_GOOD_KEY, typeGoodToModify);
+
+        fragmentListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
+    }
+
+    public void openFullGoodData(View view) {
+        // Отправка объекта в следующий фрагмет для отображения полной информации о нем
+        Bundle data = new Bundle();
+        Gson gson = new Gson();
+
+        // Получение контейнера списка и определение типа объекта
+        LinearLayout block = (LinearLayout) view.getParent();
+        TypeGood typeGood = getTypeGood(block.getId());
+
+        // Подгтовка данных, сериализация
+        Good sendGood = currentBuild.getGoodByIndex(typeGood, block.indexOfChild(view)); // Объект получается по индексу вьюшки бланка в списке
+        data.putString("good", gson.toJson(sendGood)); // Объект передается в виде json строки, сам берется относительно его положения в контейнере
+        data.putSerializable("typeGood", typeGood);
+
+        // Отображение полной информации о комплектующем
+        fragmentListener.onFragmentInteraction(this, new FullGoodDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     //TODO
     // Может необходимо производить контроль и ограничить количество символов для имени сборки
     @Override
@@ -259,9 +316,9 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
 
         // Определение того, какое поле меняет юзер
         if (view.getId() == R.id.fragment_build_full_et_desc)
-            userData.getCurrentBuild().setDescription(text);
+            currentBuild.setDescription(text);
         else if (view.getId() == R.id.fragment_build_full_et_name_build) {
-            userData.getCurrentBuild().setName(text);
+            currentBuild.setName(text);
         }
     }
 }

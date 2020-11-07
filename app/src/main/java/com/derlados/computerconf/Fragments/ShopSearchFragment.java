@@ -2,6 +2,7 @@ package com.derlados.computerconf.Fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -236,12 +237,11 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     }
     //TODO
     // Загрузку нужно будет вынести в отдельный класс с потоками
-    public void loadImage(final ImageView imageView, final Good good) {
+    public void loadImage(final ImageView imageView, Good good) {
         RequestHelper.getRequest(getContext(), good.getImageUrl(), RequestHelper.TypeRequest.IMAGE, new RequestHelper.CallBack<Bitmap>() {
 
             @Override
             public void call(Bitmap response) {
-                good.setImage(response);
                 imageView.setImageBitmap(response);
             }
 
@@ -256,18 +256,20 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     * Нажатие на бланк - вызов подробной информации о комплектующем в новом фрагменте
     * Нажатие на панель страниц - загрузка страницы в соответствии с выбором пользователя
     * */
-
     @Override
     public void onClick(View view) {
         switch (view.getId())
         {
             case R.id.inflate_good_blank_rl_blank:
+                ImageView iv = view.findViewById(R.id.inflate_good_blank_img);
+                Bitmap image = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+
                 // Отправка объекта в следующий фрагмет для отображения полной информации о нем
                 Bundle data = new Bundle();
                 Gson gson = new Gson();
                 Good sendGood = goodsList.get(goodsContainer.indexOfChild(view)); // Объект получается по индексу вьюшки бланка в списке
+                sendGood.setImage(image); // Добавление изображения //TODO надо что то с этим конкретно сделать
                 data.putString("good", gson.toJson(sendGood)); // Объект передается в виде json строки, сам берется относительно его положения в контейнере
-                data.putString("imageGood", gson.toJson(sendGood.getImage())); // Изображение отправляется отдельно так как не серализуется в классе
                 data.putSerializable("typeGood", typeGood);
                 fragmentListener.onFragmentInteraction(this, new FullGoodDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
                 break;

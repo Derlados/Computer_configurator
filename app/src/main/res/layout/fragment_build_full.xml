@@ -90,7 +90,7 @@
                             android:gravity="center"
                             android:textSize="16sp"
 
-                            android:textColor="@color/floating_button_color"/>
+                            android:textColor="@color/red"/>
 
                     </LinearLayout>
 

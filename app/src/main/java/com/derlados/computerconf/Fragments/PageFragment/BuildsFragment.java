@@ -68,9 +68,16 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
-        // Изменение сборки над которой произошло изменение, текущая сборка и есть той сборкой которую меняли
-        if (blankToModify != null && !hidden)
-            setBuildBlank(buildToModify, blankToModify, false);
+        // Если сборка модифицировалась - данные обновляются, если сборка создавалась - добавляется в список
+        if (!hidden) {
+            if (blankToModify != null)
+                setBuildBlank(buildToModify, blankToModify, false);
+            else {
+                LinearLayout newBlank = (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_build_blank, buildsContainer, false);
+                setBuildBlank(UserData.getUserData().getCurrentBuild(), newBlank, true);
+            }
+            UserData.getUserData().discardCurrentBuild(); // Когда пользователь выходит в меню, текущая сборка сбрасывается
+        }
     }
 
     /* Создание бланка
@@ -78,7 +85,7 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
     * build - сборка с которой берутся данные
     * buildBlank - бланк (контейнер LinearLayout) в котором будут происходить изменения
     * */
-    private void setBuildBlank(Build build, final LinearLayout buildBlank, boolean addToParent) {
+    private void setBuildBlank(final Build build, final LinearLayout buildBlank, boolean addToParent) {
 
         // Установка превью бланка сборки
         ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_name)).setText(build.getName());
@@ -118,6 +125,13 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
 
         // Обработка на нажатие по всему бланку
         buildBlank.findViewById(R.id.inflate_build_blank_ll_preview_info_header).setOnClickListener(this);
+        buildBlank.findViewById(R.id.inflate_build_blank_ibt_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserData.getUserData().deleteBuildByIndex(buildsContainer.indexOfChild(buildBlank)); // Индекс опеределяется текущим положением бланка в списке
+                buildsContainer.removeView(buildBlank); // Удаление бланка
+            }
+        });
 
         // Добавление бланка
         if (addToParent)

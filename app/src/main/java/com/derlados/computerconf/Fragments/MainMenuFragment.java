@@ -14,6 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.derlados.computerconf.Fragments.PageFragment.MenuPageAdapter;
 import com.derlados.computerconf.Fragments.PageFragment.PageFragment;
+import com.derlados.computerconf.Objects.UserData;
 import com.derlados.computerconf.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -26,11 +27,12 @@ public class MainMenuFragment extends Fragment implements BottomNavigationView.O
         return inflater.inflate(R.layout.fragment_main_menu, container, false);
     }
 
-    // По скольку дочерние фрагменты не реагируют на изменения видимости родителя - необходимо чтобы родителя сам их оповещал
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
+        // По скольку дочерние фрагменты не реагируют на изменения видимости родителя - необходимо чтобы родителя сам их оповещал
         for (int i = 0; i < pager.getAdapter().getCount(); ++i) {
             Fragment fragment = ((MenuPageAdapter) pager.getAdapter()).getPageFragment(i);
             // Необходимо проверять создался ли объект, ибо создаются они лишь заранее на 1 влево и вправо в viewPager
