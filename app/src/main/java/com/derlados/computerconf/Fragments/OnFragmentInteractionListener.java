@@ -10,25 +10,15 @@ import androidx.fragment.app.Fragment;
 public interface OnFragmentInteractionListener {
 
     /* Константы действий активити
-    * SET_PAGER - Установить viewPager для фрагмента главного меню
-    * OPEN_SELECTED_PAGE - Открыть страницу выбранную в нижней панели
     * NEXT_FRAGMENT_HIDE - Показать следующий фрагмент и спрятать текущий
     * NEXT_FRAGMENT_REPLACE - Показать следующий фрагмент, заменив текущий
+    * RETURN_FRAGMENT_BY_TAG - Вернуться к фрагменту (состоянию) по тегу. Полезно в случае если необходимо сделать несколько popBackStack-ов
     * */
     enum Action {
-        SET_PAGER,
-        OPEN_SELECTED_PAGE,
         NEXT_FRAGMENT_HIDE,
-        NEXT_FRAGMENT_REPLACE
+        NEXT_FRAGMENT_REPLACE,
+        RETURN_FRAGMENT_BY_TAG
     }
-
-    /* Метод для общения с активити
-    * Параметры:
-    * fragmentSource - фрагмент который вызвал метод
-    * data - данные, если они необходимы
-    * action - одна из констант действий
-    * */
-    void onActivityInteraction(Fragment fragmentSource,Action action, Bundle data);
 
     /* Метод для общения между фрагментами
      * Параметры:
@@ -36,6 +26,7 @@ public interface OnFragmentInteractionListener {
      * fragmentReceiver - Фрагмент с которым хотят взаимодействовать
      * data - данные, если они необходимы
      * action - одна из констант действий
+     * backStackTag - тег для стека вызовов фрагментов
      * */
-    void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReceiver, Action action,  Bundle data);
+    void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReceiver, Action action,  Bundle data, String backStackTag);
 }

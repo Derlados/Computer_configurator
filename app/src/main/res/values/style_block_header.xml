@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="fullDataBlockHeader">
+    <style name="block_header">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">10dp</item>
         <item name="android:background">@color/light_blue</item>
         <item name="android:padding">3dp</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginTop">15dp</item>
     </style>
 </resources>

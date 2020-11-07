@@ -43,7 +43,7 @@
             // Парсинг страницы и Извлечение товаров
             $html = file_get_html($goodTypeUrl . "page=$page/");
             $goodsHtml = $html->find('div[class="br-pp br-pp-ex goods-block__item br-pcg br-series"]');
-           
+
             // Создаание товаров
             // Функции find всегда возвращают массив, даже если там один элемент, потому нужно брать элемент с индексом 0 
             $goods = array(); 
@@ -99,9 +99,12 @@
                 // Данные в блоках на сайте представлены как ключ-значение, следовательно нечетные - ключи, четные - значения
                 $dataBlock = array();
                 for ($j = 0; $j < count($dataBlockBody); $j += 2)
+                {
                     $dataBlock[$dataBlockBody[$j]->innertext] = $dataBlockBody[$j + 1]->innertext;
+                }
 
-                $allData[$headerBlock] = $dataBlock; 
+                $allBlock = ["header" => $headerBlock, "data" => $dataBlock];
+                array_push($allData, $allBlock);
             }
 
             return json_encode($allData);

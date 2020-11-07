@@ -1,28 +1,31 @@
-package com.derlados.computerconf.Good;
+package com.derlados.computerconf.Objects;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.widget.Toast;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
-import com.derlados.computerconf.Managers.RequestHelper;
-
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Good {
 
-
-
     private String name;
-    private String imageUrl; // ссылка на скачивание изображения
     private double price;
-    private String urlFullData; // ссылка на скачивание полных данных о комплектующем
+    private String urlFullData; // Ссылка на скачивание полных данных о комплектующем
+    private String imageUrl; // Ссылка на скачивание изображения
+    private String imageName; // Название изображения
 
     /* Ассоциативные массивы
      * previewData - превью данные (характеристика:значение)
      * fullData - полные данные (название блока характеристика : ассоциативный массив (характеристика:значение))
      * */
     private HashMap<String, String> previewData;
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+    }
 
     // Для хранения блоков характеристик о комплектующем.
     // В Java нету ассоциативных массивов, а с сервера приходят данные в нужной последовательности, приходится выкручиваться
@@ -31,10 +34,6 @@ public class Good {
         public HashMap<String, String> data;
     }
     private ArrayList<dataBlock> fullData;
-
-
-
-    private Bitmap image; // скачанное изображение
 
     public String getName() {
         return name;
@@ -56,19 +55,26 @@ public class Good {
         return urlFullData;
     }
 
-    public ArrayList<dataBlock>  getFullData() {
+    public ArrayList<dataBlock> getFullData() {
         return fullData;
     }
 
+    // Данные изображения сохраняются и загружаются на устройство так как невозможно гарантировать стабильность работы с Bitmap который хранится прямо в объекте
     public Bitmap getImage() {
-        return image;
+        return UserData.getUserData().restoreImageFromDevice(imageName);
+    }
+
+    public void setImage(Bitmap image) {
+        UserData.getUserData().saveImageOnDevice(image, imageName);
+    }
+
+    public String getImageName() {
+        return imageName;
     }
 
     public void setFullData(ArrayList<dataBlock>  fullData) {
         this.fullData = fullData;
     }
 
-    public void setImage(Bitmap image) {
-        this.image = image;
-    }
+
 }

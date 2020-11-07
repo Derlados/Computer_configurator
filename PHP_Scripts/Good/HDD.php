@@ -24,7 +24,7 @@
         public function toJson()
         {
             $arrayData = parent::toJson();
-            $previewData = array('stats' => [
+            $previewData = array('previewData' => [
                 'Объем памяти' =>  $this->memorySize,
                 'Скорость вращ.' => $this->rotationSpeed,
                 'Объем буфера' => $this->bufferSize,

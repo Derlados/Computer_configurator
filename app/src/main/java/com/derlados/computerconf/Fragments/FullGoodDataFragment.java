@@ -1,45 +1,60 @@
 package com.derlados.computerconf.Fragments;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.derlados.computerconf.Good.Good;
+import com.derlados.computerconf.Constants.TypeGood;
+import com.derlados.computerconf.Objects.Build;
+import com.derlados.computerconf.Objects.Good;
 import com.derlados.computerconf.Managers.RequestHelper;
+import com.derlados.computerconf.Objects.UserData;
 import com.derlados.computerconf.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-
-import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class FullDataFragment extends Fragment {
+public class FullGoodDataFragment extends Fragment implements View.OnClickListener {
 
-    Good currentGood;
-    LinearLayout dataContainer;
+    Good currentGood; // Текущий товар который отображается
+    LinearLayout dataContainer; // Контейнер в который помещается все характеристики товара
+    TypeGood typeGood; // Тип товара
+    OnFragmentInteractionListener fragmentListener;
+    UserData userData;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        fragmentListener = (OnFragmentInteractionListener) context;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.fragment_full_data, container, false);
+        userData =  UserData.getUserData();
 
         if (getArguments() != null) {
             String jsonGood = getArguments().getString("good");
             currentGood = (new Gson()).fromJson(jsonGood, Good.class);
             dataContainer = fragment.findViewById(R.id.fragment_full_data_main_container);
+            typeGood = (TypeGood) getArguments().get("typeGood");
         }
 
         return fragment;
@@ -48,10 +63,19 @@ public class FullDataFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        downloadFullData();
-        setPreviewData();
+        setPreviewData(); // Установка превью характеристик
+        // Если данных полных нету - они загружаются, иначе можно сразу же их отрисовывать
+        if (currentGood.getFullData() == null)
+            downloadFullData();
+        else
+            setFullData();
+
+        // Обработчик нажатий кнопки
+        getView().findViewById(R.id.fragment_full_data_bt_add_to_build).setOnClickListener(this);
     }
 
+    //TODO
+    // Вынести в отдельный класс с потоками
     private void downloadFullData() {
         String apiUrl = RequestHelper.MAIN_URL + String.format("goods/fullData?urlFullData=%s", currentGood.getUrlFullData());
         RequestHelper.getRequest(getContext(), apiUrl, RequestHelper.TypeRequest.STRING, new RequestHelper.CallBack<String>() {
@@ -97,5 +121,12 @@ public class FullDataFragment extends Fragment {
                 dataContainer.addView(dataDesc);
             }
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        userData.getCurrentBuild().addToBuild(typeGood, currentGood);
+        Toast.makeText(getActivity().getApplicationContext(), "Добавлено в сборку", Toast.LENGTH_SHORT).show();
+        fragmentListener.onFragmentInteraction(this, null, OnFragmentInteractionListener.Action.RETURN_FRAGMENT_BY_TAG, new Bundle(), "Build");
     }
 }
