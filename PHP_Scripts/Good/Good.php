@@ -12,11 +12,11 @@
 
     class Good 
     {
-        private $name;
-        private $imageUrl;
-        private $imageName;
-        private $price;
-        private $urlFullData;
+        public $name;
+        public $imageUrl;
+        public $imageName;
+        public $price;
+        public $urlFullData;
 
 
         public function __construct($name, $imageUrl, $price, $urlFullData)
@@ -29,17 +29,6 @@
             // Имя является последним параметром URL
             $splitUrl = explode('/', $imageUrl);
             $this->imageName = $splitUrl[count($splitUrl) - 1];
-        }
-
-        public function toJson()
-        {
-            return array(
-                'name' => $this->name,
-                'imageUrl' => $this->imageUrl,
-                'imageName' => $this->imageName,
-                'price' => $this->price,
-                'urlFullData' => $this->urlFullData
-            );
         }
     }
 ?>

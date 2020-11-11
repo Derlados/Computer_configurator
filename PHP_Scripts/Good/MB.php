@@ -7,6 +7,7 @@
         private $chipset;
         private $typeMemory;
         private $fromFactor;
+        public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)
         {
@@ -22,20 +23,18 @@
                 $this->fromFactor = $shortStats[count($shortStats) - 1];
             else
                 $this->fromFactor = $shortStats[count($shortStats) - 2];
+                
+            $this->setPreviewData();
         }
 
-        public function toJson()
+        public function setPreviewData()
         {
-            $arrayData = parent::toJson();
-            $previewData = array('previewData' => [
+            $this->previewData = array([
                 'Сокет' =>  $this->socket,
                 'Чипсет' => $this->chipset,
                 'Тип памяти' => $this->typeMemory,
-                'Форм фактор' => $this->fromFactor
-                
+                'Форм фактор' => $this->fromFactor   
             ]);
-
-            return json_encode(array_merge($arrayData, $previewData));
         }
 
     }

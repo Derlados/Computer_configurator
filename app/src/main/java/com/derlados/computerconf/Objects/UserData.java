@@ -4,12 +4,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Message;
 import android.util.Log;
 
 import com.derlados.computerconf.App;
+import com.derlados.computerconf.Constants.HandlerMessages;
 import com.derlados.computerconf.Constants.LogsKeys;
 import com.derlados.computerconf.Constants.TypeGood;
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import android.os.Handler;
 
 public class UserData {
     final String IMAGES_DIR = "images";
@@ -34,6 +38,11 @@ public class UserData {
     private Build currentBuild;
     private Context context;
 
+    // Хендлер потока который вызывает загрузку данных с устройства
+    Handler handler = null;
+    ArrayList<Build> bufferBuilds = new ArrayList<Build>();
+    final int BUFFER_BUILDS_SIZE = 3;
+
     static UserData instance;
     private UserData() {}
     public static UserData getUserData() {
@@ -45,7 +54,14 @@ public class UserData {
             instance.rootBuilds = instance.context.getDir(instance.BUILDS_DIR, Context.MODE_PRIVATE);
 
             // Чтение сохраненных сборок
-            instance.restoreBuildsFromDevice();
+            Runnable restoring = new Runnable() {
+                @Override
+                public void run() {
+                    instance.restoreBuildsFromDevice();
+                }
+            };
+            Thread thread = new Thread(restoring);
+            thread.start();
         }
         return instance;
     }
@@ -56,8 +72,9 @@ public class UserData {
         return currentBuild;
     }
 
-    public ArrayList<Build> getBuilds() {
-        return builds;
+    public void getBuilds(Handler handler) {
+        this.handler = handler;
+        sendBuildToHandler(null, true);
     }
 
     public Build getBuildByIndex(int i) {
@@ -74,6 +91,20 @@ public class UserData {
 
     public void discardCurrentBuild() {
         currentBuild = null;
+    }
+
+    //
+    private void sendBuildToHandler(Build build, boolean send) {
+        if (build != null)
+            bufferBuilds.add(build);
+
+        if (this.handler != null && bufferBuilds.size() >= BUFFER_BUILDS_SIZE || send) {
+            Message msg = handler.obtainMessage();
+            msg.what = HandlerMessages.GET_BUILDS.ordinal();
+            msg.obj = bufferBuilds;
+            this.handler.sendMessage(msg);
+            bufferBuilds = new ArrayList<>();
+        }
     }
 
     // Сохранение изображений
@@ -135,11 +166,14 @@ public class UserData {
                     BufferedReader br = new BufferedReader(new FileReader(file));
                     Build build = gson.fromJson(br, Build.class);
                     builds.add(build);
+                    sendBuildToHandler(build, false);
                 }
                 catch (FileNotFoundException e) {
                     e.printStackTrace();
+                    Log.e(LogsKeys.ERROR_LOG.toString(), String.format(Locale.getDefault(), "File %s can't be read. Error: %s", file.getName(), e.toString()));
                 }
             }
+            sendBuildToHandler(null, true);
         }
     }
 

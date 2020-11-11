@@ -7,6 +7,7 @@
         private $sizeMemory;
         private $frequency;
         private $timing;
+        public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)
         {
@@ -19,19 +20,18 @@
             $this->sizeMemory = $shortStats[1];
             $this->frequency = $shortStats[3];
             $this->timing = $shortStats[4];
+
+            $this->setPreviewData();
         }
 
-        public function toJson()
+        public function setPreviewData()
         {
-            $arrayData = parent::toJson();
-            $previewData = array('previewData' => [
+            $this->previewData = array([
                 'Тип памяти' =>  $this->typeMemory,
                 'Объем памяти' => $this->sizeMemory,
                 'Частота' => $this->frequency,
                 'Тайминг' => $this->timing
             ]);
-
-            return json_encode(array_merge($arrayData, $previewData));
         }
 
     }

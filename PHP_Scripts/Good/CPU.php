@@ -8,6 +8,7 @@
         private $threads;
         private $frequency;
         private $TDP;
+        public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)
         {
@@ -35,20 +36,18 @@
                     $this->TDP = explode(' ', $shortStats[$i])[3];
                     break;
                 }
+
+            $this->setPreviewData();
         }
 
-        public function toJson()
+        public function setPreviewData()
         {
-            $arrayData = parent::toJson();
-            $previewData = array('previewData' => [
+            $this->previewData = array([
                 'Сокет' => $this->socket,
                 'Ядер(потоков)' => ($this->cores . '(' . $this->threads . ')'),
                 'Частота' => ($this->frequency . ' ГГц'),
                 'TDP' => ($this->TDP)
             ]);
-
-            return json_encode(array_merge($arrayData, $previewData));
         }
-
     }
 ?>

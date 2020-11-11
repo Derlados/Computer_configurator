@@ -7,6 +7,7 @@
         private $motherboard;
         private $cpu;
         private $sizeMm;
+        public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)
         {
@@ -21,20 +22,18 @@
             $this->motherboard = $shortStats[$index + 1];
             $this->cpu = $shortStats[$index + 2];
             $this->sizeMm = $shortStats[count($shortStats) - 1]; 
+
+            $this->setPreviewData();
         }
 
-        public function toJson()
+        public function setPreviewData()
         {
-            $arrayData = parent::toJson();
-            $previewData = array('previewData' => [
+            $this->previewData = array([
                 'Мощность' =>  $this->power,
                 'Подкл. мат. платы' => $this->motherboard,
                 'Подкл. процессора' => $this->cpu,
-                'Размер' => $this->sizeMm
-                
+                'Размер' => $this->sizeMm           
             ]);
-
-            return json_encode(array_merge($arrayData, $previewData));
         }
 
     }

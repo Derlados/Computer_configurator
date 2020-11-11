@@ -1,7 +1,6 @@
 package com.derlados.computerconf.Fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.derlados.computerconf.Constants.TypeGood;
-import com.derlados.computerconf.Objects.Build;
 import com.derlados.computerconf.Objects.Good;
-import com.derlados.computerconf.Managers.RequestHelper;
+import com.derlados.computerconf.Internet.RequestHelper;
 import com.derlados.computerconf.Objects.UserData;
 import com.derlados.computerconf.R;
 import com.google.gson.Gson;

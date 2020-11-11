@@ -7,6 +7,7 @@
         private $memorySize;
         private $typeMemory;
         private $memoryBus;
+        public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)
         {
@@ -18,20 +19,18 @@
             $this->memorySize = $shortStats[1];
             $this->typeMemory = $shortStats[2];
             $this->memoryBus = $shortStats[3];
+
+            $this->setPreviewData();
         }
 
-        public function toJson()
+        public function setPreviewData()
         {
-            $arrayData = parent::toJson();
-            $previewData = array('previewData' => [
+            $this->previewData = array([
                 'Интерфейс' =>  $this->interface,
                 'Размер памяти' => $this->memorySize,
                 'Тип памяти' => $this->typeMemory,
                 'Шина памяти' => $this->memoryBus
-                
             ]);
-
-            return json_encode(array_merge($arrayData, $previewData));
         }
 
     }

@@ -3,7 +3,10 @@ package com.derlados.computerconf.Fragments;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Contacts;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,20 +23,37 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.derlados.computerconf.Constants.LogsKeys;
 import com.derlados.computerconf.Constants.TypeGood;
+import com.derlados.computerconf.Internet.GsonSerializers.HashMapDeserializer;
+import com.derlados.computerconf.Internet.RequestAPI;
 import com.derlados.computerconf.Objects.Good;
-import com.derlados.computerconf.Managers.RequestHelper;
+import com.derlados.computerconf.Internet.RequestHelper;
 import com.derlados.computerconf.R;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ShopSearchFragment extends Fragment implements View.OnClickListener {
 
@@ -47,9 +67,11 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     }
     int currentPage = 1, maxPages;
 
+    GoodsDownloader goodsDownloader = new GoodsDownloader();
+
     LinearLayout goodsContainer; // XML контейнер (лаяут) в который ложаться все товары
     TypeGood typeGood; // Тип комплектующего на текущей странице
-    ArrayList<Good> goodsList = new ArrayList<>(); // Список с комплектующими
+    Good[] goodsList; // Список с комплектующими
 
     OnFragmentInteractionListener fragmentListener;
 
@@ -71,7 +93,6 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     // Загрузка страницы (загрузка всех превью данных для отображения на странице)
     private void downloadPage(TypeGood typeGood, Direction dir, Integer page) {
         goodsContainer.removeAllViews();// Очистка фрагмента фрагмента
-        goodsList.clear();
 
         // Выбор страницы которую необходимо загрузить
         switch (dir) {
@@ -90,51 +111,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
         }
 
-        //TODO
-        // Загрузка страницы, вынести в отдельный класс с потоками
-        String apiUrl = RequestHelper.MAIN_URL + String.format("goods?typeGood=%s&page=%d", typeGood.toString(), currentPage);
-        RequestHelper.getRequest(getContext(), apiUrl, RequestHelper.TypeRequest.STRING, new RequestHelper.CallBack<String>() {
-
-            @Override
-            public void call(String response) {
-                // Парсинг всех товаров на страницы
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    maxPages = jsonObject.getInt("maxPages");
-                    JSONArray jsonArray = jsonObject.getJSONArray("goods");
-
-                    Gson gson = new Gson();
-                    for (int i = 0; i < jsonArray.length(); ++i)
-                    {
-                        JSONObject jsonGood = new JSONObject(jsonArray.get(i).toString());
-                        Good good = gson.fromJson(jsonGood.toString(), Good.class);
-                        goodsList.add(good);
-                        createGoodUI(good);
-                    }
-                    createGoodsFlipPager();
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                    try {
-                        Toast.makeText(getContext(), "Проблемы с сервером", Toast.LENGTH_SHORT).show();
-                    }
-                    catch (Exception ex) {
-                        Log.e("error", ex.toString());
-                    }
-                }
-
-            }
-
-            @Override
-            public void fail(String message) {
-                try {
-                    Toast.makeText(getContext(), "Проблемы с сервером", Toast.LENGTH_SHORT).show();
-                }
-                catch (Exception e) {
-                    Log.e("error", e.toString());
-                }
-            }
-        });
+        goodsDownloader.execute(typeGood.toString(), Integer.toString(currentPage));
     }
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
@@ -235,6 +212,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
         goodsContainer.addView(flipPager);
     }
+
     //TODO
     // Загрузку нужно будет вынести в отдельный класс с потоками
     public void loadImage(final ImageView imageView, Good good) {
@@ -267,7 +245,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                 // Отправка объекта в следующий фрагмет для отображения полной информации о нем
                 Bundle data = new Bundle();
                 Gson gson = new Gson();
-                Good sendGood = goodsList.get(goodsContainer.indexOfChild(view)); // Объект получается по индексу вьюшки бланка в списке
+                Good sendGood = goodsList[goodsContainer.indexOfChild(view)]; // Объект получается по индексу вьюшки бланка в списке
                 sendGood.setImage(image); // Добавление изображения //TODO надо что то с этим конкретно сделать
                 data.putString("good", gson.toJson(sendGood)); // Объект передается в виде json строки, сам берется относительно его положения в контейнере
                 data.putSerializable("typeGood", typeGood);
@@ -287,6 +265,93 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                 break;
             //TODO
             // Возможно можно будет добавить прямой выбор страницы
+        }
+    }
+
+    // Класс для загрузки превью информации о комплектующих
+    public class GoodsDownloader extends AsyncTask<String, String, String> {
+        Retrofit retrofit;
+        RequestAPI requestAPI;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            // Создание gson и регистрация собственного сериализатора для HashMap
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(HashMap.class, new HashMapDeserializer())
+                    .create();
+
+            // Для работы с сетью
+            retrofit =  new Retrofit.Builder()
+                    .baseUrl("http://192.168.1.3/")
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build();
+            requestAPI = retrofit.create(RequestAPI.class);
+        }
+
+        // Получение всего списка товаров. Параметры: 0 - тип комплектующего, 1 - страница которую необходимо загрузить
+        @Override
+        protected String doInBackground(String... values) {
+            String typeGood = values[0];
+            int page = Integer.parseInt(values[1]);
+
+            Call<Good[]> call = requestAPI.getGoodsPage(typeGood, page);
+            Response<Good[]> response;
+            try {
+                response = call.execute();
+                if (response.isSuccessful())
+                    goodsList = response.body();
+            }
+            catch (Exception e) {
+                Log.e(LogsKeys.ERROR_LOG.toString(), e.toString());
+            }
+
+
+            return null;
+        }
+
+        // Отрисовка всех комплектующих
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            for (int i = 0; i < goodsList.length; ++i)
+                createGoodUI(goodsList[i]);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+    }
+
+    //TODO
+    public class ImageDownloader extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... values) {
+
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            for (int i = 0; i < goodsList.length; ++i)
+                createGoodUI(goodsList[i]);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
         }
     }
 }

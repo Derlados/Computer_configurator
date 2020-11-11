@@ -38,10 +38,10 @@
         * Возврат:
         * json строка, массив товаров полученых со страницы
         */
-        public static function downloadGoods($goodType, $goodTypeUrl, int $page) {
+        public static function downloadGoods($goodType, int $page) {
              
             // Парсинг страницы и Извлечение товаров
-            $html = file_get_html($goodTypeUrl . "page=$page/");
+            $html = file_get_html(self::getGoodTypeUrl($goodType) . "page=$page/");
             $goodsHtml = $html->find('div[class="br-pp br-pp-ex goods-block__item br-pcg br-series"]');
 
             // Создаание товаров
@@ -64,15 +64,11 @@
                 $name = $imgAttrs[0]->{'alt'};
                 $img = $imgAttrs[0]->{'data-observe-src'}; 
                 $price = $prices[0]->innertext; 
-                $goods[] = (GoodsFactory::createGood($goodType, $name, $img, $price, $shortStats[0]->innertext, $urlFullData))->toJson();
+                $goods[] = (GoodsFactory::createGood($goodType, $name, $img, $price, $shortStats[0]->innertext, $urlFullData));
             }
 
-            // Поиск максимального количества страниц в разделе магазина
-            $HtmlPages = $html->find('div[class="page-goods__pager"]')[0]->find('li');
-            $maxPages = $HtmlPages[count($HtmlPages) - 1]->find('a')[0]->innertext;
-
-            $data = json_encode(['goods' => $goods, 'maxPages' => $maxPages]);
-
+           // echo $goods[0]->toJson();
+            $data = json_encode($goods);
             return $data;
         }
 
@@ -108,6 +104,39 @@
             }
 
             return json_encode($allData);
+        }
+
+        public static function getMaxPages($goodType) {
+            $html = file_get_html(self::getGoodTypeUrl($goodType));
+
+            // Поиск максимального количества страниц в разделе магазина
+            $HtmlPages = $html->find('div[class="page-goods__pager"]')[0]->find('li');
+            $maxPages = $HtmlPages[count($HtmlPages) - 1]->find('a')[0]->innertext;
+
+            return $maxPages;
+        }
+
+        public static function getGoodTypeUrl($goodType) {
+            switch ($goodType) 
+            { 
+                case GoodType::CPU:
+                    return GoodTypeUri::CPU;
+                case GoodType::GPU:
+                    return GoodTypeUri::GPU;
+                case GoodType::HDD:
+                    return GoodTypeUri::HDD;
+                case GoodType::SSD:
+                    return GoodTypeUri::SSD;
+                case GoodType::RAM:
+                    return GoodTypeUri::RAM;
+                case GoodType::MB:
+                    return GoodTypeUri::MB;  
+                case GoodType::PS:
+                    return GoodTypeUri::PS;                    
+                default:
+                    http_response_code(404);
+                    return;
+            }
         }
 
         // На случай если надо будет что то делать с изображением, пока что достаточно напрямую скачивать по URL

@@ -7,6 +7,7 @@
         private $rotationSpeed;
         private $bufferSize;
         private $interface;
+        public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)
         {
@@ -19,20 +20,18 @@
             $this->rotationSpeed = $shortStats[1];
             $this->bufferSize = $shortStats[2];
             $this->interface = $shortStats[3];
+
+            $this->setPreviewData();
         }
 
-        public function toJson()
+        public function setPreviewData()
         {
-            $arrayData = parent::toJson();
-            $previewData = array('previewData' => [
+            $this->previewData = array([
                 'Объем памяти' =>  $this->memorySize,
                 'Скорость вращ.' => $this->rotationSpeed,
                 'Объем буфера' => $this->bufferSize,
                 'Интерфейс' => $this->interface
-                
             ]);
-
-            return json_encode(array_merge($arrayData, $previewData));
         }
 
     }

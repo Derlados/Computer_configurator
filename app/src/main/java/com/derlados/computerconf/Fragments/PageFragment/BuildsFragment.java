@@ -2,6 +2,9 @@ package com.derlados.computerconf.Fragments.PageFragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.derlados.computerconf.Constants.HandlerMessages;
 import com.derlados.computerconf.Constants.TypeGood;
 import com.derlados.computerconf.Fragments.BuildFullFragment;
 import com.derlados.computerconf.Fragments.OnFragmentInteractionListener;
@@ -33,6 +37,7 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
     // Данные для модификации после возврата с режима сборки
     LinearLayout blankToModify;
     Build buildToModify;
+    boolean addToParent;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -56,10 +61,20 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
         // Операция тяжелая для главного потока, необходимо будет перенести в другой, к тому же это надо будет синхронизировать с выгрузкой данных с самого устройства
 
         // Создание списка сохраненных сборок (последняя изменяемая сборка является текущей, потому находится сверху списка)
-        ArrayList<Build> buildsList = userData.getBuilds();
-        for (int i = 0; i < buildsList.size(); ++i) {
-            setBuildBlank(buildsList.get(i), (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_build_blank, buildsContainer, false), true);
-        }
+        Handler handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+
+                if (msg.what == HandlerMessages.GET_BUILDS.ordinal()) {
+                    @SuppressWarnings("unchecked")
+                    ArrayList<Build> builds = (ArrayList<Build>) msg.obj;
+                    for (int i = 0; i < builds.size(); ++i)
+                        setBuildBlank(builds.get(i), (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_build_blank, buildsContainer, false), true);
+                }
+            }
+        };
+        userData.getBuilds(handler);
 
         return fragment;
     }
@@ -69,14 +84,11 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
         super.onHiddenChanged(hidden);
 
         // Если сборка модифицировалась - данные обновляются, если сборка создавалась - добавляется в список
-        if (!hidden) {
-            if (blankToModify != null)
-                setBuildBlank(buildToModify, blankToModify, false);
-            else {
-                LinearLayout newBlank = (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_build_blank, buildsContainer, false);
-                setBuildBlank(UserData.getUserData().getCurrentBuild(), newBlank, true);
-            }
+        if (!hidden && blankToModify != null) {
+            setBuildBlank(buildToModify, blankToModify, addToParent);
             UserData.getUserData().discardCurrentBuild(); // Когда пользователь выходит в меню, текущая сборка сбрасывается
+            blankToModify = null;
+            buildToModify = null;
         }
     }
 
@@ -163,6 +175,9 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
             // Если нажата кнопка справа внизу - создается новая сборка
             case R.id.fragment_builds_float_bt:
                 userData.addNewBuild();
+                blankToModify = (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_build_blank, buildsContainer, false);
+                buildToModify = userData.addNewBuild();
+                addToParent = true;
                 frListener.onFragmentInteraction(this, new BuildFullFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, null, "Build");
                 break;
             // Нажатие было произведено на саму сборку - открывается нужная сборка, индекс сборки берется относительно положения в списке
@@ -173,6 +188,7 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
                 // Получение данных для будущей модификации
                 buildToModify = userData.getBuildByIndex(index);
                 blankToModify = (LinearLayout) view.getParent();
+                addToParent = false;
 
                 userData.setCurrentBuild(buildToModify); // Выбранная сборка становится текущей (что собственно логично)
                 frListener.onFragmentInteraction(this, new BuildFullFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, null, "Build");

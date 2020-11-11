@@ -7,6 +7,7 @@
         private $flash;
         private $form;
         private $readWritespeed;
+        public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)
         {
@@ -21,20 +22,19 @@
             $this->flash = $shortStats[$index + 1];
             $this->form = $shortStats[$index + 2];
             $this->readWritespeed = $shortStats[$index + 5] .  $shortStats[$index + 7]; 
+
+            $this->setPreviewData();
         }
 
-        public function toJson()
+        public function setPreviewData()
         {
-            $arrayData = parent::toJson();
-            $previewData = array('previewData' => [
+            $this->previewData = array([
                 'Объем памяти' =>  $this->memorySize,
                 'Флеш память' => $this->flash,
                 'Форм фактор' => $this->form,
                 'Чтение/запись' => $this->readWritespeed
                 
             ]);
-
-            return json_encode(array_merge($arrayData, $previewData));
         }
 
     }
