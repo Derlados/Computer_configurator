@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -72,7 +73,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         super.onHiddenChanged(hidden);
 
         // Изменения должны происходить если окно было показано и это не первый заход в данное окно
-        if (!hidden) {
+        if (!hidden && containerToModify != null) {
             int countGoodInList = containerToModify.getChildCount() - 1;
             // Если количество товаров в сборке изменилось - пользователь вернулся выбрав товар, иначе ничего не выбрал
             if (countGoodInList !=  currentBuild.getGoodList(typeGoodToModify).size()) {
@@ -188,9 +189,8 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         ((TextView) blank.findViewById(R.id.inflate_good_blank_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", good.getPrice()));
 
         // Установка изображения
-        //TODO
-        // Придумать какой то более явный интерфейс для скачивания изображения с памяти
         ((ImageView) blank.findViewById(R.id.inflate_good_blank_img)).setImageBitmap(good.getImage());
+        blank.findViewById(R.id.inflate_good_blank_pb).setVisibility(View.GONE);
 
         // Кнопка удалить комплектующее
         ImageButton ibtDelete = blank.findViewById(R.id.inflate_good_blank_ibt_corner);
@@ -203,6 +203,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
             }
         });
         ibtDelete.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_trash, App.getApp().getTheme())); // Отрисовка значка
+
 
 
         goodsContainer.addView(blank, index);

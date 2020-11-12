@@ -15,8 +15,18 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_processor_24" />
+        android:layout_marginTop="10dp"/>
+
+    <ProgressBar
+        android:id="@+id/inflate_good_blank_pb"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="74dp"
+        android:layout_height="85dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="27dp"
+        android:indeterminateTint="@color/white" />
 
     <TableLayout
         android:id="@+id/inflate_good_blank_tr_data"

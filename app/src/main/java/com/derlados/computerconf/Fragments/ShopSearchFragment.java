@@ -2,6 +2,7 @@ package com.derlados.computerconf.Fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -28,25 +30,13 @@ import com.derlados.computerconf.Constants.TypeGood;
 import com.derlados.computerconf.Internet.GsonSerializers.HashMapDeserializer;
 import com.derlados.computerconf.Internet.RequestAPI;
 import com.derlados.computerconf.Objects.Good;
-import com.derlados.computerconf.Internet.RequestHelper;
 import com.derlados.computerconf.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -65,13 +55,12 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         CURRENT,
         CHOSEN_PAGE
     }
-    int currentPage = 1, maxPages;
-
-    GoodsDownloader goodsDownloader = new GoodsDownloader();
+    int currentPage = 1, maxPages = 0;
 
     LinearLayout goodsContainer; // XML контейнер (лаяут) в который ложаться все товары
     TypeGood typeGood; // Тип комплектующего на текущей странице
-    Good[] goodsList; // Список с комплектующими
+    ArrayList<Good> goodsList = new ArrayList<>(); // Список с комплектующими
+    ArrayList<RelativeLayout> blanks = new ArrayList<>();
 
     OnFragmentInteractionListener fragmentListener;
 
@@ -94,6 +83,10 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     private void downloadPage(TypeGood typeGood, Direction dir, Integer page) {
         goodsContainer.removeAllViews();// Очистка фрагмента фрагмента
 
+        // Очистка данных
+        goodsList.clear();
+        blanks.clear();
+
         // Выбор страницы которую необходимо загрузить
         switch (dir) {
             case BACK:
@@ -111,6 +104,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
         }
 
+        GoodsDownloader goodsDownloader = new GoodsDownloader();
         goodsDownloader.execute(typeGood.toString(), Integer.toString(currentPage));
     }
 
@@ -136,7 +130,6 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         // key - характеристика, value - значение
         int count = 0;
         for (HashMap.Entry<String, String> entry: previewData.entrySet()) {
-
             if (count < 2) {
                 ((TextView) row1.getChildAt(count)).setText(entry.getKey());
                 ((TextView) row2.getChildAt(count)).setText(entry.getValue());
@@ -152,11 +145,10 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         // Установка рейтинга и цены
         ((TextView) blank.findViewById(R.id.inflate_good_blank_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", good.getPrice()));
 
-        loadImage((ImageView) blank.findViewById(R.id.inflate_good_blank_img), good);
+        blanks.add(blank);
 
         goodsContainer.addView(blank);
     }
-
 
     /* Загрузка панели для выбора страниц и её настройка
     * Вид панели для выбора страницы:
@@ -178,12 +170,12 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                 texts[i - 1] = Integer.toString(i);
             texts[COUNT_ELEMENTS - 2] = "..";
         }
-        else if (maxPages - currentPage < 4) { // Если текущая страница отличается менее чем на 4, нужно показать страницы без ".." с правой части
+        else if (maxPages - currentPage < 4) { // Если текущая страница отличается менее чем на 4 от максимальной, нужно показать страницы без ".." с правой части
             texts[1] = "..";
             for (int i = 1; i < 5; ++i)
                 texts[COUNT_ELEMENTS - i - 1] = Integer.toString(maxPages - i);
         }
-        else { // если страница в середине всего количеста, показывается в стандартном виде с двумя пропусками ".." на обоих сторонах
+        else { // если страница в середине всего количества, показывается в стандартном виде с двумя пропусками ".." на обоих сторонах
             texts[1] = "..";
             texts[2] = Integer.toString(currentPage - 1);
             texts[3] = Integer.toString(currentPage);
@@ -213,21 +205,22 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         goodsContainer.addView(flipPager);
     }
 
-    //TODO
-    // Загрузку нужно будет вынести в отдельный класс с потоками
-    public void loadImage(final ImageView imageView, Good good) {
-        RequestHelper.getRequest(getContext(), good.getImageUrl(), RequestHelper.TypeRequest.IMAGE, new RequestHelper.CallBack<Bitmap>() {
+    // Загрузка изображений для комплектующих
+    public void loadImages() {
+        for (int i = 0; i < goodsList.size(); ++i) {
+            final RelativeLayout blank = blanks.get(i);
+            ImageView imageView = blank.findViewById(R.id.inflate_good_blank_img);
+            Picasso.get().load(goodsList.get(i).getImageUrl()).into(imageView,  new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    blank.findViewById(R.id.inflate_good_blank_pb).setVisibility(View.GONE); // Скрытие прогресс бара
+                }
 
-            @Override
-            public void call(Bitmap response) {
-                imageView.setImageBitmap(response);
-            }
-
-            @Override
-            public void fail(String message) {
-                Toast.makeText(getContext(), "Проблемы с сервером", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onError(Exception e) {
+                }
+            });
+        }
     }
 
     /* Обработчик нажатий. Есть два места для обработки - один из бланков комплектующего и панель прокрутки страниц
@@ -245,8 +238,8 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                 // Отправка объекта в следующий фрагмет для отображения полной информации о нем
                 Bundle data = new Bundle();
                 Gson gson = new Gson();
-                Good sendGood = goodsList[goodsContainer.indexOfChild(view)]; // Объект получается по индексу вьюшки бланка в списке
-                sendGood.setImage(image); // Добавление изображения //TODO надо что то с этим конкретно сделать
+                Good sendGood = goodsList.get(goodsContainer.indexOfChild(view)); // Объект получается по индексу вьюшки бланка в списке
+                sendGood.setImage(image);
                 data.putString("good", gson.toJson(sendGood)); // Объект передается в виде json строки, сам берется относительно его положения в контейнере
                 data.putSerializable("typeGood", typeGood);
                 fragmentListener.onFragmentInteraction(this, new FullGoodDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
@@ -269,9 +262,10 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     }
 
     // Класс для загрузки превью информации о комплектующих
-    public class GoodsDownloader extends AsyncTask<String, String, String> {
+    public class GoodsDownloader extends AsyncTask<String, Integer, String> {
         Retrofit retrofit;
         RequestAPI requestAPI;
+        final Integer SET_GOODS = 0, SET_FLIP_PAGER = 1;
 
         @Override
         protected void onPreExecute() {
@@ -290,23 +284,64 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
             requestAPI = retrofit.create(RequestAPI.class);
         }
 
+        /* Прорисовка элементов
+        * SET_GOODS - прорисовка комплектующих
+        * SET_FLIP_PAGER - прорисовка
+        * */
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+            Integer action = values[0];
+
+            if (action.equals(SET_GOODS)) {
+                for (int i = 0; i < goodsList.size(); ++i)
+                    createGoodUI(goodsList.get(i));
+                loadImages();
+            }
+            else if (action.equals(SET_FLIP_PAGER))
+                createGoodsFlipPager();
+
+        }
+
         // Получение всего списка товаров. Параметры: 0 - тип комплектующего, 1 - страница которую необходимо загрузить
+        // Так же если необходимо загрузить количество страниц - загружает количество страниц
         @Override
         protected String doInBackground(String... values) {
             String typeGood = values[0];
             int page = Integer.parseInt(values[1]);
 
-            Call<Good[]> call = requestAPI.getGoodsPage(typeGood, page);
-            Response<Good[]> response;
+            // Загрузка списка комплектующих выбранной категории
+            Call<ArrayList<Good>> callGoods = requestAPI.getGoodsPage(typeGood, page);
+            Response<ArrayList<Good>> response1;
             try {
-                response = call.execute();
-                if (response.isSuccessful())
-                    goodsList = response.body();
+                response1 = callGoods.execute();
+                if (response1.isSuccessful()) {
+                    goodsList = response1.body();
+                    publishProgress(SET_GOODS);
+                }
             }
             catch (Exception e) {
                 Log.e(LogsKeys.ERROR_LOG.toString(), e.toString());
             }
 
+            // Если неизвестно максимальное количество страниц в поиске
+            if (maxPages == 0) {
+                Call<Integer> callMaxPages = requestAPI.getMaxPages(typeGood);
+                Response<Integer> response2;
+                try {
+                    response2 = callMaxPages.execute();
+                    if (response2.isSuccessful()) {
+                        maxPages = response2.body();
+                        publishProgress(SET_FLIP_PAGER);
+                    }
+                }
+                catch (Exception e) {
+                    Log.e(LogsKeys.ERROR_LOG.toString(), e.toString());
+                }
+            }
+            else
+                publishProgress(SET_FLIP_PAGER);
 
             return null;
         }
@@ -315,38 +350,6 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-
-            for (int i = 0; i < goodsList.length; ++i)
-                createGoodUI(goodsList[i]);
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
-    }
-
-    //TODO
-    public class ImageDownloader extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... values) {
-
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            for (int i = 0; i < goodsList.length; ++i)
-                createGoodUI(goodsList[i]);
         }
 
         @Override

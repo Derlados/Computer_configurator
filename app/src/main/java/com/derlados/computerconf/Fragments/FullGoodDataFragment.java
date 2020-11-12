@@ -1,7 +1,9 @@
 package com.derlados.computerconf.Fragments;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +17,21 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.derlados.computerconf.Constants.TypeGood;
+import com.derlados.computerconf.Internet.RequestAPI;
 import com.derlados.computerconf.Objects.Good;
-import com.derlados.computerconf.Internet.RequestHelper;
 import com.derlados.computerconf.Objects.UserData;
 import com.derlados.computerconf.R;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-
-import java.lang.reflect.Type;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FullGoodDataFragment extends Fragment implements View.OnClickListener {
 
@@ -41,7 +46,6 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
         super.onAttach(context);
         fragmentListener = (OnFragmentInteractionListener) context;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,25 +76,8 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
         getView().findViewById(R.id.fragment_full_data_bt_add_to_build).setOnClickListener(this);
     }
 
-    //TODO
-    // Вынести в отдельный класс с потоками
     private void downloadFullData() {
-        String apiUrl = RequestHelper.MAIN_URL + String.format("goods/fullData?urlFullData=%s", currentGood.getUrlFullData());
-        RequestHelper.getRequest(getContext(), apiUrl, RequestHelper.TypeRequest.STRING, new RequestHelper.CallBack<String>() {
-
-            @Override
-            public void call(String response) {
-                Type type = new TypeToken<ArrayList<Good.dataBlock>>() {}.getType();
-                ArrayList<Good.dataBlock> fullData = (new Gson()).fromJson(response, type);
-                currentGood.setFullData(fullData);;
-                setFullData();
-            }
-
-            @Override
-            public void fail(String message) {
-                Toast.makeText(getContext(), "Проблемы с сервером", Toast.LENGTH_SHORT).show();
-            }
-        });
+        (new GoodFullDataDownloader()).execute(currentGood);
     }
 
     private void setPreviewData() {
@@ -127,4 +114,65 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
         Toast.makeText(getActivity().getApplicationContext(), "Добавлено в сборку", Toast.LENGTH_SHORT).show();
         fragmentListener.onFragmentInteraction(this, null, OnFragmentInteractionListener.Action.RETURN_FRAGMENT_BY_TAG, new Bundle(), "Build");
     }
+
+    // Класс для загрузки информации
+    public class GoodFullDataDownloader extends AsyncTask<Good, Integer, String> {
+        Retrofit retrofit;
+        RequestAPI requestAPI;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            // Для работы с сетью
+            retrofit =  new Retrofit.Builder()
+                    .baseUrl("http://192.168.1.3/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            requestAPI = retrofit.create(RequestAPI.class);
+        }
+
+        /* Прорисовка элементов
+         * SET_GOODS - прорисовка комплектующих
+         * SET_FLIP_PAGER - прорисовка
+         * */
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+        }
+
+        // Получение полной информации о комплектующем, если их нету. Параметры: 0 - тип комплектующего
+        @Override
+        protected String doInBackground(Good... values) {
+            Good good = values[0];
+
+            if (good.getFullData() == null) {
+                Call<ArrayList<Good.dataBlock>> call = requestAPI.getGoodFullData(good.getUrlFullData());
+                try {
+                    Response<ArrayList<Good.dataBlock>> response = call.execute();
+                    if (response.isSuccessful())
+                        good.setFullData(response.body());
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+        }
+
+        // Отрисовка полной информации
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            setFullData();
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+    }
+
 }
