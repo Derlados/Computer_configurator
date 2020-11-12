@@ -68,6 +68,15 @@
 
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/fragment_full_data_pb"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:indeterminateTint="@color/white" />
+
     </LinearLayout>
 
 

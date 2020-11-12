@@ -106,6 +106,8 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
                 dataContainer.addView(dataDesc);
             }
         }
+
+        getView().findViewById(R.id.fragment_full_data_pb).setVisibility(View.GONE); // Скрытие прогресс бара
     }
 
     @Override

@@ -93,7 +93,11 @@ public class UserData {
         currentBuild = null;
     }
 
-    //
+    /* Отправка данных объекту который требует их через соответствующий хендлер
+    * Параметры:
+    * build - сборка
+    * send - флаг того надо отправить данные сейчас или нет
+    * */
     private void sendBuildToHandler(Build build, boolean send) {
         if (build != null)
             bufferBuilds.add(build);
@@ -173,7 +177,13 @@ public class UserData {
                     Log.e(LogsKeys.ERROR_LOG.toString(), String.format(Locale.getDefault(), "File %s can't be read. Error: %s", file.getName(), e.toString()));
                 }
             }
-            sendBuildToHandler(null, true);
+
+            sendBuildToHandler(null, true); // Отправка остатка
+
+            // Сообщение о конце загрузки
+            Message msg = handler.obtainMessage();
+            msg.what = HandlerMessages.FINISH.ordinal();
+            this.handler.sendMessage(msg);
         }
     }
 

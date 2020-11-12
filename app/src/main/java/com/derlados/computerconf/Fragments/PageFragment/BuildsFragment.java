@@ -57,9 +57,6 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
         FloatingActionButton addBuildBt = fragment.findViewById(R.id.fragment_builds_float_bt);
         addBuildBt.setOnClickListener(this);
 
-        //TODO
-        // Операция тяжелая для главного потока, необходимо будет перенести в другой, к тому же это надо будет синхронизировать с выгрузкой данных с самого устройства
-
         // Создание списка сохраненных сборок (последняя изменяемая сборка является текущей, потому находится сверху списка)
         Handler handler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -72,6 +69,10 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
                     for (int i = 0; i < builds.size(); ++i)
                         setBuildBlank(builds.get(i), (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_build_blank, buildsContainer, false), true);
                 }
+
+                // Конец
+                if (msg.what == HandlerMessages.FINISH.ordinal())
+                    getView().findViewById(R.id.inflate_fragment_builds_pb).setVisibility(View.GONE);
             }
         };
         userData.getBuilds(handler);
@@ -147,7 +148,7 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
 
         // Добавление бланка
         if (addToParent)
-            buildsContainer.addView(buildBlank);
+            buildsContainer.addView(buildBlank, buildsContainer.getChildCount() - 1);
     }
 
     // Формирование строки списка комплектующих
