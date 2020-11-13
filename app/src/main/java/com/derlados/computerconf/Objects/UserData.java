@@ -135,18 +135,15 @@ public class UserData {
         Gson gson = new Gson();
 
         // Сохраненние изображений всех комплектующих
-        HashMap<TypeGood, ArrayList<Good>> buildGoods = currentBuild.getGoods();
-        for (HashMap.Entry<TypeGood, ArrayList<Good>> entry : buildGoods.entrySet()) {
-            for (int i = 0; i < entry.getValue().size(); ++i) {
-                Good good = entry.getValue().get(i);
-                saveImageOnDevice(good.getImage(), good.getImageName());
-            }
+        HashMap<TypeGood, Good> buildGoods = currentBuild.getGoods();
+        for (HashMap.Entry<TypeGood, Good> entry : buildGoods.entrySet()) {
+            Good good = entry.getValue();
+            saveImageOnDevice(good.getImage(), good.getImageName());
         }
 
         // Сохраненние самой сборки в файл, где имя файла - имя самой сборки
         try {
-            //TODO
-            String nameBuild = currentBuild.getName().equals("") ? "default" : currentBuild.getName();
+            String nameBuild = currentBuild.getName().equals("") ? "default" : currentBuild.getName(); //TODO
             File buildFile = new File(rootBuilds, nameBuild);
             BufferedWriter writer = new BufferedWriter(new FileWriter(buildFile));
             String json = gson.toJson(currentBuild);

@@ -154,15 +154,10 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
     // Формирование строки списка комплектующих
     private String createStrGoodList(Build build, TypeGood typeGood) {
         StringBuilder strGoodsList = new StringBuilder();
-        ArrayList<Good> goodsList = build.getGoodList(typeGood);
+        Good good = build.getGood(typeGood);
 
-        if (goodsList.size() != 0) {
-            strGoodsList.append(goodsList.get(0).getName());
-            for (int i = 1; i < goodsList.size(); ++i) {
-                strGoodsList.append("\n");
-                strGoodsList.append(goodsList.get(i).getName());
-            }
-        }
+        if (good != null)
+            strGoodsList.append(good.getName());
         else
             strGoodsList.append("--");
 

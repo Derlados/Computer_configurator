@@ -73,14 +73,11 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         super.onHiddenChanged(hidden);
 
         // Изменения должны происходить если окно было показано и это не первый заход в данное окно
-        if (!hidden && containerToModify != null) {
-            int countGoodInList = containerToModify.getChildCount() - 1;
-            // Если количество товаров в сборке изменилось - пользователь вернулся выбрав товар, иначе ничего не выбрал
-            if (countGoodInList !=  currentBuild.getGoodList(typeGoodToModify).size()) {
-                setHeaderData(); // В заголовке данные могли изменится, потому их надо обновить
-                Good goodToModify =  currentBuild.getGoodByIndex(typeGoodToModify, containerToModify.getChildCount() - 1);
-                createGoodUI(goodToModify, containerToModify, containerToModify.getChildCount() - 1);
-            }
+        if (!hidden && containerToModify != null && currentBuild.getGood(typeGoodToModify) != null) {
+            setHeaderData(); // В заголовке данные могли изменится, потому их надо обновить
+            Good goodToModify =  currentBuild.getGood(typeGoodToModify);
+            createGoodUI(goodToModify, containerToModify);
+            containerToModify = null;
         }
     }
 
@@ -119,12 +116,12 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
             TypeGood typeGood = getTypeGood(block.getId());
 
             // Добавление комплектующих
-            ArrayList<Good> goodList = UserData.getUserData().getCurrentBuild().getGoodList(typeGood);
-            for (int j = 0; j < goodList.size(); ++j)
-                createGoodUI(goodList.get(j), block, block.getChildCount() - 1);
+            Good good = UserData.getUserData().getCurrentBuild().getGood(typeGood);
+            if (good != null)
+                createGoodUI(good, block);
 
             // Кнопка на добавление нового комплектующего (ереводит на магазин)
-            block.getChildAt(block.getChildCount() - 1).setOnClickListener(new View.OnClickListener() {
+            block.getChildAt(0).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     pickGood(view);
@@ -143,7 +140,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     }
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
-    private void createGoodUI(Good good, final LinearLayout goodsContainer, int index) {
+    private void createGoodUI(Good good, final LinearLayout goodsContainer) {
         final RelativeLayout blank = (RelativeLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
 
         // Отображение полной статистики при нажатии на бланк комплектующего
@@ -197,16 +194,16 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         ibtDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentBuild.deleteGoodByIndex(getTypeGood(goodsContainer.getId()), goodsContainer.indexOfChild(blank)); // Удаление идет относительно текущего положения в списке
+                currentBuild.deleteGood(getTypeGood(goodsContainer.getId())); // Удаление идет относительно текущего положения в списке
                 goodsContainer.removeView(blank); // Удаление комплектующего
+                goodsContainer.getChildAt(0).setVisibility(View.VISIBLE);
                 setHeaderData(); // Данные заголовка необходимо обновить
             }
         });
         ibtDelete.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_trash, App.getApp().getTheme())); // Отрисовка значка
 
-
-
-        goodsContainer.addView(blank, index);
+        goodsContainer.getChildAt(0).setVisibility(View.GONE); // Скрытие кнопки "+"
+        goodsContainer.addView(blank);
     }
 
     // Получение типа комплектующего с которым происходит взаимодействие
@@ -286,7 +283,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         TypeGood typeGood = getTypeGood(block.getId());
 
         // Подгтовка данных, сериализация
-        Good sendGood = currentBuild.getGoodByIndex(typeGood, block.indexOfChild(view)); // Объект получается по индексу вьюшки бланка в списке
+        Good sendGood = currentBuild.getGood(typeGood); // Объект получается по индексу вьюшки бланка в списке
         data.putString("good", gson.toJson(sendGood)); // Объект передается в виде json строки, сам берется относительно его положения в контейнере
         data.putSerializable("typeGood", typeGood);
 

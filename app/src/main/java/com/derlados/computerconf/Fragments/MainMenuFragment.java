@@ -14,7 +14,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.derlados.computerconf.Fragments.PageFragment.MenuPageAdapter;
 import com.derlados.computerconf.Fragments.PageFragment.PageFragment;
-import com.derlados.computerconf.Objects.UserData;
 import com.derlados.computerconf.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
