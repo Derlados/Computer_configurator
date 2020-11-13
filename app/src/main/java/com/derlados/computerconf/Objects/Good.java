@@ -59,6 +59,14 @@ public class Good {
         return fullData;
     }
 
+    public dataBlock getDataBlockByHeader(String header) {
+        for (int i = 0; i < fullData.size(); ++i) {
+            if (fullData.get(i).header.equals(header))
+                return fullData.get(i);
+        }
+        return null;
+    }
+
     // Данные изображения сохраняются и загружаются на устройство так как невозможно гарантировать стабильность работы с Bitmap который хранится прямо в объекте
     public Bitmap getImage() {
         return UserData.getUserData().restoreImageFromDevice(imageName);

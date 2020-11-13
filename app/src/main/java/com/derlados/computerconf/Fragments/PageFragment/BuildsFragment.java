@@ -170,7 +170,6 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
         switch (view.getId()) {
             // Если нажата кнопка справа внизу - создается новая сборка
             case R.id.fragment_builds_float_bt:
-                userData.addNewBuild();
                 blankToModify = (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_build_blank, buildsContainer, false);
                 buildToModify = userData.addNewBuild();
                 addToParent = true;

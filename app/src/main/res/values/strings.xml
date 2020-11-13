@@ -32,4 +32,6 @@
     <string name="build_desc">Описание сборки</string>
     <string name="build_name">Имя сборки</string>
     <string name="other">Другое</string>
+    <string name="false_compatibility">Сборка несовместима</string>
+    <string name="true_compatibility">Сборка совместима</string>
 </resources>

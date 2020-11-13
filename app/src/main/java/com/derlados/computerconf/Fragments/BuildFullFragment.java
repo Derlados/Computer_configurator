@@ -46,6 +46,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     private LinearLayout containerToModify;
     private TextView tvPrice; // Текстовое поле с ценой
     private TextView tvComplete;
+    private TextView tvCompatibility;
     private ImageView imageBuild; //TODO
 
     @Override
@@ -95,14 +96,16 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
 
         // Установка данных заголовка (нахождение полей и запись в них значения)
         tvComplete = currentFragment.findViewById(R.id.fragment_build_full_tv_complete_status);
-        tvPrice = ((TextView) currentFragment.findViewById(R.id.fragment_build_full_tv_price));
+        tvPrice = currentFragment.findViewById(R.id.fragment_build_full_tv_price);
+        tvCompatibility = currentFragment.findViewById(R.id.fragment_build_full_tv_compatibility);
         setHeaderData();
 
         // Установка обработчиков для кнопок скрытия/раскрытия блоков (невозможно прямо прописать в xml, так как это всё реализовано на фрагменте), следовательно обработчики вызывают функцию
 
-        // Структура блока описания (0 - текст "Описание", 1 - поле для ввода описания. Далее четные кнопки хедеры блоков, нечетные - содержание каждого блока (Linear layout))
+        // Структура блока описания (0 - текст "Описание", 1 - поле с описанием совместимости, 2 - поле для ввода описания.
+        // Далее нечетные кнопки хедеры блоков, четные - содержание каждого блока (Linear layout))
         LinearLayout fullDesc = currentFragment.findViewById(R.id.fragment_build_full_ll_full_desc);
-        for (int i = 2; i < fullDesc.getChildCount(); i += 2)
+        for (int i = 3; i < fullDesc.getChildCount(); i += 2)
             fullDesc.getChildAt(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -111,7 +114,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
             });
 
         // Загрузка всех данных сборки в каждый блок комплектующих
-        for (int i = 3; i < fullDesc.getChildCount(); i += 2) {
+        for (int i = 4; i < fullDesc.getChildCount(); i += 2) {
             LinearLayout block = (LinearLayout) fullDesc.getChildAt(i);
             TypeGood typeGood = getTypeGood(block.getId());
 
@@ -130,13 +133,23 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         }
     }
 
-    // Установка всех данных в заголовке (цена сборки, статус завершенности, изображение)
+    // Установка всех данных в заголовке (цена сборки, статус завершенности, изображение, совместимость)
     private void setHeaderData() {
-        tvPrice.setText(String.format(Locale.getDefault(), "%.2f ГРН",  currentBuild.getPrice()));
+        tvPrice.setText(String.format(Locale.getDefault(), "%.2f ГРН", currentBuild.getPrice()));
         if (currentBuild.isComplete())
             tvComplete.setText(getResources().getString(R.string.complete));
         else
             tvComplete.setText(getResources().getString(R.string.not_complete));
+
+        String compatibilityTest = currentBuild.getCompatibility();
+        if (compatibilityTest.equals(getResources().getString(R.string.true_compatibility))) {
+            tvCompatibility.setText(compatibilityTest);
+            tvCompatibility.setTextColor(getResources().getColor(R.color.green, App.getApp().getTheme()));
+        }
+        else {
+            tvCompatibility.setText(compatibilityTest);
+            tvCompatibility.setTextColor(getResources().getColor(R.color.red, App.getApp().getTheme()));
+        }
     }
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)

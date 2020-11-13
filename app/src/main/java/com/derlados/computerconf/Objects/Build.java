@@ -4,7 +4,10 @@ import android.animation.TypeEvaluator;
 import android.graphics.Bitmap;
 import android.util.TypedValue;
 
+import com.derlados.computerconf.App;
+import com.derlados.computerconf.Constants.CompatParam;
 import com.derlados.computerconf.Constants.TypeGood;
+import com.derlados.computerconf.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,18 +28,65 @@ public class Build {
     }
 
     //TODO
-    public boolean checkCompatibility() {
+    public String getCompatibility() {
 
-        /*
+        int countMsg = 0;
+        String compatibilityMsg = "";
+
         // Подготовка всехкомплектующих
-        Good cpu = goods.get(TypeGood.CPU).size() != 0 ? goods.get(TypeGood.CPU).get(0) : null;
-        ArrayList<Good> rams = goods.get(TypeGood.RAM);
-        Good motherboard = goods.get(TypeGood.MOTHERBOARD).size() != 0 ? goods.get(TypeGood.MOTHERBOARD).get(0) : null;
-        Good powerSupply = goods.get(TypeGood.POWER_SUPPLY).size() != 0 ? goods.get(TypeGood.POWER_SUPPLY).get(0) : null;
-        */
+        Good cpu = goods.get(TypeGood.CPU);
+        Good motherboard = goods.get(TypeGood.MOTHERBOARD);
+        Good powerSupply = goods.get(TypeGood.POWER_SUPPLY);
+        Good ram = goods.get(TypeGood.RAM);
+        Good gpu = goods.get(TypeGood.GPU);
 
+        if (motherboard != null) {
+            if (cpu != null) {
+                Good.dataBlock motherboardData = motherboard.getDataBlockByHeader("Процессор");
+                Good.dataBlock cpuData = cpu.getDataBlockByHeader("Основные характеристики");
 
-        return true;
+                String motherboardSocket = motherboardData.data.get(CompatParam.Motherboard.SOCKET);
+                String cpuSocket = cpuData.data.get(CompatParam.Cpu.SOCKET);
+
+                if (!(motherboardSocket.contains(cpuSocket) || cpuSocket.contains(motherboardSocket))) {
+                    ++countMsg;
+                    compatibilityMsg += "\n" + countMsg + ". Сокет процессора и сокет материнской платы несовместимы";
+                }
+            }
+
+            if (ram != null) {
+                Good.dataBlock motherboardData = motherboard.getDataBlockByHeader("Оперативная память");
+                Good.dataBlock ramData = ram.getDataBlockByHeader("Основные характеристики");
+
+                String motherboardTypeMemory = motherboardData.data.get(CompatParam.Motherboard.TYPE_MEMORY);
+                String ramTypeMemory = ramData.data.get(CompatParam.Ram.TYPE_MEMORY);
+
+                if (!motherboardTypeMemory.equals(ramTypeMemory)) {
+                    ++countMsg;
+                    compatibilityMsg += "\n" + countMsg + ". Тип памяти ОЗУ и материнской платы несовместимы";
+                }
+            }
+        }
+
+        if (powerSupply != null && gpu != null) {
+            Good.dataBlock gpuData = gpu.getDataBlockByHeader("Основные характеристики");
+            Good.dataBlock powerSupplyData = powerSupply.getDataBlockByHeader("Основные характеристики");
+
+            String gpuPower = gpuData.data.get(CompatParam.Gpu.POWER);
+            String powerSupplyPower = powerSupplyData.data.get(CompatParam.PowerSupply.POWER);;
+
+            if (!gpuPower.equals(powerSupplyPower)) {
+                ++countMsg;
+                compatibilityMsg += "\n" + countMsg + ". Мощность блока питание ниже рекомендованной";
+            }
+        }
+
+        if (countMsg != 0)
+            compatibilityMsg = App.getApp().getResources().getString(R.string.false_compatibility) + compatibilityMsg;
+        else
+            compatibilityMsg = App.getApp().getResources().getString(R.string.true_compatibility);
+
+        return compatibilityMsg;
     }
 
     /* Добавление товара в сборку
