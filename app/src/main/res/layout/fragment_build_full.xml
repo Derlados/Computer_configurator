@@ -249,15 +249,14 @@
 
                 <Button
                     style="@style/block_header"
-                    android:text="@string/other"
+                    android:text="@string/pc_case"
                     android:drawableEnd="@drawable/ic_arrow_right_36"/>
 
                 <LinearLayout
-                    android:id="@+id/fragment_build_full_ll_other"
+                    android:id="@+id/fragment_build_full_ll_case"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <Button
                         style="@style/find_good_bt"/>
@@ -271,7 +270,7 @@
     </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/fragment_main_menu_bottom_navigator"
+        android:id="@+id/fragment_build_full_menu_bottom_navigator"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"

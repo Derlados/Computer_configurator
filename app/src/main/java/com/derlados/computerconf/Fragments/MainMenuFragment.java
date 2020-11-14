@@ -1,6 +1,5 @@
 package com.derlados.computerconf.Fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -55,13 +54,13 @@ public class MainMenuFragment extends Fragment implements BottomNavigationView.O
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId())
         {
-            case R.id.menu_bottom_navigator_action_builds:
+            case R.id.main_menu_bottom_navigator_action_builds:
                 pager.setCurrentItem(PageFragment.PageMenu.BUILDS.ordinal());
                 break;
-            case R.id.menu_bottom_navigator_action_shop:
+            case R.id.main_menu_bottom_navigator_action_shop:
                 pager.setCurrentItem(PageFragment.PageMenu.SHOP.ordinal());
                 break;
-            case R.id.menu_bottom_navigator_action_info:
+            case R.id.main_menu_bottom_navigator_action_info:
                 pager.setCurrentItem(PageFragment.PageMenu.INFO.ordinal());
                 break;
         }

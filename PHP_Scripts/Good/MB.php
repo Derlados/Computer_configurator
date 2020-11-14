@@ -3,10 +3,10 @@
 
     class MB extends Good {
 
-        private $socket;
-        private $chipset;
-        private $typeMemory;
-        private $fromFactor;
+        private $socket = "";
+        private $chipset = "";
+        private $typeMemory = "";
+        private $fromFactor = "";
         public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)

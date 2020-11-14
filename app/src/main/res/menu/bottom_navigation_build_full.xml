@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_bottom_navigator_action_builds"
+        android:id="@+id/build_full_menu_bottom_navigator_action_brain_com"
         android:title="@string/go_brain_com"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_redo_24"/>
 
     <item
-        android:id="@+id/menu_bottom_navigator_action_shop"
+        android:id="@+id/build_full_menu_bottom_navigator_action_save"
         android:title="@string/save"
         android:enabled="true"
         android:icon="@drawable/ic_save_24"/>

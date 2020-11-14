@@ -3,10 +3,10 @@
 
     class HDD extends Good {
 
-        private $memorySize;
-        private $rotationSpeed;
-        private $bufferSize;
-        private $interface;
+        private $memorySize = "";
+        private $rotationSpeed = "";
+        private $bufferSize = "";
+        private $interface = "";
         public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)

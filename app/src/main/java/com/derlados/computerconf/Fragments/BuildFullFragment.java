@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,8 +18,10 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
@@ -28,13 +31,14 @@ import com.derlados.computerconf.Objects.Build;
 import com.derlados.computerconf.Objects.Good;
 import com.derlados.computerconf.Objects.UserData;
 import com.derlados.computerconf.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class BuildFullFragment extends Fragment implements TextWatcher {
+public class BuildFullFragment extends Fragment implements TextWatcher, BottomNavigationView.OnNavigationItemSelectedListener {
 
     private final String DATA_TYPE_GOOD_KEY = "typeGood";
     private OnFragmentInteractionListener fragmentListener;
@@ -58,15 +62,10 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         currentFragment = inflater.inflate(R.layout.fragment_build_full, container, false);
+        ((BottomNavigationView)currentFragment.findViewById(R.id.fragment_build_full_menu_bottom_navigator)).setOnNavigationItemSelectedListener(this);
         currentBuild = UserData.getUserData().getCurrentBuild();
         setBuildContent();
         return currentFragment;
-    }
-
-    @Override
-    public void onDestroy() {
-        UserData.getUserData().saveCurrentBuild(); // Сохранение сборки перед выходом
-        super.onDestroy();
     }
 
     @Override
@@ -245,15 +244,15 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
             case R.id.fragment_build_full_ll_power_supply:
                 typeGood = TypeGood.POWER_SUPPLY;
                 break;
-            case R.id.fragment_build_full_ll_other:
-                typeGood = TypeGood.OTHERS;
+            case R.id.fragment_build_full_ll_case:
+                typeGood = TypeGood.CASE;
                 break;
         }
 
         return typeGood;
     }
 
-    ////////////////////////////////////////////////////////////////////////////// Обработчиков кнопок //////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////// Обработчики кнопок ///////////////////////////////////////////
 
     // Обработчик кнопок на визуальное отображения блока комплектующих (раскрыть/скрыть)
     public void openBlockList(View view) {
@@ -273,7 +272,8 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         }
     }
 
-    // Обработчик кнопок на добавление комплектующих - переходит на страницу поиска товаров. Тип комплектующего выбирается по id отцовского контейнера
+    // Обработчик кнопок на добавление комплектующих - переходит на страницу поиска товаров.
+    // Тип комплектующего выбирается по id отцовского контейнера
     public void pickGood(View view) {
         // Данные для модификации
         containerToModify = (LinearLayout) view.getParent();
@@ -304,7 +304,20 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
         fragmentListener.onFragmentInteraction(this, new FullGoodDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.build_full_menu_bottom_navigator_action_brain_com:
+                break;
+            case R.id.build_full_menu_bottom_navigator_action_save:
+                UserData.getUserData().saveCurrentBuild(); // Сохранение сборки перед выходом
+                Toast.makeText(App.getApp().getApplicationContext(), "Сохранено", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     //TODO
     // Может необходимо производить контроль и ограничить количество символов для имени сборки
@@ -332,4 +345,6 @@ public class BuildFullFragment extends Fragment implements TextWatcher {
             currentBuild.setName(text);
         }
     }
+
+
 }

@@ -67,6 +67,9 @@ public class ShopFragment extends PageFragment implements View.OnClickListener {
             case R.id.fragment_shop_power_supply:
                 typeGood = TypeGood.POWER_SUPPLY;
                 break;
+            case R.id.fragment_shop_case:
+                typeGood = TypeGood.CASE;
+                break;
             default:
                 return;
         }

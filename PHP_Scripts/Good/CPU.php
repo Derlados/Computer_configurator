@@ -3,11 +3,11 @@
 
     class CPU extends Good {
 
-        private $socket;
-        private $cores;
-        private $threads;
-        private $frequency;
-        private $TDP;
+        private $socket = "";
+        private $cores = "";
+        private $threads = "";
+        private $frequency = "";
+        private $TDP = "";
         public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)

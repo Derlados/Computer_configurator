@@ -12,6 +12,7 @@
         const RAM = 'https://brain.com.ua/category/Moduly_pamyaty-c1334/';
         const MB = 'https://brain.com.ua/category/Systemnye_materynskye_platy-c1264-226/';
         const PS = 'https://brain.com.ua/category/Bloky_pytanyya-c1442-221/';
+        const CASE = 'https://brain.com.ua/category/Korpusa-c1441-271/';
     }
 
     class GoodDownloader {
@@ -132,7 +133,9 @@
                 case GoodType::MB:
                     return GoodTypeUri::MB;  
                 case GoodType::PS:
-                    return GoodTypeUri::PS;                    
+                    return GoodTypeUri::PS;          
+                case GoodType::CASE:
+                    return GoodTypeUri::CASE;               
                 default:
                     http_response_code(404);
                     return;

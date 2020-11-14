@@ -3,10 +3,10 @@
 
     class RAM extends Good {
 
-        private $typeMemory;
-        private $sizeMemory;
-        private $frequency;
-        private $timing;
+        private $typeMemory = "";
+        private $sizeMemory = "";
+        private $frequency = "";
+        private $timing = "";
         public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)

@@ -3,10 +3,10 @@
 
     class PS extends Good {
 
-        private $power;
-        private $motherboard;
-        private $cpu;
-        private $sizeMm;
+        private $power = "";
+        private $motherboard = "";
+        private $cpu = "";
+        private $sizeMm = "";
         public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)

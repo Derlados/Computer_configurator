@@ -3,10 +3,10 @@
 
     class GPU extends Good {
 
-        private $interface;
-        private $memorySize;
-        private $typeMemory;
-        private $memoryBus;
+        private $interface = "";
+        private $memorySize = "";
+        private $typeMemory = "";
+        private $memoryBus = "";
         public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)

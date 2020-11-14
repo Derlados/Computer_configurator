@@ -12,7 +12,6 @@ import com.derlados.computerconf.Constants.HandlerMessages;
 import com.derlados.computerconf.Constants.LogsKeys;
 import com.derlados.computerconf.Constants.TypeGood;
 import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -36,7 +35,7 @@ public class UserData {
 
     private ArrayList<Build> builds = new ArrayList<>();
     private Build currentBuild;
-    private Context context;
+    private Context appContext;
 
     // Хендлер потока который вызывает загрузку данных с устройства
     Handler handler = null;
@@ -48,10 +47,10 @@ public class UserData {
     public static UserData getUserData() {
         if (instance == null) {
             instance = new UserData();
-            instance.context = App.getApp().getApplicationContext();
+            instance.appContext = App.getApp().getApplicationContext();
             // Создание ссылок на основные дериктории
-            instance.rootImages = instance.context.getDir(instance.IMAGES_DIR, Context.MODE_PRIVATE);
-            instance.rootBuilds = instance.context.getDir(instance.BUILDS_DIR, Context.MODE_PRIVATE);
+            instance.rootImages = instance.appContext.getDir(instance.IMAGES_DIR, Context.MODE_PRIVATE);
+            instance.rootBuilds = instance.appContext.getDir(instance.BUILDS_DIR, Context.MODE_PRIVATE);
 
             // Чтение сохраненных сборок
             Runnable restoring = new Runnable() {
@@ -121,7 +120,7 @@ public class UserData {
                 FileOutputStream fout = new FileOutputStream(jpgImage);
 
                 // Запись изображения
-                BitmapDrawable bmpDraw = new BitmapDrawable(context.getResources(), img);
+                BitmapDrawable bmpDraw = new BitmapDrawable(appContext.getResources(), img);
                 bmpDraw.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, fout);
             }
         }
@@ -143,8 +142,8 @@ public class UserData {
 
         // Сохраненние самой сборки в файл, где имя файла - имя самой сборки
         try {
-            String nameBuild = currentBuild.getName().equals("") ? "default" : currentBuild.getName(); //TODO
-            File buildFile = new File(rootBuilds, nameBuild);
+            String fileNameBuild = currentBuild.getId();
+            File buildFile = new File(rootBuilds, fileNameBuild);
             BufferedWriter writer = new BufferedWriter(new FileWriter(buildFile));
             String json = gson.toJson(currentBuild);
             writer.write(json);

@@ -76,10 +76,10 @@
                 app:icon="@drawable/ic_power_supply_24"/>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/fragment_shop_case"
                 style="@style/ButtonShop"
-                android:visibility="invisible"
-                android:text=""
-                app:icon="@drawable/ic_gpu_24" />
+                android:text="@string/cases"
+                app:icon="@drawable/ic_case_24" />
 
             <com.google.android.material.button.MaterialButton
                 style="@style/ButtonShop"

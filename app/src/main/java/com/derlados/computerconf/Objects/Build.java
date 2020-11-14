@@ -2,6 +2,7 @@ package com.derlados.computerconf.Objects;
 
 import android.animation.TypeEvaluator;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.util.TypedValue;
 
 import com.derlados.computerconf.App;
@@ -11,20 +12,19 @@ import com.derlados.computerconf.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Build {
 
-    /* Комплектующие, сделаны одного типа ArrayList<Good> и помещены в HashMap, так как проблематично разделить возврат объекта одного или массива.
-    * Для мобильности кода выгодно чтобы они были ArrayList<Good>, хоть к примеру материнку можно взять только одну.
-    * В будущем можно улучшить сборки где будут участвовать материнки на два процессора, на несколько видокарт
-    * Опять же помещено в хеш мап, так как нету простых ассоциативных массивов*/
-    private HashMap<TypeGood, Good> goods = new HashMap<>();
+    private HashMap<TypeGood, Good> goods = new HashMap<>(); // Комплетующие
     private double price = 0; // Цена сборки
     private String name = "", description = ""; // Имя и описание в сборке
+    private String id;
 
     // Инициализация всех типов товаров
     public Build() {
-
+        UUID randId = UUID.randomUUID();
+        this.id = randId.toString().replace("-", "");
     }
 
     //TODO
@@ -120,6 +120,10 @@ public class Build {
 
     public double getPrice() {
         return price;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setName(String name) {

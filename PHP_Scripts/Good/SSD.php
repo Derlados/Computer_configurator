@@ -3,10 +3,10 @@
 
     class SSD extends Good {
 
-        private $memorySize;
-        private $flash;
-        private $form;
-        private $readWritespeed;
+        private $memorySize = "";
+        private $flash = "";
+        private $form = "";
+        private $readWritespeed = "";
         public $previewData;
 
         public function __construct($name, $image, $price, $htmlShortStats, $urlFullData)

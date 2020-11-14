@@ -8,6 +8,7 @@
         const RAM = 'RAM';
         const MB = 'MOTHERBOARD';
         const PS = 'POWER_SUPPLY';
+        const CASE = 'CASE';
     }
 
     class Good 
