@@ -34,6 +34,6 @@
     <string name="other">Другое</string>
     <string name="false_compatibility">Сборка несовместима</string>
     <string name="true_compatibility">Сборка совместима</string>
-    <string name="cases">Корпусы</string>
+    <string name="pc_cases">Корпусы</string>
     <string name="pc_case">Корпус :</string>
 </resources>

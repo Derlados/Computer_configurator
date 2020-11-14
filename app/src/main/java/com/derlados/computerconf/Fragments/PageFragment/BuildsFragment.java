@@ -1,6 +1,7 @@
 package com.derlados.computerconf.Fragments.PageFragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,11 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 
+import com.derlados.computerconf.App;
 import com.derlados.computerconf.Constants.HandlerMessages;
 import com.derlados.computerconf.Constants.TypeGood;
 import com.derlados.computerconf.Fragments.BuildFullFragment;
@@ -87,7 +91,7 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
         // Если сборка модифицировалась - данные обновляются, если сборка создавалась - добавляется в список
         if (!hidden && blankToModify != null) {
             setBuildBlank(buildToModify, blankToModify, addToParent);
-            UserData.getUserData().discardCurrentBuild(); // Когда пользователь выходит в меню, текущая сборка сбрасывается
+            UserData.getUserData().discardCurrentBuild(false); // Когда пользователь выходит в меню, текущая сборка сбрасывается
             blankToModify = null;
             buildToModify = null;
         }
@@ -103,20 +107,26 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
         // Установка превью бланка сборки
         ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_name)).setText(build.getName());
         ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", build.getPrice()));
-        if (build.isComplete())
-            ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_complete)).setText(getResources().getString(R.string.complete));
-        else
-            ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_complete)).setText(getResources().getString(R.string.not_complete));
+
+        TextView tvComplete = buildBlank.findViewById(R.id.inflate_build_blank_tv_complete);
+        if (build.isComplete()) {
+            tvComplete.setText(getResources().getString(R.string.complete));
+            tvComplete.setTextColor(getResources().getColor(R.color.green, App.getApp().getTheme()));
+        }
+        else {
+            tvComplete.setText(getResources().getString(R.string.not_complete));
+            tvComplete.setTextColor(getResources().getColor(R.color.red, App.getApp().getTheme()));
+        }
 
         // Установка комплектующих в раскрывающемся списке (названия комплектующих)
-        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_CPU)).setText(createStrGoodList(build, TypeGood.CPU));
-        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_GPU)).setText(createStrGoodList(build, TypeGood.GPU));
-        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_motherboard)).setText(createStrGoodList(build, TypeGood.MOTHERBOARD));
-        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_RAM)).setText(createStrGoodList(build, TypeGood.RAM));
-        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_HDD)).setText(createStrGoodList(build, TypeGood.HDD));
-        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_SSD)).setText(createStrGoodList(build, TypeGood.SSD));
-        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_power_supply)).setText(createStrGoodList(build, TypeGood.POWER_SUPPLY));
-        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_others)).setText(createStrGoodList(build, TypeGood.OTHERS));
+        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_CPU)).setText(getGoodStr(build, TypeGood.CPU));
+        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_GPU)).setText(getGoodStr(build, TypeGood.GPU));
+        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_motherboard)).setText(getGoodStr(build, TypeGood.MOTHERBOARD));
+        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_RAM)).setText(getGoodStr(build, TypeGood.RAM));
+        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_HDD)).setText(getGoodStr(build, TypeGood.HDD));
+        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_SSD)).setText(getGoodStr(build, TypeGood.SSD));
+        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_power_supply)).setText(getGoodStr(build, TypeGood.POWER_SUPPLY));
+        ((TextView)buildBlank.findViewById(R.id.inflate_build_blank_tv_chosen_case)).setText(getGoodStr(build, TypeGood.CASE));
 
         // Кнопка для сворачивания/раскрытия списка комлектующих в сборке
         (buildBlank.findViewById(R.id.inflate_build_blank_ibt_hide)).setOnClickListener(new View.OnClickListener() {
@@ -146,22 +156,25 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
             }
         });
 
+        // Установка изображения сборки
+        if (build.getGood(TypeGood.CASE) != null) {
+            Bitmap caseImg = build.getGood(TypeGood.CASE).getImage();
+            ((ImageView)buildBlank.findViewById(R.id.inflate_build_blank_img)).setImageBitmap(caseImg);
+        }
+        else
+            ((ImageView)buildBlank.findViewById(R.id.inflate_build_blank_img)).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_case_24, App.getApp().getTheme()));
+
         // Добавление бланка
         if (addToParent)
             buildsContainer.addView(buildBlank, buildsContainer.getChildCount() - 1);
     }
 
     // Формирование строки списка комплектующих
-    private String createStrGoodList(Build build, TypeGood typeGood) {
-        StringBuilder strGoodsList = new StringBuilder();
+    private String getGoodStr(Build build, TypeGood typeGood) {
         Good good = build.getGood(typeGood);
-
         if (good != null)
-            strGoodsList.append(good.getName());
-        else
-            strGoodsList.append("--");
-
-        return strGoodsList.toString();
+            return good.getName();
+        return  "--";
     }
 
     @Override

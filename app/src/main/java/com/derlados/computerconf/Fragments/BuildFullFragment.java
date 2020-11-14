@@ -1,6 +1,8 @@
 package com.derlados.computerconf.Fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -41,6 +43,8 @@ import java.util.Locale;
 public class BuildFullFragment extends Fragment implements TextWatcher, BottomNavigationView.OnNavigationItemSelectedListener {
 
     private final String DATA_TYPE_GOOD_KEY = "typeGood";
+
+
     private OnFragmentInteractionListener fragmentListener;
     private View currentFragment;
     private Build currentBuild;
@@ -51,7 +55,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
     private TextView tvPrice; // Текстовое поле с ценой
     private TextView tvComplete;
     private TextView tvCompatibility;
-    private ImageView imageBuild; //TODO
+    private ImageView imageBuild;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -97,6 +101,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
         tvComplete = currentFragment.findViewById(R.id.fragment_build_full_tv_complete_status);
         tvPrice = currentFragment.findViewById(R.id.fragment_build_full_tv_price);
         tvCompatibility = currentFragment.findViewById(R.id.fragment_build_full_tv_compatibility);
+        imageBuild = currentFragment.findViewById(R.id.fragment_build_full_img);
         setHeaderData();
 
         // Установка обработчиков для кнопок скрытия/раскрытия блоков (невозможно прямо прописать в xml, так как это всё реализовано на фрагменте), следовательно обработчики вызывают функцию
@@ -129,25 +134,6 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
                     pickGood(view);
                 }
             });
-        }
-    }
-
-    // Установка всех данных в заголовке (цена сборки, статус завершенности, изображение, совместимость)
-    private void setHeaderData() {
-        tvPrice.setText(String.format(Locale.getDefault(), "%.2f ГРН", currentBuild.getPrice()));
-        if (currentBuild.isComplete())
-            tvComplete.setText(getResources().getString(R.string.complete));
-        else
-            tvComplete.setText(getResources().getString(R.string.not_complete));
-
-        String compatibilityTest = currentBuild.getCompatibility();
-        if (compatibilityTest.equals(getResources().getString(R.string.true_compatibility))) {
-            tvCompatibility.setText(compatibilityTest);
-            tvCompatibility.setTextColor(getResources().getColor(R.color.green, App.getApp().getTheme()));
-        }
-        else {
-            tvCompatibility.setText(compatibilityTest);
-            tvCompatibility.setTextColor(getResources().getColor(R.color.red, App.getApp().getTheme()));
         }
     }
 
@@ -216,6 +202,39 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
 
         goodsContainer.getChildAt(0).setVisibility(View.GONE); // Скрытие кнопки "+"
         goodsContainer.addView(blank);
+    }
+
+    // Установка всех данных в заголовке (цена сборки, статус завершенности, изображение, совместимость)
+    private void setHeaderData() {
+
+        tvPrice.setText(String.format(Locale.getDefault(), "%.2f ГРН", currentBuild.getPrice()));
+        if (currentBuild.isComplete()) {
+            tvComplete.setText(getResources().getString(R.string.complete));
+            tvCompatibility.setTextColor(getResources().getColor(R.color.green, App.getApp().getTheme()));
+        }
+        else {
+            tvComplete.setText(getResources().getString(R.string.not_complete));
+            tvCompatibility.setTextColor(getResources().getColor(R.color.red, App.getApp().getTheme()));
+        }
+
+        // Проверка совместимости
+        String compatibilityTest = currentBuild.getCompatibility();
+        if (compatibilityTest.equals(getResources().getString(R.string.true_compatibility))) {
+            tvCompatibility.setText(compatibilityTest);
+            tvCompatibility.setTextColor(getResources().getColor(R.color.green, App.getApp().getTheme()));
+        }
+        else {
+            tvCompatibility.setText(compatibilityTest);
+            tvCompatibility.setTextColor(getResources().getColor(R.color.red, App.getApp().getTheme()));
+        }
+
+        // Изображение сборки берется из корпуса
+        if (currentBuild.getGood(TypeGood.CASE) != null) {
+            Bitmap caseImg = currentBuild.getGood(TypeGood.CASE).getImage();
+            imageBuild.setImageBitmap(caseImg);
+        }
+        else
+            imageBuild.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_case_24, App.getApp().getTheme()));
     }
 
     // Получение типа комплектующего с которым происходит взаимодействие

@@ -78,7 +78,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_shop_case"
                 style="@style/ButtonShop"
-                android:text="@string/cases"
+                android:text="@string/pc_cases"
                 app:icon="@drawable/ic_case_24" />
 
             <com.google.android.material.button.MaterialButton

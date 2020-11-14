@@ -88,7 +88,9 @@ public class UserData {
         this.currentBuild = currentBuild;
     }
 
-    public void discardCurrentBuild() {
+    public void discardCurrentBuild(boolean delete) {
+        if (delete)
+            builds.remove(currentBuild);
         currentBuild = null;
     }
 

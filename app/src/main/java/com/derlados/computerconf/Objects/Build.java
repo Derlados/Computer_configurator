@@ -39,6 +39,7 @@ public class Build {
         Good powerSupply = goods.get(TypeGood.POWER_SUPPLY);
         Good ram = goods.get(TypeGood.RAM);
         Good gpu = goods.get(TypeGood.GPU);
+        Good pcCase = goods.get(TypeGood.CASE);
 
         if (motherboard != null) {
             if (cpu != null) {
@@ -61,10 +62,34 @@ public class Build {
                 String motherboardTypeMemory = motherboardData.data.get(CompatParam.Motherboard.TYPE_MEMORY);
                 String ramTypeMemory = ramData.data.get(CompatParam.Ram.TYPE_MEMORY);
 
-                if (!motherboardTypeMemory.equals(ramTypeMemory)) {
+                if (!motherboardTypeMemory.contains(ramTypeMemory)) {
                     ++countMsg;
                     compatibilityMsg += "\n" + countMsg + ". Тип памяти ОЗУ и материнской платы несовместимы";
                 }
+            }
+
+            if (pcCase != null) {
+                Good.dataBlock motherboardData = motherboard.getDataBlockByHeader("Физические характеристики");
+                Good.dataBlock pcCaseData = pcCase.getDataBlockByHeader("Основные характеристики");
+
+                String motherboardFormFactor = motherboardData.data.get(CompatParam.Motherboard.FROM_FACTOR);
+                String pcCaseFormFactor = pcCaseData.data.get(CompatParam.Case.FROM_FACTOR);
+
+                motherboardFormFactor = motherboardFormFactor.replace(" ", "").replace( "-", "");
+                String[] pcFormFactors = pcCaseFormFactor.replace(" ", "").replace( "-", "").split(",");
+
+                int i;
+                for (i = 0; i < pcFormFactors.length; ++i) {
+                    if (motherboardFormFactor.equals(pcFormFactors[i]))
+                        break;
+                }
+
+                // Если цикл закончился успешно - следовательно не было ни одного соответствия с поддерживаемыми платами
+                if (i == pcFormFactors.length) {
+                    ++countMsg;
+                    compatibilityMsg += "\n" + countMsg + ". Форм фактор материнской платы и корпуса не совпадают";
+                }
+
             }
         }
 
@@ -72,10 +97,11 @@ public class Build {
             Good.dataBlock gpuData = gpu.getDataBlockByHeader("Основные характеристики");
             Good.dataBlock powerSupplyData = powerSupply.getDataBlockByHeader("Основные характеристики");
 
-            String gpuPower = gpuData.data.get(CompatParam.Gpu.POWER);
-            String powerSupplyPower = powerSupplyData.data.get(CompatParam.PowerSupply.POWER);;
+            // Как правило если брать БП под рекомендованные требования  видеокарты, то в целом можно работать //TODO следует придумать поумнее проверку блока питания
+            int gpuPower = Integer.parseInt(gpuData.data.get(CompatParam.Gpu.POWER).replace(" Вт", ""));
+            int powerSupplyPower = Integer.parseInt(powerSupplyData.data.get(CompatParam.PowerSupply.POWER).replace(" Вт", ""));
 
-            if (!gpuPower.equals(powerSupplyPower)) {
+            if (gpuPower > powerSupplyPower) {
                 ++countMsg;
                 compatibilityMsg += "\n" + countMsg + ". Мощность блока питание ниже рекомендованной";
             }
@@ -103,7 +129,7 @@ public class Build {
     public boolean isComplete() {
         return goods.get(TypeGood.CPU) != null && goods.get(TypeGood.MOTHERBOARD) != null && goods.get(TypeGood.GPU) != null
                 && goods.get(TypeGood.POWER_SUPPLY) != null && goods.get(TypeGood.RAM) != null
-                && (goods.get(TypeGood.HDD) != null || goods.get(TypeGood.SSD) != null);
+                && (goods.get(TypeGood.HDD) != null || goods.get(TypeGood.SSD) != null) && goods.get(TypeGood.CASE) != null;
     }
 
     public Good getGood(TypeGood typeGood) {

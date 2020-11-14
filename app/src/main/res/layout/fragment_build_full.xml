@@ -24,7 +24,7 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:id="@+id/fragment_full_data_img"
+                    android:id="@+id/fragment_build_full_img"
                     android:layout_width="0dp"
                     android:layout_height="100dp"
                     android:layout_margin="10dp"
@@ -131,14 +131,13 @@
                 <Button
                     style="@style/block_header"
                     android:text="@string/cpu"
-                    android:drawableEnd="@drawable/ic_arrow_right_36"/>
+                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
 
                 <LinearLayout
                     android:id="@+id/fragment_build_full_ll_cpu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <Button
                         style="@style/find_good_bt"/>
@@ -148,14 +147,13 @@
                 <Button
                     style="@style/block_header"
                     android:text="@string/motherboard"
-                    android:drawableEnd="@drawable/ic_arrow_right_36"/>
+                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
 
                 <LinearLayout
                     android:id="@+id/fragment_build_full_ll_mb"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <Button
                         style="@style/find_good_bt"/>
@@ -165,14 +163,13 @@
                 <Button
                     style="@style/block_header"
                     android:text="@string/gpu"
-                    android:drawableEnd="@drawable/ic_arrow_right_36"/>
+                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
 
                 <LinearLayout
                     android:id="@+id/fragment_build_full_ll_gpu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <Button
                         style="@style/find_good_bt"/>
@@ -182,14 +179,13 @@
                 <Button
                     style="@style/block_header"
                     android:text="@string/ram"
-                    android:drawableEnd="@drawable/ic_arrow_right_36"/>
+                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
 
                 <LinearLayout
                     android:id="@+id/fragment_build_full_ll_ram"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <Button
                         style="@style/find_good_bt"/>
@@ -199,14 +195,13 @@
                 <Button
                     style="@style/block_header"
                     android:text="@string/hdd"
-                    android:drawableEnd="@drawable/ic_arrow_right_36"/>
+                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
 
                 <LinearLayout
                     android:id="@+id/fragment_build_full_ll_hdd"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <Button
                         style="@style/find_good_bt"/>
@@ -216,14 +211,13 @@
                 <Button
                     style="@style/block_header"
                     android:text="@string/ssd"
-                    android:drawableEnd="@drawable/ic_arrow_right_36"/>
+                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
 
                 <LinearLayout
                     android:id="@+id/fragment_build_full_ll_ssd"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <Button
                         style="@style/find_good_bt"/>
@@ -233,14 +227,13 @@
                 <Button
                     style="@style/block_header"
                     android:text="@string/power_supply"
-                    android:drawableEnd="@drawable/ic_arrow_right_36"/>
+                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
 
                 <LinearLayout
                     android:id="@+id/fragment_build_full_ll_power_supply"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <Button
                         style="@style/find_good_bt"/>
@@ -250,7 +243,7 @@
                 <Button
                     style="@style/block_header"
                     android:text="@string/pc_case"
-                    android:drawableEnd="@drawable/ic_arrow_right_36"/>
+                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
 
                 <LinearLayout
                     android:id="@+id/fragment_build_full_ll_case"

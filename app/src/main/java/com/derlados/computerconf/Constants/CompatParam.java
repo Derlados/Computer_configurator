@@ -7,8 +7,8 @@ public class CompatParam {
     }
 
     public static class Ram {
-        public final static String TYPE_MEMORY = "";
-        public final static String SIZE_MEMORY = "";
+        public final static String TYPE_MEMORY = "Тип памяти";
+        public final static String SIZE_MEMORY = "Объем памяти";
     }
 
     public static class PowerSupply {
@@ -16,7 +16,7 @@ public class CompatParam {
     }
 
     public static class Case {
-        public final static String FROM_FACTOR = "";
+        public final static String FROM_FACTOR = "Поддерживаемые материнские платы";
     }
 
     public static class Motherboard {
@@ -30,4 +30,5 @@ public class CompatParam {
     public static class Gpu {
         public final static String POWER = "Минимальная рекомендованная мощность блока питания";
     }
+
 }
