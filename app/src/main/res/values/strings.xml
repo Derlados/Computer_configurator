@@ -9,8 +9,8 @@
     <string name="HDDs">Накопители HDD</string>
     <string name="SSDs">Накопители SSD</string>
     <string name="RAMs">Память</string>
-    <string name="power_supplies">Блоки питания</string>
-    <string name="add_to_build">+ ADD TO BUILD</string>
+    <string name="power_supplies">Блоки питания</string>і
+    <string name="add_to_build">+ в сборку</string>
     <string name="status">Статус :</string>
     <string name="not_complete">Не закончена</string>
     <string name="complete">Закончена</string>
@@ -36,4 +36,6 @@
     <string name="true_compatibility">Сборка совместима</string>
     <string name="pc_cases">Корпусы</string>
     <string name="pc_case">Корпус :</string>
+    <string name="add_favorite">+ в избранное</string>
+    <string name="in_build">Уже в сборке</string>
 </resources>

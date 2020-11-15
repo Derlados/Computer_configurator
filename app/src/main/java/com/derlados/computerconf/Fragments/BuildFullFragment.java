@@ -209,11 +209,11 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
 
         tvPrice.setText(String.format(Locale.getDefault(), "%.2f ГРН", currentBuild.getPrice()));
         if (currentBuild.isComplete()) {
-            tvComplete.setText(getResources().getString(R.string.complete));
+            tvComplete.setText(R.string.complete);
             tvCompatibility.setTextColor(getResources().getColor(R.color.green, App.getApp().getTheme()));
         }
         else {
-            tvComplete.setText(getResources().getString(R.string.not_complete));
+            tvComplete.setText(R.string.not_complete);
             tvCompatibility.setTextColor(getResources().getColor(R.color.red, App.getApp().getTheme()));
         }
 

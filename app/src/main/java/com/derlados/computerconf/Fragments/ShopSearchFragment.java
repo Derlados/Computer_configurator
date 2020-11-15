@@ -60,7 +60,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     LinearLayout goodsContainer; // XML контейнер (лаяут) в который ложаться все товары
     TypeGood typeGood; // Тип комплектующего на текущей странице
     ArrayList<Good> goodsList = new ArrayList<>(); // Список с комплектующими
-    ArrayList<RelativeLayout> blanks = new ArrayList<>();
+    ArrayList<RelativeLayout> blanks = new ArrayList<>(); // Список бланков комплектующих
 
     OnFragmentInteractionListener fragmentListener;
 
@@ -232,15 +232,11 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         switch (view.getId())
         {
             case R.id.inflate_good_blank_rl_blank:
-                ImageView iv = view.findViewById(R.id.inflate_good_blank_img);
-                Bitmap image = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-
                 // Отправка объекта в следующий фрагмет для отображения полной информации о нем
                 Bundle data = new Bundle();
                 Gson gson = new Gson();
                 Good sendGood = goodsList.get(goodsContainer.indexOfChild(view)); // Объект получается по индексу вьюшки бланка в списке
-                sendGood.setImage(image);
-                data.putString("good", gson.toJson(sendGood)); // Объект передается в виде json строки, сам берется относительно его положения в контейнере
+                data.putString("good", gson.toJson(sendGood)); // Объект передается в виде json строки
                 data.putSerializable("typeGood", typeGood);
                 fragmentListener.onFragmentInteraction(this, new FullGoodDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
                 break;
@@ -256,8 +252,6 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                 if (!numPage.equals(".."))
                     downloadPage(typeGood, Direction.CHOSEN_PAGE, Integer.parseInt(numPage));
                 break;
-            //TODO
-            // Возможно можно будет добавить прямой выбор страницы
         }
     }
 

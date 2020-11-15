@@ -46,6 +46,7 @@ public class MainMenuFragment extends Fragment implements BottomNavigationView.O
         // Настройка ViewPager-а для просмотра
         pager = this.getView().findViewById(R.id.fragment_main_menu_pager);
         pager.setAdapter(new MenuPageAdapter(getFragmentManager()));
+        pager.setOffscreenPageLimit(pager.getAdapter().getCount());
         ((BottomNavigationView)getView().findViewById(R.id.fragment_main_menu_bottom_navigator)).setOnNavigationItemSelectedListener(this);
     }
 
