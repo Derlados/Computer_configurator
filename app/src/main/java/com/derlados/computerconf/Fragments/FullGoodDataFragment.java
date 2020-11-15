@@ -1,6 +1,7 @@
 package com.derlados.computerconf.Fragments;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.derlados.computerconf.Objects.Good;
 import com.derlados.computerconf.Objects.UserData;
 import com.derlados.computerconf.R;
 import com.google.gson.Gson;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -88,8 +90,18 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
 
     private void setPreviewData() {
         // Установка изображения (Picasso кеширует запросы, так что если ранее было загружено изображение - оно возьмется из кеша)
-        ImageView imageView = currentFragment.findViewById(R.id.fragment_full_data_img);
-        Picasso.get().load(currentGood.getImageUrl()).into(imageView);
+        final ImageView imageView = currentFragment.findViewById(R.id.fragment_full_data_img);
+        Picasso.get().load(currentGood.getImageUrl()).into(imageView, new Callback() {
+            @Override
+            public void onSuccess() {
+                currentGood.setImage(((BitmapDrawable)imageView.getDrawable()).getBitmap());
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
 
         ((TextView)currentFragment.findViewById(R.id.fragment_full_data_name)).setText(currentGood.getName());
         ((TextView)currentFragment.findViewById(R.id.fragment_full_data_price)).setText(String.format(Locale.getDefault(),"%.2f ГРН", currentGood.getPrice()));

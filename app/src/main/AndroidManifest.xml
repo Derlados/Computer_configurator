@@ -3,6 +3,7 @@
     package="com.derlados.computerconf">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
+        android:screenOrientation="portrait"
         android:allowBackup="true"
         android:name="com.derlados.computerconf.App"
         android:icon="@mipmap/ic_launcher"

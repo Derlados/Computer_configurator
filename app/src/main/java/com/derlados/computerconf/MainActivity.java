@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_ll_container, mainMenuFragment)
                 .commit();
-
-
     }
 
     @Override
@@ -42,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         FragmentTransaction fTrans = fragmentManager.beginTransaction();
         if (fragmentReceiver != null)
             fragmentReceiver.setArguments(data);
+
+
 
         switch (action)
         {
