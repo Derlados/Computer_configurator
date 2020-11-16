@@ -8,11 +8,14 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
+import android.util.Log;
 
+import com.derlados.computerconf.Constants.LogsKeys;
 import com.derlados.computerconf.Fragments.MainMenuFragment;
 import com.derlados.computerconf.Fragments.OnFragmentInteractionListener;
 import com.derlados.computerconf.Fragments.PageFragment.MenuPageAdapter;
 
+import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
@@ -36,12 +39,30 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
+    public void onBackPressed() {
+        boolean close = true;
+        // Проход по фрагментам и попытка взятия  onBackPressedListener у фрагмента, если он реализован
+        List<Fragment> fragmentList = fragmentManager.getFragments();
+        for(Fragment fragment : fragmentList)
+            if (fragment != null && fragment.isVisible()) {
+                try {
+                    onBackPressedListener bpl = (onBackPressedListener) fragment;
+                    close = bpl.onBackPressed();
+                }
+                catch (Exception e) {
+                    Log.w(LogsKeys.WARNING_LOG.toString(), "interface onBackPressedListener not found");
+                }
+            }
+
+        if (close)
+            super.onBackPressed();
+    }
+
+    @Override
     public void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReceiver, Action action, Bundle data, String backStackTag) {
         FragmentTransaction fTrans = fragmentManager.beginTransaction();
         if (fragmentReceiver != null)
             fragmentReceiver.setArguments(data);
-
-
 
         switch (action)
         {
@@ -68,6 +89,16 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
                         break;
                 }
                 break;
+            case POP_BACK_STACK:
+                fragmentManager.popBackStack();
+                break;
         }
+    }
+
+    // Отклик на BackPressed во фрагментах.
+    public interface onBackPressedListener {
+        // Обработка BackPressed во фрагмента. Возврат : true - фрагмент можно закрыть, false - фрагмент должен жить
+        // Если onBackPressed() возвращает false, то фрагмент сам должен позаботится о освобождении backStack-а
+        boolean onBackPressed();
     }
 }

@@ -17,7 +17,8 @@ public interface OnFragmentInteractionListener {
     enum Action {
         NEXT_FRAGMENT_HIDE,
         NEXT_FRAGMENT_REPLACE,
-        RETURN_FRAGMENT_BY_TAG
+        RETURN_FRAGMENT_BY_TAG,
+        POP_BACK_STACK
     }
 
     /* Метод для общения между фрагментами

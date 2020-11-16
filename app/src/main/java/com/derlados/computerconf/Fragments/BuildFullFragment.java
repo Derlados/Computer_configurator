@@ -1,6 +1,8 @@
 package com.derlados.computerconf.Fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,10 +27,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.derlados.computerconf.App;
 import com.derlados.computerconf.Constants.TypeGood;
+import com.derlados.computerconf.MainActivity;
 import com.derlados.computerconf.Objects.Build;
 import com.derlados.computerconf.Objects.Good;
 import com.derlados.computerconf.Objects.UserData;
@@ -40,14 +44,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class BuildFullFragment extends Fragment implements TextWatcher, BottomNavigationView.OnNavigationItemSelectedListener {
+public class BuildFullFragment extends Fragment implements TextWatcher, BottomNavigationView.OnNavigationItemSelectedListener, MainActivity.onBackPressedListener {
 
     private final String DATA_TYPE_GOOD_KEY = "typeGood";
-
+    public static final int SAVE_DIALOG_FRAGMENT = 1;
 
     private OnFragmentInteractionListener fragmentListener;
     private View currentFragment;
     private Build currentBuild;
+
+    private boolean isSaved;
 
     // Поля для модифицакции после возврата с меню выбора комплектующего
     private TypeGood typeGoodToModify;
@@ -83,6 +89,36 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
             createGoodUI(goodToModify, containerToModify);
             containerToModify = null;
         }
+    }
+
+    // Для отклика на кнопку назад
+    @Override
+    public boolean onBackPressed() {
+        if (isSaved)
+            return true;
+        else {
+            showSaveDialog();
+            return false;
+        }
+    }
+
+    // Для обработки диалога который появляется, если пользователь захотел выйти из фрагмента сборки не сохранившись
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SAVE_DIALOG_FRAGMENT && resultCode == Activity.RESULT_OK) {
+            UserData.getUserData().saveCurrentBuild();
+            isSaved = true;
+            Toast.makeText(App.getApp().getApplicationContext(), "Сохранено",Toast.LENGTH_SHORT).show();
+        }
+        fragmentListener.onFragmentInteraction(null, null, OnFragmentInteractionListener.Action.POP_BACK_STACK, null, null);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    // Отрыктие диалога с предложением сохранить изменения
+    void showSaveDialog() {
+        DialogFragment dialogFragment = new SaveDialogFragment();
+        dialogFragment.setTargetFragment(this, SAVE_DIALOG_FRAGMENT);
+        dialogFragment.show(getActivity().getSupportFragmentManager(), "hello");
     }
 
     // Установка всего контента который находится в сборке, установка всех обработчиков нажатий
@@ -135,6 +171,8 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
                 }
             });
         }
+
+        isSaved = true; // После того как все данные загружены, сборка считается сохраненной (Потому что изменений не было)
     }
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
@@ -206,6 +244,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
 
     // Установка всех данных в заголовке (цена сборки, статус завершенности, изображение, совместимость)
     private void setHeaderData() {
+        isSaved = false; // Любое изменений будет считать сборку измененной и не сохранненой
 
         tvPrice.setText(String.format(Locale.getDefault(), "%.2f ГРН", currentBuild.getPrice()));
         if (currentBuild.isComplete()) {
@@ -327,8 +366,10 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.build_full_menu_bottom_navigator_action_brain_com:
+                showSaveDialog();
                 break;
             case R.id.build_full_menu_bottom_navigator_action_save:
+                isSaved = true;
                 UserData.getUserData().saveCurrentBuild(); // Сохранение сборки перед выходом
                 Toast.makeText(App.getApp().getApplicationContext(), "Сохранено", Toast.LENGTH_SHORT).show();
                 break;
@@ -352,6 +393,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
 
     @Override
     public void afterTextChanged(Editable editable) {
+        isSaved = false;
 
         // Нахождение нужного EditText
         View view = getActivity().getCurrentFocus();
