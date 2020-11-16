@@ -66,13 +66,10 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
 
-                if (msg.what == HandlerMessages.GET_BUILDS.ordinal()) {
-                    @SuppressWarnings("unchecked")
-                    ArrayList<Build> builds = (ArrayList<Build>) msg.obj;
-                    for (int i = 0; i < builds.size(); ++i)
-                        setBuildBlank(builds.get(i), (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_build_blank, buildsContainer, false), true);
-                }
-
+                @SuppressWarnings("unchecked")
+                ArrayList<Build> builds = (ArrayList<Build>) msg.obj;
+                for (int i = 0; i < builds.size(); ++i)
+                    setBuildBlank(builds.get(i), (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_build_blank, buildsContainer, false), true);
                 // Конец
                 if (msg.what == HandlerMessages.FINISH.ordinal())
                     fragment.findViewById(R.id.inflate_fragment_builds_pb).setVisibility(View.GONE);

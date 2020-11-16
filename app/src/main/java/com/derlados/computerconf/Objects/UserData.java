@@ -80,14 +80,9 @@ public class UserData {
 
         // Если данные выгружены, нету смысла ждать и прогонять через буфер
         if (allDataRestore) {
-            Message msg = handler.obtainMessage();
-            msg.what = HandlerMessages.FINISH.ordinal();
-            msg.obj = builds;
-            this.handler.sendMessage(msg);
+            sendBuildToHandler(builds, true);
             return;
         }
-
-        sendBuildToHandler(null, true);
     }
 
     public Build getBuildByIndex(int i) {
@@ -122,14 +117,15 @@ public class UserData {
     * build - сборка
     * send - флаг того надо отправить данные сейчас или нет
     * */
-    private void sendBuildToHandler(Build build, boolean send) {
-        if (build != null)
-            bufferBuilds.add(build);
+    private void sendBuildToHandler(ArrayList<Build> builds, boolean finish) {
 
-        if (this.handler != null && bufferBuilds.size() >= BUFFER_BUILDS_SIZE || send) {
+        if (this.handler != null) {
             Message msg = handler.obtainMessage();
-            msg.what = HandlerMessages.GET_BUILDS.ordinal();
-            msg.obj = bufferBuilds;
+            msg.obj = builds;
+
+            if (finish)
+                msg.what = HandlerMessages.FINISH.ordinal();
+
             this.handler.sendMessage(msg);
             bufferBuilds = new ArrayList<>();
         }
@@ -192,8 +188,14 @@ public class UserData {
                 try {
                     BufferedReader br = new BufferedReader(new FileReader(file));
                     Build build = gson.fromJson(br, Build.class);
+                    bufferBuilds.add(build);
                     builds.add(build);
-                    sendBuildToHandler(build, false);
+
+                    // При достижении буфера, передаются сборки в главный потко
+                    if (bufferBuilds.size() >= BUFFER_BUILDS_SIZE) {
+                        sendBuildToHandler(bufferBuilds, false);
+                        bufferBuilds.clear();
+                    }
                 }
                 catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -201,12 +203,7 @@ public class UserData {
                 }
             }
 
-            sendBuildToHandler(null, true); // Отправка остатка
-
-            // Сообщение о конце загрузки
-            Message msg = handler.obtainMessage();
-            msg.what = HandlerMessages.FINISH.ordinal();
-            this.handler.sendMessage(msg);
+            sendBuildToHandler(bufferBuilds, true); // Отправка остатка
             allDataRestore = true;
         }
     }

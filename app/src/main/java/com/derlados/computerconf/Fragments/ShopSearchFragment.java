@@ -295,6 +295,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
 
+            getView().findViewById(R.id.fragment_shop_search_pb_data).setVisibility(View.GONE); // Скрытие програсс бара
             Integer action = values[0];
 
             if (action.equals(SET_GOODS)) {
