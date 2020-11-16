@@ -20,7 +20,6 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
-
     FragmentManager fragmentManager = getSupportFragmentManager();
     Fragment mainMenuFragment;
 

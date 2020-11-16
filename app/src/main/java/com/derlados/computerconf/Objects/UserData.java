@@ -34,8 +34,12 @@ public class UserData {
     File rootImages, rootBuilds;
 
     private ArrayList<Build> builds = new ArrayList<>();
-    private Build currentBuild;
     private Context appContext;
+
+    // Для работы с текущей сборкой
+    private Build oldCurrentBuild;
+    private Build currentBuild;
+    private boolean currentBuildIsSaved = false;
 
     // Хендлер потока который вызывает загрузку данных с устройства
     Handler handler = null;
@@ -65,10 +69,9 @@ public class UserData {
         return instance;
     }
 
-    public Build addNewBuild() {
+    public void addNewBuild() {
         builds.add(new Build());
-        currentBuild = builds.get(builds.size() - 1);
-        return currentBuild;
+        setCurrentBuild(builds.size() - 1);
     }
 
     public void getBuilds(Handler handler) {
@@ -84,14 +87,23 @@ public class UserData {
         return currentBuild;
     }
 
-    public void setCurrentBuild(Build currentBuild) {
-        this.currentBuild = currentBuild;
+    public void setCurrentBuild(int buildIndex) {
+        currentBuildIsSaved = false;
+        oldCurrentBuild = builds.get(buildIndex);
+        // Текущий объект копируется для того, чтобы можно было откатить изменения
+        try {
+            this.currentBuild = (Build) oldCurrentBuild.clone();
+        }
+        catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void discardCurrentBuild(boolean delete) {
         if (delete)
-            builds.remove(currentBuild);
+            builds.remove(oldCurrentBuild);
         currentBuild = null;
+        oldCurrentBuild = null;
     }
 
     /* Отправка данных объекту который требует их через соответствующий хендлер
@@ -133,6 +145,8 @@ public class UserData {
 
     // Сохранение всех сборок в память
     public void saveCurrentBuild() {
+        builds.set(builds.indexOf(oldCurrentBuild), this.currentBuild);
+        currentBuildIsSaved = true;
         Gson gson = new Gson();
 
         // Сохраненние изображений всех комплектующих
@@ -199,5 +213,9 @@ public class UserData {
         File file = new File(rootBuilds + "/" + builds.get(index).getName());
         file.delete();
         builds.remove(index);
+    }
+
+    public boolean isCurrentBuildIsSaved() {
+        return currentBuildIsSaved;
     }
 }

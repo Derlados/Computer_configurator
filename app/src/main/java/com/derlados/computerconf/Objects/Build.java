@@ -12,9 +12,10 @@ import com.derlados.computerconf.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-public class Build {
+public class Build implements Cloneable {
 
     private HashMap<TypeGood, Good> goods = new HashMap<>(); // Комплетующие
     private double price = 0; // Цена сборки
@@ -172,5 +173,16 @@ public class Build {
     public void deleteGood(TypeGood typeGood) {
         this.price -= goods.get(typeGood).getPrice();
         goods.remove(typeGood);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Build build = (Build) super.clone();
+        build.id = this.id;
+
+        build.goods = new HashMap<>();
+        build.goods.putAll(this.goods);
+
+        return build;
     }
 }

@@ -40,8 +40,7 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
 
     // Данные для модификации после возврата с режима сборки
     LinearLayout blankToModify;
-    Build buildToModify;
-    boolean addToParent;
+    boolean addToParent; // true - новая сборка и её необходимо добавить, false - старая и надо лишь обновить
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -90,10 +89,16 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
 
         // Если сборка модифицировалась - данные обновляются, если сборка создавалась - добавляется в список
         if (!hidden && blankToModify != null) {
-            setBuildBlank(buildToModify, blankToModify, addToParent);
+
+            if (addToParent && !userData.isCurrentBuildIsSaved()) {
+                UserData.getUserData().discardCurrentBuild(true); // Когда пользователь выходит в меню, текущая сборка сбрасывается
+                blankToModify = null;
+                return;
+            }
+
+            setBuildBlank(userData.getCurrentBuild(), blankToModify, addToParent);
             UserData.getUserData().discardCurrentBuild(false); // Когда пользователь выходит в меню, текущая сборка сбрасывается
             blankToModify = null;
-            buildToModify = null;
         }
     }
 
@@ -183,8 +188,9 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
         switch (view.getId()) {
             // Если нажата кнопка справа внизу - создается новая сборка
             case R.id.fragment_builds_float_bt:
+                userData.addNewBuild();
+
                 blankToModify = (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_build_blank, buildsContainer, false);
-                buildToModify = userData.addNewBuild();
                 addToParent = true;
                 frListener.onFragmentInteraction(this, new BuildFullFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, null, "Build");
                 break;
@@ -194,11 +200,10 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
                 int index = listBuildsContainer.indexOfChild((LinearLayout)view.getParent());
 
                 // Получение данных для будущей модификации
-                buildToModify = userData.getBuildByIndex(index);
                 blankToModify = (LinearLayout) view.getParent();
                 addToParent = false;
 
-                userData.setCurrentBuild(buildToModify); // Выбранная сборка становится текущей (что собственно логично)
+                userData.setCurrentBuild(index); // Выбор идет по индексу положения в списке
                 frListener.onFragmentInteraction(this, new BuildFullFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, null, "Build");
                 break;
         }
