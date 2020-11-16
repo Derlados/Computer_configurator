@@ -75,7 +75,7 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
 
                 // Конец
                 if (msg.what == HandlerMessages.FINISH.ordinal())
-                    getView().findViewById(R.id.inflate_fragment_builds_pb).setVisibility(View.GONE);
+                    fragment.findViewById(R.id.inflate_fragment_builds_pb).setVisibility(View.GONE);
             }
         };
         userData.getBuilds(handler);
@@ -90,6 +90,7 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
         // Если сборка модифицировалась - данные обновляются, если сборка создавалась - добавляется в список
         if (!hidden && blankToModify != null) {
 
+            // Если сборка только создавалась и пользователь её не захотел сохранить - все данные уничтожаются и сборка не добавляется
             if (addToParent && !userData.isCurrentBuildIsSaved()) {
                 UserData.getUserData().discardCurrentBuild(true); // Когда пользователь выходит в меню, текущая сборка сбрасывается
                 blankToModify = null;

@@ -32,13 +32,14 @@ public class UserData {
 
     // Две основные деректории где хранятся данные пользователя
     File rootImages, rootBuilds;
+    private Context appContext;
+    private boolean allDataRestore = false;
 
     private ArrayList<Build> builds = new ArrayList<>();
-    private Context appContext;
 
     // Для работы с текущей сборкой
-    private Build oldCurrentBuild;
-    private Build currentBuild;
+    private Build oldCurrentBuild; // Первоначальная версия выбранной сборка
+    private Build currentBuild; // Копия текущей сборки с которой пользователь работает
     private boolean currentBuildIsSaved = false;
 
     // Хендлер потока который вызывает загрузку данных с устройства
@@ -71,11 +72,21 @@ public class UserData {
 
     public void addNewBuild() {
         builds.add(new Build());
-        setCurrentBuild(builds.size() - 1);
+        setCurrentBuild(builds.size() - 1); // Новая сборка становится текущей
     }
 
     public void getBuilds(Handler handler) {
         this.handler = handler;
+
+        // Если данные выгружены, нету смысла ждать и прогонять через буфер
+        if (allDataRestore) {
+            Message msg = handler.obtainMessage();
+            msg.what = HandlerMessages.FINISH.ordinal();
+            msg.obj = builds;
+            this.handler.sendMessage(msg);
+            return;
+        }
+
         sendBuildToHandler(null, true);
     }
 
@@ -145,7 +156,7 @@ public class UserData {
 
     // Сохранение всех сборок в память
     public void saveCurrentBuild() {
-        builds.set(builds.indexOf(oldCurrentBuild), this.currentBuild);
+        builds.set(builds.indexOf(oldCurrentBuild), this.currentBuild); // При сохранении копия заменяется на новоизменнную сборку
         currentBuildIsSaved = true;
         Gson gson = new Gson();
 
@@ -196,6 +207,7 @@ public class UserData {
             Message msg = handler.obtainMessage();
             msg.what = HandlerMessages.FINISH.ordinal();
             this.handler.sendMessage(msg);
+            allDataRestore = true;
         }
     }
 

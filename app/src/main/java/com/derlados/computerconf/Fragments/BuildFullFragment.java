@@ -406,6 +406,4 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
             currentBuild.setName(text);
         }
     }
-
-
 }

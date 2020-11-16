@@ -1,11 +1,9 @@
 package com.derlados.computerconf;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,10 +11,8 @@ import android.util.Log;
 import com.derlados.computerconf.Constants.LogsKeys;
 import com.derlados.computerconf.Fragments.MainMenuFragment;
 import com.derlados.computerconf.Fragments.OnFragmentInteractionListener;
-import com.derlados.computerconf.Fragments.PageFragment.MenuPageAdapter;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
@@ -59,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     @Override
     public void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReceiver, Action action, Bundle data, String backStackTag) {
-        FragmentTransaction fTrans = fragmentManager.beginTransaction();
+        FragmentTransaction fTrans = fragmentManager.beginTransaction().setCustomAnimations(R.anim.flip_fragment_in, R.anim.flip_fragment_out,  R.anim.flip_fragment_in, R.anim.flip_fragment_out);
         if (fragmentReceiver != null)
             fragmentReceiver.setArguments(data);
 

@@ -53,6 +53,8 @@ public class MainMenuFragment extends Fragment implements BottomNavigationView.O
     // Переход между страницами при помощи меню в нижней части экрана
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+
         switch (item.getItemId())
         {
             case R.id.main_menu_bottom_navigator_action_builds:

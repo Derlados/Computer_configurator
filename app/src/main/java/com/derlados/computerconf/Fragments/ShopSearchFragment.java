@@ -57,6 +57,15 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     }
     int currentPage = 1, maxPages = 0;
 
+    GoodsDownloader goodsDownloader;
+
+    //TODO
+    @Override
+    public void onPause() {
+        goodsDownloader.cancel(false);
+        super.onPause();
+    }
+
     LinearLayout goodsContainer; // XML контейнер (лаяут) в который ложаться все товары
     TypeGood typeGood; // Тип комплектующего на текущей странице
     ArrayList<Good> goodsList = new ArrayList<>(); // Список с комплектующими
@@ -104,7 +113,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
         }
 
-        GoodsDownloader goodsDownloader = new GoodsDownloader();
+        goodsDownloader = new GoodsDownloader();
         goodsDownloader.execute(typeGood.toString(), Integer.toString(currentPage));
     }
 
@@ -289,8 +298,11 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
             Integer action = values[0];
 
             if (action.equals(SET_GOODS)) {
-                for (int i = 0; i < goodsList.size(); ++i)
+                for (int i = 0; i < goodsList.size(); ++i) {
+                    if (isCancelled())
+                        return;
                     createGoodUI(goodsList.get(i));
+                }
                 loadImages();
             }
             else if (action.equals(SET_FLIP_PAGER))

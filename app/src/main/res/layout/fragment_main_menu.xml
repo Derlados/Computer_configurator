@@ -24,6 +24,7 @@
         style="@style/Widget.Design.BottomNavigationView"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
+        app:labelVisibilityMode="labeled"
         android:background="#1B2A95"/>
 
 </LinearLayout>

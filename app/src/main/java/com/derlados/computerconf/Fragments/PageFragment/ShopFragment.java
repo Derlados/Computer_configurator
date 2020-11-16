@@ -34,6 +34,7 @@ public class ShopFragment extends PageFragment implements View.OnClickListener {
         fragment.findViewById(R.id.fragment_shop_ssd).setOnClickListener(this);
         fragment.findViewById(R.id.fragment_shop_ram).setOnClickListener(this);
         fragment.findViewById(R.id.fragment_shop_power_supply).setOnClickListener(this);
+        fragment.findViewById(R.id.fragment_shop_case).setOnClickListener(this);
 
         return fragment;
     }
