@@ -4,9 +4,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -14,11 +17,13 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.derlados.computerconf.App;
 import com.derlados.computerconf.Constants.LogsKeys;
 import com.derlados.computerconf.Constants.TypeGood;
 import com.derlados.computerconf.Internet.GsonSerializers.HashMapDeserializer;
@@ -44,8 +49,6 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     boolean keepVisible = true;
 
     View currentFragment;
-    ProgressBar progressBar;
-
 
     // Направление движения по страницам
     enum Direction {
@@ -62,6 +65,11 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     TypeGood typeGood; // Тип комплектующего на текущей странице
     ArrayList<Good> goodsList = new ArrayList<>(); // Список с комплектующими
     ArrayList<RelativeLayout> blanks = new ArrayList<>(); // Список бланков комплектующих
+    EditText searchString;  // Поисковая строка
+    String searchText;  // Текст поисковой строки
+    ProgressBar progressBar; // Прогресс бар который крутится пока идет скачивание
+    TextView tvNotFound; // Текст с сообщением о том что ничего не найдено
+
 
     OnFragmentInteractionListener fragmentListener;
 
@@ -76,7 +84,30 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         currentFragment = inflater.inflate(R.layout.fragment_shop_search, container, false);
         goodsContainer = currentFragment.findViewById(R.id.fragment_shop_search_goods_container);
         typeGood = (TypeGood) getArguments().get("typeGood");
-        progressBar = currentFragment.findViewById(R.id.fragment_shop_search_pb);;
+
+        progressBar = currentFragment.findViewById(R.id.fragment_shop_search_pb);
+        tvNotFound = currentFragment.findViewById(R.id.fragment_shop_search_tv_not_found);
+
+
+        searchString = currentFragment.findViewById(R.id.fragment_shop_search_goods_et_search);
+        searchString.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // Страницы возвращаются к первой и устанавливается сама строка поиска
+                    maxPages = 0;
+                    currentPage = 1;
+                    searchText = searchString.getText().toString();
+                    if (searchText.equals("")) // Если строка пустая - передается null
+                        searchText = null;
+
+                    downloadPage(typeGood, Direction.CURRENT, null);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         downloadPage(typeGood, Direction.CURRENT, null);
         return currentFragment;
     }
@@ -107,6 +138,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     private void downloadPage(TypeGood typeGood, Direction dir, Integer page) {
         goodsContainer.removeAllViews();// Очистка фрагмента фрагмента
         progressBar.setVisibility(View.VISIBLE); // Прогресс бар снова открыт
+        tvNotFound.setVisibility(View.GONE);
 
         // Очистка данных
         goodsList.clear();
@@ -130,7 +162,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         }
 
        goodsDownloader = new GoodsDownloader();
-       goodsDownloader.execute(typeGood.toString(), Integer.toString(currentPage));
+       goodsDownloader.execute(typeGood.toString(), Integer.toString(currentPage), searchText);
     }
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
@@ -189,6 +221,15 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         texts[0] = "1";
         texts[COUNT_ELEMENTS - 1] = Integer.toString(maxPages);
 
+        // Если страниц меньше чем вся полоска - ненужные текст вью скрываются
+        if (maxPages <= COUNT_ELEMENTS) {
+            for (int i = 1; i <= maxPages; ++i)
+                ((TextView) flipPager.getChildAt(i)).setText(Integer.toString(i));
+
+            for (int i = maxPages + 1; i < flipPager.getChildCount() - 1; ++i)
+                flipPager.getChildAt(i).setVisibility(View.GONE);
+        }
+
         // Если текущая страница меньше 5, нужно показать страницы без ".." с левой части
         if (currentPage < 5) {
             for (int i = 2; i <= 5; ++i)
@@ -211,6 +252,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         // Установка всего текста в соответствующие поля и обработчиков нажатия
         for (int i = 1; i < flipPager.getChildCount() - 1; ++i) {
             TextView tv = ((TextView) flipPager.getChildAt(i));
+            tv.setVisibility(View.VISIBLE);
             tv.setText(texts[i - 1]);
             tv.setOnClickListener(this);
 
@@ -281,7 +323,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     }
 
     // Класс для загрузки превью информации о комплектующих
-    public class GoodsDownloader extends AsyncTask<String, Integer, String> {
+    public class GoodsDownloader extends AsyncTask<String, Integer, Boolean> {
         Retrofit retrofit;
         RequestAPI requestAPI;
         final Integer SET_GOODS = 0, SET_FLIP_PAGER = 1;
@@ -297,7 +339,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
             // Для работы с сетью
             retrofit =  new Retrofit.Builder()
-                    .baseUrl("http://www.xn--componf-1jg.netxisp.host")
+                    .baseUrl("http://192.168.1.3")
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
             requestAPI = retrofit.create(RequestAPI.class);
@@ -312,7 +354,6 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
             super.onProgressUpdate(values);
 
             progressBar.setVisibility(View.GONE); // Прогресс скрывается
-
             Integer action = values[0];
 
             if (action.equals(SET_GOODS)) {
@@ -331,12 +372,15 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         // Получение всего списка товаров. Параметры: 0 - тип комплектующего, 1 - страница которую необходимо загрузить
         // Так же если необходимо загрузить количество страниц - загружает количество страниц
         @Override
-        protected String doInBackground(String... values) {
+        protected Boolean doInBackground(String... values) {
+            // Необходимые данные для формирования запросов
             String typeGood = values[0];
             int page = Integer.parseInt(values[1]);
+            String search = values[2];
 
-            // Загрузка списка комплектующих выбранной категории
-            Call<ArrayList<Good>> callGoods = requestAPI.getGoodsPage(typeGood, page);
+            // Загрузка списка комплектующих выбранной категории]
+            Call<ArrayList<Good>> callGoods = requestAPI.getGoodsPage(typeGood, page, search);
+
             Response<ArrayList<Good>> response1;
             try {
                 response1 = callGoods.execute();
@@ -351,7 +395,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
             // Если неизвестно максимальное количество страниц в поиске
             if (maxPages == 0) {
-                Call<Integer> callMaxPages = requestAPI.getMaxPages(typeGood);
+                Call<Integer> callMaxPages = requestAPI.getMaxPages(typeGood, search);
                 Response<Integer> response2;
                 try {
                     response2 = callMaxPages.execute();
@@ -362,18 +406,23 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                 }
                 catch (Exception e) {
                     Log.e(LogsKeys.ERROR_LOG.toString(), e.toString());
+                    return false;
                 }
             }
             else
                 publishProgress(SET_FLIP_PAGER);
 
-            return null;
+            return true;
         }
 
         // Отрисовка всех комплектующих
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(Boolean success) {
+            if (!success) {
+                progressBar.setVisibility(View.GONE);
+                tvNotFound.setVisibility(View.VISIBLE);
+            }
+            super.onPostExecute(success);
         }
 
         @Override

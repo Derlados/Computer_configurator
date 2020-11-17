@@ -23,11 +23,11 @@ import retrofit2.http.Url;
 public interface RequestAPI {
 
     @GET("goods")
-    Call<ArrayList<Good>> getGoodsPage(@Query("typeGood") String type, @Query("page") int page);
+    Call<ArrayList<Good>> getGoodsPage(@Query("typeGood") String type, @Query("page") int page, @Query("search") String search);
 
     @GET("goods/fullData")
     Call<ArrayList<Good.dataBlock>> getGoodFullData(@Query("urlFullData") String url);
 
     @GET("goods/maxPages")
-    Call<Integer> getMaxPages(@Query("typeGood") String type);
+    Call<Integer> getMaxPages(@Query("typeGood") String type, @Query("search") String search);
 }

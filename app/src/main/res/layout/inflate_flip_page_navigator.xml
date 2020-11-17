@@ -13,27 +13,20 @@
         android:src="@drawable/ic_arrow_left_24"/>
 
     <TextView
-        style="@style/flipPageElement"
-        android:text="1"/>
+        style="@style/flipPageElement"/>
+    <TextView
+        style="@style/flipPageElement"/>
+    <TextView
+        style="@style/flipPageElement"/>
     <TextView
         style="@style/flipPageElement"
-        android:text=".."/>
+        android:textColor="@color/white"/>
     <TextView
-        style="@style/flipPageElement"
-        android:text="4"/>
+        style="@style/flipPageElement"/>
     <TextView
-        style="@style/flipPageElement"
-        android:textColor="@color/white"
-        android:text="5"/>
+        style="@style/flipPageElement"/>
     <TextView
-        style="@style/flipPageElement"
-        android:text="6"/>
-    <TextView
-        style="@style/flipPageElement"
-        android:text=".."/>
-    <TextView
-        style="@style/flipPageElement"
-        android:text="13"/>
+        style="@style/flipPageElement"/>
 
     <ImageButton
         style="@style/flipPageElement"

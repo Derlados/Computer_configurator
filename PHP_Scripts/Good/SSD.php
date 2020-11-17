@@ -20,7 +20,7 @@
                 $index = 1;
             $this->memorySize = $shortStats[$index];
             $this->flash = $shortStats[$index + 1];
-            $this->form = $shortStats[$index + 2];
+            $this->form = explode('&', $shortStats[$index + 2])[0];
             $this->readWritespeed = $shortStats[$index + 5] .  $shortStats[$index + 7]; 
 
             $this->setPreviewData();

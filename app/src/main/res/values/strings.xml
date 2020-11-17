@@ -38,4 +38,5 @@
     <string name="pc_case">Корпус :</string>
     <string name="add_favorite">+ в избранное</string>
     <string name="in_build">Уже в сборке</string>
+    <string name="not_found_any_goods">К сожелению по этому запросу ничего не найдено</string>
 </resources>

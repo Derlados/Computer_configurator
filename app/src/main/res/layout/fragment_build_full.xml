@@ -48,7 +48,9 @@
                         android:paddingStart="20dp"
                         android:paddingEnd="0dp"
                         android:textSize="20sp"
-                        android:textColor="@color/turquoise"/>
+                        android:textColor="@color/turquoise"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"/>
 
 
                     <TextView

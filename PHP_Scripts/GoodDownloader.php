@@ -15,6 +15,17 @@
         const CASE = 'https://brain.com.ua/category/Korpusa-c1441-271/';
     }
 
+    class GoodTypeSearchUri {
+        const CPU = 'https://brain.com.ua/search/category/Processory-c1097-128/page={num_page}/?Search={search_info}';
+        const GPU = 'https://brain.com.ua/search/category/Vydeokarty-c1403/page={num_page}/?Search={search_info}';
+        const HDD = 'https://brain.com.ua/search/category/Vynchestery_HDD-c1361-260/page={num_page}/?Search={search_info}';
+        const SSD = 'https://brain.com.ua/search/category/SSD_dysky-c1484/page={num_page}/?Search={search_info}';
+        const RAM = 'https://brain.com.ua/search/category/Moduly_pamyaty-c1334/page={num_page}/?Search={search_info}';
+        const MB = 'https://brain.com.ua/search/category/Systemnye_materynskye_platy-c1264-226/page={num_page}/?Search={search_info}';
+        const PS = 'https://brain.com.ua/search/category/Bloky_pytanyya-c1442-221/page={num_page}/?Search={search_info}';
+        const CASE = 'https://brain.com.ua/search/category/Korpusa-c1441-271/page={num_page}/?Search={search_info}';
+    }
+
     class GoodDownloader {
 
         // Для парсинга https 
@@ -39,10 +50,18 @@
         * Возврат:
         * json строка, массив товаров полученых со страницы
         */
-        public static function downloadGoods($goodType, int $page) {
+        public static function downloadGoods($goodType, int $page, $search) {
              
             // Парсинг страницы и Извлечение товаров
-            $html = file_get_html(self::getGoodTypeUrl($goodType) . "page=$page/");
+            if ($search == null)
+                $html = file_get_html(self::getGoodTypeUrl($goodType) . "page=$page/");
+            else 
+            {
+                $str = str_replace("{num_page}", $page, self::getGoodTypeSearchUrl($goodType));
+                $str = str_replace("{search_info}", $search, $str);
+                $html = file_get_html($str);
+            }
+
             $goodsHtml = $html->find('div[class="br-pp br-pp-ex goods-block__item br-pcg br-series"]');
 
             // Создаание товаров
@@ -68,7 +87,10 @@
                 $goods[] = (GoodsFactory::createGood($goodType, $name, $img, $price, $shortStats[0]->innertext, $urlFullData));
             }
 
-           // echo $goods[0]->toJson();
+            // echo $goods[0]->toJson();
+            if (count($goods) == 0)
+                http_response_code(404);
+                
             $data = json_encode($goods);
             return $data;
         }
@@ -107,12 +129,23 @@
             return json_encode($allData);
         }
 
-        public static function getMaxPages($goodType) {
-            $html = file_get_html(self::getGoodTypeUrl($goodType));
+        public static function getMaxPages($goodType, $search) {
+            if ($search == null)
+                 $html = file_get_html(self::getGoodTypeUrl($goodType));
+            else 
+            {
+                $str = str_replace("{num_page}", 1, self::getGoodTypeSearchUrl($goodType));
+                $str = str_replace("{search_info}", $search, $str);
+                $html = file_get_html($str);
+            }
 
-            // Поиск максимального количества страниц в разделе магазина
-            $HtmlPages = $html->find('div[class="page-goods__pager"]')[0]->find('li');
-            $maxPages = $HtmlPages[count($HtmlPages) - 1]->find('a')[0]->innertext;
+            try {
+                // Поиск максимального количества страниц в разделе магазина
+                $HtmlPages = $html->find('div[class="page-goods__pager"]')[0]->find('li');
+                $maxPages = $HtmlPages[count($HtmlPages) - 1]->find('a')[0]->innertext;
+            } catch (Exception $e) {
+                http_response_code(404);
+            }
 
             return $maxPages;
         }
@@ -136,6 +169,31 @@
                     return GoodTypeUri::PS;          
                 case GoodType::CASE:
                     return GoodTypeUri::CASE;               
+                default:
+                    http_response_code(404);
+                    return;
+            }
+        }
+
+        public static function getGoodTypeSearchUrl($goodType) {
+            switch ($goodType) 
+            { 
+                case GoodType::CPU:
+                    return GoodTypeSearchUri::CPU;
+                case GoodType::GPU:
+                    return GoodTypeSearchUri::GPU;
+                case GoodType::HDD:
+                    return GoodTypeSearchUri::HDD;
+                case GoodType::SSD:
+                    return GoodTypeSearchUri::SSD;
+                case GoodType::RAM:
+                    return GoodTypeSearchUri::RAM;
+                case GoodType::MB:
+                    return GoodTypeSearchUri::MB;  
+                case GoodType::PS:
+                    return GoodTypeSearchUri::PS;          
+                case GoodType::CASE:
+                    return GoodTypeSearchUri::CASE;               
                 default:
                     http_response_code(404);
                     return;
