@@ -173,7 +173,7 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
             super.onPreExecute();
             // Для работы с сетью
             retrofit =  new Retrofit.Builder()
-                    .baseUrl("http://www.xn--componf-1jg.netxisp.host")
+                    .baseUrl("http://buildpc.netxisp.host")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             requestAPI = retrofit.create(RequestAPI.class);

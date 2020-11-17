@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Собери свой ПК</string>
-    <string name="shop">shop</string>
-    <string name="builds">builds</string>
-    <string name="info">info</string>
+    <string name="shop">Магазин</string>
+    <string name="builds">Сборки</string>
+    <string name="info">Инфо</string>
     <string name="motherboards">Материнские платы</string>
     <string name="CPUs">Процессоры</string>
     <string name="GPUs">Видеокарты</string>
@@ -26,8 +26,8 @@
     <string name="motherboard">Материнская плата :</string>
     <string name="storage">Жетский диски / SSD :</string>
     <string name="ram">Оперативная память :</string>
-    <string name="go_brain_com">Go brain.com</string>
-    <string name="save">Save</string>
+    <string name="go_brain_com">Go brain.com.ua</string>
+    <string name="save">Сохранить</string>
     <string name="plus">+</string>
     <string name="build_desc">Описание сборки</string>
     <string name="build_name">Имя сборки</string>

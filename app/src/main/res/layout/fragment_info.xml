@@ -1,6 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="0.9">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Релиз 1.0:"
+            android:textColor="@color/turquoise"
+            android:paddingStart="15dp"
+            android:paddingEnd="0dp"
+            android:textStyle="bold"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="\t\tСоздано приложение 'Собери свой ПК'.
+В данном приложении любой пользователь может собрать компьютер своей мечты :D.\n
+\t\tОсновной функционал приложение на данный момент - это его конфигуратор.
+В нем вы можете собрать комплектующие, посмотреть суммарную стоимость, а так же
+конфигуратор сможет вам подсказать грубые ошибки в совместимости если таковы будут.
+Пользователья может сохранять бесконечное количество сборок на своем устройстве и добавлять к ним описание.
+\n\t\tТак же, если пользователь не хочет собирать всю сборку, а просто найти то,
+что его интересует - он может воспользоваться обычным поиском в меню 'Магазин'
+"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold|italic"
+            android:text="Вся информация о комплектующих была взята с нтернет-мегазина: brain.com.ua"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+</ScrollView>

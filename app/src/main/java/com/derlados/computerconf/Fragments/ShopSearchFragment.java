@@ -339,7 +339,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
             // Для работы с сетью
             retrofit =  new Retrofit.Builder()
-                    .baseUrl("http://192.168.1.3")
+                    .baseUrl("http://buildpc.netxisp.host")
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
             requestAPI = retrofit.create(RequestAPI.class);

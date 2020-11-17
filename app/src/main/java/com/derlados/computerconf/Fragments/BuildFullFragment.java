@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -402,7 +403,8 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.build_full_menu_bottom_navigator_action_brain_com:
-                showSaveDialog();
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://brain.com.ua/"));
+                startActivity(browserIntent);
                 break;
             case R.id.build_full_menu_bottom_navigator_action_save:
                 isSaved = true;
