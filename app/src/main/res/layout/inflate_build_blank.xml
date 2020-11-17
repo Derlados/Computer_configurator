@@ -264,7 +264,7 @@
         android:id="@+id/inflate_build_blank_ibt_hide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/style_bt_expand"
+        android:background="@drawable/bt_expand"
         android:src="@drawable/ic_arrow_down_36"/>
 
 </LinearLayout>

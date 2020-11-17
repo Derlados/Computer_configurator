@@ -58,12 +58,10 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     int currentPage = 1, maxPages = 0;
     GoodsDownloader goodsDownloader;
 
-
-
     LinearLayout goodsContainer; // XML контейнер (лаяут) в который ложаться все товары
     TypeGood typeGood; // Тип комплектующего на текущей странице
     ArrayList<Good> goodsList = new ArrayList<>(); // Список с комплектующими
-    ArrayList<RelativeLayout> blanks = new ArrayList<>(); // Список бланков комплектующих
+    ArrayList<LinearLayout> blanks = new ArrayList<>(); // Список бланков комплектующих
 
     OnFragmentInteractionListener fragmentListener;
 
@@ -137,7 +135,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
     private void createGoodUI(Good good) {
-        RelativeLayout blank = (RelativeLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
+        LinearLayout blank = (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
         blank.setOnClickListener(this);
         //Взятие основной таблицы информации об комплектующем
         TableLayout tableData = (TableLayout)blank.findViewById(R.id.inflate_good_blank_tr_data);
@@ -170,7 +168,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         }
 
         // Установка рейтинга и цены
-        ((TextView) blank.findViewById(R.id.inflate_good_blank_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", good.getPrice()));
+        ((TextView) blank.findViewById(R.id.inflate_good_blank_tv_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", good.getPrice()));
 
         blanks.add(blank);
 
@@ -235,7 +233,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     // Загрузка изображений для комплектующих
     public void loadImages() {
         for (int i = 0; i < goodsList.size(); ++i) {
-            final RelativeLayout blank = blanks.get(i);
+            final LinearLayout blank = blanks.get(i);
             ImageView imageView = blank.findViewById(R.id.inflate_good_blank_img);
             Picasso.get().load(goodsList.get(i).getImageUrl()).into(imageView,  new com.squareup.picasso.Callback() {
                 @Override

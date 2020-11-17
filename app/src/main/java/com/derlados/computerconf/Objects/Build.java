@@ -18,7 +18,8 @@ import java.util.UUID;
 public class Build implements Cloneable {
 
     private HashMap<TypeGood, Good> goods = new HashMap<>(); // Комплетующие
-    private HashMap<TypeGood, Integer> countGoods = new HashMap<>();
+    private HashMap<TypeGood, Integer> countGoods = new HashMap<>(); // Хранится в отдельной мапе, так как только SSD, RAM и HDD можно взять несколько
+
     private double price = 0; // Цена сборки
     private String name = "", description = ""; // Имя и описание в сборке
     private String id;
@@ -123,6 +124,10 @@ public class Build implements Cloneable {
      * */
     public void addToBuild(TypeGood typeGood, Good good) {
         goods.put(typeGood, good);
+
+        if (typeGood == TypeGood.RAM || typeGood == TypeGood.HDD || typeGood == TypeGood.SSD)
+            countGoods.put(typeGood, 1);
+
         this.price += good.getPrice(); // Подсчет общей цены
     }
 
@@ -131,6 +136,10 @@ public class Build implements Cloneable {
         return goods.get(TypeGood.CPU) != null && goods.get(TypeGood.MOTHERBOARD) != null && goods.get(TypeGood.GPU) != null
                 && goods.get(TypeGood.POWER_SUPPLY) != null && goods.get(TypeGood.RAM) != null
                 && (goods.get(TypeGood.HDD) != null || goods.get(TypeGood.SSD) != null) && goods.get(TypeGood.CASE) != null;
+    }
+
+    public boolean isMultiple(TypeGood typeGood) {
+        return countGoods.get(typeGood) != null;
     }
 
     public Good getGood(TypeGood typeGood) {

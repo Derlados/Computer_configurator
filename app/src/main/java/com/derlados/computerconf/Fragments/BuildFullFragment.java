@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -25,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -40,7 +37,6 @@ import com.derlados.computerconf.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -180,7 +176,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
     private void createGoodUI(Good good, final LinearLayout goodsContainer) {
-        final RelativeLayout blank = (RelativeLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
+        final LinearLayout blank = (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
 
         // Отображение полной статистики при нажатии на бланк комплектующего
         blank.setOnClickListener(new View.OnClickListener() {
@@ -222,7 +218,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
         }
 
         // Установка рейтинга и цены
-        ((TextView) blank.findViewById(R.id.inflate_good_blank_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", good.getPrice()));
+        ((TextView) blank.findViewById(R.id.inflate_good_blank_tv_price)).setText(String.format(Locale.getDefault(), "%.2f ГРН", good.getPrice()));
 
         // Установка изображения
         ((ImageView) blank.findViewById(R.id.inflate_good_blank_img)).setImageBitmap(good.getImage());
