@@ -1,13 +1,8 @@
 package com.derlados.computerconf.Fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.Contacts;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -29,6 +23,7 @@ import com.derlados.computerconf.Constants.LogsKeys;
 import com.derlados.computerconf.Constants.TypeGood;
 import com.derlados.computerconf.Internet.GsonSerializers.HashMapDeserializer;
 import com.derlados.computerconf.Internet.RequestAPI;
+import com.derlados.computerconf.MainActivity;
 import com.derlados.computerconf.Objects.Good;
 import com.derlados.computerconf.R;
 import com.google.gson.Gson;
@@ -45,7 +40,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ShopSearchFragment extends Fragment implements View.OnClickListener {
+public class ShopSearchFragment extends Fragment implements View.OnClickListener, MainActivity.onBackPressedListener {
+    boolean keepVisible = true;
+
+    View currentFragment;
+    ProgressBar progressBar;
+
 
     // Направление движения по страницам
     enum Direction {
@@ -56,15 +56,9 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         CHOSEN_PAGE
     }
     int currentPage = 1, maxPages = 0;
-
     GoodsDownloader goodsDownloader;
 
-    //TODO
-    @Override
-    public void onPause() {
-        goodsDownloader.cancel(false);
-        super.onPause();
-    }
+
 
     LinearLayout goodsContainer; // XML контейнер (лаяут) в который ложаться все товары
     TypeGood typeGood; // Тип комплектующего на текущей странице
@@ -81,16 +75,40 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragment = inflater.inflate(R.layout.fragment_shop_search, container, false);
-        goodsContainer = fragment.findViewById(R.id.fragment_shop_search_goods_container);
+        currentFragment = inflater.inflate(R.layout.fragment_shop_search, container, false);
+        goodsContainer = currentFragment.findViewById(R.id.fragment_shop_search_goods_container);
         typeGood = (TypeGood) getArguments().get("typeGood");
+        progressBar = currentFragment.findViewById(R.id.fragment_shop_search_pb);;
         downloadPage(typeGood, Direction.CURRENT, null);
-        return fragment;
+        return currentFragment;
+    }
+
+    @Override
+    public void onPause() {
+        goodsDownloader.cancel(false);
+        super.onPause();
+    }
+
+    // Решение проблемы с анимацией, по скольку вызывается 2 popBackStack метода то и анимация играет дважды, из-за чего появлялось мерцание
+    @Override
+    public boolean onBackPressed() {
+        getView().setVisibility(View.VISIBLE);
+        keepVisible = true;
+        return true;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden && !keepVisible)
+            getView().setVisibility(View.GONE);
+        keepVisible = false;
+        super.onHiddenChanged(hidden);
     }
 
     // Загрузка страницы (загрузка всех превью данных для отображения на странице)
     private void downloadPage(TypeGood typeGood, Direction dir, Integer page) {
         goodsContainer.removeAllViews();// Очистка фрагмента фрагмента
+        progressBar.setVisibility(View.VISIBLE); // Прогресс бар снова открыт
 
         // Очистка данных
         goodsList.clear();
@@ -113,8 +131,8 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
         }
 
-        goodsDownloader = new GoodsDownloader();
-        goodsDownloader.execute(typeGood.toString(), Integer.toString(currentPage));
+       goodsDownloader = new GoodsDownloader();
+       goodsDownloader.execute(typeGood.toString(), Integer.toString(currentPage));
     }
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
@@ -281,7 +299,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
             // Для работы с сетью
             retrofit =  new Retrofit.Builder()
-                    .baseUrl("http://192.168.1.3/")
+                    .baseUrl("http://www.xn--componf-1jg.netxisp.host")
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
             requestAPI = retrofit.create(RequestAPI.class);
@@ -295,7 +313,8 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
 
-            getView().findViewById(R.id.fragment_shop_search_pb_data).setVisibility(View.GONE); // Скрытие програсс бара
+            progressBar.setVisibility(View.GONE); // Прогресс скрывается
+
             Integer action = values[0];
 
             if (action.equals(SET_GOODS)) {
@@ -364,4 +383,6 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
             super.onCancelled();
         }
     }
+
+
 }

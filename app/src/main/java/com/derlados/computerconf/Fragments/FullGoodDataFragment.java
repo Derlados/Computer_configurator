@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -173,7 +174,7 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
             super.onPreExecute();
             // Для работы с сетью
             retrofit =  new Retrofit.Builder()
-                    .baseUrl("http://192.168.1.3/")
+                    .baseUrl("http://www.xn--componf-1jg.netxisp.host")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             requestAPI = retrofit.create(RequestAPI.class);
@@ -220,5 +221,4 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
             super.onCancelled();
         }
     }
-
 }

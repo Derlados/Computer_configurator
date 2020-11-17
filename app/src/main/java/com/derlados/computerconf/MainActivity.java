@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         // Проход по фрагментам и попытка взятия  onBackPressedListener у фрагмента, если он реализован
         List<Fragment> fragmentList = fragmentManager.getFragments();
         for(Fragment fragment : fragmentList)
-            if (fragment != null && fragment.isVisible()) {
+            if (fragment != null) {
                 try {
                     onBackPressedListener bpl = (onBackPressedListener) fragment;
                     close = bpl.onBackPressed();
@@ -77,12 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
                 fTrans.commit();
                 break;
             case RETURN_FRAGMENT_BY_TAG:
-                for (int i = fragmentManager.getBackStackEntryCount() - 1; i >= 1; --i) {
-                    if (fragmentManager.getBackStackEntryAt(i).getName() == null || !fragmentManager.getBackStackEntryAt(i).getName().equalsIgnoreCase(backStackTag))
-                        fragmentManager.popBackStack();
-                    else
-                        break;
-                }
+                fragmentManager.popBackStack(backStackTag, 0);
                 break;
             case POP_BACK_STACK:
                 fragmentManager.popBackStack();

@@ -94,12 +94,15 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
     // Для отклика на кнопку назад
     @Override
     public boolean onBackPressed() {
-        if (isSaved)
-            return true;
-        else {
-            showSaveDialog();
-            return false;
+        if (this.isVisible()) {
+            if (isSaved)
+                return true;
+            else {
+                showSaveDialog();
+                return false;
+            }
         }
+        return true;
     }
 
     // Для обработки диалога который появляется, если пользователь захотел выйти из фрагмента сборки не сохранившись
@@ -249,11 +252,11 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
         tvPrice.setText(String.format(Locale.getDefault(), "%.2f ГРН", currentBuild.getPrice()));
         if (currentBuild.isComplete()) {
             tvComplete.setText(R.string.complete);
-            tvCompatibility.setTextColor(getResources().getColor(R.color.green, App.getApp().getTheme()));
+            tvComplete.setTextColor(getResources().getColor(R.color.green, App.getApp().getTheme()));
         }
         else {
             tvComplete.setText(R.string.not_complete);
-            tvCompatibility.setTextColor(getResources().getColor(R.color.red, App.getApp().getTheme()));
+            tvComplete.setTextColor(getResources().getColor(R.color.red, App.getApp().getTheme()));
         }
 
         // Проверка совместимости

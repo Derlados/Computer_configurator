@@ -58,13 +58,13 @@ public class MainMenuFragment extends Fragment implements BottomNavigationView.O
         switch (item.getItemId())
         {
             case R.id.main_menu_bottom_navigator_action_builds:
-                pager.setCurrentItem(PageFragment.PageMenu.BUILDS.ordinal());
+                pager.setCurrentItem(PageFragment.PageMenu.BUILDS.ordinal(), false);
                 break;
             case R.id.main_menu_bottom_navigator_action_shop:
-                pager.setCurrentItem(PageFragment.PageMenu.SHOP.ordinal());
+                pager.setCurrentItem(PageFragment.PageMenu.SHOP.ordinal(), false);
                 break;
             case R.id.main_menu_bottom_navigator_action_info:
-                pager.setCurrentItem(PageFragment.PageMenu.INFO.ordinal());
+                pager.setCurrentItem(PageFragment.PageMenu.INFO.ordinal(), false);
                 break;
         }
         return false;

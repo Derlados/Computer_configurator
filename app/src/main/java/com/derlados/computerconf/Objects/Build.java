@@ -18,6 +18,7 @@ import java.util.UUID;
 public class Build implements Cloneable {
 
     private HashMap<TypeGood, Good> goods = new HashMap<>(); // Комплетующие
+    private HashMap<TypeGood, Integer> countGoods = new HashMap<>();
     private double price = 0; // Цена сборки
     private String name = "", description = ""; // Имя и описание в сборке
     private String id;
@@ -28,7 +29,6 @@ public class Build implements Cloneable {
         this.id = randId.toString().replace("-", "");
     }
 
-    //TODO
     public String getCompatibility() {
 
         int countMsg = 0;

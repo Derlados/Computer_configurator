@@ -152,7 +152,12 @@ public class UserData {
 
     // Сохранение всех сборок в память
     public void saveCurrentBuild() {
-        builds.set(builds.indexOf(oldCurrentBuild), this.currentBuild); // При сохранении копия заменяется на новоизменнную сборку
+        // При сохранении копия заменяется на новоизменнную сборку и разумеется необходимо создать снова копию сохраненной
+        int index = builds.indexOf(oldCurrentBuild);
+        builds.set(index, this.currentBuild);
+        setCurrentBuild(index);
+
+
         currentBuildIsSaved = true;
         Gson gson = new Gson();
 
@@ -219,7 +224,7 @@ public class UserData {
 
     // Удаление сборки
     public void deleteBuildByIndex(int index) {
-        File file = new File(rootBuilds + "/" + builds.get(index).getName());
+        File file = new File(rootBuilds + "/" + builds.get(index).getId());
         file.delete();
         builds.remove(index);
     }
