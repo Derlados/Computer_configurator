@@ -138,8 +138,66 @@ public class Build implements Cloneable {
                 && (goods.get(TypeGood.HDD) != null || goods.get(TypeGood.SSD) != null) && goods.get(TypeGood.CASE) != null;
     }
 
-    public boolean isMultiple(TypeGood typeGood) {
+    public boolean isMultipleGood(TypeGood typeGood) {
         return countGoods.get(typeGood) != null;
+    }
+
+    private Integer maxLimitGood(TypeGood typeGood) {
+        int limit = 1;
+        Good motherboard = goods.get(TypeGood.MOTHERBOARD);
+        if (motherboard == null)
+            return limit;
+        Good.dataBlock motherboardData;
+
+        if (typeGood == TypeGood.RAM) {
+            motherboardData = motherboard.getDataBlockByHeader("Оперативная память");
+            String countRam = motherboardData.data.get(CompatParam.Motherboard.COUNT_RAM);
+            if (countRam != null)
+                limit = Integer.parseInt(countRam);
+        }
+        else {
+            return 2;
+
+
+            /*
+            motherboardData = motherboard.getDataBlockByHeader("Внутренние разъемы и колодки");
+            String[] ports = motherboardData.data.get(CompatParam.Motherboard.PORTS).split(" ");
+            for (int i = 0; i < ports.length; ++i)
+                if (ports[i].equals("Sata")) {
+                    limit = Integer.parseInt(ports[i - 2]);
+                    break;
+                }
+            */
+        }
+        return limit;
+    }
+
+    // Добавление количества объектов
+    public void increaseCountGoods(TypeGood typeGood) {
+        int limit = maxLimitGood(typeGood);
+        int currentCount = countGoods.get(typeGood);
+
+        if (currentCount < limit) {
+            countGoods.put(typeGood, currentCount + 1);
+            price += goods.get(typeGood).getPrice();
+        }
+    }
+
+    // Уменьшения количества
+    public void reduceCountGoods(TypeGood typeGood) {
+        int currentCount = countGoods.get(typeGood);
+
+        if (currentCount > 1) {
+            countGoods.put(typeGood, currentCount - 1);
+            price -= goods.get(typeGood).getPrice();
+        }
+    }
+
+    // Получение количества объектов
+    public int getCountGoods(TypeGood typeGood) {
+        if (countGoods.get(typeGood) != null)
+            return countGoods.get(typeGood);
+        return 1;
     }
 
     public Good getGood(TypeGood typeGood) {
@@ -182,6 +240,7 @@ public class Build implements Cloneable {
     public void deleteGood(TypeGood typeGood) {
         this.price -= goods.get(typeGood).getPrice();
         goods.remove(typeGood);
+        countGoods.remove(typeGood);
     }
 
     @Override
@@ -191,6 +250,9 @@ public class Build implements Cloneable {
 
         build.goods = new HashMap<>();
         build.goods.putAll(this.goods);
+
+        build.countGoods = new HashMap<>();
+        build.countGoods.putAll(this.countGoods);
 
         return build;
     }

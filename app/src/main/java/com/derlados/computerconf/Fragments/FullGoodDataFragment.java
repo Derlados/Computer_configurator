@@ -50,7 +50,6 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
     final int ADD_TO_BUILD = 0, NOTHING = 1, ADD_TO_FAVORITE = 2;
     int clickAction; // Переменной присваивается значение одной из констант в зависмость от который будет происходить то или иное действие
 
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

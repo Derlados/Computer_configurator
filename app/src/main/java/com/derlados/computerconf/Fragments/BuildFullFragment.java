@@ -176,7 +176,8 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
     private void createGoodUI(Good good, final LinearLayout goodsContainer) {
-        final LinearLayout blank = (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
+        final TypeGood typeGoodBlank = getTypeGood(goodsContainer.getId());
+        final RelativeLayout blank = (RelativeLayout) getLayoutInflater().inflate(R.layout.inflate_good_blank, goodsContainer, false);
 
         // Отображение полной статистики при нажатии на бланк комплектующего
         blank.setOnClickListener(new View.OnClickListener() {
@@ -229,13 +230,35 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
         ibtDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentBuild.deleteGood(getTypeGood(goodsContainer.getId())); // Удаление идет относительно текущего положения в списке
+                currentBuild.deleteGood(typeGoodBlank); // Удаление идет относительно текущего положения в списке
                 goodsContainer.removeView(blank); // Удаление комплектующего
                 goodsContainer.getChildAt(0).setVisibility(View.VISIBLE);
                 setHeaderData(); // Данные заголовка необходимо обновить
             }
         });
         ibtDelete.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_trash, App.getApp().getTheme())); // Отрисовка значка
+
+        // Если это ОЗУ или внешняя память - открывается блок для изменения количества в сборке
+        if (currentBuild.isMultipleGood(typeGoodBlank)) {
+            blank.findViewById(R.id.inflate_good_blank_ll_count).setVisibility(View.VISIBLE);
+
+            final TextView tvCount = blank.findViewById(R.id.inflate_good_blank_tv_count);
+            tvCount.setText(Integer.toString(currentBuild.getCountGoods(typeGoodBlank)));
+            blank.findViewById(R.id.inflate_good_blank_bt_increase_count).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    countChange(view, typeGoodBlank, tvCount);
+                }
+            });
+            blank.findViewById(R.id.inflate_good_blank_bt_reduce_count).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    countChange(view, typeGoodBlank, tvCount);
+                }
+            });
+
+
+        }
 
         goodsContainer.getChildAt(0).setVisibility(View.GONE); // Скрытие кнопки "+"
         goodsContainer.addView(blank);
@@ -359,6 +382,20 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
 
         // Отображение полной информации о комплектующем
         fragmentListener.onFragmentInteraction(this, new FullGoodDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
+    }
+
+    // Уменьшение или увелечение количества комплектующих одного типа в сборке (Доступно только для SSD, HDD, RAM)
+    public void countChange(View view, TypeGood typeGood, TextView tvCount) {
+        switch (view.getId()) {
+            case R.id.inflate_good_blank_bt_increase_count:
+                currentBuild.increaseCountGoods(typeGood);
+                break;
+            case R.id.inflate_good_blank_bt_reduce_count:
+                currentBuild.reduceCountGoods(typeGood);
+                break;
+        }
+        tvCount.setText(Integer.toString(currentBuild.getCountGoods(typeGood)));
+        setHeaderData();
     }
 
     @Override

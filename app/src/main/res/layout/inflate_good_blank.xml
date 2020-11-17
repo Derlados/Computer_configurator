@@ -1,176 +1,172 @@
-<LinearLayout
+<RelativeLayout
+
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/inflate_good_blank_rl_blank"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_margin="10dp"
-    android:background="@color/dark_blue_2">
+    android:background="@color/dark_blue_2"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_margin="10dp">
 
-    <RelativeLayout
-        android:id="@+id/inflate_good_blank_rl_blank"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
+    <ImageView
+        android:id="@+id/inflate_good_blank_img"
+        android:layout_width="108dp"
+        android:layout_height="123dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp"/>
 
-        android:clickable="true"
-        android:focusable="true">
+    <ProgressBar
+        android:id="@+id/inflate_good_blank_pb"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="74dp"
+        android:layout_height="85dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="27dp"
+        android:indeterminateTint="@color/white" />
 
-        <ImageView
-            android:id="@+id/inflate_good_blank_img"
-            android:layout_width="108dp"
-            android:layout_height="123dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="10dp"/>
+    <TableLayout
+        android:id="@+id/inflate_good_blank_tr_data"
+        android:layout_width="255dp"
+        android:layout_height="160dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="125dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:weightSum="1">
 
-        <ProgressBar
-            android:id="@+id/inflate_good_blank_pb"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="74dp"
-            android:layout_height="85dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="31dp"
-            android:layout_marginTop="27dp"
-            android:indeterminateTint="@color/white" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:orientation="horizontal">
 
-        <TableLayout
-            android:id="@+id/inflate_good_blank_tr_data"
-            android:layout_width="255dp"
-            android:layout_height="160dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="125dp"
-            android:layout_marginTop="10dp"
-            android:weightSum="1">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.85"
+                android:gravity="center"
+                android:text="ПРОЦЕССОР INTEL CORE™ I3 9100F (BX80684I39100F)"
+                android:textAlignment="center"
+                android:textColor="@color/white" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/inflate_good_blank_ibt_corner"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15"
+                android:background="@color/invisible"
+                android:gravity="top"
+                android:maxEms="1"
+                android:src="@drawable/ic_inactive_star_24" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.85"
-                    android:gravity="center"
+        </TableRow>
 
-                    android:text="ПРОЦЕССОР INTEL CORE™ I3 9100F (BX80684I39100F)"
-                    android:textAlignment="center"
-                    android:textColor="@color/white" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/inflate_good_blank_ibt_corner"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.15"
-                    android:background="@color/invisible"
-                    android:gravity="top"
-                    android:maxEms="1"
-                    android:src="@drawable/ic_inactive_star_24" />
+            <TextView
+                style="@style/CellInfo"
+                android:text="Сокет"
+                android:textColor="@color/turquoise" />
 
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/CellInfo"
-                    android:text="Сокет"
-                    android:textColor="@color/turquoise" />
-
-                <TextView
-                    style="@style/CellInfo"
-                    android:text="Количество ядер"
-                    android:textColor="@color/turquoise" />
+            <TextView
+                style="@style/CellInfo"
+                android:text="Количество ядер"
+                android:textColor="@color/turquoise" />
 
 
-            </TableRow>
+        </TableRow>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:orientation="horizontal">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:orientation="horizontal">
 
-                <TextView
-                    style="@style/CellInfo"
-                    android:text="S1151" />
+            <TextView
+                style="@style/CellInfo"
+                android:text="S1151" />
 
-                <TextView
-                    style="@style/CellInfo"
-                    android:text="4" />
-
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/CellInfo"
-                    android:text="Частота"
-                    android:textColor="@color/turquoise" />
-
-                <TextView
-                    style="@style/CellInfo"
-                    android:text="TDP"
-                    android:textColor="@color/turquoise"/>
+            <TextView
+                style="@style/CellInfo"
+                android:text="4" />
 
 
-            </TableRow>
+        </TableRow>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:orientation="horizontal">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:orientation="horizontal">
 
-                <TextView
-                    style="@style/CellInfo"
-                    android:text="3.6 ГГц" />
+            <TextView
+                style="@style/CellInfo"
+                android:text="Частота"
+                android:textColor="@color/turquoise" />
 
-                <TextView
-                    style="@style/CellInfo"
-                    android:text="65W" />
-
-
-            </TableRow>
-
-        </TableLayout>
-
-        <TextView
-            android:id="@+id/inflate_good_blank_tv_price"
-            android:layout_width="108dp"
-            android:layout_height="35dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="135dp"
-            android:gravity="center|end"
-            android:text="X ГРН"
-            android:textAlignment="center"
-            android:textColor="@color/green"
-            android:textSize="16sp"/>
+            <TextView
+                style="@style/CellInfo"
+                android:text="TDP"
+                android:textColor="@color/turquoise" />
 
 
-    </RelativeLayout>
+        </TableRow>
 
-    <!--
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/CellInfo"
+                android:text="3.6 ГГц" />
+
+            <TextView
+                style="@style/CellInfo"
+                android:text="65W" />
+
+
+        </TableRow>
+
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/inflate_good_blank_tv_price"
+        android:layout_width="108dp"
+        android:layout_height="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="135dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center|end"
+        android:text="X ГРН"
+        android:textAlignment="center"
+        android:textColor="@color/green"
+        android:textSize="16sp"/>
+
     <LinearLayout
         android:id="@+id/inflate_good_blank_ll_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="175dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="10dp"
         android:gravity="center"
         android:layout_marginBottom="5dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -192,14 +188,14 @@
         </Button>
 
         <TextView
+            android:id="@+id/inflate_good_blank_tv_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="8"
+            android:text="1"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:textSize="18sp"
             android:textColor="@color/white">
-
         </TextView>
 
         <Button
@@ -216,7 +212,5 @@
 
 
     </LinearLayout>
-    -->
 
-</LinearLayout>
-
+</RelativeLayout>
