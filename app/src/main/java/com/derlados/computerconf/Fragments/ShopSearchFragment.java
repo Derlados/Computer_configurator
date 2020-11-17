@@ -388,9 +388,12 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                     goodsList = response1.body();
                     publishProgress(SET_GOODS);
                 }
+                else
+                    return false;
             }
             catch (Exception e) {
                 Log.e(LogsKeys.ERROR_LOG.toString(), e.toString());
+
             }
 
             // Если неизвестно максимальное количество страниц в поиске
@@ -406,7 +409,6 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                 }
                 catch (Exception e) {
                     Log.e(LogsKeys.ERROR_LOG.toString(), e.toString());
-                    return false;
                 }
             }
             else
