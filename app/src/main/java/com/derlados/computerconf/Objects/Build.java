@@ -7,11 +7,13 @@ import android.util.TypedValue;
 
 import com.derlados.computerconf.App;
 import com.derlados.computerconf.Constants.CompatParam;
+import com.derlados.computerconf.Constants.LogsKeys;
 import com.derlados.computerconf.Constants.TypeGood;
 import com.derlados.computerconf.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -100,12 +102,18 @@ public class Build implements Cloneable {
             Good.dataBlock powerSupplyData = powerSupply.getDataBlockByHeader("Основные характеристики");
 
             // Как правило если брать БП под рекомендованные требования  видеокарты, то в целом можно работать //TODO следует придумать поумнее проверку блока питания
-            int gpuPower = Integer.parseInt(gpuData.data.get(CompatParam.Gpu.POWER).replace(" Вт", ""));
-            int powerSupplyPower = Integer.parseInt(powerSupplyData.data.get(CompatParam.PowerSupply.POWER).replace(" Вт", ""));
+            try {
+                int gpuPower = Integer.parseInt(gpuData.data.get(CompatParam.Gpu.POWER).replace(" Вт", ""));
+                int powerSupplyPower = Integer.parseInt(powerSupplyData.data.get(CompatParam.PowerSupply.POWER).replace(" Вт", ""));
 
-            if (gpuPower > powerSupplyPower) {
-                ++countMsg;
-                compatibilityMsg += "\n" + countMsg + ". Мощность блока питание ниже рекомендованной";
+                if (gpuPower > powerSupplyPower) {
+                    ++countMsg;
+                    compatibilityMsg += "\n" + countMsg + ". Мощность блока питание ниже рекомендованной";
+                }
+            }
+            catch (Exception e) {
+                // Если было выбито исключение, значит в каком то из комплектующих не хватает данных
+                Log.e(LogsKeys.ERROR_LOG.toString(), e.toString());
             }
         }
 

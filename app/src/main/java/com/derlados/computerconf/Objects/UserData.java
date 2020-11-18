@@ -96,6 +96,7 @@ public class UserData {
     public void setCurrentBuild(int buildIndex) {
         currentBuildIsSaved = false;
         oldCurrentBuild = builds.get(buildIndex);
+
         // Текущий объект копируется для того, чтобы можно было откатить изменения
         try {
             this.currentBuild = (Build) oldCurrentBuild.clone();

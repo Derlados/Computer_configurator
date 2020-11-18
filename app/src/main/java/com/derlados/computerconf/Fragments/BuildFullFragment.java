@@ -110,6 +110,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
             isSaved = true;
             Toast.makeText(App.getApp().getApplicationContext(), "Сохранено",Toast.LENGTH_SHORT).show();
         }
+
         fragmentListener.onFragmentInteraction(null, null, OnFragmentInteractionListener.Action.POP_BACK_STACK, null, null);
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -410,6 +411,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
                 isSaved = true;
                 UserData.getUserData().saveCurrentBuild(); // Сохранение сборки перед выходом
                 Toast.makeText(App.getApp().getApplicationContext(), "Сохранено", Toast.LENGTH_SHORT).show();
+                currentBuild = UserData.getUserData().getCurrentBuild();
                 break;
         }
         return false;

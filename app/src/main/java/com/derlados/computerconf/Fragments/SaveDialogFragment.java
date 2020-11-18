@@ -32,7 +32,7 @@ public class SaveDialogFragment extends DialogFragment {
                 .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        getTargetFragment().onActivityResult(getTargetFragment().getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent());
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent());
                     }
                 });
 

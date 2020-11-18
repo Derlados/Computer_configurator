@@ -94,7 +94,8 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
                 return;
             }
 
-            setBuildBlank(userData.getCurrentBuild(), blankToModify, addToParent);
+            if (userData.isCurrentBuildIsSaved())
+                setBuildBlank(userData.getCurrentBuild(), blankToModify, addToParent);
             UserData.getUserData().discardCurrentBuild(false); // Когда пользователь выходит в меню, текущая сборка сбрасывается
             blankToModify = null;
         }
