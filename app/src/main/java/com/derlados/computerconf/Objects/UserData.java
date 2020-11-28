@@ -11,6 +11,7 @@ import com.derlados.computerconf.App;
 import com.derlados.computerconf.Constants.HandlerMessages;
 import com.derlados.computerconf.Constants.LogsKeys;
 import com.derlados.computerconf.Constants.TypeGood;
+import com.derlados.computerconf.Managers.FileManager;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -27,35 +28,32 @@ import java.util.Locale;
 import android.os.Handler;
 
 public class UserData {
+    final int BUFFER_BUILDS_SIZE = 3;
     final String IMAGES_DIR = "images";
     final String BUILDS_DIR = "builds";
 
     // Две основные деректории где хранятся данные пользователя
-    File rootImages, rootBuilds;
+    private File rootImages, rootBuilds;
     private Context appContext;
-    private boolean allDataRestore = false;
+    private boolean allDataRestore;
 
-    private ArrayList<Build> builds = new ArrayList<>();
+    private ArrayList<Build> builds;
 
     // Для работы с текущей сборкой
     private Build oldCurrentBuild; // Первоначальная версия выбранной сборка
     private Build currentBuild; // Копия текущей сборки с которой пользователь работает
-    private boolean currentBuildIsSaved = false;
+    private boolean currentBuildIsSaved;
 
     // Хендлер потока который вызывает загрузку данных с устройства
-    Handler handler = null;
-    ArrayList<Build> bufferBuilds = new ArrayList<Build>();
-    final int BUFFER_BUILDS_SIZE = 3;
+    Handler handler;
+    ArrayList<Build> bufferBuilds;
 
     static UserData instance;
     private UserData() {}
     public static UserData getUserData() {
         if (instance == null) {
             instance = new UserData();
-            instance.appContext = App.getApp().getApplicationContext();
-            // Создание ссылок на основные дериктории
-            instance.rootImages = instance.appContext.getDir(instance.IMAGES_DIR, Context.MODE_PRIVATE);
-            instance.rootBuilds = instance.appContext.getDir(instance.BUILDS_DIR, Context.MODE_PRIVATE);
+            instance.init();
 
             // Чтение сохраненных сборок
             Runnable restoring = new Runnable() {
@@ -68,6 +66,20 @@ public class UserData {
             thread.start();
         }
         return instance;
+    }
+
+    // Иницициализация данных юзера
+    private void init() {
+        this.allDataRestore = false;
+        this.handler = null;
+        this.bufferBuilds = new ArrayList<Build>();
+        this.builds = new ArrayList<>();
+        this.currentBuildIsSaved = false;
+
+        this.appContext = App.getApp().getApplicationContext();
+        // Создание ссылок на основные дериктории
+        this.rootImages = instance.appContext.getDir(instance.IMAGES_DIR, Context.MODE_PRIVATE);
+        this.rootBuilds = instance.appContext.getDir(instance.BUILDS_DIR, Context.MODE_PRIVATE);
     }
 
     public void addNewBuild() {
@@ -132,32 +144,12 @@ public class UserData {
         }
     }
 
-    // Сохранение изображений
-    protected void saveImageOnDevice(Bitmap img, String imgName) {
-        try {
-            // Создание файла изображения
-            File jpgImage = new File(rootImages, imgName);
-            if (!jpgImage.exists()) {
-                jpgImage.createNewFile();
-                FileOutputStream fout = new FileOutputStream(jpgImage);
-
-                // Запись изображения
-                BitmapDrawable bmpDraw = new BitmapDrawable(appContext.getResources(), img);
-                bmpDraw.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, fout);
-            }
-        }
-        catch (Exception e) {
-            Log.e(LogsKeys.ERROR_LOG.toString(), String.format(Locale.getDefault(),"Image %s cannot be save. Error: %s", imgName, e.toString()));
-        }
-    }
-
     // Сохранение всех сборок в память
     public void saveCurrentBuild() {
         // При сохранении копия заменяется на новоизменнную сборку и разумеется необходимо создать снова копию сохраненной
         int index = builds.indexOf(oldCurrentBuild);
         builds.set(index, this.currentBuild);
         setCurrentBuild(index);
-
 
         currentBuildIsSaved = true;
         Gson gson = new Gson();
@@ -166,7 +158,7 @@ public class UserData {
         HashMap<TypeGood, Good> buildGoods = currentBuild.getGoods();
         for (HashMap.Entry<TypeGood, Good> entry : buildGoods.entrySet()) {
             Good good = entry.getValue();
-            saveImageOnDevice(good.getImage(), good.getImageName());
+            FileManager.getFileManager().saveImageOnDevice(good.getImage(), good.getImageName());
         }
 
         // Сохраненние самой сборки в файл, где имя файла - имя самой сборки
@@ -212,15 +204,6 @@ public class UserData {
             sendBuildToHandler(bufferBuilds, true); // Отправка остатка
             allDataRestore = true;
         }
-    }
-
-    // Чтение изображения с устройства
-    protected Bitmap restoreImageFromDevice(String imgName) {
-        File imgFile = new File(rootImages.getPath() + '/' + imgName);
-        if (imgFile.exists())
-            return BitmapFactory.decodeFile(imgFile.getPath());
-        else
-            return null;
     }
 
     // Удаление сборки

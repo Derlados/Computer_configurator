@@ -15,7 +15,7 @@ import com.derlados.computerconf.R;
 
 public class ShopFragment extends PageFragment implements View.OnClickListener {
 
-    OnFragmentInteractionListener frListener;
+    private OnFragmentInteractionListener frListener;
 
     @Override
     public void onAttach(@NonNull Context context) {

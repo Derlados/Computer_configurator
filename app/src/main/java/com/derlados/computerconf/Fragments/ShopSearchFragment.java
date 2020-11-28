@@ -46,32 +46,29 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ShopSearchFragment extends Fragment implements View.OnClickListener, MainActivity.onBackPressedListener {
-    boolean keepVisible = true;
-
-    View currentFragment;
+    private boolean keepVisible = true;
 
     // Направление движения по страницам
-    enum Direction {
+    private enum Direction {
         NEXT,
         BACK,
         START,
         CURRENT,
         CHOSEN_PAGE
     }
-    int currentPage = 1, maxPages = 0;
-    GoodsDownloader goodsDownloader;
+    private int currentPage = 1, maxPages = 0;
+    private GoodsDownloader goodsDownloader;
 
-    LinearLayout goodsContainer; // XML контейнер (лаяут) в который ложаться все товары
-    TypeGood typeGood; // Тип комплектующего на текущей странице
-    ArrayList<Good> goodsList = new ArrayList<>(); // Список с комплектующими
-    ArrayList<RelativeLayout> blanks = new ArrayList<>(); // Список бланков комплектующих
-    EditText searchString;  // Поисковая строка
-    String searchText;  // Текст поисковой строки
-    ProgressBar progressBar; // Прогресс бар который крутится пока идет скачивание
-    TextView tvNotFound; // Текст с сообщением о том что ничего не найдено
+    private LinearLayout goodsContainer; // XML контейнер (лаяут) в который ложаться все товары
+    private TypeGood typeGood; // Тип комплектующего на текущей странице
+    private ArrayList<Good> goodsList = new ArrayList<>(); // Список с комплектующими
+    private ArrayList<RelativeLayout> blanks = new ArrayList<>(); // Список бланков комплектующих
+    private EditText searchString;  // Поисковая строка
+    private String searchText;  // Текст поисковой строки
+    private  ProgressBar progressBar; // Прогресс бар который крутится пока идет скачивание
+    private TextView tvNotFound; // Текст с сообщением о том что ничего не найдено
 
-
-    OnFragmentInteractionListener fragmentListener;
+    private OnFragmentInteractionListener fragmentListener;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -81,7 +78,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        currentFragment = inflater.inflate(R.layout.fragment_shop_search, container, false);
+        View currentFragment = inflater.inflate(R.layout.fragment_shop_search, container, false);
         goodsContainer = currentFragment.findViewById(R.id.fragment_shop_search_goods_container);
         typeGood = (TypeGood) getArguments().get("typeGood");
 
@@ -89,10 +86,12 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
         tvNotFound = currentFragment.findViewById(R.id.fragment_shop_search_tv_not_found);
 
 
+        // Поисковая строка
         searchString = currentFragment.findViewById(R.id.fragment_shop_search_goods_et_search);
         searchString.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                // Реакация на кнопку submit
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     // Страницы возвращаются к первой и устанавливается сама строка поиска
                     maxPages = 0;
@@ -195,7 +194,6 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                 ((TextView) row3.getChildAt(count - 2)).setText(entry.getKey());
                 ((TextView) row4.getChildAt(count - 2)).setText(entry.getValue());
             }
-
             ++count;
         }
 
@@ -323,7 +321,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
     }
 
     // Класс для загрузки превью информации о комплектующих
-    public class GoodsDownloader extends AsyncTask<String, Integer, Boolean> {
+    private class GoodsDownloader extends AsyncTask<String, Integer, Boolean> {
         Retrofit retrofit;
         RequestAPI requestAPI;
         final Integer SET_GOODS = 0, SET_FLIP_PAGER = 1;

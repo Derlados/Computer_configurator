@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
+import com.derlados.computerconf.Managers.FileManager;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,12 +70,13 @@ public class Good {
     }
 
     // Данные изображения сохраняются и загружаются на устройство так как невозможно гарантировать стабильность работы с Bitmap который хранится прямо в объекте
+    // При постоянном использовании Bitmap возникают ошибки SIGSEGV 11
     public Bitmap getImage() {
-        return UserData.getUserData().restoreImageFromDevice(imageName);
+        return FileManager.getFileManager().restoreImageFromDevice(imageName);
     }
 
     public void setImage(Bitmap image) {
-        UserData.getUserData().saveImageOnDevice(image, imageName);
+        FileManager.getFileManager().saveImageOnDevice(image, imageName);
     }
 
     public String getImageName() {
@@ -83,6 +86,4 @@ public class Good {
     public void setFullData(ArrayList<dataBlock>  fullData) {
         this.fullData = fullData;
     }
-
-
 }

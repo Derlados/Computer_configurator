@@ -40,15 +40,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FullGoodDataFragment extends Fragment implements View.OnClickListener {
 
-    Good currentGood; // Текущий товар который отображается
-    LinearLayout dataContainer; // Контейнер в который помещается все характеристики товара
-    TypeGood typeGood; // Тип товара
-    OnFragmentInteractionListener fragmentListener;
-    UserData userData;
-    View currentFragment;
+    private Good currentGood; // Текущий товар который отображается
+    private LinearLayout dataContainer; // Контейнер в который помещается все характеристики товара
+    private TypeGood typeGood; // Тип товара
+    private OnFragmentInteractionListener fragmentListener;
+    private UserData userData;
+    private View currentFragment;
 
-    final int ADD_TO_BUILD = 0, NOTHING = 1, ADD_TO_FAVORITE = 2;
-    int clickAction; // Переменной присваивается значение одной из констант в зависмость от который будет происходить то или иное действие
+    private final int ADD_TO_BUILD = 0, NOTHING = 1, ADD_TO_FAVORITE = 2;
+    private int clickAction; // Переменной присваивается значение одной из констант в зависмость от который будет происходить то или иное действие
 
     @Override
     public void onAttach(@NonNull Context context) {

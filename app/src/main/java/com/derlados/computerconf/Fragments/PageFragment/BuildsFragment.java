@@ -33,14 +33,14 @@ import java.util.Locale;
 
 public class BuildsFragment extends PageFragment implements View.OnClickListener {
 
-    OnFragmentInteractionListener frListener;
-    View fragment;
-    LinearLayout buildsContainer; // Основной контейнер для бланков сборок
-    UserData userData; // Объект данных юзера
+    private OnFragmentInteractionListener frListener;
+    private View fragment;
+    private LinearLayout buildsContainer; // Основной контейнер для бланков сборок
+    private UserData userData; // Объект данных юзера
 
     // Данные для модификации после возврата с режима сборки
-    LinearLayout blankToModify;
-    boolean addToParent; // true - новая сборка и её необходимо добавить, false - старая и надо лишь обновить
+    private LinearLayout blankToModify;
+    private boolean addToParent; // true - новая сборка и её необходимо добавить, false - старая и надо лишь обновить
 
     @Override
     public void onAttach(@NonNull Context context) {

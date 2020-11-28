@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class MenuPageAdapter extends FragmentPagerAdapter {
 
-    final int COUNT_PAGES_MENU = 3;
-    Fragment[] pageFragments = new Fragment[COUNT_PAGES_MENU];
+    private final int COUNT_PAGES_MENU = 3;
+    private Fragment[] pageFragments = new Fragment[COUNT_PAGES_MENU];
 
     public MenuPageAdapter(FragmentManager fm) {
         super(fm);

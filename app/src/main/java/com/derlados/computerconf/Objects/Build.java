@@ -22,12 +22,17 @@ public class Build implements Cloneable {
     private HashMap<TypeGood, Good> goods = new HashMap<>(); // Комплетующие
     private HashMap<TypeGood, Integer> countGoods = new HashMap<>(); // Хранится в отдельной мапе, так как только SSD, RAM и HDD можно взять несколько
 
-    private double price = 0; // Цена сборки
-    private String name = "", description = ""; // Имя и описание в сборке
+    private double price; // Цена сборки
+    private String name, description; // Имя и описание в сборке
     private String id;
 
     // Инициализация всех типов товаров
     public Build() {
+        this.price = 0;
+        this.name = "";
+        this.description = "";
+
+
         UUID randId = UUID.randomUUID();
         this.id = randId.toString().replace("-", "");
     }
@@ -251,6 +256,7 @@ public class Build implements Cloneable {
         countGoods.remove(typeGood);
     }
 
+    // Перегрузка клонирования так как надо буквально копировать сборку для создания временной копии (изменения в сборке до её сохранения)
     @Override
     public Object clone() throws CloneNotSupportedException {
         Build build = (Build) super.clone();
