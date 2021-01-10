@@ -76,6 +76,6 @@ public class ShopFragment extends PageFragment implements View.OnClickListener {
         }
 
         data.putSerializable("typeGood", typeGood);
-        frListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
+        frListener.nextFragment(this, new ShopSearchFragment(), data, null);
     }
 }

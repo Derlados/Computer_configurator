@@ -26,6 +26,7 @@ public class CompatParam {
         public final static String FROM_FACTOR = "Форм-фактор";
         public final static String COUNT_RAM = "Количество разъемов, шт.";
         public final static String PORTS = "Внутренние разъемы и порты";
+
     }
 
     public static class Gpu {

@@ -303,7 +303,7 @@ public class ShopSearchFragment extends Fragment implements View.OnClickListener
                 Good sendGood = goodsList.get(goodsContainer.indexOfChild(view)); // Объект получается по индексу вьюшки бланка в списке
                 data.putString("good", gson.toJson(sendGood)); // Объект передается в виде json строки
                 data.putSerializable("typeGood", typeGood);
-                fragmentListener.onFragmentInteraction(this, new FullGoodDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
+                fragmentListener.nextFragment(this, new FullGoodDataFragment(), data, null);
                 break;
             case R.id.inflate_flip_page_navigator_ibt_next:
                 downloadPage(typeGood, Direction.NEXT, null);

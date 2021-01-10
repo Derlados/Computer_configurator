@@ -154,7 +154,7 @@ public class FullGoodDataFragment extends Fragment implements View.OnClickListen
             case ADD_TO_BUILD:
                 userData.getCurrentBuild().addToBuild(typeGood, currentGood);
                 Toast.makeText(App.getApp().getApplicationContext(), "Добавлено в сборку", Toast.LENGTH_SHORT).show();
-                fragmentListener.onFragmentInteraction(this, null, OnFragmentInteractionListener.Action.RETURN_FRAGMENT_BY_TAG, new Bundle(), "Build");
+                fragmentListener.popBackStack("Build");
                 break;
             case ADD_TO_FAVORITE: //TODO
                 break;

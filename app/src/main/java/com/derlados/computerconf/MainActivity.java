@@ -54,41 +54,36 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
-    public void onFragmentInteraction(Fragment fragmentSource, Fragment fragmentReceiver, Action action, Bundle data, String backStackTag) {
+    public void nextFragment(Fragment fragmentSource, Fragment fragmentReceiver, Bundle data, String backStackTag) {
         FragmentTransaction fTrans = fragmentManager.beginTransaction().setCustomAnimations(R.anim.flip_fragment_in, R.anim.flip_fragment_out,  R.anim.flip_fragment_in, R.anim.flip_fragment_out);
-        if (fragmentReceiver != null)
-            fragmentReceiver.setArguments(data);
+        fragmentReceiver.setArguments(data);
+        if (mainMenuFragment.isVisible())
+            fTrans.hide(mainMenuFragment);
+        else
+            fTrans.hide(fragmentSource);
 
-        switch (action)
-        {
-            case NEXT_FRAGMENT_HIDE:
-                if (mainMenuFragment.isVisible())
-                    fTrans.hide(mainMenuFragment);
-                else
-                    fTrans.hide(fragmentSource);
+        fTrans.add(R.id.activity_main_ll_container, fragmentReceiver);
+        fTrans.addToBackStack(backStackTag);   // Добавление изменнений в стек
+        fTrans.commit();
+    }
 
-                fTrans.add(R.id.activity_main_ll_container, fragmentReceiver);
-                fTrans.addToBackStack(backStackTag);   // Добавление изменнений в стек
-                fTrans.commit();
-                break;
-            case NEXT_FRAGMENT_REPLACE:
-                fTrans.replace(R.id.activity_main_ll_container, fragmentReceiver);
-                fTrans.addToBackStack(backStackTag);   // Добавление изменнений в стек
-                fTrans.commit();
-                break;
-            case RETURN_FRAGMENT_BY_TAG:
-                fragmentManager.popBackStack(backStackTag, 0);
-                break;
-            case POP_BACK_STACK:
-                fragmentManager.popBackStack();
-                break;
-        }
+    @Override
+    public void popBackStack() {
+        fragmentManager.popBackStack();
+    }
+
+    @Override
+    public void popBackStack(String backStackTag) {
+        fragmentManager.popBackStack(backStackTag, 0);
     }
 
     // Отклик на BackPressed во фрагментах.
     public interface onBackPressedListener {
-        // Обработка BackPressed во фрагмента. Возврат : true - фрагмент можно закрыть, false - фрагмент должен жить
-        // Если onBackPressed() возвращает false, то фрагмент сам должен позаботится о освобождении backStack-а
+        /**
+         * Обработка BackPressed во фрагмента
+         * @return : true - фрагмент можно закрыть, false - фрагмент должен жить
+         * Если onBackPressed() возвращает false, то фрагмент сам должен позаботится о освобождении backStack-а
+         */
         boolean onBackPressed();
     }
 }

@@ -111,7 +111,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
             Toast.makeText(App.getApp().getApplicationContext(), "Сохранено",Toast.LENGTH_SHORT).show();
         }
 
-        fragmentListener.onFragmentInteraction(null, null, OnFragmentInteractionListener.Action.POP_BACK_STACK, null, null);
+        fragmentListener.popBackStack();
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -365,7 +365,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
         Bundle data = new Bundle();
         data.putSerializable(DATA_TYPE_GOOD_KEY, typeGoodToModify);
 
-        fragmentListener.onFragmentInteraction(this, new ShopSearchFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
+        fragmentListener.nextFragment(this, new ShopSearchFragment(), data, null);
     }
 
     public void openFullGoodData(View view) {
@@ -383,7 +383,7 @@ public class BuildFullFragment extends Fragment implements TextWatcher, BottomNa
         data.putSerializable("typeGood", typeGood);
 
         // Отображение полной информации о комплектующем
-        fragmentListener.onFragmentInteraction(this, new FullGoodDataFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, data, null);
+        fragmentListener.nextFragment(this, new FullGoodDataFragment(), data, null);
     }
 
     // Уменьшение или увелечение количества комплектующих одного типа в сборке (Доступно только для SSD, HDD, RAM)

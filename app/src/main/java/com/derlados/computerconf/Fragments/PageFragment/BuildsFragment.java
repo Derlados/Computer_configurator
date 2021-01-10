@@ -191,7 +191,7 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
 
                 blankToModify = (LinearLayout) getLayoutInflater().inflate(R.layout.inflate_build_blank, buildsContainer, false);
                 addToParent = true;
-                frListener.onFragmentInteraction(this, new BuildFullFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, null, "Build");
+                frListener.nextFragment(this, new BuildFullFragment(), null, "Build");
                 break;
             // Нажатие было произведено на саму сборку - открывается нужная сборка, индекс сборки берется относительно положения в списке
             case R.id.inflate_build_blank_ll_preview_info_header:
@@ -203,7 +203,7 @@ public class BuildsFragment extends PageFragment implements View.OnClickListener
                 addToParent = false;
 
                 userData.setCurrentBuild(index); // Выбор идет по индексу положения в списке
-                frListener.onFragmentInteraction(this, new BuildFullFragment(), OnFragmentInteractionListener.Action.NEXT_FRAGMENT_HIDE, null, "Build");
+                frListener.nextFragment(this, new BuildFullFragment(),  null, "Build");
                 break;
         }
     }
