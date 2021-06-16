@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.derlados.computerconf">
+    package="com.derlados.computer_conf">
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:screenOrientation="portrait"
         android:allowBackup="true"
-        android:name="com.derlados.computerconf.App"
+        android:name="com.derlados.computer_conf.App"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/net_config"
