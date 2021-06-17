@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import com.derlados.computerconf.VIews.MainMenuFragment
 import com.derlados.computerconf.VIews.OnFragmentInteractionListener
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
     var fragmentManager = supportFragmentManager
@@ -22,7 +23,6 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_ll_container, mainMenuFragment)
                 .commit()
-
     }
 
 

@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 class MenuPageAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm!!) {
     private val COUNT_PAGES_MENU = 3
     private val pageFragments = arrayOfNulls<Fragment>(COUNT_PAGES_MENU)
+
     override fun getItem(position: Int): Fragment {
         pageFragments[position] = PageFragment.newInstanse(position)
         return pageFragments[position]!!

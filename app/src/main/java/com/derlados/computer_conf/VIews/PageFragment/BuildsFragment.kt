@@ -11,20 +11,18 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import com.derlados.computerconf.App
+import com.derlados.computer_conf.App
 import com.derlados.computerconf.Constants.TypeComp
-import com.derlados.computerconf.VIews.BuildFullFragment
 import com.derlados.computerconf.VIews.OnFragmentInteractionListener
-import com.derlados.computerconf.Objects.Build
-import com.derlados.computerconf.Objects.UserData
-import com.derlados.computerconf.R
+import com.derlados.computer_conf.Models.Build
+import com.derlados.computer_conf.Models.UserData
+import com.derlados.computer_conf.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class BuildsFragment : PageFragment(), View.OnClickListener {
     private var frListener: OnFragmentInteractionListener? = null
     private var fragment: View? = null
     private var buildsContainer: LinearLayout? = null // Основной контейнер для бланков сборок
-    private lateinit var userData: UserData // Объект данных юзера
 
     // Данные для модификации после возврата с режима сборки
     private var blankToModify: LinearLayout? = null
@@ -38,8 +36,6 @@ class BuildsFragment : PageFragment(), View.OnClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         fragment = inflater.inflate(R.layout.fragment_builds, container, false)
 
-        // Определение данных и основного контейнера
-        userData = UserData.userData!!
         buildsContainer = this.fragment?.findViewById(R.id.fragment_builds_builds_container)
 
         // Кнопка в левом нижнем углу экрана для создания новых сборок
@@ -59,15 +55,15 @@ class BuildsFragment : PageFragment(), View.OnClickListener {
         if (!hidden && blankToModify != null) {
 
             // Если сборка только создавалась и пользователь её не захотел сохранить - все данные уничтожаются и сборка не добавляется
-            if (addToParent && !userData.isCurrentBuildIsSaved) {
-                this.userData.discardCurrentBuild(true) // Когда пользователь выходит в меню, текущая сборка сбрасывается
+            if (addToParent && !UserData.isCurrentBuildIsSaved) {
+                UserData.discardCurrentBuild(true) // Когда пользователь выходит в меню, текущая сборка сбрасывается
                 blankToModify = null
                 return
             }
 
-            if (userData.isCurrentBuildIsSaved)
-                setBuildBlank(this.userData.currentBuild!!, blankToModify!!, addToParent)
-            UserData.userData.discardCurrentBuild(false) // Когда пользователь выходит в меню, текущая сборка сбрасывается
+            if (UserData.isCurrentBuildIsSaved)
+                setBuildBlank(UserData.currentBuild!!, blankToModify!!, addToParent)
+            UserData.discardCurrentBuild(false) // Когда пользователь выходит в меню, текущая сборка сбрасывается
             blankToModify = null
         }
     }
@@ -118,13 +114,13 @@ class BuildsFragment : PageFragment(), View.OnClickListener {
         // Обработка на нажатие по всему бланку
         buildBlank.findViewById<View>(R.id.inflate_build_blank_ll_preview_info_header).setOnClickListener(this)
         buildBlank.findViewById<View>(R.id.inflate_build_blank_ibt_delete).setOnClickListener {
-            UserData.userData.deleteBuildByIndex(buildsContainer!!.indexOfChild(buildBlank)) // Индекс опеределяется текущим положением бланка в списке
+            UserData.deleteBuildByIndex(buildsContainer!!.indexOfChild(buildBlank)) // Индекс опеределяется текущим положением бланка в списке
             buildsContainer!!.removeView(buildBlank) // Удаление бланка
         }
 
         // Установка изображения сборки
-        if (build.getGood(TypeComp.CASE) != null) {
-            val caseImg = build.getGood(TypeComp.CASE).image
+        if (build.getComponent(TypeComp.CASE) != null) {
+            val caseImg = build.getComponent(TypeComp.CASE)?.image
             (buildBlank.findViewById<View>(R.id.inflate_build_blank_img) as ImageView).setImageBitmap(caseImg)
         } else (buildBlank.findViewById<View>(R.id.inflate_build_blank_img) as ImageView).setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_case_24, App.app.theme))
 
@@ -134,17 +130,18 @@ class BuildsFragment : PageFragment(), View.OnClickListener {
 
     // Формирование строки списка комплектующих
     private fun getGoodStr(build: Build, typeComp: TypeComp): String {
-        val good = build.getGood(typeComp)
+        val good = build.getComponent(typeComp)
         return if (good != null) good.name else "--"
     }
 
     override fun onClick(view: View) {
         when (view.id) {
             R.id.fragment_builds_float_bt -> {
-                userData!!.addNewBuild()
+                UserData.addNewBuild()
                 blankToModify = layoutInflater.inflate(R.layout.inflate_build_blank, buildsContainer, false) as LinearLayout
                 addToParent = true
-                frListener!!.nextFragment(this, BuildFullFragment(), null, "Build")
+                //TODO (Раскомментировать когда появится фрагмент)
+              //  frListener!!.nextFragment(this, BuildFullFragment(), null, "Build")
             }
             R.id.inflate_build_blank_ll_preview_info_header -> {
                 val listBuildsContainer = fragment!!.findViewById<LinearLayout>(R.id.fragment_builds_builds_container)
@@ -153,8 +150,9 @@ class BuildsFragment : PageFragment(), View.OnClickListener {
                 // Получение данных для будущей модификации
                 blankToModify = view.parent as LinearLayout
                 addToParent = false
-                userData!!.setCurrentBuild(index) // Выбор идет по индексу положения в списке
-                frListener!!.nextFragment(this, BuildFullFragment(), null, "Build")
+                UserData.setCurrentBuild(index) // Выбор идет по индексу положения в списке
+                //TODO (Раскомментировать когда появится фрагмент)
+               // frListener!!.nextFragment(this, BuildFullFragment(), null, "Build")
             }
         }
     }

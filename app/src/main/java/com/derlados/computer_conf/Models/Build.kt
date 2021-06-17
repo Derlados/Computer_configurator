@@ -1,10 +1,6 @@
-package com.derlados.computerconf.Objects
+package com.derlados.computer_conf.Models
 
-import com.derlados.computerconf.Constants.CompatParam
 import com.derlados.computerconf.Constants.TypeComp
-import com.derlados.computerconf.Managers.FileManager
-import com.derlados.computerconf.Objects.Component.Attribute
-import java.io.File
 import java.util.*
 
 class Build : Cloneable {
@@ -170,17 +166,17 @@ class Build : Cloneable {
     fun reduceCountGoods(typeComp: TypeComp) {
         val currentCount = countGoods[typeComp]!!
         if (currentCount > 1) {
-            countGoods.put(typeComp, currentCount - 1)
-            price -= components[typeComp].getPrice()
+            countGoods[typeComp] = currentCount - 1
+            // price -= components[typeComp].getPrice()
         }
     }
 
     // Получение количества объектов
-    fun getCountGoods(typeComp: TypeComp): Int {
+    fun getCountComponents(typeComp: TypeComp): Int {
         return if (countGoods[typeComp] != null) countGoods[typeComp]!! else 1
     }
 
-    fun getGood(typeComp: TypeComp): Component? {
+    fun getComponent(typeComp: TypeComp): Component? {
         return components[typeComp]
     }
 

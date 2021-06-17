@@ -12,25 +12,18 @@ abstract class PageFragment : Fragment() {
         BUILDS, SHOP, INFO
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     // Создание самого фрагмента.
     // Реализация должна быть в наследниках где каждый наследний - отдельный фрагмент
     abstract override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
 
     companion object {
-        /* Создание новой страницы в viewPage
-    * Параметры:
-    * numPage - номер страницы
-    * */
-        fun newInstanse(numPage: Int): PageFragment? {
-            var pageFragment: PageFragment? = null
-
+        /** Создание новой страницы в viewPage
+        * @param numPage - номер страницы
+        * */
+        fun newInstanse(numPage: Int): PageFragment {
             // Взятие нужной константы (для читабельности кода и легкости изменений меню)
             val page = PageMenu.values()[numPage]
-            pageFragment = when (page) {
+            val pageFragment = when (page) {
                 PageMenu.BUILDS -> BuildsFragment()
                 PageMenu.SHOP -> ShopFragment()
                 PageMenu.INFO -> InfoFragment()
