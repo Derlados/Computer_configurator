@@ -14,8 +14,8 @@ import androidx.core.content.res.ResourcesCompat
 import com.derlados.computer_conf.App
 import com.derlados.computerconf.Constants.TypeComp
 import com.derlados.computerconf.VIews.OnFragmentInteractionListener
-import com.derlados.computer_conf.Models.Build
-import com.derlados.computer_conf.Models.UserData
+import com.derlados.computer_conf.models.Build
+import com.derlados.computer_conf.models.UserData
 import com.derlados.computer_conf.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 

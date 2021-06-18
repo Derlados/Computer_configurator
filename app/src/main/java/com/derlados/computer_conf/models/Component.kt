@@ -1,16 +1,18 @@
-package com.derlados.computer_conf.Models
+package com.derlados.computer_conf.models
 
 import android.graphics.Bitmap
 import com.derlados.computerconf.Managers.FileManager
 import java.util.*
 
-class Component(val name: String, val price : Float, val urlFullData: String, val imageUrl : String, val imageName : String, val previewData: HashMap<String, String>) {
+class Component(val name: String, val price : Float, val imageUrl : String,  private val attributes: ArrayList<Attribute>) {
 
     // Для хранения блоков характеристик о комплектующем.
-    inner class Attribute(val id: Int, val data: HashMap<String, String>)
+    inner class Attribute(val id: Int, val data: HashMap<String, String>, isPreview: Boolean)
+    lateinit var imageName : String
 
-    // Массив аттрибутов формирующий полную характеристику компонента
-    var fullData: ArrayList<Attribute>? = null
+    init {
+        imageName = TODO("Доделать взятие имени изображение с URL")
+    }
 
     // Данные изображения сохраняются и загружаются на устройство так как невозможно гарантировать стабильность работы с Bitmap который хранится прямо в объекте
     // При постоянном использовании Bitmap возникают ошибки SIGSEGV 11
@@ -24,7 +26,7 @@ class Component(val name: String, val price : Float, val urlFullData: String, va
      * Получение аттррибута по id
      */
     fun getAttributeById(id: Int): Attribute {
-        for (data in fullData.orEmpty()) {
+        for (data in attributes) {
             if (data.id == id) {
                 return data
             }

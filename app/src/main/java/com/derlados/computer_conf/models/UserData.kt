@@ -1,8 +1,6 @@
-package com.derlados.computer_conf.Models
+package com.derlados.computer_conf.models
 
 import android.content.Context
-import android.os.Handler
-import android.util.Log
 import com.derlados.computer_conf.App
 import com.derlados.computerconf.Constants.TypeComp
 import com.derlados.computerconf.Managers.FileManager

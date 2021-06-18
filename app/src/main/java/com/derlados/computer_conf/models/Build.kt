@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.Models
+package com.derlados.computer_conf.models
 
 import com.derlados.computerconf.Constants.TypeComp
 import java.util.*

@@ -1,21 +1,21 @@
-import Pool from "mysql2/typings/mysql/lib/Pool";
 import MySQL from "mysql2";
+import { Pool } from "mysql2/promise";
 
 export class DataBase {
 
     private static instance: DataBase = null;
     private pool: Pool;
 
-    private constructor () {
+    private constructor() {
         this.pool = MySQL.createPool({
             connectionLimit: 5,
             host: "localhost",
             user: "root",
             password: "root",
-            database: "compconf",
+            database: "computer_conf",
             multipleStatements: true,
-            port: 3307
-        });
+            port: 3308
+        }).promise();
     }
 
     public static getDatabase(): DataBase {

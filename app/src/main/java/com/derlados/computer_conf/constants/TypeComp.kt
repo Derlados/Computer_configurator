@@ -9,5 +9,6 @@ enum class TypeComp {
     RAM,
     POWER_SUPPLY,
     OTHERS,
-    CASE
+    CASE,
+    COOLER
 }
