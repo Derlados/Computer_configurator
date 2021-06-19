@@ -1,6 +1,6 @@
-package com.derlados.computerconf.Constants;
+package com.derlados.computer_conf.Constants;
 
-enum class TypeComp {
+enum class ComponentCategory {
     CPU,
     GPU,
     MOTHERBOARD,

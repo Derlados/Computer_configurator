@@ -1,4 +1,4 @@
-package com.derlados.computerconf.VIews.PageFragment
+package com.derlados.computer_conf.VIews.PageFragment
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

@@ -2,8 +2,8 @@ package com.derlados.computer_conf.models
 
 import android.content.Context
 import com.derlados.computer_conf.App
-import com.derlados.computerconf.Constants.TypeComp
-import com.derlados.computerconf.Managers.FileManager
+import com.derlados.computer_conf.Constants.ComponentCategory
+import com.derlados.computer_conf.Managers.FileManager
 import com.google.gson.Gson
 import java.io.*
 import java.util.*
@@ -84,7 +84,7 @@ object UserData  {
         val gson = Gson()
 
         // Сохраненние изображений всех комплектующих
-        val buildGoods: HashMap<TypeComp, Component> = currentBuild!!.components
+        val buildGoods: HashMap<ComponentCategory, Component> = currentBuild!!.components
         for ((_, component) in buildGoods) {
             FileManager.saveImageOnDevice(component.image, component.imageName)
         }

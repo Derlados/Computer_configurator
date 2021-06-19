@@ -1,4 +1,4 @@
-package com.derlados.computerconf.VIews
+package com.derlados.computer_conf.VIews
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.derlados.computer_conf.R
-import com.derlados.computerconf.VIews.PageFragment.MenuPageAdapter
-import com.derlados.computerconf.VIews.PageFragment.PageFragment.PageMenu
+import com.derlados.computer_conf.VIews.PageFragment.MenuPageAdapter
+import com.derlados.computer_conf.VIews.PageFragment.PageFragment.PageMenu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_main_menu.view.*
 

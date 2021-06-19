@@ -1,4 +1,4 @@
-package com.derlados.computerconf.VIews.PageFragment
+package com.derlados.computer_conf.VIews.PageFragment
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,8 +12,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import com.derlados.computer_conf.App
-import com.derlados.computerconf.Constants.TypeComp
-import com.derlados.computerconf.VIews.OnFragmentInteractionListener
+import com.derlados.computer_conf.Constants.ComponentCategory
+import com.derlados.computer_conf.VIews.OnFragmentInteractionListener
 import com.derlados.computer_conf.models.Build
 import com.derlados.computer_conf.models.UserData
 import com.derlados.computer_conf.R
@@ -89,14 +89,14 @@ class BuildsFragment : PageFragment(), View.OnClickListener {
         }
 
         // Установка комплектующих в раскрывающемся списке (названия комплектующих)
-        buildBlank.findViewById<TextView>(R.id.inflate_build_blank_tv_chosen_CPU).text = getGoodStr(build, TypeComp.CPU)
-        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_GPU) as TextView).text = getGoodStr(build, TypeComp.GPU)
-        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_motherboard) as TextView).text = getGoodStr(build, TypeComp.MOTHERBOARD)
-        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_RAM) as TextView).text = getGoodStr(build, TypeComp.RAM)
-        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_HDD) as TextView).text = getGoodStr(build, TypeComp.HDD)
-        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_SSD) as TextView).text = getGoodStr(build, TypeComp.SSD)
-        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_power_supply) as TextView).text = getGoodStr(build, TypeComp.POWER_SUPPLY)
-        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_case) as TextView).text = getGoodStr(build, TypeComp.CASE)
+        buildBlank.findViewById<TextView>(R.id.inflate_build_blank_tv_chosen_CPU).text = getGoodStr(build, ComponentCategory.CPU)
+        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_GPU) as TextView).text = getGoodStr(build, ComponentCategory.GPU)
+        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_motherboard) as TextView).text = getGoodStr(build, ComponentCategory.MOTHERBOARD)
+        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_RAM) as TextView).text = getGoodStr(build, ComponentCategory.RAM)
+        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_HDD) as TextView).text = getGoodStr(build, ComponentCategory.HDD)
+        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_SSD) as TextView).text = getGoodStr(build, ComponentCategory.SSD)
+        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_power_supply) as TextView).text = getGoodStr(build, ComponentCategory.POWER_SUPPLY)
+        (buildBlank.findViewById<View>(R.id.inflate_build_blank_tv_chosen_case) as TextView).text = getGoodStr(build, ComponentCategory.CASE)
 
         // Кнопка для сворачивания/раскрытия списка комлектующих в сборке
         buildBlank.findViewById<View>(R.id.inflate_build_blank_ibt_hide).setOnClickListener { view ->
@@ -119,8 +119,8 @@ class BuildsFragment : PageFragment(), View.OnClickListener {
         }
 
         // Установка изображения сборки
-        if (build.getComponent(TypeComp.CASE) != null) {
-            val caseImg = build.getComponent(TypeComp.CASE)?.image
+        if (build.getComponent(ComponentCategory.CASE) != null) {
+            val caseImg = build.getComponent(ComponentCategory.CASE)?.image
             (buildBlank.findViewById<View>(R.id.inflate_build_blank_img) as ImageView).setImageBitmap(caseImg)
         } else (buildBlank.findViewById<View>(R.id.inflate_build_blank_img) as ImageView).setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_case_24, App.app.theme))
 
@@ -129,8 +129,8 @@ class BuildsFragment : PageFragment(), View.OnClickListener {
     }
 
     // Формирование строки списка комплектующих
-    private fun getGoodStr(build: Build, typeComp: TypeComp): String {
-        val good = build.getComponent(typeComp)
+    private fun getGoodStr(build: Build, componentCategory: ComponentCategory): String {
+        val good = build.getComponent(componentCategory)
         return if (good != null) good.name else "--"
     }
 

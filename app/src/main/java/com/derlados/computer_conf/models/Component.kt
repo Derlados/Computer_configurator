@@ -1,13 +1,13 @@
 package com.derlados.computer_conf.models
 
 import android.graphics.Bitmap
-import com.derlados.computerconf.Managers.FileManager
+import com.derlados.computer_conf.Managers.FileManager
 import java.util.*
 
-class Component(val name: String, val price : Float, val imageUrl : String,  private val attributes: ArrayList<Attribute>) {
+class Component(val id: Int, val name: String, val price : Float, val imageUrl : String, private val attributes: ArrayList<Attribute>) {
 
     // Для хранения блоков характеристик о комплектующем.
-    inner class Attribute(val id: Int, val data: HashMap<String, String>, isPreview: Boolean)
+    inner class Attribute(val id: Int, val name: String, val value: String, isPreview: Boolean)
     lateinit var imageName : String
 
     init {

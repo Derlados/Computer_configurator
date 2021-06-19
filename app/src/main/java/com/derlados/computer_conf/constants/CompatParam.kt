@@ -1,4 +1,4 @@
-package com.derlados.computerconf.Constants;
+package com.derlados.computer_conf.Constants;
 
 class CompatParam {
 

@@ -4,7 +4,7 @@ import ComponentModel from "../models/ComponentModel";
 
 export default class ComponentController {
 
-    private readonly BLOCK_SIZE: number = 100;
+
     private componentModel: ComponentModel;
 
     constructor() {
@@ -13,19 +13,27 @@ export default class ComponentController {
 
     public getComponents = (req: any, res: Response): void => {
         const category: string = req.params.category;
-        const offset: number = req.params.block * this.BLOCK_SIZE;
+        const offset: number = req.params.block;
 
         this.componentModel.getComponents(category, offset)
             .then(data => {
                 res.status(HttpCodes.OK).send(JSON.stringify(data));
             })
+            .catch(err => {
+                res.status(HttpCodes.INTERNAL_SERVER_ERROR).send(err.message);
+            })
     }
 
-    public getComponentById = (req: any, res: Response): void => {
+    public getMaxBlocks = (req: any, res: Response): void => {
+        const category: string = req.params.category;
 
+        this.componentModel.getMaxBlocks(category)
+            .then(data => {
+                res.status(HttpCodes.OK).send(JSON.stringify(data));
+            })
     }
 
-    public getMaxPages = (req: any, res: Response): void => {
-
+    public test = (req: any, res: Response): void => {
+        console.log(req);
     }
 }

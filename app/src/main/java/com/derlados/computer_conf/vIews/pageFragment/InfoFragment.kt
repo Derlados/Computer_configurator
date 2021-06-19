@@ -1,4 +1,4 @@
-package com.derlados.computerconf.VIews.PageFragment
+package com.derlados.computer_conf.VIews.PageFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

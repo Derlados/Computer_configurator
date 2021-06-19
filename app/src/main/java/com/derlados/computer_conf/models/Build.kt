@@ -1,10 +1,10 @@
 package com.derlados.computer_conf.models
 
-import com.derlados.computerconf.Constants.TypeComp
+import com.derlados.computer_conf.Constants.ComponentCategory
 import java.util.*
 
 class Build : Cloneable {
-    var components = HashMap<TypeComp, Component>() // Комплетующие
+    var components = HashMap<ComponentCategory, Component>() // Комплетующие
         private set
     var price = 0.0 // Цена сборки
         private set
@@ -12,13 +12,13 @@ class Build : Cloneable {
     var description: String = "" // Описание в сборке
     var id: String = UUID.randomUUID().toString().replace("-", "")
 
-    private var countGoods = HashMap<TypeComp, Int>() // Хранится в отдельной мапе, так как только SSD, RAM и HDD можно взять несколько
+    private var countGoods = HashMap<ComponentCategory, Int>() // Хранится в отдельной мапе, так как только SSD, RAM и HDD можно взять несколько
 
     val isComplete: Boolean
-        get() = components[TypeComp.CPU] != null && components[TypeComp.MOTHERBOARD] != null
-                && components[TypeComp.GPU] != null && components[TypeComp.POWER_SUPPLY] != null
-                && components[TypeComp.RAM] != null && components[TypeComp.CASE] != null
-                && (components[TypeComp.HDD] != null || components[TypeComp.SSD] != null)
+        get() = components[ComponentCategory.CPU] != null && components[ComponentCategory.MOTHERBOARD] != null
+                && components[ComponentCategory.GPU] != null && components[ComponentCategory.POWER_SUPPLY] != null
+                && components[ComponentCategory.RAM] != null && components[ComponentCategory.CASE] != null
+                && (components[ComponentCategory.HDD] != null || components[ComponentCategory.SSD] != null)
 
     //TODO следует придумать поумнее проверку блока питания
     // Проверка совместимости
@@ -100,32 +100,32 @@ class Build : Cloneable {
     /** Добавление комплектующего в сборку
      * Параметры:
      * @param component - комплектующее
-     * @param typeComp - тип комплектующего
+     * @param componentCategory - тип комплектующего
      * */
-    fun addToBuild(component: Component, typeComp: TypeComp) {
+    fun addToBuild(component: Component, componentCategory: ComponentCategory) {
 
-        components.put(typeComp, component)
-        if (typeComp === TypeComp.RAM || typeComp === TypeComp.HDD || typeComp === TypeComp.SSD) {
-            countGoods.put(typeComp, 1)
+        components.put(componentCategory, component)
+        if (componentCategory === ComponentCategory.RAM || componentCategory === ComponentCategory.HDD || componentCategory === ComponentCategory.SSD) {
+            countGoods.put(componentCategory, 1)
         }
         price += component.price // Подсчет общей цены
     }
 
     /**
      * Проверка можно ли добавлять несколько комплектующих той же категории
-     * @param typeComp - тип компонента
+     * @param componentCategory - тип компонента
      * @return true - несколько комплектующих, false - комплектующее одно
      */
-    fun isMultipleGood(typeComp: TypeComp): Boolean {
-        return countGoods[typeComp] != null
+    fun isMultipleGood(componentCategory: ComponentCategory): Boolean {
+        return countGoods[componentCategory] != null
     }
 
     /**
      * Проверка максимального лимита на количество комплектующего
-     * @param typeComp - тип комплектующего
+     * @param componentCategory - тип комплектующего
      * @return - лимит количества комплектующих
      */
-    private fun maxLimitGood(typeComp: TypeComp): Int {
+    private fun maxLimitGood(componentCategory: ComponentCategory): Int {
 //        var limit = 1
 //        val motherboard = components[TypeComp.MOTHERBOARD] ?: return limit
 //
@@ -153,39 +153,39 @@ class Build : Cloneable {
     }
 
     // Добавление количества объектов
-    fun increaseCountGoods(typeComp: TypeComp) {
-        val limit = maxLimitGood(typeComp)
-        val currentCount = countGoods[typeComp]!!
+    fun increaseCountGoods(componentCategory: ComponentCategory) {
+        val limit = maxLimitGood(componentCategory)
+        val currentCount = countGoods[componentCategory]!!
         if (currentCount < limit) {
-            countGoods.put(typeComp, currentCount + 1)
-            price += components[typeComp]?.price!!
+            countGoods.put(componentCategory, currentCount + 1)
+            price += components[componentCategory]?.price!!
         }
     }
 
     // Уменьшения количества
-    fun reduceCountGoods(typeComp: TypeComp) {
-        val currentCount = countGoods[typeComp]!!
+    fun reduceCountGoods(componentCategory: ComponentCategory) {
+        val currentCount = countGoods[componentCategory]!!
         if (currentCount > 1) {
-            countGoods[typeComp] = currentCount - 1
+            countGoods[componentCategory] = currentCount - 1
             // price -= components[typeComp].getPrice()
         }
     }
 
     // Получение количества объектов
-    fun getCountComponents(typeComp: TypeComp): Int {
-        return if (countGoods[typeComp] != null) countGoods[typeComp]!! else 1
+    fun getCountComponents(componentCategory: ComponentCategory): Int {
+        return if (countGoods[componentCategory] != null) countGoods[componentCategory]!! else 1
     }
 
-    fun getComponent(typeComp: TypeComp): Component? {
-        return components[typeComp]
+    fun getComponent(componentCategory: ComponentCategory): Component? {
+        return components[componentCategory]
     }
 
     /** Удаление комплектующего по типу
     * @param typeGood - тип комплектующего
     * */
-    fun deleteGood(typeComp: TypeComp) {
-        price -= components[typeComp]?.price!!
-        components.remove(typeComp)
+    fun deleteGood(componentCategory: ComponentCategory) {
+        price -= components[componentCategory]?.price!!
+        components.remove(componentCategory)
     }
 
     //TODO (Нужно сделать удаление комплектующих одного типа, но разных (накопители и может даже ОЗУ))

@@ -1,4 +1,4 @@
-package com.derlados.computerconf.Managers
+package com.derlados.computer_conf.Managers
 
 import android.content.Context
 import android.graphics.Bitmap

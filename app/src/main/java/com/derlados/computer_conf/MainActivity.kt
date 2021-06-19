@@ -4,9 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import com.derlados.computerconf.VIews.MainMenuFragment
-import com.derlados.computerconf.VIews.OnFragmentInteractionListener
-import kotlinx.android.synthetic.main.activity_main.*
+import com.derlados.computer_conf.presenters.SearchPresenter
+import com.derlados.computer_conf.VIews.MainMenuFragment
+import com.derlados.computer_conf.VIews.OnFragmentInteractionListener
 
 class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
     var fragmentManager = supportFragmentManager
@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_ll_container, mainMenuFragment)
                 .commit()
+
+        SearchPresenter(null)
     }
 
 

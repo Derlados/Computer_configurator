@@ -1,4 +1,4 @@
-package com.derlados.computerconf.Internet.GsonSerializers
+package com.derlados.computer_conf.Internet.GsonSerializers
 
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
