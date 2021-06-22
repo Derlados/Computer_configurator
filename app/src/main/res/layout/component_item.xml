@@ -1,0 +1,212 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/inflate_good_blank_rl_blank"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/dark_blue_2"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:layout_marginBottom="5dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.29"
+        android:orientation="vertical"
+        android:layout_marginEnd="5dp">
+
+        <ImageView
+            android:id="@+id/component_item_img"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.72"
+            android:src="@drawable/test"/>
+
+        <TextView
+            android:id="@+id/component_item_tv_price"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.28"
+            android:gravity="center|end"
+            android:text="X ГРН"
+            android:textAlignment="center"
+            android:textColor="@color/green"
+            android:textSize="16sp"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.71">
+
+        <TableLayout
+            android:id="@+id/component_item_tl_data"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:weightSum="1">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/component_item_tv_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.85"
+                    android:gravity="center"
+                    android:text="ПРОЦЕССОР INTEL CORE™ I3 9100F (BX80684I39100F)"
+                    android:textAlignment="center"
+                    android:textColor="@color/white" />
+
+                <ImageButton
+                    android:id="@+id/inflate_good_blank_ibt_corner"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15"
+                    android:background="@color/invisible"
+                    android:gravity="top"
+                    android:maxEms="1"
+                    android:src="@drawable/ic_inactive_star_24" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/CellInfo"
+                    android:text="Сокет"
+                    android:textColor="@color/turquoise" />
+
+                <TextView
+                    style="@style/CellInfo"
+                    android:text="Количество ядер"
+                    android:textColor="@color/turquoise" />
+
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/CellInfo"
+                    android:text="S1151" />
+
+                <TextView
+                    style="@style/CellInfo"
+                    android:text="4" />
+
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/CellInfo"
+                    android:text="Частота"
+                    android:textColor="@color/turquoise" />
+
+                <TextView
+                    style="@style/CellInfo"
+                    android:text="TDP"
+                    android:textColor="@color/turquoise" />
+
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/CellInfo"
+                    android:text="3.6 ГГц" />
+
+                <TextView
+                    style="@style/CellInfo"
+                    android:text="65W" />
+
+
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/inflate_good_blank_ll_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:gravity="center"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Количество: "
+            android:textSize="18sp"
+            android:textColor="@color/turquoise"/>
+
+        <Button
+            android:id="@+id/inflate_good_blank_bt_increase_count"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/bt_circle"
+            android:textAlignment="center"
+            android:text="+"
+            android:textSize="18sp"
+            android:textColor="#000000">
+
+        </Button>
+
+        <TextView
+            android:id="@+id/inflate_good_blank_tv_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/white">
+        </TextView>
+
+        <Button
+            android:id="@+id/inflate_good_blank_bt_reduce_count"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/bt_circle"
+            android:text="-"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textColor="#000000">
+
+        </Button>
+
+
+    </LinearLayout>
+
+</LinearLayout>

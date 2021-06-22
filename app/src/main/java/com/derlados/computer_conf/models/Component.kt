@@ -2,12 +2,14 @@ package com.derlados.computer_conf.models
 
 import android.graphics.Bitmap
 import com.derlados.computer_conf.Managers.FileManager
+import org.w3c.dom.Attr
 import java.util.*
+import kotlin.collections.ArrayList
 
 class Component(val id: Int, val name: String, val price : Float, val imageUrl : String, private val attributes: ArrayList<Attribute>) {
 
     // Для хранения блоков характеристик о комплектующем.
-    inner class Attribute(val id: Int, val name: String, val value: String, isPreview: Boolean)
+    inner class Attribute(val id: Int, val name: String, val value: String, val isPreview: Boolean)
     lateinit var imageName : String
 
     init {
@@ -26,13 +28,10 @@ class Component(val id: Int, val name: String, val price : Float, val imageUrl :
      * Получение аттррибута по id
      */
     fun getAttributeById(id: Int): Attribute {
-        for (data in attributes) {
-            if (data.id == id) {
-                return data
-            }
-        }
-        throw Exception("Attribute not found")
+        return attributes.single { attribute -> attribute.id == id }
     }
 
-
+    fun getPreviewAttributes(): List<Attribute> {
+        return attributes.filter { attribute -> attribute.isPreview }
+    }
 }
