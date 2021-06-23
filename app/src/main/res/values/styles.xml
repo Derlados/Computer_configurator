@@ -39,13 +39,14 @@
     <style name="ButtonShop">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_margin">2dp</item>
         <item name="android:layout_weight">0.33</item>
         <item name="android:maxEms">1</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:theme">@style/Theme.MaterialComponents.Light</item>
+        <item name="android:background">@color/dark_blue_2</item>
         <item name="backgroundTint">#0B1D40</item>
         <item name="iconSize">@dimen/icon_size</item>
         <item name="iconGravity">textTop</item>

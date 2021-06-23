@@ -2,7 +2,7 @@ package com.derlados.computer_conf.models
 
 import android.content.Context
 import com.derlados.computer_conf.App
-import com.derlados.computer_conf.Constants.ComponentCategory
+import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.Managers.FileManager
 import com.google.gson.Gson
 import java.io.*

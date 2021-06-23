@@ -56,6 +56,8 @@ export default class ComponentModel {
                         const comp: Component = components.get(row.id_component);
                         delete row.id_component;
 
+                        row.isPreview = (row.isPreview == 1);
+
                         comp.attributes.push(Object.assign(new Attribute(), row));
                     });
 

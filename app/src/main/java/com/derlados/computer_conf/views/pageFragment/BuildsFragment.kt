@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.VIews.PageFragment
+package com.derlados.computer_conf.views.pageFragment
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,8 +12,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import com.derlados.computer_conf.App
-import com.derlados.computer_conf.Constants.ComponentCategory
-import com.derlados.computer_conf.VIews.OnFragmentInteractionListener
+import com.derlados.computer_conf.consts.ComponentCategory
+import com.derlados.computer_conf.views.OnFragmentInteractionListener
 import com.derlados.computer_conf.models.Build
 import com.derlados.computer_conf.models.UserData
 import com.derlados.computer_conf.R

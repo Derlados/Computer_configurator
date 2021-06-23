@@ -10,11 +10,8 @@ class Component(val id: Int, val name: String, val price : Float, val imageUrl :
 
     // Для хранения блоков характеристик о комплектующем.
     inner class Attribute(val id: Int, val name: String, val value: String, val isPreview: Boolean)
-    lateinit var imageName : String
 
-    init {
-        imageName = TODO("Доделать взятие имени изображение с URL")
-    }
+    var imageName : String = imageUrl.split(Regex("([^/]+)\$")).toString()
 
     // Данные изображения сохраняются и загружаются на устройство так как невозможно гарантировать стабильность работы с Bitmap который хранится прямо в объекте
     // При постоянном использовании Bitmap возникают ошибки SIGSEGV 11

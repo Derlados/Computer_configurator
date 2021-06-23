@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.Constants;
+package com.derlados.computer_conf.consts;
 
 enum class ComponentCategory {
     CPU,

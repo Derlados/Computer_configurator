@@ -1,6 +1,6 @@
 package com.derlados.computer_conf.models
 
-import com.derlados.computer_conf.Constants.ComponentCategory
+import com.derlados.computer_conf.consts.ComponentCategory
 import java.util.*
 
 class Build : Cloneable {

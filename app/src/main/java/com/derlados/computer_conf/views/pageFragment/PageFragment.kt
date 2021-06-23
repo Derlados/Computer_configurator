@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.VIews.PageFragment
+package com.derlados.computer_conf.views.pageFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,15 +20,12 @@ abstract class PageFragment : Fragment() {
         /** Создание новой страницы в viewPage
         * @param numPage - номер страницы
         * */
-        fun newInstanse(numPage: Int): PageFragment {
-            // Взятие нужной константы (для читабельности кода и легкости изменений меню)
-            val page = PageMenu.values()[numPage]
-            val pageFragment = when (page) {
+        fun newInstance(numPage: Int): PageFragment {
+            return when (PageMenu.values()[numPage]) {
                 PageMenu.BUILDS -> BuildsFragment()
                 PageMenu.SHOP -> SearchFragment()
                 PageMenu.INFO -> InfoFragment()
             }
-            return pageFragment
         }
     }
 }

@@ -1,6 +1,5 @@
-package com.derlados.computer_conf.vIews.adapters
+package com.derlados.computer_conf.views.adapters
 
-import android.graphics.ColorSpace
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.models.Component
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.component_item.view.*
-import org.w3c.dom.Attr
 
 class ComponentRecyclerAdapter(private  val components: List<Component>, private val onItemClicked: (Component) -> Unit):
         RecyclerView.Adapter<ComponentRecyclerAdapter.ComponentHolder>() {
@@ -34,14 +31,14 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
 
             // Опеределение полей атрибутов и их значения (четный индекс - значение, нечетный - атрибут)
             val tlData: TableLayout = itemView.findViewById(R.id.component_item_tl_data)
-            for (i in 1..tlData.childCount) {
+            for (i in 1 until tlData.childCount) {
                 val row: TableRow = tlData.getChildAt(i) as TableRow
 
                 if (i % 2 == 0) {
-                    for (j in 1..row.childCount)
+                    for (j in 0 until row.childCount)
                         tvValues.add(row.getChildAt(j) as TextView)
                 } else {
-                    for (j in 1..row.childCount)
+                    for (j in 0 until row.childCount)
                         tvHeaders.add(row.getChildAt(j) as TextView)
                 }
             }
@@ -59,7 +56,7 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
         val component: Component = components[position]
 
         holder.tvName.text = component.name
-        holder.tvPrice.text = component.price.toString()
+        holder.tvPrice.text = "${component.price} ГРН"
         Picasso.get().load(component.imageUrl).into(holder.img)
 
         val attributes: List<Component.Attribute> = component.getPreviewAttributes()
