@@ -86,7 +86,7 @@ object UserData  {
         // Сохраненние изображений всех комплектующих
         val buildGoods: HashMap<ComponentCategory, Component> = currentBuild!!.components
         for ((_, component) in buildGoods) {
-            FileManager.saveImageOnDevice(component.image, component.imageName)
+            FileManager.saveImage(component.image, component.imageName)
         }
 
         // Сохраненние самой сборки в файл, где имя файла - имя самой сборки

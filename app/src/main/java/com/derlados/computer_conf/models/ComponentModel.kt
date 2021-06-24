@@ -1,12 +1,16 @@
 package com.derlados.computer_conf.models
 
 import android.accounts.NetworkErrorException
+import com.derlados.computer_conf.Managers.FileManager
 import com.derlados.computer_conf.internet.ComponentAPI
 import com.derlados.computer_conf.consts.ComponentCategory
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.reflect.Type
 
 
 object ComponentModel {
@@ -59,11 +63,29 @@ object ComponentModel {
         maxBlocks = -1
     }
 
-    fun saveComponentsInCache() {
-       // TODO(Сделать кеширование)
+    /**
+     * Сохранение комплектующих на устройство
+     * @param category -  категория комплектуюших
+     */
+    fun saveComponents(category: ComponentCategory) {
+        if (!FileManager.isExist(FileManager.Entity.COMPONENT, category.toString()))
+            FileManager.saveJsonData(FileManager.Entity.COMPONENT, category.toString(), Gson().toJson(components))
     }
 
-    fun restoreFromCache() {
-        // TODO(Сделать кеширование)
+    /**
+     * Чтение информации о комплектующих с устройства
+     * @param category - категория комплектующих
+     * @return - true - успешное чтение (данные есть), false - даннных нету
+     */
+    fun restoreFromCache(category: ComponentCategory): Boolean {
+        return if (FileManager.isExist(FileManager.Entity.COMPONENT, category.toString())) {
+            val data: String = FileManager.restoreJsonData(FileManager.Entity.COMPONENT, category.toString())
+            val type: Type = object: TypeToken<ArrayList<Component>>() {}.type
+            val cacheComponents: ArrayList<Component> =  Gson().fromJson(data, type)
+            components.addAll(cacheComponents)
+            true
+        } else {
+            false
+        }
     }
 }

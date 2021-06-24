@@ -2,8 +2,6 @@ package com.derlados.computer_conf.models
 
 import android.graphics.Bitmap
 import com.derlados.computer_conf.Managers.FileManager
-import org.w3c.dom.Attr
-import java.util.*
 import kotlin.collections.ArrayList
 
 class Component(val id: Int, val name: String, val price : Float, val imageUrl : String, private val attributes: ArrayList<Attribute>) {
@@ -16,9 +14,9 @@ class Component(val id: Int, val name: String, val price : Float, val imageUrl :
     // Данные изображения сохраняются и загружаются на устройство так как невозможно гарантировать стабильность работы с Bitmap который хранится прямо в объекте
     // При постоянном использовании Bitmap возникают ошибки SIGSEGV 11
     var image: Bitmap
-        get() = FileManager.restoreImageFromDevice(imageName)
+        get() = FileManager.restoreImage(imageName)
         set(image) {
-            FileManager.saveImageOnDevice(image, imageName)
+            FileManager.saveImage(image, imageName)
         }
 
     /**

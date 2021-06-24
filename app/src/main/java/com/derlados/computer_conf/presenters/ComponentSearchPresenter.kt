@@ -1,11 +1,11 @@
 package com.derlados.computer_conf.presenters
 
 import android.accounts.NetworkErrorException
-import android.annotation.SuppressLint
 import android.os.AsyncTask
 import com.derlados.computer_conf.interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.consts.ComponentCategory
+import com.derlados.computer_conf.models.Component
 
 class ComponentSearchPresenter(private val view: ComponentSearchView, private val category: ComponentCategory) {
     enum class UpdateCmd {
@@ -18,12 +18,24 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
 
     fun init() {
         view.setComponents(ComponentModel.components)
-        downloader.execute(category)
+
+        if (!ComponentModel.restoreFromCache(category)) {
+            downloader.execute(category)
+        } else {
+            view.updateComponents()
+            view.closeProgressBar()
+        }
     }
 
     fun finish() {
         downloader.cancel(false)
         ComponentModel.clearComponents()
+    }
+
+    fun searchComponent(searchText: String) {
+        val filteredComponents = ComponentModel.components.filter { component -> component.name.contains(searchText) }
+        view.setComponents(filteredComponents)
+        view.updateComponents()
     }
 
     /**
@@ -63,7 +75,7 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
 
         override fun onPostExecute(result: Void?) {
             super.onPostExecute(result)
-            ComponentModel.saveComponentsInCache()
+            ComponentModel.saveComponents(category)
         }
 
         /**
@@ -74,7 +86,10 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
             super.onProgressUpdate(*values)
 
             when (values[0] as UpdateCmd) {
-                UpdateCmd.DOWNLOADED -> view.updateComponents()
+                UpdateCmd.DOWNLOADED -> {
+                    view.updateComponents();
+                    view.closeProgressBar()
+                }
                 UpdateCmd.NOT_FOUND -> view.showNotFoundMessage()
                 UpdateCmd.ERROR-> view.showError(values[1] as String)
             }
@@ -82,7 +97,7 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
 
         override fun onCancelled() {
             super.onCancelled()
-            ComponentModel.saveComponentsInCache()
+            ComponentModel.saveComponents(category)
         }
     }
 }

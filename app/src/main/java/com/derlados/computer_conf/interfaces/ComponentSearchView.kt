@@ -7,7 +7,8 @@ interface ComponentSearchView {
     fun showError(message: String)
     fun showNotFoundMessage()
     fun openProgressBar()
-    fun setComponents(components: ArrayList<Component>)
+    fun closeProgressBar()
+    fun setComponents(components: List<Component>)
     fun updateComponents()
 
 }

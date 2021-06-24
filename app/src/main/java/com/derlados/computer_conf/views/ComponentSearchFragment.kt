@@ -54,7 +54,7 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
         searchString.setOnEditorActionListener(OnEditorActionListener { _, actionId, _ -> // Реакация на кнопку submit
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchText = searchString.text.toString()
-
+                presenter.searchComponent(searchText)
                 return@OnEditorActionListener true
             }
             return@OnEditorActionListener false
@@ -83,6 +83,7 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
 
     override fun onStop() {
         super.onStop()
+        rvComponents.adapter?.notifyItemRangeChanged(0, 0)
         presenter.finish()
     }
 
@@ -100,16 +101,22 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
         pbLoading.visibility = View.VISIBLE
     }
 
+    override fun closeProgressBar() {
+        pbLoading.visibility = View.GONE
+    }
+
     /**
      * Иниициализация (отрисовка) комплектующих, создает адаптек для RecyclerView
      */
-    override fun setComponents(components: ArrayList<Component>) {
+    override fun setComponents(components: List<Component>) {
         rvComponents.layoutManager = LinearLayoutManager(context)
         rvComponents.adapter = ComponentRecyclerAdapter(components, ::onClickItem)
     }
 
+    /**
+     * Обновление комплектующих в списке. Обновляется адаптер, уведомляя об изменении длині списка
+     */
     override fun updateComponents() {
-        pbLoading.visibility = View.GONE
         val adapter: RecyclerView.Adapter<*>? = rvComponents.adapter
         adapter?.notifyItemRangeChanged(0, adapter.itemCount)
     }
