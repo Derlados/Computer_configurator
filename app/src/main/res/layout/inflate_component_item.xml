@@ -52,7 +52,7 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.2"
+                android:layout_weight="0.4"
                 android:orientation="horizontal">
 
                 <TextView
@@ -80,53 +80,17 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.2"
+                android:layout_weight="0.15"
                 android:orientation="horizontal">
 
                 <TextView
                     style="@style/CellInfo"
-                    android:text="Сокет"
+                    android:text="-"
                     android:textColor="@color/turquoise" />
 
                 <TextView
                     style="@style/CellInfo"
-                    android:text="Количество ядер"
-                    android:textColor="@color/turquoise" />
-
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/CellInfo"
-                    android:text="S1151" />
-
-                <TextView
-                    style="@style/CellInfo"
-                    android:text="4" />
-
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/CellInfo"
-                    android:text="Частота"
-                    android:textColor="@color/turquoise" />
-
-                <TextView
-                    style="@style/CellInfo"
-                    android:text="TDP"
+                    android:text="-"
                     android:textColor="@color/turquoise" />
 
 
@@ -135,16 +99,52 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.2"
+                android:layout_weight="0.15"
                 android:orientation="horizontal">
 
                 <TextView
                     style="@style/CellInfo"
-                    android:text="3.6 ГГц" />
+                    android:text="-" />
 
                 <TextView
                     style="@style/CellInfo"
-                    android:text="65W" />
+                    android:text="-" />
+
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.15"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/CellInfo"
+                    android:text="-"
+                    android:textColor="@color/turquoise" />
+
+                <TextView
+                    style="@style/CellInfo"
+                    android:text="-"
+                    android:textColor="@color/turquoise" />
+
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.15"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/CellInfo"
+                    android:text="-" />
+
+                <TextView
+                    style="@style/CellInfo"
+                    android:text="-" />
 
 
             </TableRow>

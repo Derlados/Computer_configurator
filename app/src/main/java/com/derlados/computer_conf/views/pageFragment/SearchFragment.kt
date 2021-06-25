@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.derlados.computer_conf.R
+import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.views.ComponentSearchFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
@@ -50,6 +51,6 @@ class SearchFragment : PageFragment(), View.OnClickListener {
             else -> return
         }
         data.putSerializable("category", componentCategory)
-        frListener.nextFragment(this, ComponentSearchFragment(), data, null)
+        frListener.nextFragment(this, ComponentSearchFragment(), data, BackStackTag.COMPONENT_SEARCH)
     }
 }

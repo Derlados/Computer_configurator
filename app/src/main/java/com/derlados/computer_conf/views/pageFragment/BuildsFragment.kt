@@ -131,7 +131,7 @@ class BuildsFragment : PageFragment(), View.OnClickListener {
     // Формирование строки списка комплектующих
     private fun getGoodStr(build: Build, componentCategory: ComponentCategory): String {
         val good = build.getComponent(componentCategory)
-        return if (good != null) good.name else "--"
+        return good?.name ?: "--"
     }
 
     override fun onClick(view: View) {

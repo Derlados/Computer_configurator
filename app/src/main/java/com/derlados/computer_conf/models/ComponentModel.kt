@@ -18,6 +18,8 @@ object ComponentModel {
     var maxBlocks: Int = -1
     var components: ArrayList<Component>
     private set
+    lateinit var chosenComponent: Component
+    private set
 
     private val retrofit: Retrofit
     private val api: ComponentAPI
@@ -87,5 +89,9 @@ object ComponentModel {
         } else {
             false
         }
+    }
+
+    fun tempSaveComponent(component: Component) {
+        chosenComponent = component
     }
 }

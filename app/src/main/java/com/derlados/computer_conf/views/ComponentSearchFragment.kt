@@ -14,14 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
+import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.presenters.ComponentSearchPresenter
 import com.derlados.computer_conf.views.adapters.ComponentRecyclerAdapter
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_component_search.view.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, ComponentSearchView {
     private lateinit var presenter: ComponentSearchPresenter
@@ -66,10 +65,12 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
         return currentFragment
     }
 
+    //TODO Надо пофиксить
     // Решение проблемы с анимацией, по скольку вызывается 2 popBackStack метода то и анимация играет дважды, из-за чего появлялось мерцание
     override fun onBackPressed(): Boolean {
         view?.visibility = View.VISIBLE
         keepVisible = true
+        Toast.makeText(context, "here", Toast.LENGTH_SHORT).show()
         return true
     }
 
@@ -121,14 +122,12 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
         adapter?.notifyItemRangeChanged(0, adapter.itemCount)
     }
 
-    /** Отправка комплектующего в следующий фрагмет для отображения полной информации о нем
-     * Метод используется
+    /** Переход к полной информации о комплектующем
+     * Метод используется в адаптере
      * @param component - комплектующее
      */
     private fun onClickItem (component: Component) {
-        val data = Bundle()
-        data.putString("component", Gson().toJson(component)) // Объект передается в виде json
-        data.putSerializable("category", category)
-        //fragmentListener.nextFragment(this, FullGoodDataFragment(), data, null)
+        presenter.saveChosenComponent(component)
+        fragmentListener.nextFragment(this, ComponentInfoFragment(), null, BackStackTag.COMPONENT_INFO)
     }
 }

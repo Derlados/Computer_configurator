@@ -38,7 +38,8 @@ export default class ComponentModel {
                         components.set(comp.id, comp);
                     });
 
-                    const sqlFullData: string = `SELECT comp_attr.id_component, attribute.characteristic AS name, comp_attr.id_value AS id, attribute_value.value, attribute.isPreview 
+                    const sqlFullData: string = `SELECT comp_attr.id_component, attribute.characteristic AS name, comp_attr.id_value AS id, attribute_value.value, 
+                                                        attribute.is_preview AS isPreview, attribute.preview_text
                                                 FROM comp_attr 
                                                 JOIN (SELECT id_component FROM component 
                                                         JOIN category ON category.id_category = component.id_category
@@ -54,11 +55,14 @@ export default class ComponentModel {
                 .then(result => {
                     (result as RowDataPacket[])[0].forEach(row => {
                         const comp: Component = components.get(row.id_component);
-                        delete row.id_component;
 
-                        row.isPreview = (row.isPreview == 1);
+                        const attribute: Attribute = new Attribute();
+                        attribute.isPreview = row.isPreview == 1;
+                        attribute.id = row.id;
+                        attribute.value = row.value;
+                        attribute.name = attribute.isPreview ? row.preview_text : row.name
 
-                        comp.attributes.push(Object.assign(new Attribute(), row));
+                        comp.attributes.push(attribute);
                     });
 
                     resolve(Array.from(components, ([key, value]) => (value))); // Вернуть необходимо именно массив

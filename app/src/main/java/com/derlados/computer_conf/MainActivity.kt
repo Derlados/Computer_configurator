@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
+import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.views.MainMenuFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
 
@@ -41,14 +42,14 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
         if (close) super.onBackPressed()
     }
 
-    override fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, data: Bundle?, backStackTag: String?) {
+    override fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, data: Bundle?, backStackTag: BackStackTag) {
         val fTrans = fragmentManager.beginTransaction().setCustomAnimations(R.anim.flip_fragment_in,
                 R.anim.flip_fragment_out, R.anim.flip_fragment_in, R.anim.flip_fragment_out)
 
         fragmentReceiver.arguments = data
         if (mainMenuFragment.isVisible) fTrans.hide(mainMenuFragment) else fTrans.hide(fragmentSource)
         fTrans.add(R.id.activity_main_ll_container, fragmentReceiver)
-        fTrans.addToBackStack(backStackTag) // Добавление изменнений в стек
+        fTrans.addToBackStack(backStackTag.toString()) // Добавление изменнений в стек
         fTrans.commit()
     }
 

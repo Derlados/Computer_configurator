@@ -8,6 +8,7 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.models.Component
 import com.squareup.picasso.Picasso
@@ -48,7 +49,7 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComponentHolder {
         val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.component_item, parent, false);
+                .inflate(R.layout.inflate_component_item, parent, false);
         return ComponentHolder(itemView)
     }
 
@@ -56,7 +57,7 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
         val component: Component = components[position]
 
         holder.tvName.text = component.name
-        holder.tvPrice.text = "${component.price} ГРН"
+        holder.tvPrice.text = App.app.resources.getString(R.string.component_price, component.price)
         Picasso.get().load(component.imageUrl).into(holder.img)
 
         val attributes: List<Component.Attribute> = component.getPreviewAttributes()
@@ -72,29 +73,4 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
 
     override fun getItemCount(): Int = components.size
 
-
-//    /* Обработчик нажатий. Есть два места для обработки - один из бланков комплектующего и панель прокрутки страниц
-//    * Нажатие на бланк - вызов подробной информации о комплектующем в новом фрагменте
-//    * Нажатие на панель страниц - загрузка страницы в соответствии с выбором пользователя
-//    * */
-//    fun onClick(view: View) {
-//        when (view.id) {
-//            R.id.inflate_good_blank_rl_blank -> {
-//                // Отправка объекта в следующий фрагмет для отображения полной информации о нем
-//                val data = Bundle()
-//                val gson = Gson()
-//                val sendGood = goodsList[goodsContainer.indexOfChild(view)] // Объект получается по индексу вьюшки бланка в списке
-//                data.putString("good", gson.toJson(sendGood)) // Объект передается в виде json строки
-//                data.putSerializable("typeGood", category)
-//                //fragmentListener.nextFragment(this, FullGoodDataFragment(), data, null)
-//            }
-//            R.id.inflate_flip_page_navigator_ibt_next -> downloadPage(category, ComponentSearchFragment.Direction.NEXT, null)
-//            R.id.inflate_flip_page_navigator_ibt_back -> downloadPage(category, ComponentSearchFragment.Direction.BACK, null)
-//            else -> {
-//                val numPage = (view as TextView).text.toString()
-//                // Если нажатое поле является "..", это событие никак не должно обрабатываться
-//                if (numPage != "..") downloadPage(category, ComponentSearchFragment.Direction.CHOSEN_PAGE, numPage.toInt())
-//            }
-//        }
-//    }
 }

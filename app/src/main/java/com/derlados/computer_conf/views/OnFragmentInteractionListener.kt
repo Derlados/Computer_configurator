@@ -2,6 +2,7 @@ package com.derlados.computer_conf.views
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.derlados.computer_conf.consts.BackStackTag
 
 // Интерфейс для общения фрагментов с активити
 interface OnFragmentInteractionListener {
@@ -13,7 +14,7 @@ interface OnFragmentInteractionListener {
      * @param data - данные которые передаются следующему фрагмету
      * @param backStackTag - тег бекстека для возврата если это необъодимо
      */
-    fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, data: Bundle?, backStackTag: String?)
+    fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, data: Bundle?, backStackTag: BackStackTag)
 
 
     /**

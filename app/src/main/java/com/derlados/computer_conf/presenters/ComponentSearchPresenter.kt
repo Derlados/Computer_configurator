@@ -39,6 +39,13 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     }
 
     /**
+     * Сохранение выбранного комплектующего для дальнейшего отображения
+     */
+    fun saveChosenComponent(component: Component) {
+        ComponentModel.tempSaveComponent(component)
+    }
+
+    /**
      * Класс для загрузки компонентов
      * Загрузка происходит по блокам, для устранения больших задержек
      */
