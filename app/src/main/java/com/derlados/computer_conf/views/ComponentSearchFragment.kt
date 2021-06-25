@@ -70,7 +70,6 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
     override fun onBackPressed(): Boolean {
         view?.visibility = View.VISIBLE
         keepVisible = true
-        Toast.makeText(context, "here", Toast.LENGTH_SHORT).show()
         return true
     }
 

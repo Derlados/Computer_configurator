@@ -7,10 +7,14 @@ import com.derlados.computer_conf.consts.ComponentCategory
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 
 object ComponentModel {
@@ -33,31 +37,51 @@ object ComponentModel {
         this.api = retrofit.create(ComponentAPI::class.java)
     }
 
-    fun downloadComponents(category: ComponentCategory, block: Int) {
-        val call: Call<ArrayList<Component>> = api.getGoodsBlock(category.toString(), block)
-        val response: Response<ArrayList<Component>> = call.execute()
-        if (response.code() == 200) {
-            val newComponents: ArrayList<Component> = response.body()!!
-            components.addAll(newComponents)
-        } else {
-            throw NetworkErrorException(response.code().toString())
-        }
+    suspend fun downloadComponents(category: ComponentCategory, block: Int): Unit {
+       return suspendCoroutine { continuation ->
+           val call: Call<ArrayList<Component>> = api.getGoodsBlock(category.toString(), block)
+
+           call.enqueue(object : Callback<ArrayList<Component>> {
+               override fun onResponse(call: Call<ArrayList<Component>>, response: Response<ArrayList<Component>>) {
+                   if (response.code() == 200) {
+                       val newComponents: ArrayList<Component> = response.body()!!
+                       components.addAll(newComponents)
+                       continuation.resume(Unit)
+                   } else {
+                       throw NetworkErrorException(response.code().toString())
+                   }
+               }
+
+               override fun onFailure(call: Call<ArrayList<Component>>, t: Throwable) {
+                   continuation.resumeWithException(NetworkErrorException("No connection"))
+               }
+           })
+       }
     }
 
-    fun getMaxBlocks(category: ComponentCategory): Int {
-        if (maxBlocks != -1) {
-            return maxBlocks
+    suspend fun getMaxBlocks(category: ComponentCategory): Int {
+        return suspendCoroutine { continuation ->
+            if (maxBlocks != -1) {
+                continuation.resume(maxBlocks)
+            }
+
+            val call: Call<Int> = api.getMaxBlocks(category.toString());
+            call.enqueue(object: Callback<Int> {
+                override fun onResponse(call: Call<Int>, response: Response<Int>) {
+                    if (response.code() == 200 && response.body() != null) {
+                        maxBlocks = response.body()!!
+                        continuation.resume(maxBlocks)
+                    } else {
+                        throw NetworkErrorException(response.code().toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<Int>, t: Throwable) {
+                    continuation.resumeWithException(NetworkErrorException("No connection"))
+                }
+            })
         }
 
-        val call: Call<Int> = api.getMaxBlocks(category.toString());
-        val response: Response<Int> = call.execute()
-
-        if (response.code() == 200 && response.body() != null) {
-            maxBlocks = response.body()!!
-            return maxBlocks
-        } else {
-            throw NetworkErrorException(response.code().toString())
-        }
     }
 
     fun clearComponents() {

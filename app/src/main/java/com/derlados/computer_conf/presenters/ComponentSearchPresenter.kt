@@ -1,7 +1,9 @@
 package com.derlados.computer_conf.presenters
 
+import kotlinx.coroutines.*
 import android.accounts.NetworkErrorException
 import android.os.AsyncTask
+import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.consts.ComponentCategory
@@ -14,13 +16,13 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
         ERROR
     }
 
-    private val downloader = ComponentsDownloader()
+    private var downloadJob: Job? = null
 
     fun init() {
         view.setComponents(ComponentModel.components)
 
         if (!ComponentModel.restoreFromCache(category)) {
-            downloader.execute(category)
+            download()
         } else {
             view.updateComponents()
             view.closeProgressBar()
@@ -28,7 +30,8 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     }
 
     fun finish() {
-        downloader.cancel(false)
+        downloadJob?.cancel()
+        ComponentModel.saveComponents(category)
         ComponentModel.clearComponents()
     }
 
@@ -45,66 +48,30 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
         ComponentModel.tempSaveComponent(component)
     }
 
-    /**
-     * Класс для загрузки компонентов
-     * Загрузка происходит по блокам, для устранения больших задержек
-     */
-    inner class  ComponentsDownloader : AsyncTask<ComponentCategory, Any, Void>() {
 
-        /**
-         * Загрузка данных с сервера
-         * @param params - [0 - категория комплектующего]
-         */
-        override fun doInBackground(vararg params: ComponentCategory): Void? {
-            val category: ComponentCategory = params[0]
+     private fun download() {
+         downloadJob = CoroutineScope(Dispatchers.Main).launch {
+             try {
+                 val maxBlocks = ComponentModel.getMaxBlocks(category)
+                 if (maxBlocks == 0 && isActive) {
+                     view.showNotFoundMessage()
+                 }
 
-            try {
-                val maxBlocks = ComponentModel.getMaxBlocks(category)
-                if (maxBlocks == 0) {
-                    publishProgress(UpdateCmd.NOT_FOUND)
-                    return null
-                }
+                 for (i in 1..maxBlocks) {
+                     if (isActive) {
+                         ComponentModel.downloadComponents(category, i)
+                         view.updateComponents()
+                         view.closeProgressBar()
+                     }
+                 }
+             } catch (e: NetworkErrorException) {
+                 if (isActive) {
+                     view.showError(e.toString())
+                 }
+                 //TODO добавить класс ErrorHandler
+             }
 
-               for (i in 1..maxBlocks) {
-                   if (!isCancelled) {
-                       ComponentModel.downloadComponents(category, i)
-                       publishProgress(UpdateCmd.DOWNLOADED)
-                   }
-               }
-            }
-            catch (e: NetworkErrorException) {
-                publishProgress(UpdateCmd.ERROR, e.toString())
-                //TODO добавить класс ErrorHandler
-            }
+         }
+     }
 
-            return null
-        }
-
-        override fun onPostExecute(result: Void?) {
-            super.onPostExecute(result)
-            ComponentModel.saveComponents(category)
-        }
-
-        /**
-         * @see UpdateCmd
-         * @param values - [0] - команда UpdateMsg, [1..] - данные которые необходимы
-         */
-        override fun onProgressUpdate(vararg values: Any) {
-            super.onProgressUpdate(*values)
-
-            when (values[0] as UpdateCmd) {
-                UpdateCmd.DOWNLOADED -> {
-                    view.updateComponents();
-                    view.closeProgressBar()
-                }
-                UpdateCmd.NOT_FOUND -> view.showNotFoundMessage()
-                UpdateCmd.ERROR-> view.showError(values[1] as String)
-            }
-        }
-
-        override fun onCancelled() {
-            super.onCancelled()
-            ComponentModel.saveComponents(category)
-        }
-    }
 }
