@@ -10,12 +10,6 @@ import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.models.Component
 
 class ComponentSearchPresenter(private val view: ComponentSearchView, private val category: ComponentCategory) {
-    enum class UpdateCmd {
-        NOT_FOUND,
-        DOWNLOADED,
-        ERROR
-    }
-
     private var downloadJob: Job? = null
 
     fun init() {
@@ -48,7 +42,6 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
         ComponentModel.tempSaveComponent(component)
     }
 
-
      private fun download() {
          downloadJob = CoroutineScope(Dispatchers.Main).launch {
              try {
@@ -73,5 +66,4 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
 
          }
      }
-
 }

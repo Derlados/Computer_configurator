@@ -8,7 +8,8 @@ enum class ComponentCategory {
     SSD,
     RAM,
     POWER_SUPPLY,
-    OTHERS,
     CASE,
-    COOLER
+    COOLER,
+    FAVORITE,
+    OTHERS
 }

@@ -37,7 +37,7 @@ object ComponentModel {
         this.api = retrofit.create(ComponentAPI::class.java)
     }
 
-    suspend fun downloadComponents(category: ComponentCategory, block: Int): Unit {
+    suspend fun downloadComponents(category: ComponentCategory, block: Int) {
        return suspendCoroutine { continuation ->
            val call: Call<ArrayList<Component>> = api.getGoodsBlock(category.toString(), block)
 
@@ -48,7 +48,7 @@ object ComponentModel {
                        components.addAll(newComponents)
                        continuation.resume(Unit)
                    } else {
-                       throw NetworkErrorException(response.code().toString())
+                       continuation.resumeWithException(NetworkErrorException(response.code().toString()))
                    }
                }
 
@@ -72,7 +72,7 @@ object ComponentModel {
                         maxBlocks = response.body()!!
                         continuation.resume(maxBlocks)
                     } else {
-                        throw NetworkErrorException(response.code().toString())
+                        continuation.resumeWithException(NetworkErrorException(response.code().toString()))
                     }
                 }
 

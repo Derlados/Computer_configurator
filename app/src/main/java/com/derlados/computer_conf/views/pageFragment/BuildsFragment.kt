@@ -34,7 +34,7 @@ class BuildsFragment : PageFragment(), View.OnClickListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        fragment = inflater.inflate(R.layout.fragment_builds, container, false)
+        fragment = inflater.inflate(R.layout.fragment_build_list, container, false)
 
         buildsContainer = this.fragment?.findViewById(R.id.fragment_builds_builds_container)
 

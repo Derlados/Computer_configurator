@@ -41,4 +41,5 @@
     <string name="not_found_any_goods">К сожелению по этому запросу ничего не найдено</string>
     <string name="component_price">%1$.0f грн</string>
     <string name="characteristics">Характеристики</string>
+    <string name="not_compatibility">Не совместима</string>
 </resources>
