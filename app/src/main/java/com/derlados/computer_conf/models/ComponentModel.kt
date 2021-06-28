@@ -22,8 +22,7 @@ object ComponentModel {
     var maxBlocks: Int = -1
     var components: ArrayList<Component>
     private set
-    lateinit var chosenComponent: Component
-    private set
+    lateinit var chosenComponentToView: Component
 
     private val retrofit: Retrofit
     private val api: ComponentAPI
@@ -115,7 +114,4 @@ object ComponentModel {
         }
     }
 
-    fun tempSaveComponent(component: Component) {
-        chosenComponent = component
-    }
 }

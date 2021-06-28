@@ -8,10 +8,9 @@ class Build : Cloneable, BuildData {
     override var price: Float = 0.0F // Цена сборки
     override var name: String = ""
     override var description: String = "" // Описание в сборке
+    override var countGoods = HashMap<ComponentCategory, Int>() // Хранится в отдельной мапе, так как только SSD, RAM и HDD можно взять несколько
 
     var id: String = UUID.randomUUID().toString().replace("-", "")
-
-    override var countGoods = HashMap<ComponentCategory, Int>() // Хранится в отдельной мапе, так как только SSD, RAM и HDD можно взять несколько
 
     val isComplete: Boolean
         get() = components[ComponentCategory.CPU] != null && components[ComponentCategory.MOTHERBOARD] != null
@@ -26,9 +25,9 @@ class Build : Cloneable, BuildData {
      * */
     fun addToBuild(component: Component, componentCategory: ComponentCategory) {
 
-        components.put(componentCategory, component)
+        components[componentCategory] = component
         if (componentCategory === ComponentCategory.RAM || componentCategory === ComponentCategory.HDD || componentCategory === ComponentCategory.SSD) {
-            countGoods.put(componentCategory, 1)
+            countGoods[componentCategory] = 1
         }
         price += component.price // Подсчет общей цены
     }
@@ -73,10 +72,88 @@ class Build : Cloneable, BuildData {
     /** Удаление комплектующего по типу
     * @param typeGood - тип комплектующего
     * */
-    fun deleteGood(componentCategory: ComponentCategory) {
+    fun removeComponent(componentCategory: ComponentCategory) {
         price -= components[componentCategory]?.price!!
         components.remove(componentCategory)
     }
+
+    //TODO следует придумать поумнее проверку блока питания
+    // Проверка совместимости
+    val compatibility: String = "default"
+    /* get() {
+        var countMsg = 0
+        var compatibilityMsg = ""
+
+        // Подготовка всех комплектующих
+        val cpu = goods[TypeGood.CPU]
+        val motherboard = goods[TypeGood.MOTHERBOARD]
+        val powerSupply = goods[TypeGood.POWER_SUPPLY]
+        val ram = goods[TypeGood.RAM]
+        val gpu = goods[TypeGood.GPU]
+        val pcCase = goods[TypeGood.CASE]
+        if (motherboard != null) {
+            if (cpu != null) {
+                val motherboardData = motherboard.getExDataByIdAttr("Процессор")
+                val cpuData = cpu.getExDataByIdAttr("Основные характеристики")
+                val motherboardSocket = motherboardData!!.data!![CompatParam.Motherboard.SOCKET]
+                val cpuSocket = cpuData!!.data!![CompatParam.Cpu.SOCKET]
+                if (!(motherboardSocket.contains(cpuSocket) || cpuSocket.contains(motherboardSocket))) {
+                    ++countMsg
+                    compatibilityMsg += "\n$countMsg. Сокет процессора и сокет материнской платы несовместимы"
+                }
+            }
+            if (ram != null) {
+                val motherboardData = motherboard.getExDataByIdAttr("Оперативная память")
+                val ramData = ram.getExDataByIdAttr("Основные характеристики")
+                val motherboardTypeMemory = motherboardData!!.data!![CompatParam.Motherboard.TYPE_MEMORY]
+                val ramTypeMemory = ramData!!.data!![CompatParam.Ram.TYPE_MEMORY]
+                if (!motherboardTypeMemory.contains(ramTypeMemory)) {
+                    ++countMsg
+                    compatibilityMsg += "\n$countMsg. Тип памяти ОЗУ и материнской платы несовместимы"
+                }
+            }
+            if (pcCase != null) {
+                val motherboardData = motherboard.getExDataByIdAttr("Физические характеристики")
+                val pcCaseData = pcCase.getExDataByIdAttr("Основные характеристики")
+                var motherboardFormFactor = motherboardData!!.data!![CompatParam.Motherboard.FORM_FACTOR]
+                val pcCaseFormFactor = pcCaseData!!.data!![CompatParam.Case.FROM_FACTOR]
+                motherboardFormFactor = motherboardFormFactor.replace(" ", "").replace("-", "")
+                val pcFormFactors: Array<String> = pcCaseFormFactor.replace(" ", "").replace("-", "").split(",".toRegex()).toTypedArray()
+                var i: Int
+                i = 0
+                while (i < pcFormFactors.size) {
+                    if (motherboardFormFactor == pcFormFactors[i]) break
+                    ++i
+                }
+
+                // Если цикл закончился успешно - следовательно не было ни одного соответствия с поддерживаемыми платами
+                if (i == pcFormFactors.size) {
+                    ++countMsg
+                    compatibilityMsg += "\n$countMsg. Форм фактор материнской платы и корпуса не совпадают"
+                }
+            }
+        }
+        if (powerSupply != null && gpu != null) {
+            val gpuData = gpu.getExDataByIdAttr("Основные характеристики")
+            val powerSupplyData = powerSupply.getExDataByIdAttr("Основные характеристики")
+
+            // Как правило если брать БП под рекомендованные требования  видеокарты, то в целом можно работать //TODO следует придумать поумнее проверку блока питания
+            try {
+                val gpuPower: Int = gpuData!!.data!![CompatParam.Gpu.POWER].replace(" Вт", "").toInt()
+                val powerSupplyPower: Int = powerSupplyData!!.data!![CompatParam.CasePowerSupply.POWER].replace(" Вт", "").toInt()
+                if (gpuPower > powerSupplyPower) {
+                    ++countMsg
+                    compatibilityMsg += "\n$countMsg. Мощность блока питание ниже рекомендованной"
+                }
+            } catch (e: Exception) {
+                // Если было выбито исключение, значит в каком то из комплектующих не хватает данных
+                Log.e(LogsKeys.ERROR_LOG.toString(), e.toString())
+            }
+        }
+            compatibilityMsg = if (countMsg != 0) App.Companion.getApp().getResources().getString(R.string.false_compatibility) + compatibilityMsg else App.Companion.getApp().getResources().getString(R.string.true_compatibility)
+            return compatibilityMsg
+        }*/
+
 
     //TODO (Нужно сделать удаление комплектующих одного типа, но разных (накопители и может даже ОЗУ))
 
@@ -112,8 +189,11 @@ class Build : Cloneable, BuildData {
         return 0
     }
 
-    // Перегрузка клонирования так как надо буквально копировать сборку для создания временной копии (изменения в сборке до её сохранения)
-    public override fun clone(): Any {
+    /**
+     * Перегрузка клонирования, для конструктора необходима работа с копией.
+     * Глубокое копирование мапов не требуется, класс Component используется исключительно для чтения
+     */
+    public override fun clone(): Build {
         val build = super.clone() as Build
         build.id = id
         build.components = HashMap()

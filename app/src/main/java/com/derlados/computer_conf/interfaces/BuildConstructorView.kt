@@ -17,4 +17,5 @@ interface BuildConstructorView {
     fun updatePrice(price: Float)
 
     fun showSaveDialog()
+    fun exitView()
 }

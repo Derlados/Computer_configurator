@@ -8,7 +8,7 @@ import com.derlados.computer_conf.models.ComponentModel
 class ComponentInfoPresenter(private val view: ComponentInfoView) {
 
     fun init() {
-        view.setComponentInfo(ComponentModel.chosenComponent)
+        view.setComponentInfo(ComponentModel.chosenComponentToView)
         view.initMarkBt("Add to favorite", ::addToFavorite)
 
         //TODO("Нужно проверять выбирает ли юзер комплектующее в сборку")

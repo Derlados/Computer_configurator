@@ -123,6 +123,7 @@
                 android:layout_marginBottom="15dp"/>
 
             <LinearLayout
+                android:id="@+id/fragment_build_ll_component_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -130,6 +131,7 @@
 
                 <Button
                     style="@style/block_header"
+                    android:onClick="openBlockList"
                     android:text="@string/cpu"
                     android:drawableEnd="@drawable/ic_arrow_down_36"/>
 

@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +17,7 @@ import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
+import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.interfaces.BuildConstructorView
 import com.derlados.computer_conf.models.BuildData
@@ -22,13 +25,14 @@ import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.presenters.BuildConstructorPresenter
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
 import com.derlados.computer_conf.views.SaveDialogFragment
+import com.derlados.computer_conf.views.pageFragment.SearchFragment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_build.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
 import java.util.*
 import kotlin.collections.HashMap
 
-class BuildConstructorFragment : Fragment(), MainActivity.OnBackPressedListener, BuildConstructorView {
+class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPressedListener, BuildConstructorView {
     companion object {
         const val SAVE_DIALOG_FRAGMENT = 1
     }
@@ -54,6 +58,9 @@ class BuildConstructorFragment : Fragment(), MainActivity.OnBackPressedListener,
     private lateinit var tvDesc: TextView
     private lateinit var tvCompatibility: TextView
     private lateinit var imgBuild: ImageView
+    private lateinit var llComponents: LinearLayout
+
+    private lateinit var presenter: BuildConstructorPresenter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -70,20 +77,45 @@ class BuildConstructorFragment : Fragment(), MainActivity.OnBackPressedListener,
         tvCompatibility = currentFragment.fragment_build_tv_compatibility
         tvStatus = currentFragment.fragment_build_tv_status
         tvDesc = currentFragment.fragment_build_et_desc
+        llComponents = currentFragment.fragment_build_ll_component_list
+
+        presenter = BuildConstructorPresenter(this)
+
+        // Установка обработчиков нажатий на кнопку "+" для добавления комплектующих
+        for ((category, value) in componentContainers) {
+            val btAdd = (currentFragment.findViewById<LinearLayout>(value)).getChildAt(0) as Button
+            btAdd.setOnClickListener {
+                pickComponent(category)
+            }
+        }
+
+        // Каждая вторая кнопка является заголовком категории
+        // TODO (Нужно придумать лучший способ организации)
+        for (i in 0 until llComponents.childCount step 2) {
+            llComponents.getChildAt(i).setOnClickListener(::toggleCompListVisibility)
+        }
 
         return currentFragment
     }
 
+    /**
+     * Каждый раз когда пользователь возвращается к экрану, необходимо проверять его выбор.
+     * Возврат возможен только из поиска комплектующих
+     */
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
 
         if (!hidden) {
-
+            presenter.checkUserChoice()
         }
     }
 
+    /**
+     * Управление выходом из экрана переходит под управление презентера
+     */
     override fun onBackPressed(): Boolean {
-        TODO("Not yet implemented")
+        presenter.finish()
+        return false
     }
 
     //TODO Этот способ устарел, новый через setFragmentResultListener
@@ -174,12 +206,15 @@ class BuildConstructorFragment : Fragment(), MainActivity.OnBackPressedListener,
         // Кнопка удалить комплектующее
         val ibtDelete = card.component_item_bt_corner
         ibtDelete.setOnClickListener {
-             //TODO презентер должен удалить и обновить сблорку
-
+            presenter.removeComponent(category, component)
             container.removeView(card) // Удаление комплектующего
             container.getChildAt(0).visibility = View.VISIBLE // Кнопка добавить становится активной
         }
         ibtDelete.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_trash, App.app.theme)) // Отрисовка значка
+
+        card.setOnClickListener {
+            openComponentInfo(component)
+        }
 
         //TODO реализовать в будущем
         // Если это ОЗУ или внешняя память - открывается блок для изменения количества в сборке
@@ -203,56 +238,41 @@ class BuildConstructorFragment : Fragment(), MainActivity.OnBackPressedListener,
         }
     }
 
+    override fun exitView() {
+        frListener.popBackStack()
+    }
 
     ///////////////////////////////// Обработчики кнопок ///////////////////////////////////////////
-//    // Обработчик кнопок на визуальное отображения блока комплектующих (раскрыть/скрыть)
-//    fun openBlockList(view: View) {
-//        // Получение необходимого списка, он находится сразу под кнопкой, потому сначала находится индекс кнопки и потом контейне как <индекс> + 1
-//        val mainList = view.parent as LinearLayout
-//        val index = (view.parent as LinearLayout).indexOfChild(view)
-//        val blockList = mainList.getChildAt(index + 1) as LinearLayout
-//
-//        // Если блок скрыт - он открывается, иначе скрывается
-//        if (blockList.visibility == View.GONE) {
-//            blockList.visibility = View.VISIBLE
-//            (view as Button).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0)
-//        } else {
-//            blockList.visibility = View.GONE
-//            (view as Button).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_right_36, 0)
-//        }
-//    }
-//
-//    // Обработчик кнопок на добавление комплектующих - переходит на страницу поиска товаров.
-//    // Тип комплектующего выбирается по id отцовского контейнера
-//    private fun pickGood(view: View) {
-//        // Данные для модификации
-//        containerToModify = view.parent as LinearLayout
-//        typeCompToModify = getTypeGood(containerToModify!!.id)
-//
-//        // Подготовка данных
-//        val data = Bundle()
-//        data.putSerializable(DATA_TYPE_GOOD_KEY, typeCompToModify)
-//        fragmentListener!!.nextFragment(this, ShopSearchFragment(), data, null)
-//    }
-//
-//    fun openFullGoodData(view: View) {
-//        // Отправка объекта в следующий фрагмет для отображения полной информации о нем
-//        val data = Bundle()
-//        val gson = Gson()
-//
-//        // Получение контейнера списка и определение типа объекта
-//        val block = view.parent as LinearLayout
-//        val typeGood = getTypeGood(block.id)
-//
-//        // Подгтовка данных, сериализация
-//        val sendGood = currentBuild!!.getComponent(typeGood) // Объект получается по индексу вьюшки бланка в списке
-//        data.putString("good", gson.toJson(sendGood)) // Объект передается в виде json строки, сам берется относительно его положения в контейнере
-//        data.putSerializable("typeGood", typeGood)
-//
-//        // Отображение полной информации о комплектующем
-//        fragmentListener!!.nextFragment(this, FullGoodDataFragment(), data, null)
-//    }
-//
+
+    /**
+     * Открытие/скрытие списка комплектуюзих в определенной категории
+     */
+    private fun toggleCompListVisibility(view: View) {
+        // Необходимый список находится сразу под кнопкой, потому сначала находится индекс кнопки и потом спиок как <индекс кнопки> + 1
+        val index = currentFragment.fragment_build_ll_component_list.indexOfChild(view)
+        val blockList = currentFragment.fragment_build_ll_component_list.getChildAt(index + 1) as LinearLayout
+
+        if (blockList.visibility == View.GONE) {
+            blockList.visibility = View.VISIBLE
+            (view as Button).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0)
+        } else {
+            blockList.visibility = View.GONE
+            (view as Button).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_right_36, 0)
+        }
+    }
+
+    /**
+     * Обработчик кнопки "+" для выбора комплектующих в сборку
+     */
+    private fun pickComponent(category: ComponentCategory) {
+        presenter.selectCategoryToSearch(category)
+    }
+
+    private fun openComponentInfo(component: Component) {
+        presenter.selectComponentToVIew(component)
+        frListener.nextFragment(this, SearchFragment(), null, BackStackTag.COMPONENT_SEARCH)
+    }
+
 //    // Уменьшение или увелечение количества комплектующих одного типа в сборке (Доступно только для SSD, HDD, RAM)
 //    fun countChange(view: View, typeComp: TypeComp?, tvCount: TextView) {
 //        when (view.id) {
@@ -279,22 +299,23 @@ class BuildConstructorFragment : Fragment(), MainActivity.OnBackPressedListener,
 //        return false
 //    }
 //
-//    ////////////////////////////////////////////////////////////////////////////////////////////////
-//    //TODO
-//    // Может необходимо производить контроль и ограничить количество символов для имени сборки
-//    override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-//    override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-//    override fun afterTextChanged(editable: Editable) {
-//        isSaved = false
-//
-//        // Нахождение нужного EditText
-//        val view = activity!!.currentFocus
-//        val text = (view as EditText?)!!.text.toString()
-//
-//        // Определение того, какое поле меняет юзер
-//        if (view!!.id == R.id.fragment_build_full_et_desc) currentBuild!!.description = text else if (view.id == R.id.fragment_build_full_et_name_build) {
-//            currentBuild!!.name = text
-//        }
-//    }
-//
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //TODO
+    // Может необходимо производить контроль и ограничить количество символов для имени сборки
+    override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+    override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+    override fun afterTextChanged(editable: Editable) {
+        // Нахождение нужного EditText
+        val view = activity?.currentFocus
+        val text = (view as EditText?)?.text.toString()
+
+        // Определение того, какое поле меняет юзер
+        if (view?.id == R.id.fragment_build_et_name)
+            presenter.setName(text)
+        else if (view?.id == R.id.fragment_build_et_desc) {
+            presenter.setDescription(text)
+        }
+    }
+
 }
