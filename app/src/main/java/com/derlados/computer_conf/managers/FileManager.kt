@@ -43,7 +43,19 @@ object FileManager {
         writer.close()
     }
 
-    fun restoreJsonData(entity: Entity, filename: String): String {
+    fun readJsonFromDir(entity: Entity): ArrayList<String> {
+        val jsonArray = ArrayList<String>()
+        val dir = dirs[entity]
+        dir?.listFiles()?.let { files ->
+            for (file: File in files) {
+                val reader = BufferedReader(FileReader(file))
+                jsonArray.add(reader.readText())
+            }
+        }
+        return jsonArray
+    }
+
+    fun readJson(entity: Entity, filename: String): String {
         val file = File(dirs[entity], filename)
         val reader = BufferedReader(FileReader(file))
         return reader.readText()

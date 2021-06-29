@@ -18,7 +18,6 @@ class BuildConstructorPresenter(private val view: BuildConstructorView) {
     }
 
     fun init() {
-        BuildModel.createNewBuild()
         BuildModel.selectedBuild?.let {
             view.setBuildData(it)
             //view.setImage()
@@ -40,6 +39,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView) {
             isShouldClose = true
         } else {
             BuildModel.deselectBuild()
+            view.exitView()
         }
     }
 
@@ -51,23 +51,28 @@ class BuildConstructorPresenter(private val view: BuildConstructorView) {
 
     fun checkUserChoice() {
         BuildModel.chosenComponent?.let {
+            BuildModel.isSaved = false
             view.addNewComponent(BuildModel.changedCategory, it)
+            BuildModel.deselectComponent()
+            updateBuild()
         }
-        updateBuild()
     }
 
     //TODO В дальнейшем должен удалять именно комплектующее.
     // Развитие в плане того что некоторых компонентов может быть больше чем 1
     fun removeComponent(category: ComponentCategory, component: Component? = null) {
+        BuildModel.isSaved = false
         BuildModel.selectedBuild?.removeComponent(category)
         updateBuild()
     }
 
     fun setName(name: String) {
+        BuildModel.isSaved = false
         BuildModel.selectedBuild?.name = name
     }
 
     fun setDescription(desc: String) {
+        BuildModel.isSaved = false
         BuildModel.selectedBuild?.description = desc
     }
 
@@ -80,5 +85,4 @@ class BuildConstructorPresenter(private val view: BuildConstructorView) {
             view.setStatus(StatusBuild.IS_NOT_COMPLETE)
         }
     }
-
 }

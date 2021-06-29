@@ -12,6 +12,7 @@ import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.models.Component
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.inflate_component_item.view.*
 
 class ComponentRecyclerAdapter(private  val components: List<Component>, private val onItemClicked: (Component) -> Unit):
         RecyclerView.Adapter<ComponentRecyclerAdapter.ComponentHolder>() {
@@ -31,7 +32,7 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
             img = itemView.findViewById(R.id.component_item_img)
 
             // Опеределение полей атрибутов и их значения (четный индекс - значение, нечетный - атрибут)
-            val tlData: TableLayout = itemView.findViewById(R.id.component_item_tl_data)
+            val tlData: TableLayout = itemView.component_item_tl_data
             for (i in 1 until tlData.childCount) {
                 val row: TableRow = tlData.getChildAt(i) as TableRow
 

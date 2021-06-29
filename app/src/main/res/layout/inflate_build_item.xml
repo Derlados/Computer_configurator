@@ -14,7 +14,7 @@
         android:padding="10dp">
 
         <ImageView
-            android:id="@+id/inflate_build_blank_img"
+            android:id="@+id/inflate_build_item_img"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_margin="5dp"
@@ -34,7 +34,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/inflate_build_blank_tv_name"
+                    android:id="@+id/inflate_build_item_tv_name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.85"
@@ -47,7 +47,7 @@
                     android:textColor="@color/turquoise"/>
 
                 <ImageButton
-                    android:id="@+id/inflate_build_blank_ibt_delete"
+                    android:id="@+id/inflate_build_item_ibt_delete"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.15"
@@ -58,7 +58,7 @@
 
 
             <TextView
-                android:id="@+id/inflate_build_blank_tv_price"
+                android:id="@+id/inflate_build_item_tv_price"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.3"
@@ -89,7 +89,7 @@
                     android:textColor="@color/white"/>
 
                 <TextView
-                    android:id="@+id/inflate_build_blank_tv_complete"
+                    android:id="@+id/inflate_build_item_tv_complete"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -107,7 +107,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/inflate_build_blank_ll_preview_info"
+        android:id="@+id/inflate_build_item_component_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -125,7 +125,7 @@
                 android:text="@string/cpu"/>
 
             <TextView
-                android:id="@+id/inflate_build_blank_tv_chosen_CPU"
+                android:id="@+id/inflate_build_item_tv_chosen_cpu"
                 style="@style/build_desc_text_value"
                 android:layout_weight="0.65"
                 android:text="@string/not_chosen"/>
@@ -143,7 +143,7 @@
                 android:text="@string/motherboard_reduction"/>
 
             <TextView
-                android:id="@+id/inflate_build_blank_tv_chosen_motherboard"
+                android:id="@+id/inflate_build_item_tv_chosen_mb"
                 style="@style/build_desc_text_value"
                 android:layout_weight="0.65"
                 android:text="@string/not_chosen"/>
@@ -161,7 +161,7 @@
                 android:text="@string/gpu"/>
 
             <TextView
-                android:id="@+id/inflate_build_blank_tv_chosen_GPU"
+                android:id="@+id/inflate_build_item_tv_chosen_gpu"
                 style="@style/build_desc_text_value"
                 android:layout_weight="0.65"
                 android:text="@string/not_chosen"/>
@@ -179,7 +179,7 @@
                 android:text="@string/ram_reduction"/>
 
             <TextView
-                android:id="@+id/inflate_build_blank_tv_chosen_RAM"
+                android:id="@+id/inflate_build_item_tv_chosen_ram"
                 style="@style/build_desc_text_value"
                 android:layout_weight="0.65"
                 android:text="@string/not_chosen"/>
@@ -197,7 +197,7 @@
                 android:text="@string/hdd"/>
 
             <TextView
-                android:id="@+id/inflate_build_blank_tv_chosen_HDD"
+                android:id="@+id/inflate_build_item_tv_chosen_hdd"
                 style="@style/build_desc_text_value"
                 android:layout_weight="0.65"
                 android:text="@string/not_chosen"/>
@@ -215,7 +215,7 @@
                 android:text="@string/ssd"/>
 
             <TextView
-                android:id="@+id/inflate_build_blank_tv_chosen_SSD"
+                android:id="@+id/inflate_build_item_tv_chosen_ssd"
                 style="@style/build_desc_text_value"
                 android:layout_weight="0.65"
                 android:text="@string/not_chosen"/>
@@ -233,7 +233,7 @@
                 android:text="@string/power_supply"/>
 
             <TextView
-                android:id="@+id/inflate_build_blank_tv_chosen_power_supply"
+                android:id="@+id/inflate_build_item_tv_chosen_power_supply"
                 style="@style/build_desc_text_value"
                 android:layout_weight="0.65"
                 android:text="@string/not_chosen"/>
@@ -252,16 +252,17 @@
                 android:text="@string/pc_case"/>
 
             <TextView
-                android:id="@+id/inflate_build_blank_tv_chosen_case"
+                android:id="@+id/inflate_build_item_tv_chosen_case"
                 style="@style/build_desc_text_value"
-                android:layout_weight="0.65"/>
+                android:layout_weight="0.65"
+                android:text="@string/not_chosen"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/inflate_build_blank_ibt_hide"
+        android:id="@+id/inflate_build_item_ibt_hide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bt_expand"

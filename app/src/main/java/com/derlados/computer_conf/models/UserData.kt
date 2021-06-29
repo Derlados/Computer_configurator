@@ -62,7 +62,7 @@ object UserData  {
 
         // Текущий объект копируется для того, чтобы можно было откатить изменения
         try {
-            currentBuild = oldCurrentBuild!!.clone() as Build
+            currentBuild = oldCurrentBuild!!.clone()
         } catch (e: CloneNotSupportedException) {
             e.printStackTrace()
         }

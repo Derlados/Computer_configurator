@@ -3,9 +3,12 @@ package com.derlados.computer_conf.models
 import com.derlados.computer_conf.Managers.FileManager
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 
 object BuildModel {
-    lateinit var builds: ArrayList<Build> // Список всех сборок пользователя
+    val builds = ArrayList<Build>() // Список всех сборок пользователя
+
     var selectedBuild: Build? = null // Выбранная сборка, должна являться клоном из списка
     lateinit var changedCategory: ComponentCategory
     var chosenComponent: Component? = null
@@ -17,21 +20,24 @@ object BuildModel {
         selectedBuild = newBuild.clone()
     }
 
-    fun chooseBuild(build: Build) {
-        selectedBuild = build.clone()
+    fun selectBuild(id: String) {
+        selectedBuild = (builds.find { build -> build.id == id })?.clone()
     }
 
-    fun removeBuild(build: Build) {
-        FileManager.remove(FileManager.Entity.BUILD, build.id)
-        builds.remove(build)
+    fun removeBuild(id: String) {
+        FileManager.remove(FileManager.Entity.BUILD, id)
+        builds.remove(builds.find { build -> build.id == id })
     }
 
     fun downloadCurrentUserBuilds() {
 
     }
 
-    fun getBuildsFromCache():Boolean {
-        return false
+    fun loadBuildsFromCache() {
+        val buildsJson: ArrayList<String> = FileManager.readJsonFromDir(FileManager.Entity.BUILD)
+        for (i in 0 until buildsJson.size) {
+            builds.add(Gson().fromJson(buildsJson[i], Build::class.java))
+        }
     }
 
     /**
@@ -54,6 +60,6 @@ object BuildModel {
     }
 
     fun deselectComponent() {
-
+        chosenComponent = null
     }
 }

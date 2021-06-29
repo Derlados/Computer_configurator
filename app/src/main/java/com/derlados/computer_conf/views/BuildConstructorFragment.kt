@@ -52,10 +52,10 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
     private lateinit var currentFragment: View
 
     // Поля для модифицакции после возврата с меню выбора комплектующего
-    private lateinit var tvName: TextView // Текстовое поле с ценой
+    private lateinit var etName: EditText
     private lateinit var tvPrice: TextView // Текстовое поле с ценой
     private lateinit var tvStatus: TextView
-    private lateinit var tvDesc: TextView
+    private lateinit var etDesc: EditText
     private lateinit var tvCompatibility: TextView
     private lateinit var imgBuild: ImageView
     private lateinit var llComponents: LinearLayout
@@ -71,12 +71,14 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         currentFragment = inflater.inflate(R.layout.fragment_build, container, false)
         //(currentFragment.findViewById<View>(R.id.fragment_build_full_menu_bottom_navigator) as BottomNavigationView).setOnNavigationItemSelectedListener(this)
 
-        tvName = currentFragment.fragment_build_et_name
+        etName = currentFragment.fragment_build_et_name
+        etName.addTextChangedListener(this)
         tvPrice = currentFragment.fragment_build_tv_price
         imgBuild = currentFragment.fragment_build_img
         tvCompatibility = currentFragment.fragment_build_tv_compatibility
         tvStatus = currentFragment.fragment_build_tv_status
-        tvDesc = currentFragment.fragment_build_et_desc
+        etDesc = currentFragment.fragment_build_et_desc
+        etName.addTextChangedListener(this)
         llComponents = currentFragment.fragment_build_ll_component_list
 
         presenter = BuildConstructorPresenter(this)
@@ -125,6 +127,7 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == SAVE_DIALOG_FRAGMENT && resultCode == Activity.RESULT_OK) {
             Toast.makeText(App.app.applicationContext, "Сохранено", Toast.LENGTH_SHORT).show()
+            presenter.saveBuild()
         }
         frListener.popBackStack()
         super.onActivityResult(requestCode, resultCode, data)
@@ -138,9 +141,9 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
     }
 
     override fun setBuildData(build: BuildData) {
-        tvName.text = build.name
+        etName.setText(build.name)
         tvPrice.text = App.app.getString(R.string.component_price, build.price)
-        tvDesc.text = build.description
+        etDesc.setText(build.description)
 
         for ((category, value) in build.components) {
             addNewComponent(category, value)
@@ -266,11 +269,12 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
      */
     private fun pickComponent(category: ComponentCategory) {
         presenter.selectCategoryToSearch(category)
+        frListener.nextFragment(this, SearchFragment(), null, BackStackTag.COMPONENT_SEARCH)
     }
 
     private fun openComponentInfo(component: Component) {
         presenter.selectComponentToVIew(component)
-        frListener.nextFragment(this, SearchFragment(), null, BackStackTag.COMPONENT_SEARCH)
+        frListener.nextFragment(this, SearchFragment(), null, BackStackTag.COMPONENT_INFO)
     }
 
 //    // Уменьшение или увелечение количества комплектующих одного типа в сборке (Доступно только для SSD, HDD, RAM)

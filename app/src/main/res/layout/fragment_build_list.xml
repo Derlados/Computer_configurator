@@ -7,33 +7,16 @@
     android:background="@color/background"
     android:layout_weight="0.8">
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id ="@+id/fragment_build_list_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/fragment_builds_builds_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:context=".MainActivity">
 
-            <ProgressBar
-                android:id="@+id/inflate_fragment_builds_pb"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="85dp"
-                android:layout_height="85dp"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:indeterminateTint="@color/white" />
-
-        </LinearLayout>
-
-
-    </ScrollView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fragment_builds_float_bt"
+        android:id="@+id/fragment_build_list_bt_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -43,6 +26,6 @@
         android:src="@drawable/ic_add_24"
         app:backgroundTint="@color/red"
         android:clickable="true"
-        android:focusable="true"/>
+        android:focusable="true" />
 
 </RelativeLayout>

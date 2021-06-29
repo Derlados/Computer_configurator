@@ -2,8 +2,6 @@ package com.derlados.computer_conf.presenters
 
 import kotlinx.coroutines.*
 import android.accounts.NetworkErrorException
-import android.os.AsyncTask
-import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.consts.ComponentCategory

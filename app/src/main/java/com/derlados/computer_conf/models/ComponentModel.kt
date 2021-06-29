@@ -104,7 +104,7 @@ object ComponentModel {
      */
     fun restoreFromCache(category: ComponentCategory): Boolean {
         return if (FileManager.isExist(FileManager.Entity.COMPONENT, category.toString())) {
-            val data: String = FileManager.restoreJsonData(FileManager.Entity.COMPONENT, category.toString())
+            val data: String = FileManager.readJson(FileManager.Entity.COMPONENT, category.toString())
             val type: Type = object: TypeToken<ArrayList<Component>>() {}.type
             val cacheComponents: ArrayList<Component> =  Gson().fromJson(data, type)
             components.addAll(cacheComponents)

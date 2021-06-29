@@ -4,6 +4,8 @@ import com.derlados.computer_conf.consts.ComponentCategory
 import java.util.HashMap
 
 interface BuildData {
+    val id: String
+
     val components: HashMap<ComponentCategory, Component>
     val price: Float
     val name: String
