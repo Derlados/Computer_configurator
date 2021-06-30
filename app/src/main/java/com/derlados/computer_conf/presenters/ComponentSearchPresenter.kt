@@ -7,7 +7,8 @@ import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.models.Component
 
-class ComponentSearchPresenter(private val view: ComponentSearchView, private val category: ComponentCategory) {
+class ComponentSearchPresenter(private val view: ComponentSearchView) {
+    private var category: ComponentCategory = ComponentModel.chosenCategory
     private var downloadJob: Job? = null
 
     fun init() {
@@ -37,7 +38,7 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
      * Сохранение выбранного комплектующего для дальнейшего отображения
      */
     fun saveChosenComponent(component: Component) {
-        ComponentModel.chosenComponentToView = component
+        ComponentModel.chosenComponent = component
     }
 
      private fun download() {

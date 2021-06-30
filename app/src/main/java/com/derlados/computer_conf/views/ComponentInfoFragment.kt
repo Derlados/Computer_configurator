@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
+import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.interfaces.ComponentInfoView
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.presenters.ComponentInfoPresenter
@@ -60,10 +61,6 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView {
     }
 
     override fun returnToBuild() {
-        fragmentListener.popBackStack("build")
-    }
-
-    override fun returnToSearch() {
-        fragmentListener.popBackStack()
+        fragmentListener.popBackStack(BackStackTag.BUILD)
     }
 }

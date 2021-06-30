@@ -12,6 +12,8 @@ class Build : Cloneable, BuildData {
     override var description: String = "" // Описание в сборке
     override var countGoods = HashMap<ComponentCategory, Int>() // Хранится в отдельной мапе, так как только SSD, RAM и HDD можно взять несколько
 
+    var lastAdded: Pair<ComponentCategory, Component>? = null
+
     val isComplete: Boolean
         get() = components[ComponentCategory.CPU] != null && components[ComponentCategory.MOTHERBOARD] != null
                 && components[ComponentCategory.GPU] != null && components[ComponentCategory.POWER_SUPPLY] != null
@@ -20,16 +22,20 @@ class Build : Cloneable, BuildData {
 
     /** Добавление комплектующего в сборку
      * Параметры:
+     * @param category - тип комплектующего
      * @param component - комплектующее
-     * @param componentCategory - тип комплектующего
      * */
-    fun addToBuild(component: Component, componentCategory: ComponentCategory) {
-
-        components[componentCategory] = component
-        if (componentCategory === ComponentCategory.RAM || componentCategory === ComponentCategory.HDD || componentCategory === ComponentCategory.SSD) {
-            countGoods[componentCategory] = 1
+    fun addToBuild(category: ComponentCategory, component: Component) {
+        components[category] = component
+        if (category === ComponentCategory.RAM || category === ComponentCategory.HDD || category === ComponentCategory.SSD) {
+            countGoods[category] = 1
         }
         price += component.price // Подсчет общей цены
+        lastAdded = Pair(category, component)
+    }
+
+    fun clearLastAdded() {
+        lastAdded = null
     }
 
     /**

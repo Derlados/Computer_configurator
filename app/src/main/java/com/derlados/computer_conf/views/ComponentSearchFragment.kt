@@ -26,7 +26,6 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
     private lateinit var presenter: ComponentSearchPresenter
 
     private var keepVisible = true
-    private lateinit var category: ComponentCategory
     private lateinit var searchText: String
 
     private lateinit var rvComponents: RecyclerView
@@ -43,7 +42,6 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         currentFragment = inflater.inflate(R.layout.fragment_component_search, container, false)
-        category = requireArguments()["category"] as ComponentCategory
         rvComponents = currentFragment.fragment_component_search_rv
         tvNotFound = currentFragment.fragment_component_search_tv_not_found
         pbLoading = currentFragment.fragment_component_search_pb_loading
@@ -59,7 +57,7 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
             return@OnEditorActionListener false
         })
 
-        presenter = ComponentSearchPresenter(this, category)
+        presenter = ComponentSearchPresenter(this)
         presenter.init()
 
         return currentFragment
@@ -127,6 +125,6 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
      */
     private fun onClickItem (component: Component) {
         presenter.saveChosenComponent(component)
-        fragmentListener.nextFragment(this, ComponentInfoFragment(), null, BackStackTag.COMPONENT_INFO)
+        fragmentListener.nextFragment(this, ComponentInfoFragment(), BackStackTag.COMPONENT_INFO)
     }
 }

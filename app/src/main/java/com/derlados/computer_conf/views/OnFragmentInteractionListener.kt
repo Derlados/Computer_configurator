@@ -14,7 +14,7 @@ interface OnFragmentInteractionListener {
      * @param data - данные которые передаются следующему фрагмету
      * @param backStackTag - тег бекстека для возврата если это необъодимо
      */
-    fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, data: Bundle?, backStackTag: BackStackTag)
+    fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, backStackTag: BackStackTag)
 
 
     /**
@@ -26,5 +26,5 @@ interface OnFragmentInteractionListener {
      * Возврат фрагмента из стека по его тегу
      * @param backStackTag - тег по которому необходимо сделать возврат
      */
-    fun popBackStack(backStackTag: String?)
+    fun popBackStack(backStackTag: BackStackTag)
 }

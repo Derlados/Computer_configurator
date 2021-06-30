@@ -60,7 +60,7 @@ class BuildsFragment : PageFragment(), PageBuildsView {
     }
 
     override fun openBuildConstructor() {
-        frListener.nextFragment(this, BuildConstructorFragment(), null, BackStackTag.BUILD)
+        frListener.nextFragment(this, BuildConstructorFragment(), BackStackTag.BUILD)
     }
 
     private fun createBuild() {

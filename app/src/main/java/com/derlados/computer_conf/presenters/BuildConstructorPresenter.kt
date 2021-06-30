@@ -2,7 +2,6 @@ package com.derlados.computer_conf.presenters
 
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.interfaces.BuildConstructorView
-import com.derlados.computer_conf.models.Build
 import com.derlados.computer_conf.models.BuildModel
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.models.ComponentModel
@@ -18,6 +17,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView) {
     }
 
     fun init() {
+        val i: Int = 0
         BuildModel.selectedBuild?.let {
             view.setBuildData(it)
             //view.setImage()
@@ -26,11 +26,11 @@ class BuildConstructorPresenter(private val view: BuildConstructorView) {
     }
 
     fun selectCategoryToSearch(category: ComponentCategory) {
-        BuildModel.changedCategory = category
+        ComponentModel.chosenCategory = category
     }
 
     fun selectComponentToVIew(component: Component) {
-        ComponentModel.chosenComponentToView = component
+        ComponentModel.chosenComponent = component
     }
 
     fun finish() {
@@ -50,10 +50,10 @@ class BuildConstructorPresenter(private val view: BuildConstructorView) {
     }
 
     fun checkUserChoice() {
-        BuildModel.chosenComponent?.let {
+        BuildModel.selectedBuild?.lastAdded?.let { (category, component) ->
             BuildModel.isSaved = false
-            view.addNewComponent(BuildModel.changedCategory, it)
-            BuildModel.deselectComponent()
+            view.addNewComponent(category, component)
+            BuildModel.selectedBuild?.clearLastAdded()
             updateBuild()
         }
     }

@@ -16,13 +16,12 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-
 object ComponentModel {
-
     var maxBlocks: Int = -1
     var components: ArrayList<Component>
     private set
-    lateinit var chosenComponentToView: Component
+    lateinit var chosenComponent: Component
+    lateinit var chosenCategory: ComponentCategory
 
     private val retrofit: Retrofit
     private val api: ComponentAPI

@@ -10,8 +10,6 @@ object BuildModel {
     val builds = ArrayList<Build>() // Список всех сборок пользователя
 
     var selectedBuild: Build? = null // Выбранная сборка, должна являться клоном из списка
-    lateinit var changedCategory: ComponentCategory
-    var chosenComponent: Component? = null
     var isSaved: Boolean = true
 
     fun createNewBuild() {
@@ -57,9 +55,5 @@ object BuildModel {
      */
     fun deselectBuild() {
         selectedBuild = null
-    }
-
-    fun deselectComponent() {
-        chosenComponent = null
     }
 }

@@ -51,6 +51,6 @@ class SearchFragment : PageFragment(), View.OnClickListener {
             else -> return
         }
         data.putSerializable("category", componentCategory)
-        frListener.nextFragment(this, ComponentSearchFragment(), data, BackStackTag.COMPONENT_SEARCH)
+        frListener.nextFragment(this, ComponentSearchFragment(), BackStackTag.COMPONENT_SEARCH)
     }
 }

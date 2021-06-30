@@ -31,22 +31,22 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
         var close = true
         // Проход по фрагментам и попытка взятия  onBackPressedListener у фрагмента, если он реализован
         val fragmentList = fragmentManager.fragments
-        for (fragment in fragmentList) if (fragment != null) {
-            try {
-                val bpl = fragment as OnBackPressedListener
-                close = bpl.onBackPressed()
-            } catch (e: Exception) {
-                Log.w(Log.WARN.toString(), "interface onBackPressedListener not found")
+        for (fragment in fragmentList)  {
+            if (fragment != null && fragment.isVisible) {
+                val bpl = fragment as? OnBackPressedListener
+                bpl?.let {
+                    close = bpl.onBackPressed()
+                }
             }
         }
+
         if (close) super.onBackPressed()
     }
 
-    override fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, data: Bundle?, backStackTag: BackStackTag) {
+    override fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, backStackTag: BackStackTag) {
         val fTrans = fragmentManager.beginTransaction().setCustomAnimations(R.anim.flip_fragment_in,
                 R.anim.flip_fragment_out, R.anim.flip_fragment_in, R.anim.flip_fragment_out)
 
-        fragmentReceiver.arguments = data
         if (mainMenuFragment.isVisible) fTrans.hide(mainMenuFragment) else fTrans.hide(fragmentSource)
         fTrans.add(R.id.activity_main_ll_container, fragmentReceiver)
         fTrans.addToBackStack(backStackTag.toString()) // Добавление изменнений в стек
@@ -57,8 +57,8 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
         fragmentManager.popBackStack()
     }
 
-    override fun popBackStack(backStackTag: String?) {
-        fragmentManager.popBackStack(backStackTag, 0)
+    override fun popBackStack(backStackTag: BackStackTag) {
+        fragmentManager.popBackStack(backStackTag.toString(), 0)
     }
 
     // Отклик на BackPressed во фрагментах.

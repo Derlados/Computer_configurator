@@ -23,6 +23,8 @@ import com.derlados.computer_conf.interfaces.BuildConstructorView
 import com.derlados.computer_conf.models.BuildData
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.presenters.BuildConstructorPresenter
+import com.derlados.computer_conf.views.ComponentInfoFragment
+import com.derlados.computer_conf.views.ComponentSearchFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
 import com.derlados.computer_conf.views.SaveDialogFragment
 import com.derlados.computer_conf.views.pageFragment.SearchFragment
@@ -78,10 +80,8 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         tvCompatibility = currentFragment.fragment_build_tv_compatibility
         tvStatus = currentFragment.fragment_build_tv_status
         etDesc = currentFragment.fragment_build_et_desc
-        etName.addTextChangedListener(this)
+        etDesc.addTextChangedListener(this)
         llComponents = currentFragment.fragment_build_ll_component_list
-
-        presenter = BuildConstructorPresenter(this)
 
         // Установка обработчиков нажатий на кнопку "+" для добавления комплектующих
         for ((category, value) in componentContainers) {
@@ -97,6 +97,8 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
             llComponents.getChildAt(i).setOnClickListener(::toggleCompListVisibility)
         }
 
+        presenter = BuildConstructorPresenter(this)
+        presenter.init()
         return currentFragment
     }
 
@@ -269,12 +271,12 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
      */
     private fun pickComponent(category: ComponentCategory) {
         presenter.selectCategoryToSearch(category)
-        frListener.nextFragment(this, SearchFragment(), null, BackStackTag.COMPONENT_SEARCH)
+        frListener.nextFragment(this, ComponentSearchFragment(),  BackStackTag.COMPONENT_SEARCH)
     }
 
     private fun openComponentInfo(component: Component) {
         presenter.selectComponentToVIew(component)
-        frListener.nextFragment(this, SearchFragment(), null, BackStackTag.COMPONENT_INFO)
+        frListener.nextFragment(this, ComponentInfoFragment(),  BackStackTag.COMPONENT_INFO)
     }
 
 //    // Уменьшение или увелечение количества комплектующих одного типа в сборке (Доступно только для SSD, HDD, RAM)
@@ -312,7 +314,7 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
     override fun afterTextChanged(editable: Editable) {
         // Нахождение нужного EditText
         val view = activity?.currentFocus
-        val text = (view as EditText?)?.text.toString()
+        val text = (view as? EditText)?.text.toString()
 
         // Определение того, какое поле меняет юзер
         if (view?.id == R.id.fragment_build_et_name)

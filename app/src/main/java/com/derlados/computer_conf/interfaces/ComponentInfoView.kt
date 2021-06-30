@@ -6,5 +6,4 @@ interface ComponentInfoView {
     fun initMarkBt(text :String, onClickAction: () -> Unit )
     fun setComponentInfo(component: Component)
     fun returnToBuild()
-    fun returnToSearch()
 }
