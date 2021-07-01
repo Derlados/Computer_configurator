@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.consts.ComponentCategory
+import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.views.ComponentSearchFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
 import kotlinx.android.synthetic.main.fragment_shop.view.*
@@ -38,7 +39,6 @@ class SearchFragment : PageFragment(), View.OnClickListener {
      * Слушатель нажатия кнопки. Переход к поиску компонентов
      */
     override fun onClick(view: View) {
-        val data = Bundle() // Данные которые будут переданы другому фрагменту
         val componentCategory: ComponentCategory = when (view.id) {
             R.id.fragment_search_component_cpu -> ComponentCategory.CPU
             R.id.fragment_search_component_gpu -> ComponentCategory.GPU
@@ -50,7 +50,9 @@ class SearchFragment : PageFragment(), View.OnClickListener {
             R.id.fragment_search_component_case -> ComponentCategory.CASE
             else -> return
         }
-        data.putSerializable("category", componentCategory)
+        //TODO убрать бред с вызовом модели
+        ComponentModel.chosenCategory = componentCategory
+
         frListener.nextFragment(this, ComponentSearchFragment(), BackStackTag.COMPONENT_SEARCH)
     }
 }

@@ -39,7 +39,9 @@
     <string name="add_favorite">+ в избранное</string>
     <string name="in_build">Уже в сборке</string>
     <string name="not_found_any_goods">К сожелению по этому запросу ничего не найдено</string>
-    <string name="component_price">%1$.0f грн</string>
+    <string name="component_price">%1$d грн</string>
     <string name="characteristics">Характеристики</string>
     <string name="not_compatibility">Не совместима</string>
+    <string name="track_price">Отслеживаемая цена:</string>
+    <string name="price">цена</string>
 </resources>

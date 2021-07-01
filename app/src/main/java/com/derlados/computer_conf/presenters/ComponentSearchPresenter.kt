@@ -12,13 +12,17 @@ class ComponentSearchPresenter(private val view: ComponentSearchView) {
     private var downloadJob: Job? = null
 
     fun init() {
-        view.setComponents(ComponentModel.components)
+        if (category != ComponentCategory.FAVORITE) {
+            ComponentModel.restoreFromCache(category)
+            view.setComponents(ComponentModel.components, ComponentModel.trackPrices)
 
-        if (!ComponentModel.restoreFromCache(category)) {
-            download()
+            //TODO изменить в соответствии с изменением кеширования
+            if (ComponentModel.components.isEmpty())
+                download()
+            else
+                view.closeProgressBar()
         } else {
-            view.updateComponents()
-            view.closeProgressBar()
+            view.setComponents(ComponentModel.favoriteComponents, ComponentModel.trackPrices)
         }
     }
 
@@ -30,8 +34,8 @@ class ComponentSearchPresenter(private val view: ComponentSearchView) {
 
     fun searchComponent(searchText: String) {
         val filteredComponents = ComponentModel.components.filter { component -> component.name.contains(searchText) }
-        view.setComponents(filteredComponents)
-        view.updateComponents()
+        view.setComponents(filteredComponents, ComponentModel.trackPrices)
+        view.updateComponentList()
     }
 
     /**
@@ -41,7 +45,29 @@ class ComponentSearchPresenter(private val view: ComponentSearchView) {
         ComponentModel.chosenComponent = component
     }
 
-     private fun download() {
+    /**
+     * Переключение статуса "избранного" у комплектующего. Если категория комплектующих "Избранное",
+     * то в случае удаления - удаляется также и блок во view, иначе - обновляется
+     * @param id - id комплектуюшего
+     */
+    fun toggleFavoriteStatus(id: Int) {
+        val indexInList: Int = ComponentModel.components.indexOfFirst { component -> component.id == id }
+
+        if (ComponentModel.favoriteComponents.contains(ComponentModel.components[indexInList])) {
+            ComponentModel.removeFromFavorite(id)
+
+            if (category == ComponentCategory.FAVORITE) {
+                view.removeSingleComponent(indexInList)
+            } else {
+                view.updateSingleComponent(indexInList)
+            }
+        } else {
+            ComponentModel.addToFavorite(id)
+            view.updateSingleComponent(indexInList)
+        }
+    }
+
+    private fun download() {
          downloadJob = CoroutineScope(Dispatchers.Main).launch {
              try {
                  val maxBlocks = ComponentModel.getMaxBlocks(category)
@@ -52,7 +78,7 @@ class ComponentSearchPresenter(private val view: ComponentSearchView) {
                  for (i in 1..maxBlocks) {
                      if (isActive) {
                          ComponentModel.downloadComponents(category, i)
-                         view.updateComponents()
+                         view.updateComponentList()
                          view.closeProgressBar()
                      }
                  }

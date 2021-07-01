@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import android.widget.TextView.OnEditorActionListener
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,7 @@ import com.derlados.computer_conf.presenters.ComponentSearchPresenter
 import com.derlados.computer_conf.views.adapters.ComponentRecyclerAdapter
 import kotlinx.android.synthetic.main.fragment_component_search.view.*
 import java.util.*
+import kotlin.collections.HashMap
 
 class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, ComponentSearchView {
     private lateinit var presenter: ComponentSearchPresenter
@@ -106,17 +108,26 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
     /**
      * Иниициализация (отрисовка) комплектующих, создает адаптек для RecyclerView
      */
-    override fun setComponents(components: List<Component>) {
+    override fun setComponents(components: List<Component>, trackPrices: HashMap<Int, Int>) {
         rvComponents.layoutManager = LinearLayoutManager(context)
-        rvComponents.adapter = ComponentRecyclerAdapter(components, ::onClickItem)
+        rvComponents.adapter = ComponentRecyclerAdapter(components, trackPrices, ::onClickItem, ::onFavoriteClick)
     }
 
     /**
      * Обновление комплектующих в списке. Обновляется адаптер, уведомляя об изменении длині списка
      */
-    override fun updateComponents() {
+    override fun updateComponentList() {
         val adapter: RecyclerView.Adapter<*>? = rvComponents.adapter
         adapter?.notifyItemRangeChanged(0, adapter.itemCount)
+
+    }
+
+    override fun updateSingleComponent(index: Int) {
+        rvComponents.adapter?.notifyItemChanged(index)
+    }
+
+    override fun removeSingleComponent(index: Int) {
+        rvComponents.adapter?.notifyItemRemoved(index)
     }
 
     /** Переход к полной информации о комплектующем
@@ -126,5 +137,9 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
     private fun onClickItem (component: Component) {
         presenter.saveChosenComponent(component)
         fragmentListener.nextFragment(this, ComponentInfoFragment(), BackStackTag.COMPONENT_INFO)
+    }
+
+    private fun onFavoriteClick(id: Int) {
+        presenter.toggleFavoriteStatus(id)
     }
 }

@@ -11,30 +11,53 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 import java.lang.reflect.Type
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 object ComponentModel {
-    var maxBlocks: Int = -1
-    var components: ArrayList<Component>
-    private set
-    lateinit var chosenComponent: Component
-    lateinit var chosenCategory: ComponentCategory
+    private data class CacheData(val components: ArrayList<Component>, val lastBLock: Int, val maxBlocks: Int)
+
+    private const val TRACK_PRICES_FILENAME = "TRACK_PRICES"
 
     private val retrofit: Retrofit
     private val api: ComponentAPI
 
+    var maxBlocks: Int = -1
+    var components: ArrayList<Component>
+    private set
+    var favoriteComponents: ArrayList<Component>
+    private set
+    var trackPrices: HashMap<Int, Int>
+    private set
+
+    lateinit var chosenComponent: Component
+    lateinit var chosenCategory: ComponentCategory
+
     init {
-        this.components = ArrayList()
-        this.retrofit = Retrofit.Builder()
+        components = ArrayList()
+        trackPrices = HashMap()
+        favoriteComponents = ArrayList()
+
+        retrofit = Retrofit.Builder()
                 .baseUrl(ComponentAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-        this.api = retrofit.create(ComponentAPI::class.java)
+        api = retrofit.create(ComponentAPI::class.java)
+
+        restoreFavorite()
     }
 
+    /**
+     * Скачивание комплектующих по блокам
+     * @param category - категория комплектующих
+     * @param block - номер блока данных для скачиваняия
+     */
     suspend fun downloadComponents(category: ComponentCategory, block: Int) {
        return suspendCoroutine { continuation ->
            val call: Call<ArrayList<Component>> = api.getGoodsBlock(category.toString(), block)
@@ -94,23 +117,62 @@ object ComponentModel {
     fun saveComponents(category: ComponentCategory) {
         if (!FileManager.isExist(FileManager.Entity.COMPONENT, category.toString()))
             FileManager.saveJsonData(FileManager.Entity.COMPONENT, category.toString(), Gson().toJson(components))
+        FileManager.saveJsonData(FileManager.Entity.COMPONENT, ComponentCategory.FAVORITE.toString(), Gson().toJson(favoriteComponents))
+        FileManager.saveJsonData(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME, Gson().toJson(trackPrices))
+
+        //TODO улучшить кеширование
     }
 
     /**
      * Чтение информации о комплектующих с устройства
      * @param category - категория комплектующих
-     * @return - true - успешное чтение (данные есть), false - даннных нету
      */
-    fun restoreFromCache(category: ComponentCategory): Boolean {
-        return if (FileManager.isExist(FileManager.Entity.COMPONENT, category.toString())) {
+    //TODO проверка актуальности
+    fun restoreFromCache(category: ComponentCategory) {
+        if (category == ComponentCategory.FAVORITE) {
+            components.addAll(favoriteComponents)
+            return
+        }
+
+        if (FileManager.isExist(FileManager.Entity.COMPONENT, category.toString())) {
             val data: String = FileManager.readJson(FileManager.Entity.COMPONENT, category.toString())
-            val type: Type = object: TypeToken<ArrayList<Component>>() {}.type
-            val cacheComponents: ArrayList<Component> =  Gson().fromJson(data, type)
+            val type: Type = object : TypeToken<ArrayList<Component>>() {}.type
+            val cacheComponents: ArrayList<Component> = Gson().fromJson(data, type)
             components.addAll(cacheComponents)
-            true
-        } else {
-            false
         }
     }
 
+    /**
+     * Чтение информации о избранных комплектующих и отслеживаемых ценах с устройства
+     * Должны присутствовать два файла - цены и комплектующие. В случае отсутствия одного из них - данные расцениваются как поврежденные
+     */
+    private fun restoreFavorite() {
+        if (!FileManager.isExist(FileManager.Entity.COMPONENT, ComponentCategory.FAVORITE.toString())
+                || !FileManager.isExist(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME)) {
+
+            FileManager.remove(FileManager.Entity.COMPONENT, ComponentCategory.FAVORITE.toString())
+            FileManager.remove(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME)
+            return
+        }
+
+        var data: String = FileManager.readJson(FileManager.Entity.COMPONENT, ComponentCategory.FAVORITE.toString())
+        var type: Type = object : TypeToken<ArrayList<Component>>() {}.type
+        favoriteComponents.addAll(Gson().fromJson(data, type))
+
+        data= FileManager.readJson(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME)
+        type = object : TypeToken<HashMap<Int, Int>>() {}.type
+        trackPrices.putAll(Gson().fromJson(data, type))
+    }
+
+    //////////////////////////////////////////// ФУНКЦИИ ДЛЯ РАБОТЫ С ИЗБРАННЫМИ КОМПЛЕКТУЮЩИМИ /////////////////////////////////////
+
+    fun addToFavorite(id: Int) {
+        components.find { component -> component.id == id }?.let { favoriteComponents.add(it) }
+        trackPrices[id] = 0
+    }
+
+    fun removeFromFavorite(id: Int) {
+        favoriteComponents.remove(components.find { component -> component.id == id })
+        trackPrices.remove(id)
+    }
 }

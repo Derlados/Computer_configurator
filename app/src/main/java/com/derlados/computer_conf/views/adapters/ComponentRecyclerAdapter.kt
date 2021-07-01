@@ -3,10 +3,9 @@ package com.derlados.computer_conf.views.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
+import android.widget.*
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
@@ -14,22 +13,24 @@ import com.derlados.computer_conf.models.Component
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
 
-class ComponentRecyclerAdapter(private  val components: List<Component>, private val onItemClicked: (Component) -> Unit):
-        RecyclerView.Adapter<ComponentRecyclerAdapter.ComponentHolder>() {
+class ComponentRecyclerAdapter(private  val components: List<Component>, private val trackPrices: HashMap<Int, Int>,  private val onItemClicked: (Component) -> Unit,
+                               private val onBtFavoriteClick: (Int) -> Unit)
+    : RecyclerView.Adapter<ComponentRecyclerAdapter.ComponentHolder>() {
 
     class ComponentHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val tvName: TextView = itemView.component_item_tv_name
+        val tvPrice: TextView = itemView.component_item_tv_price
+        val img: ImageView = itemView.component_item_img
+        val btFavorite: ImageButton = itemView.inflate_component_item_bt_favorite
 
-        val tvName: TextView
-        val tvPrice: TextView
-        val img: ImageView
         val tvHeaders: ArrayList<TextView> = ArrayList()
         val tvValues: ArrayList<TextView> = ArrayList()
 
+        val llMonitoring: LinearLayout = itemView.inflate_component_item_ll_track_block
+        val tvTrackPrice: EditText = itemView.inflate_component_item_et_track_price
+
         init {
             itemView.findViewById<TableLayout>(R.id.component_item_tl_data)
-            tvName = itemView.findViewById(R.id.component_item_tv_name)
-            tvPrice = itemView.findViewById(R.id.component_item_tv_price)
-            img = itemView.findViewById(R.id.component_item_img)
 
             // Опеределение полей атрибутов и их значения (четный индекс - значение, нечетный - атрибут)
             val tlData: TableLayout = itemView.component_item_tl_data
@@ -70,8 +71,21 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
         holder.itemView.setOnClickListener {
             onItemClicked(component)
         }
+
+        holder.btFavorite.setOnClickListener {
+            onBtFavoriteClick(component.id)
+        }
+        if (trackPrices.containsKey(component.id)) {
+            holder.btFavorite.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_active_star_24, App.app.theme))
+        } else {
+            holder.btFavorite.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_inactive_star_24, App.app.theme))
+        }
+
+        trackPrices[component.id]?.let {
+            holder.llMonitoring.visibility = View.VISIBLE
+            holder.tvTrackPrice.setText(it.toString())
+        }
     }
 
     override fun getItemCount(): Int = components.size
-
 }

@@ -7,7 +7,7 @@ interface BuildData {
     val id: String
 
     val components: HashMap<ComponentCategory, Component>
-    val price: Float
+    val price: Int
     val name: String
     val description: String
     var countGoods: HashMap<ComponentCategory, Int>

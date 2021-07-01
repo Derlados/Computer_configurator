@@ -7,7 +7,7 @@ class Build : Cloneable, BuildData {
     override var id: String = UUID.randomUUID().toString().replace("-", "")
 
     override var components = HashMap<ComponentCategory, Component>() // Комплетующие
-    override var price: Float = 0.0F // Цена сборки
+    override var price: Int = 0 // Цена сборки
     override var name: String = ""
     override var description: String = "" // Описание в сборке
     override var countGoods = HashMap<ComponentCategory, Int>() // Хранится в отдельной мапе, так как только SSD, RAM и HDD можно взять несколько
@@ -76,7 +76,7 @@ class Build : Cloneable, BuildData {
     }
 
     /** Удаление комплектующего по типу
-    * @param typeGood - тип комплектующего
+    * @param componentCategory - категория комплектующего
     * */
     fun removeComponent(componentCategory: ComponentCategory) {
         price -= components[componentCategory]?.price!!

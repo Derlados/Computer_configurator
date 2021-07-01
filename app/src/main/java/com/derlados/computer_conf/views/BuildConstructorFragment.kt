@@ -27,7 +27,6 @@ import com.derlados.computer_conf.views.ComponentInfoFragment
 import com.derlados.computer_conf.views.ComponentSearchFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
 import com.derlados.computer_conf.views.SaveDialogFragment
-import com.derlados.computer_conf.views.pageFragment.SearchFragment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_build.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
@@ -175,7 +174,7 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         }
     }
 
-    override fun updatePrice(price: Float) {
+    override fun updatePrice(price: Int) {
         tvPrice.text = App.app.resources.getString(R.string.component_price, price)
     }
 
@@ -209,7 +208,7 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         }
 
         // Кнопка удалить комплектующее
-        val ibtDelete = card.component_item_bt_corner
+        val ibtDelete = card.inflate_component_item_bt_favorite
         ibtDelete.setOnClickListener {
             presenter.removeComponent(category, component)
             container.removeView(card) // Удаление комплектующего

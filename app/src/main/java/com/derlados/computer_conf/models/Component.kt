@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import com.derlados.computer_conf.Managers.FileManager
 import kotlin.collections.ArrayList
 
-class Component(val id: Int, val name: String, val price : Float, val imageUrl : String, val attributes: ArrayList<Attribute>) {
+class Component(val id: Int, val name: String, val price : Int, val imageUrl : String, val attributes: ArrayList<Attribute>) {
 
     // Для хранения блоков характеристик о комплектующем.
     inner class Attribute(val id: Int, val name: String, val value: String, val isPreview: Boolean)
