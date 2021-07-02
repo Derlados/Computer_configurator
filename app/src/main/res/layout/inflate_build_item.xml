@@ -19,7 +19,7 @@
             android:layout_height="80dp"
             android:layout_margin="5dp"
             android:layout_weight="0.3"
-            android:src="@drawable/ic_processor_24"/>
+            android:src="@drawable/ic_cpu_24"/>
 
         <LinearLayout
             android:layout_width="0dp"

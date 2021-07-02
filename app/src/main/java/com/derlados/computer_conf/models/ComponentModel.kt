@@ -164,6 +164,7 @@ object ComponentModel {
         trackPrices.putAll(Gson().fromJson(data, type))
     }
 
+
     //////////////////////////////////////////// ФУНКЦИИ ДЛЯ РАБОТЫ С ИЗБРАННЫМИ КОМПЛЕКТУЮЩИМИ /////////////////////////////////////
 
     fun addToFavorite(id: Int) {

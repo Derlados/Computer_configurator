@@ -1,5 +1,6 @@
 package com.derlados.computer_conf.interfaces
 
+import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.models.Component
 
 interface ComponentSearchView {
@@ -11,4 +12,5 @@ interface ComponentSearchView {
     fun updateComponentList()
     fun updateSingleComponent(index: Int)
     fun removeSingleComponent(index: Int)
+    fun setDefaultImageByCategory(id: Int)
 }

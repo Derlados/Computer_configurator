@@ -1,5 +1,7 @@
 package com.derlados.computer_conf.views.adapters
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +12,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.models.Component
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
+import java.lang.Exception
 
-class ComponentRecyclerAdapter(private  val components: List<Component>, private val trackPrices: HashMap<Int, Int>,  private val onItemClicked: (Component) -> Unit,
-                               private val onBtFavoriteClick: (Int) -> Unit)
+class ComponentRecyclerAdapter(private  val components: List<Component>, private val trackPrices: HashMap<Int, Int>, private val defaultImageId: Int,
+                               private val onItemClicked: (Component) -> Unit, private val onBtFavoriteClick: (Int) -> Unit)
     : RecyclerView.Adapter<ComponentRecyclerAdapter.ComponentHolder>() {
 
     class ComponentHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -23,11 +28,11 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
         val img: ImageView = itemView.component_item_img
         val btFavorite: ImageButton = itemView.inflate_component_item_bt_favorite
 
-        val tvHeaders: ArrayList<TextView> = ArrayList()
-        val tvValues: ArrayList<TextView> = ArrayList()
-
         val llMonitoring: LinearLayout = itemView.inflate_component_item_ll_track_block
         val tvTrackPrice: EditText = itemView.inflate_component_item_et_track_price
+
+        val tvHeaders: ArrayList<TextView> = ArrayList()
+        val tvValues: ArrayList<TextView> = ArrayList()
 
         init {
             itemView.findViewById<TableLayout>(R.id.component_item_tl_data)
@@ -60,7 +65,24 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
 
         holder.tvName.text = component.name
         holder.tvPrice.text = App.app.resources.getString(R.string.component_price, component.price)
-        Picasso.get().load(component.imageUrl).into(holder.img)
+
+        // Если изображение не было закешировано, будет скачано новое и сохранено. Пока изображения нету - устанавливается по умолчанию
+        if (component.image != null) {
+            holder.img.setImageBitmap(component.image)
+        } else {
+            holder.img.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, defaultImageId, App.app.theme))
+            Picasso.get().load(component.imageUrl).into(object : Target {
+                override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
+                    holder.img.setImageBitmap(bitmap)
+                    component.image = bitmap
+                }
+
+                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                }
+                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                }
+            })
+        }
 
         val attributes: List<Component.Attribute> = component.getPreviewAttributes()
         for (i in attributes.indices) {

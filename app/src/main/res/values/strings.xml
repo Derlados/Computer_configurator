@@ -10,7 +10,6 @@
     <string name="SSDs">Накопители SSD</string>
     <string name="RAMs">Память</string>
     <string name="power_supplies">Блоки питания</string>і
-    <string name="add_to_build">+ в сборку</string>
     <string name="status">Статус :</string>
     <string name="not_complete">Не закончена</string>
     <string name="complete">Закончена</string>
@@ -44,4 +43,7 @@
     <string name="not_compatibility">Не совместима</string>
     <string name="track_price">Отслеживаемая цена:</string>
     <string name="price">цена</string>
+
+    <string name="add_to_favorite">+ в избранное</string>
+    <string name="add_to_build">+ в сборку</string>
 </resources>

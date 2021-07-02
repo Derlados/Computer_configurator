@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.consts.ComponentCategory
@@ -14,6 +15,18 @@ import com.derlados.computer_conf.views.OnFragmentInteractionListener
 import kotlinx.android.synthetic.main.fragment_shop.view.*
 
 class SearchFragment : PageFragment(), View.OnClickListener {
+
+    private val btCategories: HashMap<Int, ComponentCategory> = hashMapOf(
+            R.id.fragment_search_component_cpu to ComponentCategory.CPU,
+            R.id.fragment_search_component_gpu to ComponentCategory.GPU,
+            R.id.fragment_search_component_motherboard to ComponentCategory.MOTHERBOARD,
+            R.id.fragment_search_component_hdd to ComponentCategory.HDD,
+            R.id.fragment_search_component_ssd to ComponentCategory.SSD,
+            R.id.fragment_search_component_ram to ComponentCategory.RAM,
+            R.id.fragment_search_component_power_supply to ComponentCategory.POWER_SUPPLY,
+            R.id.fragment_search_component_case to ComponentCategory.CASE
+    )
+
     private lateinit var frListener: OnFragmentInteractionListener
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -23,14 +36,9 @@ class SearchFragment : PageFragment(), View.OnClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val fragment = inflater.inflate(R.layout.fragment_shop, container, false)
 
-        fragment.fragment_search_component_cpu.setOnClickListener(this)
-        fragment.fragment_search_component_gpu.setOnClickListener(this)
-        fragment.fragment_search_component_motherboard.setOnClickListener(this)
-        fragment.fragment_search_component_hdd.setOnClickListener(this)
-        fragment.fragment_search_component_ssd.setOnClickListener(this)
-        fragment.fragment_search_component_ram.setOnClickListener(this)
-        fragment.fragment_search_component_power_supply.setOnClickListener(this)
-        fragment.fragment_search_component_case.setOnClickListener(this)
+        for ((btId, _) in btCategories) {
+            fragment.findViewById<Button>(btId).setOnClickListener(this)
+        }
 
         return fragment
     }
@@ -39,20 +47,11 @@ class SearchFragment : PageFragment(), View.OnClickListener {
      * Слушатель нажатия кнопки. Переход к поиску компонентов
      */
     override fun onClick(view: View) {
-        val componentCategory: ComponentCategory = when (view.id) {
-            R.id.fragment_search_component_cpu -> ComponentCategory.CPU
-            R.id.fragment_search_component_gpu -> ComponentCategory.GPU
-            R.id.fragment_search_component_motherboard -> ComponentCategory.MOTHERBOARD
-            R.id.fragment_search_component_hdd -> ComponentCategory.HDD
-            R.id.fragment_search_component_ssd -> ComponentCategory.SSD
-            R.id.fragment_search_component_ram -> ComponentCategory.RAM
-            R.id.fragment_search_component_power_supply -> ComponentCategory.POWER_SUPPLY
-            R.id.fragment_search_component_case -> ComponentCategory.CASE
-            else -> return
-        }
-        //TODO убрать бред с вызовом модели
-        ComponentModel.chosenCategory = componentCategory
+        btCategories[view.id]?.let {
+            //TODO Вызов модели из View, однако это единственная функция этого экрана
+            ComponentModel.chosenCategory = it
 
-        frListener.nextFragment(this, ComponentSearchFragment(), BackStackTag.COMPONENT_SEARCH)
+            frListener.nextFragment(this, ComponentSearchFragment(), BackStackTag.COMPONENT_SEARCH)
+        }
     }
 }

@@ -31,7 +31,7 @@
                 android:id="@+id/fragment_search_component_cpu"
                 style="@style/ButtonShop"
                 android:text="@string/CPUs"
-                app:icon="@drawable/ic_processor_24" />
+                app:icon="@drawable/ic_cpu_24" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_search_component_gpu"

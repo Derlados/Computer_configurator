@@ -1,11 +1,13 @@
 package com.derlados.computer_conf.views
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
@@ -31,7 +33,7 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         currentFragment = inflater.inflate(R.layout.fragment_component_data, container, false)
         attributeList = currentFragment.findViewById(R.id.fragment_component_data_attributes)
-        presenter = ComponentInfoPresenter(this)
+        presenter = ComponentInfoPresenter(this, App.resourceProvider)
         presenter.init()
 
         return currentFragment
@@ -50,7 +52,11 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView {
 
         currentFragment.fragment_component_data_name.text = component.name
         currentFragment.fragment_component_data_price.text = App.app.resources.getString(R.string.component_price, component.price)
-        Picasso.get().load(component.imageUrl).into(currentFragment.fragment_component_data_img)
+        if (component.image != null) {
+            currentFragment.fragment_component_data_img.setImageBitmap(component.image)
+        } else {
+            Picasso.get().load(component.imageUrl).into(currentFragment.fragment_component_data_img)
+        }
 
         for (attribute in component.attributes) {
             val dataString: LinearLayout = layoutInflater.inflate(R.layout.inflate_attribute_string, container, false) as LinearLayout
@@ -62,5 +68,11 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView {
 
     override fun returnToBuild() {
         fragmentListener.popBackStack(BackStackTag.BUILD)
+    }
+
+    override fun setDefaultImage(defaultId: Int) {
+        currentFragment.fragment_component_data_img.setImageDrawable(
+                ResourcesCompat.getDrawable(App.app.resources, defaultId, App.app.theme)
+        )
     }
 }

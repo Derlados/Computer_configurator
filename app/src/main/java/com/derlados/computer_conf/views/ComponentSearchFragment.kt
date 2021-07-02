@@ -1,6 +1,7 @@
 package com.derlados.computer_conf.views
 
 import android.content.Context
+import android.content.res.loader.ResourcesProvider
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +9,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import android.widget.TextView.OnEditorActionListener
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.derlados.computer_conf.App
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
@@ -25,7 +26,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, ComponentSearchView {
-    private lateinit var presenter: ComponentSearchPresenter
+    private var defaultImageId: Int = -1
 
     private var keepVisible = true
     private lateinit var searchText: String
@@ -36,6 +37,8 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
     private lateinit var tvNotFound: TextView
     private lateinit var pbLoading: ProgressBar
     private lateinit var fragmentListener: OnFragmentInteractionListener
+
+    private lateinit var presenter: ComponentSearchPresenter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,7 +62,7 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
             return@OnEditorActionListener false
         })
 
-        presenter = ComponentSearchPresenter(this)
+        presenter = ComponentSearchPresenter(this, App.resourceProvider)
         presenter.init()
 
         return currentFragment
@@ -87,6 +90,10 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
         presenter.finish()
     }
 
+    override fun setDefaultImageByCategory(id: Int) {
+        defaultImageId = id
+    }
+
     override fun showError(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
@@ -110,7 +117,7 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
      */
     override fun setComponents(components: List<Component>, trackPrices: HashMap<Int, Int>) {
         rvComponents.layoutManager = LinearLayoutManager(context)
-        rvComponents.adapter = ComponentRecyclerAdapter(components, trackPrices, ::onClickItem, ::onFavoriteClick)
+        rvComponents.adapter = ComponentRecyclerAdapter(components, trackPrices, defaultImageId, ::onClickItem, ::onFavoriteClick)
     }
 
     /**

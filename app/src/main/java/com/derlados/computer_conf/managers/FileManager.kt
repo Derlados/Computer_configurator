@@ -87,7 +87,7 @@ object FileManager {
         if (imgFile.exists()) {
             return BitmapFactory.decodeFile(imgFile.path)
         } else {
-            throw Exception("File not found $imgName")
+            throw FileNotFoundException("File not found $imgName")
         }
     }
 }

@@ -5,13 +5,16 @@ import android.accounts.NetworkErrorException
 import com.derlados.computer_conf.interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.consts.ComponentCategory
+import com.derlados.computer_conf.interfaces.ResourceProvider
 import com.derlados.computer_conf.models.Component
 
-class ComponentSearchPresenter(private val view: ComponentSearchView) {
+class ComponentSearchPresenter(private val view: ComponentSearchView, private val resourceProvider: ResourceProvider) {
     private var category: ComponentCategory = ComponentModel.chosenCategory
     private var downloadJob: Job? = null
 
     fun init() {
+        view.setDefaultImageByCategory(resourceProvider.getDefaultImageByCategory(category))
+
         if (category != ComponentCategory.FAVORITE) {
             ComponentModel.restoreFromCache(category)
             view.setComponents(ComponentModel.components, ComponentModel.trackPrices)

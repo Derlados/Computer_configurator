@@ -1,22 +1,35 @@
 package com.derlados.computer_conf.models
 
 import android.graphics.Bitmap
+import androidx.annotation.Nullable
 import com.derlados.computer_conf.Managers.FileManager
+import com.google.gson.annotations.SerializedName
+import java.io.FileNotFoundException
 import kotlin.collections.ArrayList
 
 class Component(val id: Int, val name: String, val price : Int, val imageUrl : String, val attributes: ArrayList<Attribute>) {
+    inner class Attribute(val id: Int, val name: String, val value: String, val isPreview: Boolean) // Для хранения арактеристик о комплектующем
 
-    // Для хранения блоков характеристик о комплектующем.
-    inner class Attribute(val id: Int, val name: String, val value: String, val isPreview: Boolean)
-
-    var imageName : String = imageUrl.split(Regex("([^/]+)\$")).toString()
+    val imageName : String
+        get() {
+            return imageUrl
+            //return imageUrl.split(Regex("([^/]+)\$")).toString()
+        }
 
     // Данные изображения сохраняются и загружаются на устройство так как невозможно гарантировать стабильность работы с Bitmap который хранится прямо в объекте
     // При постоянном использовании Bitmap возникают ошибки SIGSEGV 11
-    var image: Bitmap
-        get() = FileManager.restoreImage(imageName)
+    var image: Bitmap?
+        get() {
+            return try {
+                FileManager.restoreImage(this.imageName)
+            } catch (e: FileNotFoundException) {
+                null
+            }
+        }
         set(image) {
-            FileManager.saveImage(image, imageName)
+            image?.let {
+                FileManager.saveImage(image, imageName)
+            }
         }
 
     /**
