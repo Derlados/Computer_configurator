@@ -46,4 +46,5 @@
 
     <string name="add_to_favorite">+ в избранное</string>
     <string name="add_to_build">+ в сборку</string>
+    <string name="filters">Filters</string>
 </resources>

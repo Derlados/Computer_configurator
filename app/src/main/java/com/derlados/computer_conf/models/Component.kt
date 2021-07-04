@@ -10,10 +10,9 @@ import kotlin.collections.ArrayList
 class Component(val id: Int, val name: String, val price : Int, val imageUrl : String, val attributes: ArrayList<Attribute>) {
     inner class Attribute(val id: Int, val name: String, val value: String, val isPreview: Boolean) // Для хранения арактеристик о комплектующем
 
-    val imageName : String
+    private val imageName : String
         get() {
-            return imageUrl
-            //return imageUrl.split(Regex("([^/]+)\$")).toString()
+            return Regex("([^/]+)\$").find(imageUrl)!!.value
         }
 
     // Данные изображения сохраняются и загружаются на устройство так как невозможно гарантировать стабильность работы с Bitmap который хранится прямо в объекте
@@ -21,7 +20,7 @@ class Component(val id: Int, val name: String, val price : Int, val imageUrl : S
     var image: Bitmap?
         get() {
             return try {
-                FileManager.restoreImage(this.imageName)
+                FileManager.restoreImage(imageName)
             } catch (e: FileNotFoundException) {
                 null
             }

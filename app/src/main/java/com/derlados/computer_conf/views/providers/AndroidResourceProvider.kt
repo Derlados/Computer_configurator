@@ -27,6 +27,9 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
         return when (resString) {
             ResourceProvider.ResString.ADD_TO_FAVORITE -> context.getString(R.string.add_to_favorite)
             ResourceProvider.ResString.ADD_TO_BUILD -> context.getString(R.string.add_to_build)
+            ResourceProvider.ResString.NOT_COMPATIBILITY -> context.getString(R.string.not_compatibility)
+            ResourceProvider.ResString.NOT_COMPLETE -> context.getString(R.string.not_complete)
+            ResourceProvider.ResString.COMPLETE -> context.getString(R.string.complete)
         }
     }
 }

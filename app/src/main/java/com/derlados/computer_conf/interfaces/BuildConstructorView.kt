@@ -10,7 +10,7 @@ interface BuildConstructorView {
     fun setBuildData(build: BuildData)
     fun setImage(image: Bitmap)
     fun setImage(url: String)
-    fun setStatus(status: BuildConstructorPresenter.StatusBuild, message: String? = null)
+    fun setStatus(status: String, message: String? = null)
 
     fun addNewComponent(category: ComponentCategory, component: Component)
     fun updatePrice(price: Int)

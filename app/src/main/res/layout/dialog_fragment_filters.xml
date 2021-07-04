@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="20dp"
+    android:padding="5dp"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/element_color_1"
+            android:drawableEnd="@drawable/ic_arrow_down_36"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:text="Сокет"
+            android:textSize="16sp"
+            android:padding="10dp">
+
+        </Button>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/element_color_1">
+
+                <CheckBox
+                    android:layout_weight="1"
+                    android:textSize="14sp"
+                    android:checked="true"
+                    android:text="s1200"
+                    android:buttonTint="@color/light_blue"
+                    />
+
+                <CheckBox
+                    android:layout_weight="1"
+                    android:textSize="14sp"
+                    android:text="AM4"
+                    android:checked="true"
+                    android:buttonTint="@color/light_blue"
+                    />
+
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/element_color_1"
+            android:drawableEnd="@drawable/ic_arrow_down_36"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:text="Сокет"
+            android:textSize="16sp"
+            android:padding="10dp">
+
+        </Button>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/element_color_1"
+            android:drawableEnd="@drawable/ic_arrow_down_36"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:text="Сокет"
+            android:textSize="16sp"
+            android:padding="10dp">
+
+        </Button>
+
+    </LinearLayout>
+
+
+</LinearLayout>

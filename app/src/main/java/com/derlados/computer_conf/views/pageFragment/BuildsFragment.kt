@@ -14,7 +14,7 @@ import com.derlados.computer_conf.interfaces.PageBuildsView
 import com.derlados.computer_conf.models.BuildData
 import com.derlados.computer_conf.presenters.PageBuildsPresenter
 import com.derlados.computer_conf.views.adapters.BuildRecyclerAdapter
-import com.derlados.computerconf.VIews.BuildConstructorFragment
+import com.derlados.computer_conf.views.BuildConstructorFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_build_list.view.*
 

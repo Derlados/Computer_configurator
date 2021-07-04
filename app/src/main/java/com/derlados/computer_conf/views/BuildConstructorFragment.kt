@@ -1,8 +1,6 @@
-package com.derlados.computerconf.VIews
+package com.derlados.computer_conf.views
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.Editable
@@ -14,6 +12,8 @@ import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
+import androidx.fragment.app.setFragmentResultListener
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
@@ -23,19 +23,16 @@ import com.derlados.computer_conf.interfaces.BuildConstructorView
 import com.derlados.computer_conf.models.BuildData
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.presenters.BuildConstructorPresenter
-import com.derlados.computer_conf.views.ComponentInfoFragment
-import com.derlados.computer_conf.views.ComponentSearchFragment
-import com.derlados.computer_conf.views.OnFragmentInteractionListener
-import com.derlados.computer_conf.views.SaveDialogFragment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_build.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
 import java.util.*
 import kotlin.collections.HashMap
 
-class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPressedListener, BuildConstructorView {
-    companion object {
-        const val SAVE_DIALOG_FRAGMENT = 1
+class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPressedListener, BuildConstructorView, FragmentResultListener {
+    companion object  {
+        const val SAVE_BUILD = "SAVE_BUILD"
+        const val WITHOUT_SAVE = "WITHOUT_SAVE"
     }
 
     private var componentContainers: HashMap<ComponentCategory, Int> = hashMapOf(
@@ -70,6 +67,8 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         currentFragment = inflater.inflate(R.layout.fragment_build, container, false)
+        setFragmentResultListener(SAVE_BUILD, ::onFragmentResult)
+
         //(currentFragment.findViewById<View>(R.id.fragment_build_full_menu_bottom_navigator) as BottomNavigationView).setOnNavigationItemSelectedListener(this)
 
         etName = currentFragment.fragment_build_et_name
@@ -91,12 +90,11 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         }
 
         // Каждая вторая кнопка является заголовком категории
-        // TODO (Нужно придумать лучший способ организации)
         for (i in 0 until llComponents.childCount step 2) {
             llComponents.getChildAt(i).setOnClickListener(::toggleCompListVisibility)
         }
 
-        presenter = BuildConstructorPresenter(this)
+        presenter = BuildConstructorPresenter(this, App.resourceProvider)
         presenter.init()
         return currentFragment
     }
@@ -121,24 +119,18 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         return false
     }
 
-    //TODO Этот способ устарел, новый через setFragmentResultListener
-    /**
-     *  Для обработки диалога который появляется, если пользователь захотел выйти из фрагмента сборки не сохранившись
-     */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == SAVE_DIALOG_FRAGMENT && resultCode == Activity.RESULT_OK) {
+    // Отрыктие диалога с предложением сохранить изменения
+    override fun showSaveDialog() {
+        val dialogFragment: DialogFragment = SaveDialogFragment()
+        activity?.let { dialogFragment.show(it.supportFragmentManager, "build") }
+    }
+
+    override fun onFragmentResult(requestKey: String, result: Bundle) {
+        if (requestKey == SAVE_BUILD) {
             Toast.makeText(App.app.applicationContext, "Сохранено", Toast.LENGTH_SHORT).show()
             presenter.saveBuild()
         }
         frListener.popBackStack()
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    // Отрыктие диалога с предложением сохранить изменения
-    override fun showSaveDialog() {
-        val dialogFragment: DialogFragment = SaveDialogFragment()
-        dialogFragment.setTargetFragment(this, SAVE_DIALOG_FRAGMENT)
-        activity?.let { dialogFragment.show(it.supportFragmentManager, "hello") }
     }
 
     override fun setBuildData(build: BuildData) {
@@ -159,19 +151,9 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         Picasso.get().load(url).into(imgBuild)
     }
 
-    override fun setStatus(status: BuildConstructorPresenter.StatusBuild, message: String?) {
-        when(status) {
-            BuildConstructorPresenter.StatusBuild.COMPATIBILITY_ERROR -> {
-                tvStatus.text = resources.getString(R.string.not_compatibility)
-                tvCompatibility.text = message
-            }
-            BuildConstructorPresenter.StatusBuild.IS_NOT_COMPLETE -> {
-                tvStatus.text = resources.getString(R.string.not_complete)
-            }
-            BuildConstructorPresenter.StatusBuild.COMPLETE -> {
-                tvStatus.text = resources.getString(R.string.complete)
-            }
-        }
+    override fun setStatus(status: String, message: String?) {
+        tvStatus.text = status
+        tvCompatibility.text = message
     }
 
     override fun updatePrice(price: Int) {
@@ -305,7 +287,7 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
 //    }
 //
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////Обработчик ввода текста//////////////////////////////////////////////////
     //TODO
     // Может необходимо производить контроль и ограничить количество символов для имени сборки
     override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
@@ -322,5 +304,6 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
             presenter.setDescription(text)
         }
     }
+
 
 }

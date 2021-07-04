@@ -13,10 +13,8 @@ class SaveDialogFragment : DialogFragment() {
         val builder = AlertDialog.Builder(activity, R.style.DarkAlert)
         builder
                 .setTitle("Сохранить изменения ?")
-                .setPositiveButton("Да") { _, _ -> targetFragment!!.onActivityResult(targetRequestCode, Activity.RESULT_OK, activity?.intent) }
-                .setNegativeButton("Нет") { _, _ -> targetFragment!!.onActivityResult(targetRequestCode, Activity.RESULT_CANCELED, activity?.intent) }
-        //parentFragmentManager.setFragmentResult()
-
+                .setPositiveButton("Да") { _, _ -> parentFragmentManager.setFragmentResult(BuildConstructorFragment.SAVE_BUILD, Bundle())}
+                .setNegativeButton("Нет") { _, _ -> parentFragmentManager.setFragmentResult(BuildConstructorFragment.WITHOUT_SAVE, Bundle())}
         return builder.create()
     }
 }

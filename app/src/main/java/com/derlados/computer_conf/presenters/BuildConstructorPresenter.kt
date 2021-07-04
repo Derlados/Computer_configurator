@@ -2,26 +2,22 @@ package com.derlados.computer_conf.presenters
 
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.interfaces.BuildConstructorView
+import com.derlados.computer_conf.interfaces.ResourceProvider
 import com.derlados.computer_conf.models.BuildModel
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.models.ComponentModel
 
-class BuildConstructorPresenter(private val view: BuildConstructorView) {
+class BuildConstructorPresenter(private val view: BuildConstructorView, private val resourceProvider: ResourceProvider) {
 
     var isShouldClose: Boolean = false
 
-    enum class StatusBuild {
-        COMPLETE,
-        IS_NOT_COMPLETE,
-        COMPATIBILITY_ERROR
-    }
 
     fun init() {
         val i: Int = 0
         BuildModel.selectedBuild?.let {
             view.setBuildData(it)
             //view.setImage()
-            view.setStatus(StatusBuild.IS_NOT_COMPLETE)
+            view.setStatus(resourceProvider.getString(ResourceProvider.ResString.NOT_COMPLETE))
         }
     }
 
@@ -82,7 +78,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView) {
             build.getComponent(ComponentCategory.CASE)?.let { component ->
                 view.setImage(component.imageUrl)
             }
-            view.setStatus(StatusBuild.IS_NOT_COMPLETE)
+            view.setStatus(resourceProvider.getString(ResourceProvider.ResString.NOT_COMPLETE))
         }
     }
 }
