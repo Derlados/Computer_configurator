@@ -6,6 +6,8 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 interface ComponentAPI {
     companion object {
@@ -18,4 +20,6 @@ interface ComponentAPI {
     @GET("${BASE_URL}category={category}/max-blocks")
     fun getMaxBlocks(@Path("category") category: String): Call<Int>
 
+    @GET("${BASE_URL}category={category}/filters")
+    fun getFilters(@Path("category") category: String): Call<HashMap<String, ArrayList<String>>>
 }

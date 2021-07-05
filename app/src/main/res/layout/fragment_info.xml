@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
+            android:textColor="@color/white"
             android:text="\t\tСоздано приложение 'Собери свой ПК'.
 В данном приложении любой пользователь может собрать компьютер своей мечты :D.\n
 \t\tОсновной функционал приложение на данный момент - это его конфигуратор.
@@ -38,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold|italic"
+            android:textColor="@color/white"
             android:text="Вся информация о комплектующих была взята с нтернет-мегазина: brain.com.ua"
             android:textSize="18sp"/>
 

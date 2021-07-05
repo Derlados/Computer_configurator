@@ -73,6 +73,10 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     private fun download() {
          downloadJob = CoroutineScope(Dispatchers.Main).launch {
              try {
+                 val filters = async {
+
+                 }
+
                  val maxBlocks = ComponentModel.getMaxBlocks(category)
                  if (maxBlocks == 0 && isActive) {
                      view.showNotFoundMessage()

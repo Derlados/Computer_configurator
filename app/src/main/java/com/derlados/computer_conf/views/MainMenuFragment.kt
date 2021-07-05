@@ -20,16 +20,21 @@ class MainMenuFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
     private lateinit var fragment: View
     private lateinit var fragmentActivity: FragmentActivity
 
+    val titles: HashMap<Int, String> = hashMapOf(
+            PageMenu.BUILDS.ordinal to "Ваши сборки",
+            PageMenu.SEARCH.ordinal to "Категории комплектуюших",
+            PageMenu.INFO.ordinal to "Информация"
+    )
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         fragmentActivity = context as FragmentActivity
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         fragment = inflater.inflate(R.layout.fragment_main_menu, container, false)
         return fragment
     }
-
 
     //TODO (По хорошему нужно делать через контроллер, однако функционал полностью под ЖЦ UI)
     override fun onHiddenChanged(hidden: Boolean) {
@@ -49,15 +54,30 @@ class MainMenuFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
         pager = fragment.fragment_main_menu_pager
         pager.adapter = MenuPageAdapter(fragmentActivity)
         pager.offscreenPageLimit = pager.adapter?.itemCount!!
+        pager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                activity?.title = titles[position]
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+            }
+        })
         (fragment.fragment_main_menu_bottom_navigator as BottomNavigationView).setOnNavigationItemSelectedListener(this)
     }
 
     // Переход между страницами при помощи меню в нижней части экрана
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.main_menu_bottom_navigator_action_builds -> pager.setCurrentItem(PageMenu.BUILDS.ordinal, false)
-            R.id.main_menu_bottom_navigator_action_shop -> pager.setCurrentItem(PageMenu.SHOP.ordinal, false)
-            R.id.main_menu_bottom_navigator_action_info -> pager.setCurrentItem(PageMenu.INFO.ordinal, false)
+            R.id.main_menu_bottom_navigator_action_builds -> {
+                pager.setCurrentItem(PageMenu.BUILDS.ordinal, false)
+                activity?.title = titles[PageMenu.BUILDS.ordinal]
+            }
+            R.id.main_menu_bottom_navigator_action_shop -> {
+                pager.setCurrentItem(PageMenu.SEARCH.ordinal, false)
+                activity?.title = titles[PageMenu.SEARCH.ordinal]
+            }
+            R.id.main_menu_bottom_navigator_action_info -> {
+                pager.setCurrentItem(PageMenu.INFO.ordinal, false)
+                activity?.title = titles[PageMenu.INFO.ordinal]
+            }
         }
         return false
     }

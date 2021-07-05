@@ -8,7 +8,7 @@ import java.io.FileNotFoundException
 import kotlin.collections.ArrayList
 
 class Component(val id: Int, val name: String, val price : Int, val imageUrl : String, val attributes: ArrayList<Attribute>) {
-    inner class Attribute(val id: Int, val name: String, val value: String, val isPreview: Boolean) // Для хранения арактеристик о комплектующем
+    inner class Attribute(val id: Int, val name: String, val idValue: Int,  val value: String, val isPreview: Boolean) // Для хранения арактеристик о комплектующем
 
     private val imageName : String
         get() {

@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 abstract class PageFragment : Fragment() {
     // Перечисления
     enum class PageMenu {
-        BUILDS, SHOP, INFO
+        BUILDS, SEARCH, INFO
     }
 
     // Создание самого фрагмента.
@@ -23,7 +23,7 @@ abstract class PageFragment : Fragment() {
         fun newInstance(numPage: Int): PageFragment {
             return when (PageMenu.values()[numPage]) {
                 PageMenu.BUILDS -> BuildsFragment()
-                PageMenu.SHOP -> SearchFragment()
+                PageMenu.SEARCH -> SearchFragment()
                 PageMenu.INFO -> InfoFragment()
             }
         }

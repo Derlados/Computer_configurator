@@ -12,5 +12,7 @@
     <color name="green">#00FF0C</color>
     <color name="dark_blue_2">#091E47</color>
     <color name="turquoise">#29FAE9</color>
-    <color name="element_color_1">#080378</color>
+    <color name="element_1">#080378</color>
+    <color name="element_2">#1B2A95</color>
+    <color name="appbar">#010739</color>
 </resources>

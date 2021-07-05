@@ -1,14 +1,23 @@
 package com.derlados.computer_conf
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.PopupMenu
+import android.widget.SearchView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.consts.BackStackTag
+import com.derlados.computer_conf.consts.ComponentCategory
+import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.views.MainMenuFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
 
-class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
+class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMenu.OnMenuItemClickListener {
     var fragmentManager = supportFragmentManager
     private lateinit var mainMenuFragment: MainMenuFragment;
 
@@ -23,9 +32,9 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_ll_container, mainMenuFragment)
                 .commit()
+
+        ComponentModel.getFilters(ComponentCategory.CPU)
     }
-
-
 
     override fun onBackPressed() {
         var close = true
@@ -42,6 +51,13 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
 
         if (close) super.onBackPressed()
     }
+
+
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show()
+        return true
+    }
+
 
     override fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, backStackTag: BackStackTag) {
         val fTrans = fragmentManager.beginTransaction().setCustomAnimations(R.anim.flip_fragment_in,
@@ -70,4 +86,6 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
          */
         fun onBackPressed(): Boolean
     }
+
+
 }

@@ -31,9 +31,26 @@ export default class ComponentController {
             .then(data => {
                 res.status(HttpCodes.OK).send(JSON.stringify(data));
             })
+            .catch(err => {
+                res.status(HttpCodes.INTERNAL_SERVER_ERROR).send(err.message);
+            })
     }
 
-    public test = (req: any, res: Response): void => {
-        console.log(req);
+    public getFilters = (req: any, res: Response): void => {
+        const category: string = req.params.category;
+
+        this.componentModel.getFilters(category)
+            .then(data => {
+
+                const result: any = {}
+                data.forEach((value, key) => {
+                    result[key] = value
+                })
+
+                res.status(HttpCodes.OK).send(JSON.stringify(result));
+            })
+            .catch(err => {
+                res.status(HttpCodes.INTERNAL_SERVER_ERROR).send(err.message);
+            })
     }
 }

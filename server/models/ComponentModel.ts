@@ -4,6 +4,11 @@ import { DataBase } from "../controllers/database";
 import { Attribute } from "./data-classes/Attribute";
 import { Component } from "./data-classes/Component";
 
+export type filterValue = {
+    idValue: number,
+    value: string
+}
+
 export default class ComponentModel {
     private pool: Pool; // Пул базы данных
     private readonly BLOCK_SIZE: number = 100;
@@ -39,7 +44,7 @@ export default class ComponentModel {
                     });
 
                     const sqlFullData: string = `SELECT comp_attr.id_component, attribute.characteristic AS name, comp_attr.id_value AS id, attribute_value.value, 
-                                                        attribute.is_preview AS isPreview, attribute.preview_text
+                                                    attribute.is_preview AS isPreview, attribute.preview_text
                                                 FROM comp_attr 
                                                 JOIN (SELECT id_component FROM component 
                                                         JOIN category ON category.id_category = component.id_category
@@ -83,7 +88,36 @@ export default class ComponentModel {
         return new Promise<number>((resolve, reject) => {
             this.pool.execute(sql, [category])
                 .then(result => {
-                    resolve((result as RowDataPacket[])[0][0].total)
+                    resolve((result as RowDataPacket[])[0][0].total);
+                })
+        })
+    }
+
+    public async getFilters(category: string): Promise<Map<string, Array<string>>> {
+        const sql: string = `SELECT DISTINCT attribute.characteristic, attribute_value.value FROM comp_attr 
+        JOIN attribute ON attribute.id_characteristic = comp_attr.id_characteristic 
+        JOIN attribute_value ON attribute_value.id_value = comp_attr.id_value 
+        JOIN component ON component.id_component = comp_attr.id_component
+        JOIN category ON category.id_category = component.id_category
+        WHERE comp_attr.id_characteristic IN (SELECT id_characteristic FROM filters WHERE category.url_category = "CPU") 
+                AND (category.url_category = "CPU")
+        ORDER BY CONVERT(attribute_value.value, INT), attribute_value.value ASC`;
+
+        return new Promise<Map<string, Array<string>>>((resolve, reject) => {
+            this.pool.execute(sql, [category, category])
+                .then(result => {
+                    const filters: Map<string, Array<string>> = new Map<string, Array<string>>();
+
+                    (result as RowDataPacket[])[0].forEach(row => {
+                        if (!filters.has(row.characteristic)) {
+                            filters.set(row.characteristic, Array());
+                        }
+
+                        filters.get(row.characteristic).push(row.value);
+                    })
+
+                    console.log(filters)
+                    resolve(filters)
                 })
         })
     }
