@@ -19,10 +19,11 @@ import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.consts.ComponentCategory
-import com.derlados.computer_conf.interfaces.BuildConstructorView
+import com.derlados.computer_conf.view_interfaces.BuildConstructorView
 import com.derlados.computer_conf.models.BuildData
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.presenters.BuildConstructorPresenter
+import com.derlados.computer_conf.views.dialog_fragments.SaveDialogFragment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_build.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*

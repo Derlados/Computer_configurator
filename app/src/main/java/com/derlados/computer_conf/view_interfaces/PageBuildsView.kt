@@ -1,6 +1,5 @@
-package com.derlados.computer_conf.interfaces
+package com.derlados.computer_conf.view_interfaces
 
-import com.derlados.computer_conf.models.Build
 import com.derlados.computer_conf.models.BuildData
 
 interface PageBuildsView {

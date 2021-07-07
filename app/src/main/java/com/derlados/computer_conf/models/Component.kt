@@ -1,14 +1,12 @@
 package com.derlados.computer_conf.models
 
 import android.graphics.Bitmap
-import androidx.annotation.Nullable
-import com.derlados.computer_conf.Managers.FileManager
-import com.google.gson.annotations.SerializedName
+import com.derlados.computer_conf.managers.FileManager
 import java.io.FileNotFoundException
 import kotlin.collections.ArrayList
 
 class Component(val id: Int, val name: String, val price : Int, val imageUrl : String, val attributes: ArrayList<Attribute>) {
-    inner class Attribute(val id: Int, val name: String, val idValue: Int,  val value: String, val isPreview: Boolean) // Для хранения арактеристик о комплектующем
+    inner class Attribute(val id: Int, val name: String, val idValue: Int, val value: String, val isPreview: Boolean) // Для хранения арактеристик о комплектующем
 
     private val imageName : String
         get() {

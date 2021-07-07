@@ -1,8 +1,10 @@
 package com.derlados.computer_conf.models
 
 import android.accounts.NetworkErrorException
-import com.derlados.computer_conf.Managers.FileManager
+import android.util.Log
+import com.derlados.computer_conf.managers.FileManager
 import com.derlados.computer_conf.consts.ComponentCategory
+import com.derlados.computer_conf.data_classes.FilterAttribute
 import com.derlados.computer_conf.internet.ComponentAPI
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -26,7 +28,7 @@ object ComponentModel {
     private val api: ComponentAPI
 
     var maxBlocks: Int = -1
-    var filters: HashMap<String, ArrayList<String>> = HashMap()
+    var filters: HashMap<Int, FilterAttribute> = HashMap()
     var components: ArrayList<Component>
     private set
     var favoriteComponents: ArrayList<Component>
@@ -41,10 +43,6 @@ object ComponentModel {
         components = ArrayList()
         trackPrices = HashMap()
         favoriteComponents = ArrayList()
-
-//        val gson = GsonBuilder()
-//                .registerTypeAdapter(HashMap::class.java, HashMapDeserializer())
-//                .create()
 
         retrofit = Retrofit.Builder()
                 .baseUrl(ComponentAPI.BASE_URL)
@@ -110,12 +108,13 @@ object ComponentModel {
 
     }
 
-    suspend fun getFilters(category: ComponentCategory): HashMap<String, ArrayList<String>> {
+    suspend fun downloadFilters(category: ComponentCategory): HashMap<Int, FilterAttribute> {
         return suspendCoroutine { continuation ->
-            val call: Call<HashMap<String, ArrayList<String>>> = api.getFilters(category.toString())
-            call.enqueue(object : Callback<HashMap<String, ArrayList<String>>> {
-                override fun onResponse(call: Call<HashMap<String, ArrayList<String>>>, response: Response<HashMap<String, ArrayList<String>>>) {
-                    val result: HashMap<String, ArrayList<String>>? = response.body()
+            val call: Call<HashMap<Int, FilterAttribute>> = api.getFilters(category.toString())
+            call.enqueue(object : Callback<HashMap<Int, FilterAttribute>> {
+                override fun onResponse(call: Call<HashMap<Int, FilterAttribute>>, response: Response<HashMap<Int, FilterAttribute>>) {
+                    Log.d(Log.DEBUG.toString(), response.body().toString())
+                    val result: HashMap<Int, FilterAttribute>? = response.body()
 
                     if (response.code() == 200 && result != null) {
                         filters = result
@@ -125,7 +124,7 @@ object ComponentModel {
                     }
                 }
 
-                override fun onFailure(call: Call<HashMap<String, ArrayList<String>>>, t: Throwable) {
+                override fun onFailure(call: Call<HashMap<Int, FilterAttribute>>, t: Throwable) {
                     continuation.resumeWithException(NetworkErrorException("No connection"))
                 }
             })

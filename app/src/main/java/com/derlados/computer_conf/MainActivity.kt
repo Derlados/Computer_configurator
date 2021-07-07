@@ -32,8 +32,6 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_ll_container, mainMenuFragment)
                 .commit()
-
-        ComponentModel.getFilters(ComponentCategory.CPU)
     }
 
     override fun onBackPressed() {

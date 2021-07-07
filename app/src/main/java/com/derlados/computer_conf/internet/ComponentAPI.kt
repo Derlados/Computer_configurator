@@ -1,6 +1,7 @@
 package com.derlados.computer_conf.internet
 
 
+import com.derlados.computer_conf.data_classes.FilterAttribute
 import com.derlados.computer_conf.models.Component
 import retrofit2.Call
 import retrofit2.http.GET
@@ -21,5 +22,5 @@ interface ComponentAPI {
     fun getMaxBlocks(@Path("category") category: String): Call<Int>
 
     @GET("${BASE_URL}category={category}/filters")
-    fun getFilters(@Path("category") category: String): Call<HashMap<String, ArrayList<String>>>
+    fun getFilters(@Path("category") category: String): Call<HashMap<Int, FilterAttribute>>
 }

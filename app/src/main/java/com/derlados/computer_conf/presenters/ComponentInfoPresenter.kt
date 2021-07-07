@@ -2,10 +2,9 @@ package com.derlados.computer_conf.presenters
 
 import android.widget.Toast
 import com.derlados.computer_conf.App
-import com.derlados.computer_conf.interfaces.ComponentInfoView
-import com.derlados.computer_conf.interfaces.ResourceProvider
+import com.derlados.computer_conf.view_interfaces.ComponentInfoView
+import com.derlados.computer_conf.view_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.BuildModel
-import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.models.ComponentModel
 
 class ComponentInfoPresenter(private val view: ComponentInfoView, private val resourceProvider: ResourceProvider) {

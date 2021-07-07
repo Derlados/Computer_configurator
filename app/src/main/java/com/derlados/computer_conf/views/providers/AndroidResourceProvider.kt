@@ -3,10 +3,7 @@ package com.derlados.computer_conf.views.providers
 import android.content.Context
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.ComponentCategory
-import com.derlados.computer_conf.interfaces.ResourceProvider
-import java.util.*
-import kotlin.collections.HashMap
-import kotlin.contracts.contract
+import com.derlados.computer_conf.view_interfaces.ResourceProvider
 
 class AndroidResourceProvider(private val context: Context): ResourceProvider {
     override fun getDefaultImageByCategory(category: ComponentCategory): Int {

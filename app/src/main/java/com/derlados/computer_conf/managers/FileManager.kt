@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.Managers
+package com.derlados.computer_conf.managers
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -23,9 +23,9 @@ object FileManager {
 
     // Инициализация основных данных
     init {
-        val rootImages: File = this.appContext.getDir(this.IMAGE_DIR, Context.MODE_PRIVATE)
-        val rootBuilds: File = this.appContext.getDir(this.BUILDS_DIR, Context.MODE_PRIVATE)
-        val rootComponents: File = this.appContext.getDir(this.COMPONENT_DIR, Context.MODE_PRIVATE)
+        val rootImages: File = appContext.getDir(IMAGE_DIR, Context.MODE_PRIVATE)
+        val rootBuilds: File = appContext.getDir(BUILDS_DIR, Context.MODE_PRIVATE)
+        val rootComponents: File = appContext.getDir(COMPONENT_DIR, Context.MODE_PRIVATE)
 
         dirs[Entity.IMAGE] = rootImages
         dirs[Entity.BUILD] = rootBuilds

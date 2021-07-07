@@ -50,6 +50,8 @@
                         android:paddingEnd="0dp"
                         android:textSize="20sp"
                         android:textColor="@color/turquoise"
+                        android:textColorHint="@color/hint_color"
+                        android:backgroundTint="@color/hint_color"
                         android:imeOptions="actionDone"
                         android:singleLine="true"/>
 
@@ -120,6 +122,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/build_desc"
+                android:textColor="@color/white"
+                android:textColorHint="@color/hint_color"
+                android:backgroundTint="@color/hint_color"
                 android:layout_marginBottom="15dp"/>
 
             <LinearLayout

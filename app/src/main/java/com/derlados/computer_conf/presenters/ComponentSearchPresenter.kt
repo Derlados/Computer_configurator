@@ -2,15 +2,16 @@ package com.derlados.computer_conf.presenters
 
 import kotlinx.coroutines.*
 import android.accounts.NetworkErrorException
-import com.derlados.computer_conf.interfaces.ComponentSearchView
+import com.derlados.computer_conf.view_interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.consts.ComponentCategory
-import com.derlados.computer_conf.interfaces.ResourceProvider
+import com.derlados.computer_conf.view_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.Component
 
 class ComponentSearchPresenter(private val view: ComponentSearchView, private val resourceProvider: ResourceProvider) {
     private var category: ComponentCategory = ComponentModel.chosenCategory
     private var downloadJob: Job? = null
+    lateinit var filteredComponents: List<Component>
 
     fun init() {
         view.setDefaultImageByCategory(resourceProvider.getDefaultImageByCategory(category))
@@ -20,6 +21,7 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
             view.setComponents(ComponentModel.components, ComponentModel.trackPrices)
 
             //TODO изменить в соответствии с изменением кеширования
+            downloadFilters()
             if (ComponentModel.components.isEmpty())
                 download()
             else
@@ -36,10 +38,23 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     }
 
     fun searchComponent(searchText: String) {
-        val filteredComponents = ComponentModel.components.filter { component -> component.name.contains(searchText) }
+        filteredComponents = ComponentModel.components.filter { component -> component.name.contains(searchText) }
         view.setComponents(filteredComponents, ComponentModel.trackPrices)
         view.updateComponentList()
     }
+
+    fun filterComponents(chosenFilters: HashMap<Int, ArrayList<String>>, chosenRangeFilters: HashMap<Int, Pair<Float, Float>>) {
+        ComponentModel.components.forEach {
+            for ((key, value) in chosenFilters) {
+                
+            }
+
+            for ((key, value) in chosenRangeFilters) {
+
+            }
+        }
+    }
+
 
     /**
      * Сохранение выбранного комплектующего для дальнейшего отображения
@@ -73,9 +88,9 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     private fun download() {
          downloadJob = CoroutineScope(Dispatchers.Main).launch {
              try {
-                 val filters = async {
-
-                 }
+                 val filterDownloader = async { ComponentModel.downloadFilters(category) }
+                 filterDownloader.start()
+                 view.setFiltersInDialog(filterDownloader.await())
 
                  val maxBlocks = ComponentModel.getMaxBlocks(category)
                  if (maxBlocks == 0 && isActive) {
@@ -98,4 +113,10 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
 
          }
      }
+
+    private fun downloadFilters() {
+        CoroutineScope(Dispatchers.Main).launch {
+            view.setFiltersInDialog(ComponentModel.downloadFilters(category))
+        }
+    }
 }

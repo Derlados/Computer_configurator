@@ -21,7 +21,7 @@
             android:padding="3dp"/>
 
         <EditText
-            android:id="@+id/fragment_shop_search_goods_et_search"
+            android:id="@+id/fragment_component_search_goods_et_search"
             android:layout_width="0dp"
             android:layout_weight="0.7"
             android:layout_height="match_parent"
@@ -31,15 +31,17 @@
             android:singleLine="true"
             android:textColor="@color/white" />
 
-        <ImageView
+        <ToggleButton
+            android:id="@+id/fragment_component_search_goods_img_price_sort"
             android:layout_width="0dp"
             android:layout_weight="0.1"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_price_down"
+            android:background="@drawable/ic_toggle"
             android:layout_gravity="center"
             android:padding="3dp"/>
 
         <ImageView
+            android:id="@+id/fragment_component_search_goods_img_filters"
             android:layout_width="0dp"
             android:layout_weight="0.1"
             android:layout_height="match_parent"

@@ -15,4 +15,5 @@
     <color name="element_1">#080378</color>
     <color name="element_2">#1B2A95</color>
     <color name="appbar">#010739</color>
+    <color name="hint_color">#94FFFFFF</color>
 </resources>

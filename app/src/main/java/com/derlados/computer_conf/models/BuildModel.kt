@@ -1,10 +1,7 @@
 package com.derlados.computer_conf.models
 
-import com.derlados.computer_conf.Managers.FileManager
-import com.derlados.computer_conf.consts.ComponentCategory
+import com.derlados.computer_conf.managers.FileManager
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import java.lang.reflect.Type
 
 object BuildModel {
     val builds = ArrayList<Build>() // Список всех сборок пользователя

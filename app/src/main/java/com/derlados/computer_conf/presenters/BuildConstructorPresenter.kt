@@ -1,8 +1,8 @@
 package com.derlados.computer_conf.presenters
 
 import com.derlados.computer_conf.consts.ComponentCategory
-import com.derlados.computer_conf.interfaces.BuildConstructorView
-import com.derlados.computer_conf.interfaces.ResourceProvider
+import com.derlados.computer_conf.view_interfaces.BuildConstructorView
+import com.derlados.computer_conf.view_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.BuildModel
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.models.ComponentModel

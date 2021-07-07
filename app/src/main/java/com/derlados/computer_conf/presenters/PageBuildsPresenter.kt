@@ -1,7 +1,6 @@
 package com.derlados.computer_conf.presenters
 
-import com.derlados.computer_conf.interfaces.PageBuildsView
-import com.derlados.computer_conf.models.BuildData
+import com.derlados.computer_conf.view_interfaces.PageBuildsView
 import com.derlados.computer_conf.models.BuildModel
 
 class PageBuildsPresenter(private val view: PageBuildsView) {

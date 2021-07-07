@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
-import com.derlados.computer_conf.interfaces.PageBuildsView
+import com.derlados.computer_conf.view_interfaces.PageBuildsView
 import com.derlados.computer_conf.models.BuildData
 import com.derlados.computer_conf.presenters.PageBuildsPresenter
 import com.derlados.computer_conf.views.adapters.BuildRecyclerAdapter

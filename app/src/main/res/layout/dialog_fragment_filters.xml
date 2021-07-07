@@ -1,102 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp"
-    android:padding="5dp"
+    android:orientation="vertical"
     android:background="@color/background">
 
-    <LinearLayout
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Фильтры"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"/>
+
+    <ScrollView
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="5dp">
 
-        <Button
+        <LinearLayout
+            android:id="@+id/dialog_fragment_filters_ll_main_container"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/element_1"
-            android:drawableEnd="@drawable/ic_arrow_down_36"
-            android:textAlignment="viewStart"
-            android:textAllCaps="false"
-            android:text="Сокет"
-            android:textSize="16sp"
-            android:padding="10dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        </Button>
+        </LinearLayout>
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/element_1">
-
-                <CheckBox
-                    android:layout_weight="1"
-                    android:textSize="14sp"
-                    android:checked="true"
-                    android:text="s1200"
-                    android:buttonTint="@color/light_blue"
-                    />
-
-                <CheckBox
-                    android:layout_weight="1"
-                    android:textSize="14sp"
-                    android:text="AM4"
-                    android:checked="true"
-                    android:buttonTint="@color/light_blue"
-                    />
-
-            </TableRow>
-
-        </TableLayout>
-
-    </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+        android:layout_height="60dp"
+        android:orientation="horizontal">
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/element_1"
-            android:drawableEnd="@drawable/ic_arrow_down_36"
-            android:textAlignment="viewStart"
-            android:textAllCaps="false"
-            android:text="Сокет"
-            android:textSize="16sp"
-            android:padding="10dp">
-
-        </Button>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+            android:id="@+id/dialog_fragment_filters_bt_reset"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:text="@string/reset"
+            android:textAllCaps="false"/>
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/element_1"
-            android:drawableEnd="@drawable/ic_arrow_down_36"
-            android:textAlignment="viewStart"
-            android:textAllCaps="false"
-            android:text="Сокет"
-            android:textSize="16sp"
-            android:padding="10dp">
-
-        </Button>
+            android:id="@+id/dialog_fragment_filters_bt_apply"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:text="@string/accept"
+            android:textAllCaps="false"/>
 
     </LinearLayout>
-
 
 </LinearLayout>
+

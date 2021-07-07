@@ -1,7 +1,6 @@
 package com.derlados.computer_conf.views
 
 import android.content.Context
-import android.content.res.loader.ResourcesProvider
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,16 +12,18 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.App
-import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
-import com.derlados.computer_conf.interfaces.ComponentSearchView
+import com.derlados.computer_conf.data_classes.FilterAttribute
+import com.derlados.computer_conf.view_interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.presenters.ComponentSearchPresenter
 import com.derlados.computer_conf.views.adapters.ComponentRecyclerAdapter
+import com.derlados.computer_conf.views.dialog_fragments.FilterDialogFragment
 import kotlinx.android.synthetic.main.fragment_component_search.view.*
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, ComponentSearchView {
@@ -31,8 +32,10 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
     private var keepVisible = true
     private lateinit var searchText: String
 
-    private lateinit var rvComponents: RecyclerView
     private lateinit var currentFragment: View
+    private lateinit var filterDialog: FilterDialogFragment
+
+    private lateinit var rvComponents: RecyclerView
     private lateinit var searchString: EditText
     private lateinit var tvNotFound: TextView
     private lateinit var pbLoading: ProgressBar
@@ -47,12 +50,13 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         currentFragment = inflater.inflate(R.layout.fragment_component_search, container, false)
+
         rvComponents = currentFragment.fragment_component_search_rv
         tvNotFound = currentFragment.fragment_component_search_tv_not_found
         pbLoading = currentFragment.fragment_component_search_pb_loading
 
         // Поисковая строка
-        searchString = currentFragment.fragment_shop_search_goods_et_search
+        searchString = currentFragment.fragment_component_search_goods_et_search
         searchString.setOnEditorActionListener(OnEditorActionListener { _, actionId, _ -> // Реакация на кнопку submit
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchText = searchString.text.toString()
@@ -62,14 +66,18 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
             return@OnEditorActionListener false
         })
 
+        currentFragment.fragment_component_search_goods_img_filters.setOnClickListener { showFiltersDialog() }
+
         presenter = ComponentSearchPresenter(this, App.resourceProvider)
         presenter.init()
 
         return currentFragment
     }
 
-    //TODO Надо пофиксить
-    // Решение проблемы с анимацией, по скольку вызывается 2 popBackStack метода то и анимация играет дважды, из-за чего появлялось мерцание
+    /**
+     * Решение проблемы с анимацией, по скольку вызывается 2 popBackStack метода то и анимация играет дважды,
+     * из-за чего появлялось мерцание
+     */
     override fun onBackPressed(): Boolean {
         view?.visibility = View.VISIBLE
         keepVisible = true
@@ -121,12 +129,10 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
     }
 
     /**
-     * Обновление комплектующих в списке. Обновляется адаптер, уведомляя об изменении длині списка
+     * Обновление комплектующих в списке. Тяжелое обновление, используется при сортировуке
      */
     override fun updateComponentList() {
-        val adapter: RecyclerView.Adapter<*>? = rvComponents.adapter
-        adapter?.notifyItemRangeChanged(0, adapter.itemCount)
-
+        rvComponents.adapter?.notifyDataSetChanged()
     }
 
     override fun updateSingleComponent(index: Int) {
@@ -136,6 +142,19 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
     override fun removeSingleComponent(index: Int) {
         rvComponents.adapter?.notifyItemRemoved(index)
     }
+
+    override fun setFiltersInDialog(filters: HashMap<Int, FilterAttribute>) {
+        filterDialog = FilterDialogFragment(filters, ::filtersDialogListener)
+    }
+
+    private fun showFiltersDialog() {
+        activity?.let { filterDialog.show(it.supportFragmentManager, "filters") }
+    }
+
+    private fun filtersDialogListener(chosenFilters: HashMap<Int, ArrayList<String>>, chosenRangeFilters: HashMap<Int, Pair<Float, Float>>) {
+
+    }
+
 
     /** Переход к полной информации о комплектующем
      * Метод используется в адаптере
