@@ -56,7 +56,7 @@ export default class ComponentModel {
                         components.set(comp.id, comp);
                     });
 
-                    const sqlFullData: string = `SELECT comp_attr.id_component, attribute.characteristic AS name, comp_attr.id_value AS id, attribute_value.value, 
+                    const sqlFullData: string = `SELECT comp_attr.id_component, attribute.id_characteristic AS id, attribute.characteristic AS name,  attribute_value.value, 
                                                     attribute.is_preview AS isPreview, attribute.preview_text
                                                 FROM comp_attr 
                                                 JOIN (SELECT id_component FROM component
@@ -75,11 +75,10 @@ export default class ComponentModel {
 
                         const attribute: Attribute = new Attribute();
                         attribute.isPreview = row.isPreview == 1;
-                        attribute.id = row.id;
                         attribute.value = row.value;
                         attribute.name = attribute.isPreview ? row.preview_text : row.name
 
-                        comp.attributes.push(attribute);
+                        comp.attributes[row.id] = attribute;
                     });
 
                     resolve(Array.from(components, ([key, value]) => (value))); // Вернуть необходимо именно массив

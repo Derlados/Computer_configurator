@@ -5,9 +5,9 @@ export class Component {
     name: string;
     price: number;
     imageUrl: string;
-    attributes: Array<Attribute>;
+    attributes: Object;
 
     constructor() {
-        this.attributes = new Array<Attribute>();
+        this.attributes = {};
     }
 }

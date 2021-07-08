@@ -192,13 +192,23 @@ object ComponentModel {
 
     //////////////////////////////////////////// ФУНКЦИИ ДЛЯ РАБОТЫ С ИЗБРАННЫМИ КОМПЛЕКТУЮЩИМИ /////////////////////////////////////
 
+    /**
+     * Добавление в избранное по id. Производится поиск сред текущих комплектующих и найденное добавляется в избранное.
+     * Отслеживаемая цена ставится по умолчанию 0
+     * @param id - id комплектующего которое пользователь хочет добавить в избранное
+     */
     fun addToFavorite(id: Int) {
         components.find { component -> component.id == id }?.let { favoriteComponents.add(it) }
         trackPrices[id] = 0
     }
 
+    /**
+     * Удаление из избранного id. Производится поиск среди избранных и найденное удаляется
+     * Так же удаляется отслеживаемая цена
+     * @param id - id комплектующего которое пользователь хочет удалить
+     */
     fun removeFromFavorite(id: Int) {
-        favoriteComponents.remove(components.find { component -> component.id == id })
+        favoriteComponents.remove(favoriteComponents.find { component -> component.id == id })
         trackPrices.remove(id)
     }
 }

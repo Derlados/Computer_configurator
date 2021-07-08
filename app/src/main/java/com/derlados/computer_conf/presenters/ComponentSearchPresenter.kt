@@ -11,7 +11,7 @@ import com.derlados.computer_conf.models.Component
 class ComponentSearchPresenter(private val view: ComponentSearchView, private val resourceProvider: ResourceProvider) {
     private var category: ComponentCategory = ComponentModel.chosenCategory
     private var downloadJob: Job? = null
-    lateinit var filteredComponents: List<Component>
+    lateinit var currentComponentList: List<Component>
 
     fun init() {
         view.setDefaultImageByCategory(resourceProvider.getDefaultImageByCategory(category))
@@ -38,23 +38,46 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     }
 
     fun searchComponent(searchText: String) {
-        filteredComponents = ComponentModel.components.filter { component -> component.name.contains(searchText) }
-        view.setComponents(filteredComponents, ComponentModel.trackPrices)
+        currentComponentList = ComponentModel.components.filter { component -> component.name.contains(searchText) }
+        view.setComponents(currentComponentList, ComponentModel.trackPrices)
         view.updateComponentList()
     }
 
     fun filterComponents(chosenFilters: HashMap<Int, ArrayList<String>>, chosenRangeFilters: HashMap<Int, Pair<Float, Float>>) {
-        ComponentModel.components.forEach {
-            for ((key, value) in chosenFilters) {
-                
-            }
-
-            for ((key, value) in chosenRangeFilters) {
-
-            }
-        }
+        currentComponentList = ComponentModel.components.filter { component -> isFilterValid(component, chosenFilters, chosenRangeFilters) }
+        view.setComponents(currentComponentList, ComponentModel.trackPrices)
+        view.updateComponentList()
     }
 
+    /**
+     * Проверка на валидацию по фильтрам комплектующего
+     * @param component - комплектующее
+     * @param chosenFilters - выбранные чекбок фильтры
+     * @param chosenRangeFilters - выбранные "ренжевые" фильтры
+     * @return - true - соответствует фильтрам, false - не соответствует филтрам
+     */
+    private fun isFilterValid(component: Component, chosenFilters: HashMap<Int, ArrayList<String>>, chosenRangeFilters: HashMap<Int, Pair<Float, Float>>): Boolean {
+        for ((key, values) in chosenFilters) {
+            val attribute: Component.Attribute? = component.attributes[key]
+            if (attribute == null || !values.contains(attribute.value)) {
+                return false
+            }
+        }
+
+        for ((key, value) in chosenRangeFilters) {
+            val attribute: Component.Attribute? = component.attributes[key]
+            if (attribute == null) {
+                return false
+            } else {
+                val attrValue: Float? = Regex("([0-9]|\\.)+").find(attribute.value)?.value?.toFloat()
+                if (attrValue == null || attrValue !in value.first..value.second) {
+                    return false
+                }
+            }
+        }
+
+        return true
+    }
 
     /**
      * Сохранение выбранного комплектующего для дальнейшего отображения
@@ -69,19 +92,20 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
      * @param id - id комплектуюшего
      */
     fun toggleFavoriteStatus(id: Int) {
-        val indexInList: Int = ComponentModel.components.indexOfFirst { component -> component.id == id }
+        val indexInCurrentList = currentComponentList.indexOfFirst { component -> component.id == id }
+        val indexInFavoriteList: Int = ComponentModel.favoriteComponents.indexOfFirst { component -> component.id == id }
 
-        if (ComponentModel.favoriteComponents.contains(ComponentModel.components[indexInList])) {
+        if (indexInFavoriteList != -1) {
             ComponentModel.removeFromFavorite(id)
 
             if (category == ComponentCategory.FAVORITE) {
-                view.removeSingleComponent(indexInList)
+                view.removeSingleComponent(indexInCurrentList)
             } else {
-                view.updateSingleComponent(indexInList)
+                view.updateSingleComponent(indexInCurrentList)
             }
         } else {
             ComponentModel.addToFavorite(id)
-            view.updateSingleComponent(indexInList)
+            view.updateSingleComponent(indexInCurrentList)
         }
     }
 

@@ -148,13 +148,17 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
     }
 
     private fun showFiltersDialog() {
-        activity?.let { filterDialog.show(it.supportFragmentManager, "filters") }
+        if (filterDialog.isAdded) {
+            filterDialog.dialog?.show()
+        } else {
+            activity?.let { filterDialog.show(it.supportFragmentManager, "filters") }
+        }
+
     }
 
     private fun filtersDialogListener(chosenFilters: HashMap<Int, ArrayList<String>>, chosenRangeFilters: HashMap<Int, Pair<Float, Float>>) {
-
+        presenter.filterComponents(chosenFilters, chosenRangeFilters)
     }
-
 
     /** Переход к полной информации о комплектующем
      * Метод используется в адаптере

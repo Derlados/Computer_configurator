@@ -17,6 +17,7 @@ export default class ComponentController {
 
         this.componentModel.getComponents(category, offset)
             .then(data => {
+                console.log(data);
                 res.status(HttpCodes.OK).send(JSON.stringify(data));
             })
             .catch(err => {

@@ -57,7 +57,7 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView {
             Picasso.get().load(component.imageUrl).into(currentFragment.fragment_component_data_img)
         }
 
-        for (attribute in component.attributes) {
+        for ((_, attribute) in component.attributes.toSortedMap()) {
             val dataString: LinearLayout = layoutInflater.inflate(R.layout.inflate_attribute_string, container, false) as LinearLayout
             dataString.inflate_attribute_string_name.text = attribute.name
             dataString.inflate_attribute_string_value.text = attribute.value
