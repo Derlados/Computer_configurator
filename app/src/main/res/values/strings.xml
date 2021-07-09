@@ -46,7 +46,11 @@
 
     <string name="add_to_favorite">+ в избранное</string>
     <string name="add_to_build">+ в сборку</string>
-    <string name="filters">Filters</string>
+    <string name="filters">Фильтры</string>
     <string name="accept">Применить</string>
     <string name="reset">Сбросить</string>
+    <string name="sort">Сортировка:</string>
+
+    <string name="price_low_to_high">От дешевых к дорогим</string>
+    <string name="price_high_to_low">От дорогих к дешевым</string>
 </resources>

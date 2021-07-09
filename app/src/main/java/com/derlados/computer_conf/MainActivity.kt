@@ -1,21 +1,18 @@
 package com.derlados.computer_conf
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
-import android.widget.ImageView
+import android.widget.AdapterView
 import android.widget.PopupMenu
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.chivorn.smartmaterialspinner.SmartMaterialSpinner
 import com.derlados.computer_conf.consts.BackStackTag
-import com.derlados.computer_conf.consts.ComponentCategory
-import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.views.MainMenuFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
+
 
 class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMenu.OnMenuItemClickListener {
     var fragmentManager = supportFragmentManager
@@ -32,6 +29,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_ll_container, mainMenuFragment)
                 .commit()
+
     }
 
     override fun onBackPressed() {
@@ -50,18 +48,24 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
         if (close) super.onBackPressed()
     }
 
-
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show()
         return true
     }
 
+    override fun nextFragment(
+        fragmentSource: Fragment,
+        fragmentReceiver: Fragment,
+        backStackTag: BackStackTag
+    ) {
+        val fTrans = fragmentManager.beginTransaction().setCustomAnimations(
+            R.anim.flip_fragment_in,
+            R.anim.flip_fragment_out, R.anim.flip_fragment_in, R.anim.flip_fragment_out
+        )
 
-    override fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, backStackTag: BackStackTag) {
-        val fTrans = fragmentManager.beginTransaction().setCustomAnimations(R.anim.flip_fragment_in,
-                R.anim.flip_fragment_out, R.anim.flip_fragment_in, R.anim.flip_fragment_out)
-
-        if (mainMenuFragment.isVisible) fTrans.hide(mainMenuFragment) else fTrans.hide(fragmentSource)
+        if (mainMenuFragment.isVisible) fTrans.hide(mainMenuFragment) else fTrans.hide(
+            fragmentSource
+        )
         fTrans.add(R.id.activity_main_ll_container, fragmentReceiver)
         fTrans.addToBackStack(backStackTag.toString()) // Добавление изменнений в стек
         fTrans.commit()

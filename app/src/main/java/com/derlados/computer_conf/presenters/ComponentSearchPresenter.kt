@@ -5,10 +5,16 @@ import android.accounts.NetworkErrorException
 import com.derlados.computer_conf.view_interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.consts.ComponentCategory
+import com.derlados.computer_conf.consts.SortType
+import com.derlados.computer_conf.data_classes.FilterUserChoice
 import com.derlados.computer_conf.view_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.Component
 
 class ComponentSearchPresenter(private val view: ComponentSearchView, private val resourceProvider: ResourceProvider) {
+    private companion object {
+        const val MAX_DEFAULT_PRICE = 100000
+    }
+
     private var category: ComponentCategory = ComponentModel.chosenCategory
     private var downloadJob: Job? = null
     lateinit var currentComponentList: List<Component>
@@ -43,8 +49,17 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
         view.updateComponentList()
     }
 
-    fun filterComponents(chosenFilters: HashMap<Int, ArrayList<String>>, chosenRangeFilters: HashMap<Int, Pair<Float, Float>>) {
-        currentComponentList = ComponentModel.components.filter { component -> isFilterValid(component, chosenFilters, chosenRangeFilters) }
+    fun filterComponents(userChoice: FilterUserChoice) {
+        // Фильтрация по атрибутам
+        currentComponentList = ComponentModel.components.filter { component -> isFilterValid(component, userChoice) }
+
+        // Сортировка комплектующих
+        when (userChoice.chosenSortType) {
+            SortType.PRICE_HIGH_TO_LOW -> currentComponentList = currentComponentList.sortedByDescending { component -> component.price  }
+            SortType.PRICE_LOW_TO_HIGH -> currentComponentList = currentComponentList.sortedBy { component -> component.price  }
+            else -> {}
+        }
+
         view.setComponents(currentComponentList, ComponentModel.trackPrices)
         view.updateComponentList()
     }
@@ -52,19 +67,21 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     /**
      * Проверка на валидацию по фильтрам комплектующего
      * @param component - комплектующее
-     * @param chosenFilters - выбранные чекбок фильтры
-     * @param chosenRangeFilters - выбранные "ренжевые" фильтры
+     * @see FilterUserChoice
+     * @param userChoice - выбранные фильтры пользователя (цена, необходимые характеристики, тип сортирофки)
      * @return - true - соответствует фильтрам, false - не соответствует филтрам
      */
-    private fun isFilterValid(component: Component, chosenFilters: HashMap<Int, ArrayList<String>>, chosenRangeFilters: HashMap<Int, Pair<Float, Float>>): Boolean {
-        for ((key, values) in chosenFilters) {
+    private fun isFilterValid(component: Component, userChoice: FilterUserChoice): Boolean {
+        // Проверка на наличие необходимого атрибута
+        for ((key, values) in userChoice.chosenFilters) {
             val attribute: Component.Attribute? = component.attributes[key]
             if (attribute == null || !values.contains(attribute.value)) {
                 return false
             }
         }
 
-        for ((key, value) in chosenRangeFilters) {
+        // Проверка на наличие и находится ли значение атрибута в заданом диапазоне
+        for ((key, value) in userChoice.chosenRangeFilters) {
             val attribute: Component.Attribute? = component.attributes[key]
             if (attribute == null) {
                 return false
@@ -74,6 +91,11 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
                     return false
                 }
             }
+        }
+
+        // Проверка цены
+        if (component.price !in userChoice.chosenRangePrice.first..userChoice.chosenRangePrice.second) {
+            return false
         }
 
         return true
@@ -112,10 +134,6 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     private fun download() {
          downloadJob = CoroutineScope(Dispatchers.Main).launch {
              try {
-                 val filterDownloader = async { ComponentModel.downloadFilters(category) }
-                 filterDownloader.start()
-                 view.setFiltersInDialog(filterDownloader.await())
-
                  val maxBlocks = ComponentModel.getMaxBlocks(category)
                  if (maxBlocks == 0 && isActive) {
                      view.showNotFoundMessage()
@@ -140,7 +158,14 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
 
     private fun downloadFilters() {
         CoroutineScope(Dispatchers.Main).launch {
-            view.setFiltersInDialog(ComponentModel.downloadFilters(category))
+            val filters = ComponentModel.downloadFilters(category)
+            val maxPrice = ComponentModel.components.maxByOrNull { it.price }?.price
+
+            if (maxPrice == null) {
+                view.setFiltersInDialog(filters, MAX_DEFAULT_PRICE)
+            } else {
+                view.setFiltersInDialog(filters, maxPrice)
+            }
         }
     }
 }

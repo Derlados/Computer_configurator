@@ -15,5 +15,5 @@ interface ComponentSearchView {
     fun removeSingleComponent(index: Int)
     fun setDefaultImageByCategory(id: Int)
 
-    fun setFiltersInDialog(filters: HashMap<Int, FilterAttribute>)
+    fun setFiltersInDialog(filters: HashMap<Int, FilterAttribute>, maxPrice: Int)
 }

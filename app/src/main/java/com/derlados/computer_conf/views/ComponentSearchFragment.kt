@@ -15,7 +15,9 @@ import com.derlados.computer_conf.App
 import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
+import com.derlados.computer_conf.consts.SortType
 import com.derlados.computer_conf.data_classes.FilterAttribute
+import com.derlados.computer_conf.data_classes.FilterUserChoice
 import com.derlados.computer_conf.view_interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.presenters.ComponentSearchPresenter
@@ -143,8 +145,8 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
         rvComponents.adapter?.notifyItemRemoved(index)
     }
 
-    override fun setFiltersInDialog(filters: HashMap<Int, FilterAttribute>) {
-        filterDialog = FilterDialogFragment(filters, ::filtersDialogListener)
+    override fun setFiltersInDialog(filters: HashMap<Int, FilterAttribute>, maxPrice: Int) {
+        filterDialog = FilterDialogFragment(filters, maxPrice, ::filtersDialogListener)
     }
 
     private fun showFiltersDialog() {
@@ -156,8 +158,8 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
 
     }
 
-    private fun filtersDialogListener(chosenFilters: HashMap<Int, ArrayList<String>>, chosenRangeFilters: HashMap<Int, Pair<Float, Float>>) {
-        presenter.filterComponents(chosenFilters, chosenRangeFilters)
+    private fun filtersDialogListener(userChoice: FilterUserChoice) {
+        presenter.filterComponents(userChoice)
     }
 
     /** Переход к полной информации о комплектующем
