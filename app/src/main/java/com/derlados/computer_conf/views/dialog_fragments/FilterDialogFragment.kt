@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
+import android.graphics.Color
 import android.graphics.Insets
 import android.os.Build
 import android.os.Bundle
@@ -17,6 +18,7 @@ import android.view.WindowInsets
 import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
+import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.SortType
 import com.derlados.computer_conf.data_classes.FilterAttribute
@@ -25,7 +27,6 @@ import com.google.android.material.slider.RangeSlider
 import kotlinx.android.synthetic.main.dialog_fragment_filters.view.*
 import kotlinx.android.synthetic.main.inflate_filter_block.view.*
 import kotlinx.android.synthetic.main.inflate_filter_range.view.*
-import java.lang.Exception
 import kotlin.math.round
 import kotlin.math.roundToInt
 
@@ -37,11 +38,17 @@ class FilterDialogFragment(
 ) : DialogFragment(), TextWatcher {
 
     private val sortsList = listOf(
-            Pair(R.string.price_low_to_high, SortType.PRICE_LOW_TO_HIGH),
-            Pair(R.string.price_high_to_low, SortType.PRICE_HIGH_TO_LOW)
+        Pair(R.string.price_low_to_high, SortType.PRICE_LOW_TO_HIGH),
+        Pair(R.string.price_high_to_low, SortType.PRICE_HIGH_TO_LOW),
+        Pair(R.string.not_chosen, SortType.DEFAULT)
     )
 
-    private val userChoice = FilterUserChoice(HashMap(), HashMap(), Pair(0, maxPrice), SortType.DEFAULT)
+    private val userChoice = FilterUserChoice(
+        HashMap(),
+        HashMap(),
+        Pair(0, maxPrice),
+        SortType.DEFAULT
+    )
 
     private var rangeSliders: ArrayList<Pair<RangeSlider, List<Float>>> = ArrayList() // Массив пар слайдера и диапазона
     private var checkBoxes: ArrayList<CheckBox> = ArrayList() // Все чекбоксы
@@ -67,7 +74,11 @@ class FilterDialogFragment(
         val dialog = builder.create()
         dialog.setCanceledOnTouchOutside(false);
         dialog.setOnKeyListener(object : DialogInterface.OnKeyListener {
-            override fun onKey(dialogInterface: DialogInterface?, keyCode: Int, event: KeyEvent?): Boolean {
+            override fun onKey(
+                dialogInterface: DialogInterface?,
+                keyCode: Int,
+                event: KeyEvent?
+            ): Boolean {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     dialog.hide()
                     return true
@@ -113,14 +124,29 @@ class FilterDialogFragment(
 
                 // Поворот изображения на 180 градусов стрелки
                 if (ellValues.isExpanded) {
-                    btAttribute.setCompoundDrawablesWithIntrinsicBounds(null, null, ResourcesCompat.getDrawable(resources, R.drawable.ic_arrow_down_36, activity?.theme), null)
+                    btAttribute.setCompoundDrawablesWithIntrinsicBounds(
+                        null, null, ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.ic_arrow_down_36,
+                            activity?.theme
+                        ), null
+                    )
                 } else {
-                    btAttribute.setCompoundDrawablesWithIntrinsicBounds(null, null, ResourcesCompat.getDrawable(resources, R.drawable.ic_arrow_up_36, activity?.theme), null)
+                    btAttribute.setCompoundDrawablesWithIntrinsicBounds(
+                        null, null, ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.ic_arrow_up_36,
+                            activity?.theme
+                        ), null
+                    )
                 }
             }
 
             if (filterAttribute.isRange) {
-                val range = Pair(filterAttribute.values[0].toFloat(), filterAttribute.values[1].toFloat())
+                val range = Pair(
+                    filterAttribute.values[0].toFloat(),
+                    filterAttribute.values[1].toFloat()
+                )
                 createRangeSlider(ellValues, key, range, filterAttribute.step)
             } else {
                 createCheckBoxes(ellValues, key, filterAttribute.values)
@@ -183,8 +209,17 @@ class FilterDialogFragment(
      * @param values - пара значений, минимальное и максимальное значения соответственно
      * @param step - шаг слайдера
      */
-    private fun createRangeSlider(parent: ViewGroup, key: Int, values: Pair<Float, Float>, step: Float) {
-        val llRangeFilterBlock = layoutInflater.inflate(R.layout.inflate_filter_range, parent, false) as LinearLayout
+    private fun createRangeSlider(
+        parent: ViewGroup,
+        key: Int,
+        values: Pair<Float, Float>,
+        step: Float
+    ) {
+        val llRangeFilterBlock = layoutInflater.inflate(
+            R.layout.inflate_filter_range,
+            parent,
+            false
+        ) as LinearLayout
         val rangeSlider = llRangeFilterBlock.inflate_filter_range_slider
 
         rangeSlider.valueFrom = values.first
@@ -199,8 +234,16 @@ class FilterDialogFragment(
            val max =  rangeSlider.values.maxOrNull()
            if (min != null && max != null) {
                userChoice.chosenRangeFilters[key] = Pair(min, max)
-               llRangeFilterBlock.inflate_filter_range_tv_min_value.text = String.format("%s", round(min * 100) / 100)
-               llRangeFilterBlock.inflate_filter_range_tv_max_value.text = String.format("%s", round(max * 100) / 100)
+               llRangeFilterBlock.inflate_filter_range_tv_min_value.text = String.format(
+                   "%s", round(
+                       min * 100
+                   ) / 100
+               )
+               llRangeFilterBlock.inflate_filter_range_tv_max_value.text = String.format(
+                   "%s", round(
+                       max * 100
+                   ) / 100
+               )
            }
        }
         rangeSliders.add(Pair(rangeSlider, values.toList()))
@@ -219,21 +262,43 @@ class FilterDialogFragment(
 
     private fun initSortSpinner(dialog: View) {
         val spinner = dialog.dialog_fragment_filters_sp_sort
-        val listItem = ArrayList<String>()
+        val listItems = ArrayList<String>()
         for ((id, _) in sortsList) {
-            listItem.add(resources.getString(id))
+            listItems.add(resources.getString(id))
         }
 
-        spinner.item = listItem
+        val adapter = object : ArrayAdapter<String>(requireContext(), R.layout.spinner_item, listItems) {
+            override fun getCount(): Int {
+                return sortsList.size - 1
+            }
+
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val tv: TextView = super.getView(position, convertView, parent) as TextView
+                if (position == sortsList.size - 1) {
+                    tv.setTextColor(Color.GRAY)
+                }
+                return tv
+            }
+
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val tv: TextView = super.getDropDownView(position, convertView, parent) as TextView
+                if (userChoice.chosenSortType == sortsList[position].second)
+                    tv.setTextColor(resources.getColor(R.color.light_blue, App.app.theme))
+                return tv
+            }
+        }
+        adapter.setDropDownViewResource(R.layout.spinner_item_list)
+        spinner.adapter = adapter
+        spinner.setSelection(sortsList.size - 1)
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, id: Long) {
-                spinner.hint = ""
-
                 userChoice.chosenSortType = sortsList[position].second
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>) {}
         }
+
+
     }
 
     private fun addFilterValue(key: Int, value: String) {

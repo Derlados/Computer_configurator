@@ -32,7 +32,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -40,25 +40,18 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.35"
                     android:paddingTop="3dp"
-                    android:paddingStart="10dp"
+                    android:padding="10dp"
                     android:text="@string/sort"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:gravity="center_vertical"/>
 
-                <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
+                <Spinner
                     android:id="@+id/dialog_fragment_filters_sp_sort"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="0.65"
-                    app:smsp_hint="@string/not_chosen"
-                    app:smsp_hintSize="14sp"
-                    app:smsp_itemSize="14sp"
-                    app:smsp_itemColor="@color/light_blue"
-                    app:smsp_arrowColor="@color/light_blue"
-                    app:smsp_itemListColor="@color/white"
-                    app:smsp_selectedItemListColor="@color/white"
-                    app:smsp_itemListBackgroundColor="@color/element_2"
+                    android:background="@drawable/spinner_arrow"
                     android:gravity="center"/>
 
             </LinearLayout>
