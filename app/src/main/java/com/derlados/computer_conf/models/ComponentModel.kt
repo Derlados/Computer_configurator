@@ -4,7 +4,9 @@ import android.accounts.NetworkErrorException
 import android.util.Log
 import com.derlados.computer_conf.managers.FileManager
 import com.derlados.computer_conf.consts.ComponentCategory
+import com.derlados.computer_conf.consts.SortType
 import com.derlados.computer_conf.data_classes.FilterAttribute
+import com.derlados.computer_conf.data_classes.UserFilterChoice
 import com.derlados.computer_conf.internet.ComponentAPI
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -21,7 +23,6 @@ import kotlin.coroutines.suspendCoroutine
 
 object ComponentModel {
     private data class CacheData(val components: ArrayList<Component>, val lastBLock: Int, val maxBlocks: Int)
-
     private const val TRACK_PRICES_FILENAME = "TRACK_PRICES"
 
     private val retrofit: Retrofit
@@ -38,11 +39,18 @@ object ComponentModel {
 
     lateinit var chosenComponent: Component
     lateinit var chosenCategory: ComponentCategory
+    val userFilterChoice: UserFilterChoice
 
     init {
         components = ArrayList()
         trackPrices = HashMap()
         favoriteComponents = ArrayList()
+        userFilterChoice = UserFilterChoice(
+            HashMap(),
+            HashMap(),
+            Pair(0, 0),
+            SortType.DEFAULT
+        )
 
         retrofit = Retrofit.Builder()
                 .baseUrl(ComponentAPI.BASE_URL)

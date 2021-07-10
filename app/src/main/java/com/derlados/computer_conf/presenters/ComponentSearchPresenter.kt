@@ -6,15 +6,11 @@ import com.derlados.computer_conf.view_interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.consts.SortType
-import com.derlados.computer_conf.data_classes.FilterUserChoice
+import com.derlados.computer_conf.data_classes.UserFilterChoice
 import com.derlados.computer_conf.view_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.Component
 
 class ComponentSearchPresenter(private val view: ComponentSearchView, private val resourceProvider: ResourceProvider) {
-    private companion object {
-        const val MAX_DEFAULT_PRICE = 100000
-    }
-
     private var category: ComponentCategory = ComponentModel.chosenCategory
     private var downloadJob: Job? = null
     lateinit var currentComponentList: List<Component>
@@ -27,7 +23,6 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
             view.setComponents(ComponentModel.components, ComponentModel.trackPrices)
 
             //TODO изменить в соответствии с изменением кеширования
-            downloadFilters()
             if (ComponentModel.components.isEmpty())
                 download()
             else
@@ -49,7 +44,8 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
         view.updateComponentList()
     }
 
-    fun filterComponents(userChoice: FilterUserChoice) {
+    fun filterComponents() {
+        val userChoice = ComponentModel.userFilterChoice
         // Фильтрация по атрибутам
         currentComponentList = ComponentModel.components.filter { component -> isFilterValid(component, userChoice) }
 
@@ -62,43 +58,6 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
 
         view.setComponents(currentComponentList, ComponentModel.trackPrices)
         view.updateComponentList()
-    }
-
-    /**
-     * Проверка на валидацию по фильтрам комплектующего
-     * @param component - комплектующее
-     * @see FilterUserChoice
-     * @param userChoice - выбранные фильтры пользователя (цена, необходимые характеристики, тип сортирофки)
-     * @return - true - соответствует фильтрам, false - не соответствует филтрам
-     */
-    private fun isFilterValid(component: Component, userChoice: FilterUserChoice): Boolean {
-        // Проверка на наличие необходимого атрибута
-        for ((key, values) in userChoice.chosenFilters) {
-            val attribute: Component.Attribute? = component.attributes[key]
-            if (attribute == null || !values.contains(attribute.value)) {
-                return false
-            }
-        }
-
-        // Проверка на наличие и находится ли значение атрибута в заданом диапазоне
-        for ((key, value) in userChoice.chosenRangeFilters) {
-            val attribute: Component.Attribute? = component.attributes[key]
-            if (attribute == null) {
-                return false
-            } else {
-                val attrValue: Float? = Regex("([0-9]|\\.)+").find(attribute.value)?.value?.toFloat()
-                if (attrValue == null || attrValue !in value.first..value.second) {
-                    return false
-                }
-            }
-        }
-
-        // Проверка цены
-        if (component.price !in userChoice.chosenRangePrice.first..userChoice.chosenRangePrice.second) {
-            return false
-        }
-
-        return true
     }
 
     /**
@@ -131,6 +90,43 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
         }
     }
 
+    /**
+     * Проверка на валидацию по фильтрам комплектующего
+     * @param component - комплектующее
+     * @see UserFilterChoice
+     * @param userFilterChoice - выбранные фильтры пользователя (цена, необходимые характеристики, тип сортирофки)
+     * @return - true - соответствует фильтрам, false - не соответствует филтрам
+     */
+    private fun isFilterValid(component: Component, userFilterChoice: UserFilterChoice): Boolean {
+        // Проверка на наличие необходимого атрибута
+        for ((key, values) in userFilterChoice.chosenFilters) {
+            val attribute: Component.Attribute? = component.attributes[key]
+            if (attribute == null || !values.contains(attribute.value)) {
+                return false
+            }
+        }
+
+        // Проверка на наличие и находится ли значение атрибута в заданом диапазоне
+        for ((key, value) in userFilterChoice.chosenRangeFilters) {
+            val attribute: Component.Attribute? = component.attributes[key]
+            if (attribute == null) {
+                return false
+            } else {
+                val attrValue: Float? = Regex("([0-9]|\\.)+").find(attribute.value)?.value?.toFloat()
+                if (attrValue == null || attrValue !in value.first..value.second) {
+                    return false
+                }
+            }
+        }
+
+        // Проверка цены
+        if (component.price !in userFilterChoice.chosenRangePrice.first..userFilterChoice.chosenRangePrice.second) {
+            return false
+        }
+
+        return true
+    }
+
     private fun download() {
          downloadJob = CoroutineScope(Dispatchers.Main).launch {
              try {
@@ -155,17 +151,4 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
 
          }
      }
-
-    private fun downloadFilters() {
-        CoroutineScope(Dispatchers.Main).launch {
-            val filters = ComponentModel.downloadFilters(category)
-            val maxPrice = ComponentModel.components.maxByOrNull { it.price }?.price
-
-            if (maxPrice == null) {
-                view.setFiltersInDialog(filters, MAX_DEFAULT_PRICE)
-            } else {
-                view.setFiltersInDialog(filters, maxPrice)
-            }
-        }
-    }
 }

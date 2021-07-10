@@ -15,9 +15,6 @@ import com.derlados.computer_conf.App
 import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
-import com.derlados.computer_conf.consts.SortType
-import com.derlados.computer_conf.data_classes.FilterAttribute
-import com.derlados.computer_conf.data_classes.FilterUserChoice
 import com.derlados.computer_conf.view_interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.presenters.ComponentSearchPresenter
@@ -25,7 +22,6 @@ import com.derlados.computer_conf.views.adapters.ComponentRecyclerAdapter
 import com.derlados.computer_conf.views.dialog_fragments.FilterDialogFragment
 import kotlinx.android.synthetic.main.fragment_component_search.view.*
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, ComponentSearchView {
@@ -67,6 +63,9 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
             }
             return@OnEditorActionListener false
         })
+
+        // Диалог для фильтров
+        filterDialog = FilterDialogFragment(::filtersDialogListener)
 
         currentFragment.fragment_component_search_goods_img_filters.setOnClickListener { showFiltersDialog() }
 
@@ -145,10 +144,6 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
         rvComponents.adapter?.notifyItemRemoved(index)
     }
 
-    override fun setFiltersInDialog(filters: HashMap<Int, FilterAttribute>, maxPrice: Int) {
-        filterDialog = FilterDialogFragment(filters, maxPrice, ::filtersDialogListener)
-    }
-
     private fun showFiltersDialog() {
         if (filterDialog.isAdded) {
             filterDialog.dialog?.show()
@@ -158,8 +153,8 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
 
     }
 
-    private fun filtersDialogListener(userChoice: FilterUserChoice) {
-        presenter.filterComponents(userChoice)
+    private fun filtersDialogListener() {
+        presenter.filterComponents()
     }
 
     /** Переход к полной информации о комплектующем

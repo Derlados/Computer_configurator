@@ -1,6 +1,5 @@
 package com.derlados.computer_conf.view_interfaces
 
-import com.derlados.computer_conf.data_classes.FilterAttribute
 import com.derlados.computer_conf.models.Component
 
 interface ComponentSearchView {
@@ -14,6 +13,4 @@ interface ComponentSearchView {
     fun updateSingleComponent(index: Int)
     fun removeSingleComponent(index: Int)
     fun setDefaultImageByCategory(id: Int)
-
-    fun setFiltersInDialog(filters: HashMap<Int, FilterAttribute>, maxPrice: Int)
 }
