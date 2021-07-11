@@ -8,3 +8,10 @@ data class UserFilterChoice (
     var chosenRangePrice: Pair<Int, Int>,
     var chosenSortType: SortType
 )
+
+fun UserFilterChoice.clear() {
+    chosenFilters.clear()
+    chosenRangeFilters.clear()
+    chosenRangePrice = Pair(0, 0)
+    chosenSortType = SortType.DEFAULT
+}

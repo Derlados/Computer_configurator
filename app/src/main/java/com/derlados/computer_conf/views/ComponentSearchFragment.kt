@@ -69,7 +69,7 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
 
         currentFragment.fragment_component_search_goods_img_filters.setOnClickListener { showFiltersDialog() }
 
-        presenter = ComponentSearchPresenter(this, App.resourceProvider)
+        presenter = ComponentSearchPresenter(this, App.app.resourceProvider)
         presenter.init()
 
         return currentFragment

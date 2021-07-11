@@ -11,6 +11,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
+import com.derlados.computer_conf.managers.FileManager
 import com.derlados.computer_conf.models.Component
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -74,7 +75,7 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
             Picasso.get().load(component.imageUrl).into(object : Target {
                 override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
                     holder.img.setImageBitmap(bitmap)
-                    component.image = bitmap
+                    FileManager.saveImage(bitmap, component.imageName)
                 }
 
                 override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {

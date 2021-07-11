@@ -15,11 +15,8 @@ interface ComponentAPI {
         const val BASE_URL: String = "http://192.168.1.3:3000/api/components/"
     }
 
-    @GET("${BASE_URL}category={category}/block={block}")
-    fun getGoodsBlock(@Path("category") category: String, @Path("block") block: Int): Call<ArrayList<Component>>
-
-    @GET("${BASE_URL}category={category}/max-blocks")
-    fun getMaxBlocks(@Path("category") category: String): Call<Int>
+    @GET("${BASE_URL}category={category}")
+    fun getGoodsBlock(@Path("category") category: String): Call<ArrayList<Component>>
 
     @GET("${BASE_URL}category={category}/filters")
     fun getFilters(@Path("category") category: String): Call<HashMap<Int, FilterAttribute>>

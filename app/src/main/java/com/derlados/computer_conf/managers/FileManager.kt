@@ -6,18 +6,22 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import com.derlados.computer_conf.App
 import java.io.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 //TODO(перенести работу с файлами сюда)
 object FileManager {
 
     enum class Entity {
-        IMAGE, BUILD, COMPONENT
+        IMAGE, BUILD, COMPONENT, FILTERS
     }
     private val dirs: HashMap<Entity, File> = HashMap()
 
     private const val IMAGE_DIR = "images"
     private const val BUILDS_DIR = "builds"
     private const val COMPONENT_DIR = "components"
+    private const val FILTERS_DIR = "filters"
 
     private val appContext: Context = App.app.applicationContext
 
@@ -26,14 +30,20 @@ object FileManager {
         val rootImages: File = appContext.getDir(IMAGE_DIR, Context.MODE_PRIVATE)
         val rootBuilds: File = appContext.getDir(BUILDS_DIR, Context.MODE_PRIVATE)
         val rootComponents: File = appContext.getDir(COMPONENT_DIR, Context.MODE_PRIVATE)
+        val rootFilters: File = appContext.getDir(FILTERS_DIR, Context.MODE_PRIVATE)
 
         dirs[Entity.IMAGE] = rootImages
         dirs[Entity.BUILD] = rootBuilds
         dirs[Entity.COMPONENT] = rootComponents
+        dirs[Entity.FILTERS] = rootFilters
     }
 
     fun isExist(entity: Entity, filename: String):Boolean {
         return File(dirs[entity], filename).exists()
+    }
+
+    fun lastModDate(entity: Entity, filename: String): Date {
+        return Date(File(dirs[entity], filename).lastModified())
     }
 
     fun saveJsonData(entity: Entity, filename: String, json: String) {

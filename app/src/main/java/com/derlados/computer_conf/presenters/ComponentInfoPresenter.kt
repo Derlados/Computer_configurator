@@ -3,7 +3,7 @@ package com.derlados.computer_conf.presenters
 import android.widget.Toast
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.view_interfaces.ComponentInfoView
-import com.derlados.computer_conf.view_interfaces.ResourceProvider
+import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.BuildModel
 import com.derlados.computer_conf.models.ComponentModel
 

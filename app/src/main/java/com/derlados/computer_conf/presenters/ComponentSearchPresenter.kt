@@ -7,26 +7,21 @@ import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.consts.SortType
 import com.derlados.computer_conf.data_classes.UserFilterChoice
-import com.derlados.computer_conf.view_interfaces.ResourceProvider
+import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.Component
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ComponentSearchPresenter(private val view: ComponentSearchView, private val resourceProvider: ResourceProvider) {
-    private var category: ComponentCategory = ComponentModel.chosenCategory
     private var downloadJob: Job? = null
-    lateinit var currentComponentList: List<Component>
+    private var currentComponentList: List<Component> = listOf()
 
     fun init() {
-        view.setDefaultImageByCategory(resourceProvider.getDefaultImageByCategory(category))
+        view.setDefaultImageByCategory(resourceProvider.getDefaultImageByCategory(ComponentModel.chosenCategory))
 
-        if (category != ComponentCategory.FAVORITE) {
-            ComponentModel.restoreFromCache(category)
-            view.setComponents(ComponentModel.components, ComponentModel.trackPrices)
-
-            //TODO изменить в соответствии с изменением кеширования
-            if (ComponentModel.components.isEmpty())
-                download()
-            else
-                view.closeProgressBar()
+        if (ComponentModel.chosenCategory != ComponentCategory.FAVORITE) {
+            view.setComponents(currentComponentList, ComponentModel.trackPrices)
+            download()
         } else {
             view.setComponents(ComponentModel.favoriteComponents, ComponentModel.trackPrices)
         }
@@ -34,8 +29,8 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
 
     fun finish() {
         downloadJob?.cancel()
-        ComponentModel.saveComponents(category)
-        ComponentModel.clearComponents()
+        ComponentModel.saveDataInCache()
+        ComponentModel.resetData()
     }
 
     fun searchComponent(searchText: String) {
@@ -79,7 +74,7 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
         if (indexInFavoriteList != -1) {
             ComponentModel.removeFromFavorite(id)
 
-            if (category == ComponentCategory.FAVORITE) {
+            if (ComponentModel.chosenCategory == ComponentCategory.FAVORITE) {
                 view.removeSingleComponent(indexInCurrentList)
             } else {
                 view.updateSingleComponent(indexInCurrentList)
@@ -130,25 +125,20 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     private fun download() {
          downloadJob = CoroutineScope(Dispatchers.Main).launch {
              try {
-                 val maxBlocks = ComponentModel.getMaxBlocks(category)
-                 if (maxBlocks == 0 && isActive) {
-                     view.showNotFoundMessage()
-                 }
-
-                 for (i in 1..maxBlocks) {
-                     if (isActive) {
-                         ComponentModel.downloadComponents(category, i)
-                         view.updateComponentList()
-                         view.closeProgressBar()
-                     }
+                 if (isActive) {
+                     currentComponentList = ComponentModel.getComponents()
                  }
              } catch (e: NetworkErrorException) {
                  if (isActive) {
+                     currentComponentList = ComponentModel.getLocalComponents()
                      view.showError(e.toString())
                  }
                  //TODO добавить класс ErrorHandler
              }
 
+             view.setComponents(currentComponentList, ComponentModel.trackPrices)
+             view.updateComponentList()
+             view.closeProgressBar()
          }
      }
 }

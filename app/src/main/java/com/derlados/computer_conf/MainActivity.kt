@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_ll_container, mainMenuFragment)
                 .commit()
-
     }
 
     override fun onBackPressed() {

@@ -32,10 +32,7 @@ import kotlin.math.round
 import kotlin.math.roundToInt
 
 
-class FilterDialogFragment(
-    private val resultListener: () -> Unit
-) : DialogFragment(), TextWatcher, FiltersDialogView {
-
+class FilterDialogFragment(private val resultListener: () -> Unit) : DialogFragment(), TextWatcher, FiltersDialogView {
     private val sortsList = listOf(
         Pair(R.string.price_low_to_high, SortType.PRICE_LOW_TO_HIGH),
         Pair(R.string.price_high_to_low, SortType.PRICE_HIGH_TO_LOW),

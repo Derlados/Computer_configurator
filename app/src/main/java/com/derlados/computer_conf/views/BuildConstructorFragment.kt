@@ -95,7 +95,7 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
             llComponents.getChildAt(i).setOnClickListener(::toggleCompListVisibility)
         }
 
-        presenter = BuildConstructorPresenter(this, App.resourceProvider)
+        presenter = BuildConstructorPresenter(this, App.app.resourceProvider)
         presenter.init()
         return currentFragment
     }

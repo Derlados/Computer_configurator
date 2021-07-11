@@ -49,7 +49,7 @@ class SearchFragment : PageFragment(), View.OnClickListener {
     override fun onClick(view: View) {
         btCategories[view.id]?.let {
             //TODO Вызов модели из View, однако это единственная функция этого экрана
-            ComponentModel.chosenCategory = it
+            ComponentModel.chooseCategory(it)
 
             frListener.nextFragment(this, ComponentSearchFragment(), BackStackTag.COMPONENT_SEARCH)
         }

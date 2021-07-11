@@ -1,13 +1,13 @@
 package com.derlados.computer_conf.models
 
 import android.accounts.NetworkErrorException
-import android.util.Log
-import com.derlados.computer_conf.managers.FileManager
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.consts.SortType
 import com.derlados.computer_conf.data_classes.FilterAttribute
 import com.derlados.computer_conf.data_classes.UserFilterChoice
+import com.derlados.computer_conf.data_classes.clear
 import com.derlados.computer_conf.internet.ComponentAPI
+import com.derlados.computer_conf.managers.FileManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
@@ -16,22 +16,25 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
+import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-
 object ComponentModel {
-    private data class CacheData(val components: ArrayList<Component>, val lastBLock: Int, val maxBlocks: Int)
+    private const val RELEVANCE_CACHE_DAYS: Long = 1
     private const val TRACK_PRICES_FILENAME = "TRACK_PRICES"
 
     private val retrofit: Retrofit
     private val api: ComponentAPI
 
-    var maxBlocks: Int = -1
-    var filters: HashMap<Int, FilterAttribute> = HashMap()
+    private var filters: HashMap<Int, FilterAttribute> = HashMap()
     var components: ArrayList<Component>
-    private set
+        private set
+    private var isMustSaveComponents = false
+
     var favoriteComponents: ArrayList<Component>
     private set
     var trackPrices: HashMap<Int, Int>
@@ -45,11 +48,12 @@ object ComponentModel {
         components = ArrayList()
         trackPrices = HashMap()
         favoriteComponents = ArrayList()
+
         userFilterChoice = UserFilterChoice(
-            HashMap(),
-            HashMap(),
-            Pair(0, 0),
-            SortType.DEFAULT
+                HashMap(),
+                HashMap(),
+                Pair(0, 0),
+                SortType.DEFAULT
         )
 
         retrofit = Retrofit.Builder()
@@ -57,122 +61,131 @@ object ComponentModel {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         api = retrofit.create(ComponentAPI::class.java)
-
-        restoreFavorite()
     }
 
     /**
-     * Скачивание комплектующих по блокам
+     * Выбор категории. Когда категория выбрана - из кэша восстанавливаются сохраненные данные
+     * относительно этой категории комплектющих
      * @param category - категория комплектующих
-     * @param block - номер блока данных для скачиваняия
      */
-    suspend fun downloadComponents(category: ComponentCategory, block: Int) {
+    fun chooseCategory(category: ComponentCategory) {
+        chosenCategory = category
+        restoreDataFromCache()
+    }
+
+    /**
+     * Скачивание комплектующих. Прежде чем начнется скачивание с интернета, проверяется наличие и актуальность данных в кэше
+     * @return массив полученных комплектующих
+     */
+    suspend fun getComponents(): ArrayList<Component> {
        return suspendCoroutine { continuation ->
-           val call: Call<ArrayList<Component>> = api.getGoodsBlock(category.toString(), block)
-
-           call.enqueue(object : Callback<ArrayList<Component>> {
-               override fun onResponse(call: Call<ArrayList<Component>>, response: Response<ArrayList<Component>>) {
-                   val newComponents: ArrayList<Component>? = response.body()
-
-                   if (response.code() == 200 && newComponents != null) {
-                       components.addAll(newComponents)
-                       continuation.resume(Unit)
-                   } else {
-                       continuation.resumeWithException(NetworkErrorException(response.code().toString()))
+           // Есди данные присутствуют и они актуальные или если нету интернет соединения - используются данные с кеша
+           if ((components.isNotEmpty() && isRelevanceCache())) {
+               continuation.resume(components)
+           } else {
+               val call: Call<ArrayList<Component>> = api.getGoodsBlock(chosenCategory.toString())
+               call.enqueue(object : Callback<ArrayList<Component>> {
+                   override fun onResponse(call: Call<ArrayList<Component>>, response: Response<ArrayList<Component>>) {
+                       val newComponents: ArrayList<Component>? = response.body()
+                       if (response.code() == 200 && newComponents != null) {
+                           components.addAll(newComponents)
+                           isMustSaveComponents = true
+                           continuation.resume(components)
+                       } else {
+                           continuation.resumeWithException(NetworkErrorException(response.code().toString()))
+                       }
                    }
-               }
 
-               override fun onFailure(call: Call<ArrayList<Component>>, t: Throwable) {
-                   continuation.resumeWithException(NetworkErrorException("No connection"))
-               }
-           })
+                   override fun onFailure(call: Call<ArrayList<Component>>, t: Throwable) {
+                       continuation.resumeWithException(NetworkErrorException("No connection"))
+                   }
+               })
+           }
        }
     }
 
-    suspend fun getMaxBlocks(category: ComponentCategory): Int {
+    /**
+     * Получение локальных данных о комплектующих. На случай если данные не получилось скачать
+     */
+    fun getLocalComponents(): ArrayList<Component> {
+        return components
+    }
+
+    suspend fun getFilters(): HashMap<Int, FilterAttribute> {
         return suspendCoroutine { continuation ->
-            if (maxBlocks != -1) {
-                continuation.resume(maxBlocks)
+            if (filters.isNotEmpty()) {
+                continuation.resume(filters)
+            } else {
+                val call: Call<HashMap<Int, FilterAttribute>> = api.getFilters(chosenCategory.toString())
+                call.enqueue(object : Callback<HashMap<Int, FilterAttribute>> {
+                    override fun onResponse(call: Call<HashMap<Int, FilterAttribute>>, response: Response<HashMap<Int, FilterAttribute>>) {
+                        val result: HashMap<Int, FilterAttribute>? = response.body()
+
+                        if (response.code() == 200 && result != null) {
+                            filters = result
+                            continuation.resume(filters)
+                        } else {
+                            continuation.resumeWithException(NetworkErrorException(response.code().toString()))
+                        }
+                    }
+
+                    override fun onFailure(call: Call<HashMap<Int, FilterAttribute>>, t: Throwable) {
+                        continuation.resumeWithException(NetworkErrorException("No connection"))
+                    }
+                })
             }
-
-            val call: Call<Int> = api.getMaxBlocks(category.toString());
-            call.enqueue(object : Callback<Int> {
-                override fun onResponse(call: Call<Int>, response: Response<Int>) {
-                    val result: Int? = response.body()
-
-                    if (response.code() == 200 && result != null) {
-                        maxBlocks = result
-                        continuation.resume(maxBlocks)
-                    } else {
-                        continuation.resumeWithException(NetworkErrorException(response.code().toString()))
-                    }
-                }
-
-                override fun onFailure(call: Call<Int>, t: Throwable) {
-                    continuation.resumeWithException(NetworkErrorException("No connection"))
-                }
-            })
-        }
-
-    }
-
-    suspend fun downloadFilters(category: ComponentCategory): HashMap<Int, FilterAttribute> {
-        return suspendCoroutine { continuation ->
-            val call: Call<HashMap<Int, FilterAttribute>> = api.getFilters(category.toString())
-            call.enqueue(object : Callback<HashMap<Int, FilterAttribute>> {
-                override fun onResponse(call: Call<HashMap<Int, FilterAttribute>>, response: Response<HashMap<Int, FilterAttribute>>) {
-                    Log.d(Log.DEBUG.toString(), response.body().toString())
-                    val result: HashMap<Int, FilterAttribute>? = response.body()
-
-                    if (response.code() == 200 && result != null) {
-                        filters = result
-                        continuation.resume(filters)
-                    } else {
-                        continuation.resumeWithException(NetworkErrorException(response.code().toString()))
-                    }
-                }
-
-                override fun onFailure(call: Call<HashMap<Int, FilterAttribute>>, t: Throwable) {
-                    continuation.resumeWithException(NetworkErrorException("No connection"))
-                }
-            })
         }
     }
 
-    fun clearComponents() {
+    /**
+     * После того как модель использована, данные должны быть очищены и сброшены
+     */
+    fun resetData() {
         components.clear()
-        maxBlocks = -1
+        isMustSaveComponents = false
+        userFilterChoice.clear()
+        filters.clear()
     }
 
     /**
      * Сохранение комплектующих на устройство
-     * @param category -  категория комплектуюших
      */
-    fun saveComponents(category: ComponentCategory) {
-        if (!FileManager.isExist(FileManager.Entity.COMPONENT, category.toString()))
-            FileManager.saveJsonData(FileManager.Entity.COMPONENT, category.toString(), Gson().toJson(components))
+    fun saveDataInCache() {
+        // Перезапись должна быть только в том случае, если данные загружались с сервера
+        if (components.isNotEmpty() && isMustSaveComponents)
+            FileManager.saveJsonData(FileManager.Entity.COMPONENT, chosenCategory.toString(), Gson().toJson(components))
+
+        // Фильтры нет необходимости сохранять, если они уже присутствуют
+        if (filters.isNotEmpty() && !FileManager.isExist(FileManager.Entity.FILTERS, chosenCategory.toString()))
+            FileManager.saveJsonData(FileManager.Entity.FILTERS, chosenCategory.toString(), Gson().toJson(filters))
+
         FileManager.saveJsonData(FileManager.Entity.COMPONENT, ComponentCategory.FAVORITE.toString(), Gson().toJson(favoriteComponents))
         FileManager.saveJsonData(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME, Gson().toJson(trackPrices))
-
-        //TODO улучшить кеширование
     }
 
     /**
      * Чтение информации о комплектующих с устройства
-     * @param category - категория комплектующих
      */
-    //TODO проверка актуальности
-    fun restoreFromCache(category: ComponentCategory) {
-        if (category == ComponentCategory.FAVORITE) {
-            components.addAll(favoriteComponents)
+    private fun restoreDataFromCache() {
+        restoreFavorite() // Сначала беруться из кэша избранные комплектующие
+
+        if (chosenCategory == ComponentCategory.FAVORITE) {
+            components = favoriteComponents
             return
         }
 
-        if (FileManager.isExist(FileManager.Entity.COMPONENT, category.toString())) {
-            val data: String = FileManager.readJson(FileManager.Entity.COMPONENT, category.toString())
+        if (FileManager.isExist(FileManager.Entity.COMPONENT, chosenCategory.toString())) {
+            val data: String = FileManager.readJson(FileManager.Entity.COMPONENT, chosenCategory.toString())
             val type: Type = object : TypeToken<ArrayList<Component>>() {}.type
             val cacheComponents: ArrayList<Component> = Gson().fromJson(data, type)
-            components.addAll(cacheComponents)
+            components = cacheComponents
+        }
+
+        if (FileManager.isExist(FileManager.Entity.FILTERS, chosenCategory.toString())) {
+            val data: String = FileManager.readJson(FileManager.Entity.FILTERS, chosenCategory.toString())
+            val type: Type = object : TypeToken<HashMap<Int, FilterAttribute>>() {}.type
+            val cacheFilters: HashMap<Int, FilterAttribute> = Gson().fromJson(data, type)
+            filters =  cacheFilters
         }
     }
 
@@ -191,11 +204,22 @@ object ComponentModel {
 
         var data: String = FileManager.readJson(FileManager.Entity.COMPONENT, ComponentCategory.FAVORITE.toString())
         var type: Type = object : TypeToken<ArrayList<Component>>() {}.type
-        favoriteComponents.addAll(Gson().fromJson(data, type))
+        favoriteComponents = Gson().fromJson(data, type)
 
         data= FileManager.readJson(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME)
         type = object : TypeToken<HashMap<Int, Int>>() {}.type
-        trackPrices.putAll(Gson().fromJson(data, type))
+        trackPrices = Gson().fromJson(data, type)
+    }
+
+    /**
+     * Проверка актуальности данных. Время опеределяется константой в днях
+     * @see RELEVANCE_CACHE_DAYS
+     */
+    private fun isRelevanceCache(): Boolean {
+        val lastSaveTime = FileManager.lastModDate(FileManager.Entity.COMPONENT, chosenCategory.toString()).time
+        val expiryTime = lastSaveTime + TimeUnit.DAYS.toMillis(RELEVANCE_CACHE_DAYS)
+
+        return lastSaveTime < expiryTime
     }
 
     //////////////////////////////////////////// ФУНКЦИИ ДЛЯ РАБОТЫ С ИЗБРАННЫМИ КОМПЛЕКТУЮЩИМИ /////////////////////////////////////

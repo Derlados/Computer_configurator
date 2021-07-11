@@ -12,7 +12,7 @@ export type filterValue = {
 
 export default class ComponentModel {
     private pool: Pool; // Пул базы данных
-    private readonly BLOCK_SIZE: number = 100;
+    private readonly BLOCK_SIZE: number = 10000;
 
     // Оптимизация, чтобы не искать Id. Реализация на сервере дает возможность корректировать id без клиента
     private readonly CategoriesId: Map<string, number> = new Map<string, number>([
@@ -38,13 +38,11 @@ export default class ComponentModel {
      * @param block - номер блока данных, по сути является коефициентом сдвига в запросе, который умножается на размер одного блока
      * @returns - массив комплектующих 
      */
-    public async getComponents(category: string, block: number): Promise<Array<Component>> {
+    public async getComponents(category: string): Promise<Array<Component>> {
         const sql: string = `SELECT id_component AS id, name, price, img AS imageUrl FROM component 
-                            WHERE id_category = ?
-                            LIMIT ? OFFSET ?`;
+                            WHERE id_category = ?`;
 
-        const offset = (block - 1) * this.BLOCK_SIZE;
-        const data: string[] = [this.CategoriesId.get(category).toString(), this.BLOCK_SIZE.toString(), offset.toString()];
+        const data: string[] = [this.CategoriesId.get(category).toString()];
         const components: Map<number, Component> = new Map<number, Component>()
 
         return new Promise<Array<Component>>((resolve, reject) => {
@@ -60,8 +58,7 @@ export default class ComponentModel {
                                                     attribute.is_preview AS isPreview, attribute.preview_text
                                                 FROM comp_attr 
                                                 JOIN (SELECT id_component FROM component
-                                                        WHERE id_category = ?
-                                                        LIMIT ? OFFSET ?) AS curComp 
+                                                        WHERE id_category = ?) AS curComp 
                                                 ON curComp.id_component = comp_attr.id_component 
                                                 JOIN attribute ON attribute.id_characteristic = comp_attr.id_characteristic
                                                 JOIN attribute_value ON attribute_value.id_value = comp_attr.id_value`;
@@ -82,24 +79,6 @@ export default class ComponentModel {
                     });
 
                     resolve(Array.from(components, ([key, value]) => (value))); // Вернуть необходимо именно массив
-                })
-        })
-    }
-
-    /**
-     * Получение максимального количества "блоков" комплектующих
-     * @param category - категория комплектующих
-     * @returns - максимальное число блоков
-     */
-    public async getMaxBlocks(category: string): Promise<number> {
-        const sql: string = `SELECT CEIL(COUNT(*) / ${this.BLOCK_SIZE}) AS total FROM component 
-                            JOIN category ON category.id_category = component.id_category
-                            WHERE category.url_category = ?`;
-
-        return new Promise<number>((resolve, reject) => {
-            this.pool.execute(sql, [category])
-                .then(result => {
-                    resolve((result as RowDataPacket[])[0][0].total);
                 })
         })
     }

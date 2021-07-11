@@ -13,22 +13,8 @@ export default class ComponentController {
 
     public getComponents = (req: any, res: Response): void => {
         const category: string = req.params.category;
-        const offset: number = req.params.block;
 
-        this.componentModel.getComponents(category, offset)
-            .then(data => {
-                console.log(data);
-                res.status(HttpCodes.OK).send(JSON.stringify(data));
-            })
-            .catch(err => {
-                res.status(HttpCodes.INTERNAL_SERVER_ERROR).send(err.message);
-            })
-    }
-
-    public getMaxBlocks = (req: any, res: Response): void => {
-        const category: string = req.params.category;
-
-        this.componentModel.getMaxBlocks(category)
+        this.componentModel.getComponents(category)
             .then(data => {
                 res.status(HttpCodes.OK).send(JSON.stringify(data));
             })

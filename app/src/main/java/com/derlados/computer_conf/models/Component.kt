@@ -8,7 +8,7 @@ import kotlin.collections.ArrayList
 class Component(val id: Int, val name: String, val price : Int, val imageUrl : String, val attributes: HashMap<Int, Attribute>) {
     inner class Attribute(val name: String, val idValue: Int, val value: String, val isPreview: Boolean) // Для хранения арактеристик о комплектующем
 
-    private val imageName : String
+    val imageName : String
         get() {
             return Regex("([^/]+)\$").find(imageUrl)!!.value
         }
@@ -21,11 +21,6 @@ class Component(val id: Int, val name: String, val price : Int, val imageUrl : S
                 FileManager.restoreImage(imageName)
             } catch (e: FileNotFoundException) {
                 null
-            }
-        }
-        set(image) {
-            image?.let {
-                FileManager.saveImage(image, imageName)
             }
         }
 

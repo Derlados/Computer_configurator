@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.view_interfaces
+package com.derlados.computer_conf.providers.android_providers_interfaces
 
 import com.derlados.computer_conf.consts.ComponentCategory
 

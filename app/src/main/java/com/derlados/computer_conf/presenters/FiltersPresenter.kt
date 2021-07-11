@@ -69,7 +69,7 @@ class FiltersPresenter(val view: FiltersDialogView) {
 
     private fun downloadFilters() {
         CoroutineScope(Dispatchers.Main).launch {
-            val filters = ComponentModel.downloadFilters(ComponentModel.chosenCategory)
+            val filters = ComponentModel.getFilters()
             maxPrice = ComponentModel.components.maxByOrNull { it.price }?.price ?: 0
             userChoice.chosenRangePrice = Pair(0, maxPrice)
 

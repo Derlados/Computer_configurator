@@ -1,9 +1,9 @@
-package com.derlados.computer_conf.views.providers
+package com.derlados.computer_conf.providers
 
 import android.content.Context
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.ComponentCategory
-import com.derlados.computer_conf.view_interfaces.ResourceProvider
+import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 
 class AndroidResourceProvider(private val context: Context): ResourceProvider {
     override fun getDefaultImageByCategory(category: ComponentCategory): Int {

@@ -32,7 +32,7 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         currentFragment = inflater.inflate(R.layout.fragment_component_data, container, false)
         attributeList = currentFragment.findViewById(R.id.fragment_component_data_attributes)
-        presenter = ComponentInfoPresenter(this, App.resourceProvider)
+        presenter = ComponentInfoPresenter(this, App.app.resourceProvider)
         presenter.init()
 
         return currentFragment
