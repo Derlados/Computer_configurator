@@ -128,140 +128,154 @@
                 android:layout_marginBottom="15dp"/>
 
             <LinearLayout
-                android:id="@+id/fragment_build_ll_component_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <Button
+                <android.widget.Button
+                    android:id="@+id/fragment_build_bt_head_cpu"
                     style="@style/block_header"
-                    android:onClick="openBlockList"
-                    android:text="@string/cpu"
-                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
+                    android:text="@string/cpu" />
 
-                <LinearLayout
-                    android:id="@+id/fragment_build_ll_cpu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                    android:id="@+id/fragment_build_expll_cpu"
+                    style="@style/ExpandComponents">
 
-                    <Button
-                        style="@style/find_good_bt"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                </LinearLayout>
+                    </LinearLayout>
 
-                <Button
+                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                <android.widget.Button
+                    android:id="@+id/fragment_build_bt_head_mb"
                     style="@style/block_header"
-                    android:text="@string/motherboard"
-                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
+                    android:text="@string/motherboard"/>
 
-                <LinearLayout
-                    android:id="@+id/fragment_build_ll_mb"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                    android:id="@+id/fragment_build_expll_mb"
+                    style="@style/ExpandComponents">
 
-                    <Button
-                        style="@style/find_good_bt"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                </LinearLayout>
+                    </LinearLayout>
 
-                <Button
+                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                <android.widget.Button
+                    android:id="@+id/fragment_build_bt_head_gpu"
                     style="@style/block_header"
-                    android:text="@string/gpu"
-                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
+                    android:text="@string/gpu"/>
 
-                <LinearLayout
-                    android:id="@+id/fragment_build_ll_gpu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                    android:id="@+id/fragment_build_expll_gpu"
+                    style="@style/ExpandComponents">
 
-                    <Button
-                        style="@style/find_good_bt"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                </LinearLayout>
+                    </LinearLayout>
 
-                <Button
+                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                <android.widget.Button
+                    android:id="@+id/fragment_build_bt_head_ram"
                     style="@style/block_header"
-                    android:text="@string/ram"
-                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
+                    android:text="@string/ram"/>
 
-                <LinearLayout
-                    android:id="@+id/fragment_build_ll_ram"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                    android:id="@+id/fragment_build_expll_ram"
+                    style="@style/ExpandComponents">
 
-                    <Button
-                        style="@style/find_good_bt"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                </LinearLayout>
+                    </LinearLayout>
 
-                <Button
+                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                <android.widget.Button
+                    android:id="@+id/fragment_build_bt_head_hdd"
                     style="@style/block_header"
-                    android:text="@string/hdd"
-                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
+                    android:text="@string/hdd"/>
 
-                <LinearLayout
-                    android:id="@+id/fragment_build_ll_hdd"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                    android:id="@+id/fragment_build_expll_hdd"
+                    style="@style/ExpandComponents">
 
-                    <Button
-                        style="@style/find_good_bt"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                </LinearLayout>
+                    </LinearLayout>
 
-                <Button
+                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                <android.widget.Button
+                    android:id="@+id/fragment_build_bt_head_ssd"
                     style="@style/block_header"
-                    android:text="@string/ssd"
-                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
+                    android:text="@string/ssd"/>
 
-                <LinearLayout
-                    android:id="@+id/fragment_build_ll_ssd"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                    android:id="@+id/fragment_build_expll_ssd"
+                    style="@style/ExpandComponents">
 
-                    <Button
-                        style="@style/find_good_bt"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                </LinearLayout>
+                    </LinearLayout>
 
-                <Button
+                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                <android.widget.Button
+                    android:id="@+id/fragment_build_bt_head_ps"
                     style="@style/block_header"
-                    android:text="@string/power_supply"
-                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
+                    android:text="@string/power_supply"/>
 
-                <LinearLayout
-                    android:id="@+id/fragment_build_ll_power_supply"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                    android:id="@+id/fragment_build_expll_power_supply"
+                    style="@style/ExpandComponents">
 
-                    <Button
-                        style="@style/find_good_bt"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                </LinearLayout>
+                    </LinearLayout>
 
-                <Button
+                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                <android.widget.Button
+                    android:id="@+id/fragment_build_bt_head_case"
                     style="@style/block_header"
-                    android:text="@string/pc_case"
-                    android:drawableEnd="@drawable/ic_arrow_down_36"/>
+                    android:text="@string/pc_case"/>
 
-                <LinearLayout
-                    android:id="@+id/fragment_build_ll_case"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                    android:id="@+id/fragment_build_expll_case"
+                    style="@style/ExpandComponents">
 
-                    <Button
-                        style="@style/find_good_bt"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                </LinearLayout>
+                    </LinearLayout>
+
+                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
 
             </LinearLayout>
 

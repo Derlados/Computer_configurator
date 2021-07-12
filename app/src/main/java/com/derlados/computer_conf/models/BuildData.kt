@@ -11,4 +11,5 @@ interface BuildData {
     val name: String
     val description: String
     var countGoods: HashMap<ComponentCategory, Int>
+    var image: String?
 }

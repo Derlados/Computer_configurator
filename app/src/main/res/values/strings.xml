@@ -13,20 +13,21 @@
     <string name="status">Статус :</string>
     <string name="not_complete">Не закончена</string>
     <string name="complete">Закончена</string>
-    <string name="cpu">Процессор :</string>
-    <string name="motherboard_reduction">Мат. плата :</string>
-    <string name="gpu">Видеокарта :</string>
-    <string name="ram_reduction">ОЗУ :</string>
-    <string name="hdd">Жесткий диск :</string>
-    <string name="ssd">SSD :</string>
-    <string name="power_supply">Блок питания :</string>
+    <string name="cpu">Процессор</string>
+    <string name="motherboard_reduction">Мат. плата</string>
+    <string name="gpu">Видеокарта</string>
+    <string name="ram_reduction">ОЗУ</string>
+    <string name="hdd">Жесткий диск</string>
+    <string name="ssd">SSD</string>
+    <string name="power_supply">Блок питания</string>
     <string name="not_chosen">Не выбрано</string>
     <string name="description">Описание :</string>
-    <string name="motherboard">Материнская плата :</string>
+    <string name="motherboard">Материнская плата</string>
     <string name="storage">Жетский диски / SSD :</string>
-    <string name="ram">Оперативная память :</string>
+    <string name="ram">Оперативная память</string>
     <string name="go_brain_com">Go brain.com.ua</string>
     <string name="save">Сохранить</string>
+    <string name="saved">Сохранено</string>
     <string name="plus">+</string>
     <string name="build_desc">Описание сборки</string>
     <string name="build_name">Имя сборки</string>
@@ -34,7 +35,7 @@
     <string name="false_compatibility">Сборка несовместима</string>
     <string name="true_compatibility">Сборка совместима</string>
     <string name="pc_cases">Корпусы</string>
-    <string name="pc_case">Корпус :</string>
+    <string name="pc_case">Корпус</string>
     <string name="add_favorite">+ в избранное</string>
     <string name="in_build">Уже в сборке</string>
     <string name="not_found_any_goods">К сожелению по этому запросу ничего не найдено</string>
@@ -53,4 +54,5 @@
 
     <string name="price_low_to_high">От дешевых к дорогим</string>
     <string name="price_high_to_low">От дорогих к дешевым</string>
+    <string name="publish">Опубликовать</string>
 </resources>

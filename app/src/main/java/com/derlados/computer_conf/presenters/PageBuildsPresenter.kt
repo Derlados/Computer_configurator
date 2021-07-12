@@ -1,5 +1,6 @@
 package com.derlados.computer_conf.presenters
 
+import com.derlados.computer_conf.models.Build
 import com.derlados.computer_conf.view_interfaces.PageBuildsView
 import com.derlados.computer_conf.models.BuildModel
 
@@ -11,8 +12,9 @@ class PageBuildsPresenter(private val view: PageBuildsView) {
     }
 
     fun removeBuild(id: String) {
+        view.removeItemBuildList(BuildModel.indexBuildById(id))
         BuildModel.removeBuild(id)
-        view.updateBuildList()
+
     }
 
     fun selectBuild(id: String) {
@@ -23,10 +25,13 @@ class PageBuildsPresenter(private val view: PageBuildsView) {
     fun createNewBuild() {
         BuildModel.createNewBuild()
         view.openBuildConstructor()
-        view.updateBuildList()
+        view.updateRangeBuildList(BuildModel.builds.size)
     }
 
-    fun checkUserChanges() {
-
+    fun userReturn() {
+        if (BuildModel.isSaved) {
+            view.updateItemBuildList(BuildModel.indexOfSelectedBuild())
+        }
+        BuildModel.deselectBuild()
     }
 }

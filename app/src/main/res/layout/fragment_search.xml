@@ -23,19 +23,19 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_search_component_motherboard"
-                style="@style/ButtonShop"
+                style="@style/ButtonCategory"
                 android:text="@string/motherboards"
                 app:icon="@drawable/ic_motherboard_24"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_search_component_cpu"
-                style="@style/ButtonShop"
+                style="@style/ButtonCategory"
                 android:text="@string/CPUs"
                 app:icon="@drawable/ic_cpu_24" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_search_component_gpu"
-                style="@style/ButtonShop"
+                style="@style/ButtonCategory"
                 android:text="@string/GPUs"
                 app:icon="@drawable/ic_gpu_24" />
 
@@ -49,19 +49,19 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_search_component_hdd"
-                style="@style/ButtonShop"
+                style="@style/ButtonCategory"
                 android:text="@string/HDDs"
                 app:icon="@drawable/ic_hdd_24"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_search_component_ssd"
-                style="@style/ButtonShop"
+                style="@style/ButtonCategory"
                 android:text="@string/SSDs"
                 app:icon="@drawable/ic_ssd_24" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_search_component_ram"
-                style="@style/ButtonShop"
+                style="@style/ButtonCategory"
                 android:text="@string/RAMs"
                 app:icon="@drawable/ic_ram_24"/>
 
@@ -75,18 +75,18 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_search_component_power_supply"
-                style="@style/ButtonShop"
+                style="@style/ButtonCategory"
                 android:text="@string/power_supplies"
                 app:icon="@drawable/ic_power_supply_24"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fragment_search_component_case"
-                style="@style/ButtonShop"
+                style="@style/ButtonCategory"
                 android:text="@string/pc_cases"
                 app:icon="@drawable/ic_case_24" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/ButtonShop"
+                style="@style/ButtonCategory"
                 android:visibility="invisible"
                 android:text=""
                 app:icon="@drawable/ic_gpu_24"/>

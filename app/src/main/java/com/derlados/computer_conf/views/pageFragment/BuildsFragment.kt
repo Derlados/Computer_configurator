@@ -48,15 +48,26 @@ class BuildsFragment : PageFragment(), PageBuildsView {
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
 
-        //TODO Необходимо изменить данные о сборке
         if (!hidden) {
-
+            presenter.userReturn()
         }
     }
 
     override fun <T : BuildData> setBuildsData(buildsData: ArrayList<T>) {
         rvBuildRecycler.layoutManager = LinearLayoutManager(context)
         rvBuildRecycler.adapter = BuildRecyclerAdapter(buildsData, ::selectBuild, ::removeBuild)
+    }
+
+    override fun updateRangeBuildList(size: Int) {
+        rvBuildRecycler.adapter?.notifyItemRangeChanged(0, size)
+    }
+
+    override fun updateItemBuildList(index: Int) {
+        rvBuildRecycler.adapter?.notifyItemChanged(index)
+    }
+
+    override fun removeItemBuildList(index: Int) {
+        rvBuildRecycler.adapter?.notifyItemRemoved(index)
     }
 
     override fun openBuildConstructor() {
@@ -69,12 +80,6 @@ class BuildsFragment : PageFragment(), PageBuildsView {
 
     private fun selectBuild(id: String) {
         presenter.selectBuild(id)
-    }
-
-    //TODO надо переделать notifyChanged, тут сложный момент так как либо изменяется ренж, либо конкретная сборка
-    override fun updateBuildList() {
-        val adapter: RecyclerView.Adapter<*>? = rvBuildRecycler.adapter
-        adapter?.notifyDataSetChanged()
     }
 
     private fun removeBuild(id: String) {

@@ -11,9 +11,10 @@ interface BuildConstructorView {
     fun setImage(url: String)
     fun setStatus(status: String, message: String? = null)
 
-    fun addNewComponent(category: ComponentCategory, component: Component)
+    fun addNewComponent(category: ComponentCategory, component: Component, init: Boolean)
     fun updatePrice(price: Int)
 
     fun showSaveDialog()
+    fun showToast(message: String)
     fun exitView()
 }

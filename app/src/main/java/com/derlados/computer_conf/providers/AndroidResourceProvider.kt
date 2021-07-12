@@ -27,6 +27,7 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.NOT_COMPATIBILITY -> context.getString(R.string.not_compatibility)
             ResourceProvider.ResString.NOT_COMPLETE -> context.getString(R.string.not_complete)
             ResourceProvider.ResString.COMPLETE -> context.getString(R.string.complete)
+            ResourceProvider.ResString.SAVED -> context.getString(R.string.saved)
         }
     }
 }

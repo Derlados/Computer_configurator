@@ -6,7 +6,7 @@
     <color name="white">#FFFFFF</color>
     <color name="red">#FF4C5B</color>
     <color name="invisible">#00FFFFFF</color>
-    <color name="background">#000319</color>
+    <color name="background">#00041C</color>
     <color name="main_theme_1">#1B2A95</color>
     <color name="light_blue">#08CEFF</color>
     <color name="green">#00FF0C</color>
@@ -14,7 +14,10 @@
     <color name="turquoise">#29FAE9</color>
     <color name="element_1">#080378</color>
     <color name="element_2">#1B2A95</color>
+    <color name="element_3">#141F40</color>
     <color name="appbar">#010739</color>
     <color name="hint_color">#94FFFFFF</color>
     <color name="drop_down_item_color_1">#161932</color>
+
+
 </resources>

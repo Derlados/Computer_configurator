@@ -11,9 +11,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
 
     var isShouldClose: Boolean = false
 
-
     fun init() {
-        val i: Int = 0
         BuildModel.selectedBuild?.let {
             view.setBuildData(it)
             //view.setImage()
@@ -25,7 +23,8 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
         ComponentModel.chosenCategory = category
     }
 
-    fun selectComponentToVIew(component: Component) {
+    fun selectComponentToVIew(category: ComponentCategory, component: Component) {
+        ComponentModel.chosenCategory = category
         ComponentModel.chosenComponent = component
     }
 
@@ -34,13 +33,13 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
             view.showSaveDialog()
             isShouldClose = true
         } else {
-            BuildModel.deselectBuild()
             view.exitView()
         }
     }
 
     fun saveBuild() {
         BuildModel.saveSelectedBuild()
+        view.showToast(resourceProvider.getString(ResourceProvider.ResString.SAVED))
         if (isShouldClose)
             view.exitView()
     }
@@ -48,7 +47,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     fun checkUserChoice() {
         BuildModel.selectedBuild?.lastAdded?.let { (category, component) ->
             BuildModel.isSaved = false
-            view.addNewComponent(category, component)
+            view.addNewComponent(category, component, true)
             BuildModel.selectedBuild?.clearLastAdded()
             updateBuild()
         }

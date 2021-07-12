@@ -9,6 +9,7 @@ import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.models.BuildData
+import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.inflate_build_item.view.*
 
@@ -33,7 +34,7 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
         val img: ImageView = itemView.inflate_build_item_img
         val btDelete: ImageButton = itemView.inflate_build_item_ibt_delete
         private val btComponentList: ImageButton = itemView.inflate_build_item_ibt_hide
-        private val llComponentList: LinearLayout = itemView.inflate_build_item_component_list
+        private val llComponentList: ExpandableLinearLayout = itemView.inflate_build_item_component_list
 
         init {
             btComponentList.setOnClickListener {
@@ -42,11 +43,13 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
         }
 
         private fun toggleComponentList() {
-            if (llComponentList.visibility == View.GONE) {
-                llComponentList.visibility = View.VISIBLE
+            if (llComponentList.isExpanded) {
+                btComponentList.setImageResource(R.drawable.ic_arrow_down_36)
             } else {
-                llComponentList.visibility = View.GONE
+                btComponentList.setImageResource(R.drawable.ic_arrow_up_36)
             }
+
+            llComponentList.toggle()
         }
     }
 
@@ -62,8 +65,8 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
         holder.tvName.text = build.name
         holder.tvPrice.text = App.app.getString(R.string.component_price, build.price)
         //TODO holder.tvStatus
-        build.components[ComponentCategory.CASE]?.let {
-            Picasso.get().load(it.imageUrl).into(holder.img)
+        build.image?.let {
+            Picasso.get().load(it).into(holder.img)
         }
 
         for ((key, value) in holder.tvComponents) {

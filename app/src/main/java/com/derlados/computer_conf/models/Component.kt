@@ -15,7 +15,7 @@ class Component(val id: Int, val name: String, val price : Int, val imageUrl : S
 
     // Данные изображения сохраняются и загружаются на устройство так как невозможно гарантировать стабильность работы с Bitmap который хранится прямо в объекте
     // При постоянном использовании Bitmap возникают ошибки SIGSEGV 11
-    var image: Bitmap?
+    val image: Bitmap?
         get() {
             return try {
                 FileManager.restoreImage(imageName)

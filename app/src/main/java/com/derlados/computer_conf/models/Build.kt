@@ -12,6 +12,15 @@ class Build : Cloneable, BuildData {
     override var description: String = "" // Описание в сборке
     override var countGoods = HashMap<ComponentCategory, Int>() // Хранится в отдельной мапе, так как только SSD, RAM и HDD можно взять несколько
 
+
+    override var image : String? = null
+    //TODO нужно разобраться с кешированиев ретрофита и если оно работает не так как хотелось бы - придется вручную всё сохранять
+        /**
+         * Получение изображения, если оно есть
+         */
+        get() = BuildModel.selectedBuild?.components?.get(ComponentCategory.CASE)?.imageUrl
+
+
     var lastAdded: Pair<ComponentCategory, Component>? = null
 
     val isComplete: Boolean
@@ -19,6 +28,9 @@ class Build : Cloneable, BuildData {
                 && components[ComponentCategory.GPU] != null && components[ComponentCategory.POWER_SUPPLY] != null
                 && components[ComponentCategory.RAM] != null && components[ComponentCategory.CASE] != null
                 && (components[ComponentCategory.HDD] != null || components[ComponentCategory.SSD] != null)
+
+
+
 
     /** Добавление комплектующего в сборку
      * Параметры:

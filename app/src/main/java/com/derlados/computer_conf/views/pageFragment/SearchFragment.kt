@@ -12,7 +12,6 @@ import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.views.ComponentSearchFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
-import kotlinx.android.synthetic.main.fragment_shop.view.*
 
 class SearchFragment : PageFragment(), View.OnClickListener {
 
@@ -34,7 +33,7 @@ class SearchFragment : PageFragment(), View.OnClickListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val fragment = inflater.inflate(R.layout.fragment_shop, container, false)
+        val fragment = inflater.inflate(R.layout.fragment_search, container, false)
 
         for ((btId, _) in btCategories) {
             fragment.findViewById<Button>(btId).setOnClickListener(this)

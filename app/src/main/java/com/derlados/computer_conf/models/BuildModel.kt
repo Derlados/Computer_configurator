@@ -1,5 +1,6 @@
 package com.derlados.computer_conf.models
 
+import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.managers.FileManager
 import com.google.gson.Gson
 
@@ -52,5 +53,13 @@ object BuildModel {
      */
     fun deselectBuild() {
         selectedBuild = null
+    }
+
+    fun indexOfSelectedBuild(): Int {
+        return builds.indexOfFirst { it.id == selectedBuild?.id }
+    }
+
+    fun indexBuildById(id: String): Int {
+        return builds.indexOfFirst { it.id == id}
     }
 }

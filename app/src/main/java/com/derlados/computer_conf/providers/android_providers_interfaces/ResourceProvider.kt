@@ -8,7 +8,8 @@ interface ResourceProvider {
         ADD_TO_BUILD,
         NOT_COMPATIBILITY,
         NOT_COMPLETE,
-        COMPLETE
+        COMPLETE,
+        SAVED
     }
 
     fun getDefaultImageByCategory(category: ComponentCategory): Int

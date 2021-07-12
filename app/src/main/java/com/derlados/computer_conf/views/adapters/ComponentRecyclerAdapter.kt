@@ -72,17 +72,7 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
             holder.img.setImageBitmap(component.image)
         } else {
             holder.img.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, defaultImageId, App.app.theme))
-            Picasso.get().load(component.imageUrl).into(object : Target {
-                override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
-                    holder.img.setImageBitmap(bitmap)
-                    FileManager.saveImage(bitmap, component.imageName)
-                }
-
-                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                }
-                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                }
-            })
+            Picasso.get().load(component.imageUrl).into(holder.img)
         }
 
         val attributes: List<Component.Attribute> = component.getPreviewAttributes()

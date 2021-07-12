@@ -1,10 +1,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:orientation="vertical"
-    android:background="@color/dark_blue_2">
+    android:background="@color/element_3">
 
     <LinearLayout
         android:id="@+id/inflate_build_blank_ll_preview_info_header"
@@ -19,7 +20,7 @@
             android:layout_height="80dp"
             android:layout_margin="5dp"
             android:layout_weight="0.3"
-            android:src="@drawable/ic_cpu_24"/>
+            android:src="@drawable/ic_case_24"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -106,13 +107,16 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <com.github.aakira.expandablelayout.ExpandableLinearLayout
         android:id="@+id/inflate_build_item_component_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#183265"
-        android:visibility="gone">
+        android:background="@color/element_3"
+        app:ael_duration="200"
+        app:ael_orientation="vertical"
+        app:ael_expanded="false"
+        app:ael_interpolator="accelerateDecelerate">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -259,7 +263,7 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
 
     <ImageButton
         android:id="@+id/inflate_build_item_ibt_hide"

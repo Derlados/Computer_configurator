@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -24,27 +25,31 @@ import com.derlados.computer_conf.models.BuildData
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.presenters.BuildConstructorPresenter
 import com.derlados.computer_conf.views.dialog_fragments.SaveDialogFragment
+import com.github.aakira.expandablelayout.ExpandableLinearLayout
+import com.google.android.material.navigation.NavigationBarItemView
+import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_build.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
 import java.util.*
 import kotlin.collections.HashMap
 
-class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPressedListener, BuildConstructorView, FragmentResultListener {
+class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPressedListener, BuildConstructorView, FragmentResultListener, NavigationBarView.OnItemSelectedListener {
     companion object  {
         const val SAVE_BUILD = "SAVE_BUILD"
         const val WITHOUT_SAVE = "WITHOUT_SAVE"
     }
 
-    private var componentContainers: HashMap<ComponentCategory, Int> = hashMapOf(
-            ComponentCategory.CPU to R.id.fragment_build_ll_cpu,
-            ComponentCategory.MOTHERBOARD to R.id.fragment_build_ll_mb,
-            ComponentCategory.GPU to R.id.fragment_build_ll_gpu,
-            ComponentCategory.RAM to R.id.fragment_build_ll_ram,
-            ComponentCategory.HDD to R.id.fragment_build_ll_hdd,
-            ComponentCategory.SSD to R.id.fragment_build_ll_ssd,
-            ComponentCategory.POWER_SUPPLY to R.id.fragment_build_ll_power_supply,
-            ComponentCategory.CASE to R.id.fragment_build_ll_case,
+    private var componentContainers: HashMap<ComponentCategory, Pair<Int, Int>> = hashMapOf(
+            ComponentCategory.CPU to Pair(R.id.fragment_build_bt_head_cpu, R.id.fragment_build_expll_cpu),
+            ComponentCategory.MOTHERBOARD to Pair(R.id.fragment_build_bt_head_mb, R.id.fragment_build_expll_mb),
+            ComponentCategory.GPU to Pair(R.id.fragment_build_bt_head_gpu, R.id.fragment_build_expll_gpu),
+            ComponentCategory.RAM to Pair(R.id.fragment_build_bt_head_ram, R.id.fragment_build_expll_ram),
+            ComponentCategory.HDD to Pair(R.id.fragment_build_bt_head_hdd, R.id.fragment_build_expll_hdd),
+            ComponentCategory.SSD to Pair(R.id.fragment_build_bt_head_ssd, R.id.fragment_build_expll_ssd),
+            ComponentCategory.POWER_SUPPLY to Pair(R.id.fragment_build_bt_head_ps, R.id.fragment_build_expll_power_supply),
+            ComponentCategory.CASE to Pair(R.id.fragment_build_bt_head_case, R.id.fragment_build_expll_case),
     )
 
     private lateinit var frListener: OnFragmentInteractionListener
@@ -57,7 +62,6 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
     private lateinit var etDesc: EditText
     private lateinit var tvCompatibility: TextView
     private lateinit var imgBuild: ImageView
-    private lateinit var llComponents: LinearLayout
 
     private lateinit var presenter: BuildConstructorPresenter
 
@@ -69,8 +73,9 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         currentFragment = inflater.inflate(R.layout.fragment_build, container, false)
         setFragmentResultListener(SAVE_BUILD, ::onFragmentResult)
+        setFragmentResultListener(WITHOUT_SAVE, ::onFragmentResult)
 
-        //(currentFragment.findViewById<View>(R.id.fragment_build_full_menu_bottom_navigator) as BottomNavigationView).setOnNavigationItemSelectedListener(this)
+        currentFragment.fragment_build_full_menu_bottom_navigator.setOnItemSelectedListener(this)
 
         etName = currentFragment.fragment_build_et_name
         etName.addTextChangedListener(this)
@@ -80,19 +85,12 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         tvStatus = currentFragment.fragment_build_tv_status
         etDesc = currentFragment.fragment_build_et_desc
         etDesc.addTextChangedListener(this)
-        llComponents = currentFragment.fragment_build_ll_component_list
 
-        // Установка обработчиков нажатий на кнопку "+" для добавления комплектующих
-        for ((category, value) in componentContainers) {
-            val btAdd = (currentFragment.findViewById<LinearLayout>(value)).getChildAt(0) as Button
-            btAdd.setOnClickListener {
-                pickComponent(category)
+        for ((key, value ) in componentContainers) {
+            val btHeader: Button = currentFragment.findViewById(value.first)
+            btHeader.setOnClickListener{
+                pickComponent(key)
             }
-        }
-
-        // Каждая вторая кнопка является заголовком категории
-        for (i in 0 until llComponents.childCount step 2) {
-            llComponents.getChildAt(i).setOnClickListener(::toggleCompListVisibility)
         }
 
         presenter = BuildConstructorPresenter(this, App.app.resourceProvider)
@@ -120,18 +118,24 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         return false
     }
 
-    // Отрыктие диалога с предложением сохранить изменения
+    /**
+     * Отрыктие диалога с предложением сохранить изменения
+     */
     override fun showSaveDialog() {
         val dialogFragment: DialogFragment = SaveDialogFragment()
         activity?.let { dialogFragment.show(it.supportFragmentManager, "build") }
     }
 
+    override fun showToast(message: String) {
+        Toast.makeText(App.app.applicationContext, message, Toast.LENGTH_SHORT).show()
+    }
+
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         if (requestKey == SAVE_BUILD) {
-            Toast.makeText(App.app.applicationContext, "Сохранено", Toast.LENGTH_SHORT).show()
             presenter.saveBuild()
+        } else {
+            exitView()
         }
-        frListener.popBackStack()
     }
 
     override fun setBuildData(build: BuildData) {
@@ -140,7 +144,7 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         etDesc.setText(build.description)
 
         for ((category, value) in build.components) {
-            addNewComponent(category, value)
+            addNewComponent(category, value, false)
         }
     }
 
@@ -159,6 +163,33 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
 
     override fun updatePrice(price: Int) {
         tvPrice.text = App.app.resources.getString(R.string.component_price, price)
+    }
+
+    /**
+     * Добавление нового комплектующего в сборку
+     * ExpandableLinearLayout работает не корректно при изменении в нем содержимого. ExpandableLinearLayout
+     * необходимо переинициализировать каждый раз когда пользователь выбирает новое комплектующее
+     * и только в этом случае !!!!
+     * @param category - категория комплектующего
+     * @param component - комплектующее
+     * @param init - флаг, необходимо ли переинициализировать ExpandableLinearLayout
+     */
+    override fun addNewComponent(category: ComponentCategory, component: Component, init: Boolean) {
+        componentContainers[category]?.let { (btId, containerId) ->
+            val btHeader: Button = currentFragment.findViewById(btId)
+            val expandContainer: ExpandableLinearLayout = currentFragment.findViewById(containerId)
+            createComponentCard(component, category, expandContainer.getChildAt(0) as LinearLayout)
+            if (init)
+                expandContainer.initLayout()
+
+            // Вместо перехода к поиску комплектующего, кнопка раскрывает список с комплектуюшими
+            btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0)
+            btHeader.setOnClickListener { toggleCompListVisibility(btHeader, expandContainer) }
+        }
+    }
+
+    override fun exitView() {
+        frListener.popBackStack()
     }
 
     // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
@@ -193,14 +224,13 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         // Кнопка удалить комплектующее
         val ibtDelete = card.inflate_component_item_bt_favorite
         ibtDelete.setOnClickListener {
-            presenter.removeComponent(category, component)
+            removeComponent(category, component)
             container.removeView(card) // Удаление комплектующего
-            container.getChildAt(0).visibility = View.VISIBLE // Кнопка добавить становится активной
         }
         ibtDelete.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_trash, App.app.theme)) // Отрисовка значка
 
         card.setOnClickListener {
-            openComponentInfo(component)
+            openComponentInfo(category, component)
         }
 
         //TODO реализовать в будущем
@@ -213,20 +243,8 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
 //            card.findViewById<View>(R.id.inflate_good_blank_bt_reduce_count).setOnClickListener { view -> countChange(view, typeGoodBlank, tvCount) }
 //        }
 
-        // Скрытие кнопки "+" (явлеяется первым элементом в LinearLayout)
-        container.getChildAt(0).visibility = View.GONE
+
         container.addView(card)
-    }
-
-    override fun addNewComponent(category: ComponentCategory, component: Component) {
-        componentContainers[category]?.let {
-            val container: LinearLayout = currentFragment.findViewById(it)
-            createComponentCard(component, category, container)
-        }
-    }
-
-    override fun exitView() {
-        frListener.popBackStack()
     }
 
     ///////////////////////////////// Обработчики кнопок ///////////////////////////////////////////
@@ -234,18 +252,15 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
     /**
      * Открытие/скрытие списка комплектуюзих в определенной категории
      */
-    private fun toggleCompListVisibility(view: View) {
-        // Необходимый список находится сразу под кнопкой, потому сначала находится индекс кнопки и потом спиок как <индекс кнопки> + 1
-        val index = currentFragment.fragment_build_ll_component_list.indexOfChild(view)
-        val blockList = currentFragment.fragment_build_ll_component_list.getChildAt(index + 1) as LinearLayout
-
-        if (blockList.visibility == View.GONE) {
-            blockList.visibility = View.VISIBLE
-            (view as Button).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0)
+    private fun toggleCompListVisibility(btHeader: Button, container: ExpandableLinearLayout) {
+        // Поворот стрелки на 180 градусов. Относительно текущего состояния
+        if (container.isExpanded) {
+            btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0)
         } else {
-            blockList.visibility = View.GONE
-            (view as Button).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_right_36, 0)
+            btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_up_36, 0)
         }
+
+        container.toggle()
     }
 
     /**
@@ -256,8 +271,23 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         frListener.nextFragment(this, ComponentSearchFragment(),  BackStackTag.COMPONENT_SEARCH)
     }
 
-    private fun openComponentInfo(component: Component) {
-        presenter.selectComponentToVIew(component)
+    private fun removeComponent(category: ComponentCategory, component: Component) {
+        presenter.removeComponent(category, component)
+
+        componentContainers[category]?.let { (btId, containerId) ->
+            val btHeader: Button = currentFragment.findViewById(btId)
+            currentFragment.findViewById<ExpandableLinearLayout>(containerId).initLayout()
+
+            // Вместо перехода к поиску комплектующего, кнопка раскрывает список с комплектуюшими
+            btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_add_24, 0)
+            btHeader.setOnClickListener {
+                pickComponent(category)
+            }
+        }
+    }
+
+    private fun openComponentInfo(category: ComponentCategory, component: Component) {
+        presenter.selectComponentToVIew(category, component)
         frListener.nextFragment(this, ComponentInfoFragment(),  BackStackTag.COMPONENT_INFO)
     }
 
@@ -271,22 +301,18 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
 //        setHeaderData()
 //    }
 //
-//    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.build_full_menu_bottom_navigator_action_brain_com -> {
-//                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://brain.com.ua/"))
-//                startActivity(browserIntent)
-//            }
-//            R.id.build_full_menu_bottom_navigator_action_save -> {
-//                isSaved = true
-//                UserData.userData.saveCurrentBuild() // Сохранение сборки перед выходом
-//                Toast.makeText(App.app.applicationContext, "Сохранено", Toast.LENGTH_SHORT).show()
-//                currentBuild = UserData.userData.currentBuild
-//            }
-//        }
-//        return false
-//    }
-//
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.build_constructor_menu_nav_publish -> {
+                // TODO доделать публикацию
+            }
+            R.id.build_constructor_menu_nav_save -> {
+                presenter.saveBuild()
+            }
+        }
+        return false
+    }
 
     //////////////////////////////////////////////Обработчик ввода текста//////////////////////////////////////////////////
     //TODO

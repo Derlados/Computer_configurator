@@ -112,26 +112,14 @@ class FilterDialogFragment(private val resultListener: () -> Unit) : DialogFragm
 
             btAttribute.text = filterAttribute.name
             btAttribute.setOnClickListener {
-                ellValues.toggle()
-
                 // Поворот изображения на 180 градусов стрелки
                 if (ellValues.isExpanded) {
-                    btAttribute.setCompoundDrawablesWithIntrinsicBounds(
-                        null, null, ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.ic_arrow_down_36,
-                            activity?.theme
-                        ), null
-                    )
+                    btAttribute.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0)
                 } else {
-                    btAttribute.setCompoundDrawablesWithIntrinsicBounds(
-                        null, null, ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.ic_arrow_up_36,
-                            activity?.theme
-                        ), null
-                    )
+                    btAttribute.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_up_36, 0)
                 }
+
+                ellValues.toggle()
             }
 
             if (filterAttribute.isRange) {
