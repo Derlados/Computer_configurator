@@ -43,6 +43,7 @@ object BuildModel {
         selectedBuild?.run {
             val buildToRemove = builds.find { build -> build.id == this.id }
             builds[builds.indexOf(buildToRemove)] = this.clone()
+            val str = Gson().toJson(this)
             FileManager.saveJsonData(FileManager.Entity.BUILD, this.id, Gson().toJson(this))
         }
         isSaved = true

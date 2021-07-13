@@ -161,11 +161,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/inflate_good_blank_ll_count"
+        android:id="@+id/inflate_component_item_ll_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         android:visibility="gone">
 
         <TextView
@@ -173,44 +173,45 @@
             android:layout_height="wrap_content"
             android:text="Количество: "
             android:textSize="18sp"
-            android:textColor="@color/turquoise"/>
+            android:textColor="@color/turquoise"
+            android:layout_marginEnd="10dp"/>
 
-        <Button
-            android:id="@+id/inflate_good_blank_bt_increase_count"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+        <android.widget.Button
+            android:id="@+id/inflate_component_item_bt_increase"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_margin="5dp"
             android:background="@drawable/bt_circle"
             android:textAlignment="center"
             android:text="+"
             android:textSize="18sp"
-            android:textColor="#000000">
+            android:textColor="@color/white">
 
-        </Button>
+        </android.widget.Button>
 
         <TextView
-            android:id="@+id/inflate_good_blank_tv_count"
+            android:id="@+id/inflate_component_item_tv_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:textSize="18sp"
             android:textColor="@color/white">
         </TextView>
 
-        <Button
-            android:id="@+id/inflate_good_blank_bt_reduce_count"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+        <android.widget.Button
+            android:id="@+id/inflate_component_item_bt_reduce"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_margin="5dp"
             android:background="@drawable/bt_circle"
             android:text="-"
             android:textAlignment="center"
             android:textSize="18sp"
-            android:textColor="#000000">
+            android:textColor="@color/white">
 
-        </Button>
+        </android.widget.Button>
 
 
     </LinearLayout>

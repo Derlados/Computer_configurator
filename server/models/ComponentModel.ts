@@ -71,6 +71,7 @@ export default class ComponentModel {
                         const comp: Component = components.get(row.id_component);
 
                         const attribute: Attribute = new Attribute();
+                        attribute.id = row.id;
                         attribute.isPreview = row.isPreview == 1;
                         attribute.value = row.value;
                         attribute.name = attribute.isPreview ? row.preview_text : row.name

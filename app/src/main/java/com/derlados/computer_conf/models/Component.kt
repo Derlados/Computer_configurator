@@ -6,7 +6,16 @@ import java.io.FileNotFoundException
 import kotlin.collections.ArrayList
 
 class Component(val id: Int, val name: String, val price : Int, val imageUrl : String, val attributes: HashMap<Int, Attribute>) {
-    inner class Attribute(val name: String, val idValue: Int, val value: String, val isPreview: Boolean) // Для хранения арактеристик о комплектующем
+
+    // Для хранения арактеристик о комплектующем
+    inner class Attribute(val id: Int, val name: String, val idValue: Int, val value: String, val isPreview: Boolean) {
+        /**
+         * Взятие числового значение из атрибута. К примеру объем памяти, количество портов и т.д.
+         */
+        fun toInt(): Int? {
+            return Regex("([^/]+)\$").find(value)?.value?.toInt()
+        }
+    }
 
     val imageName : String
         get() {
@@ -27,4 +36,9 @@ class Component(val id: Int, val name: String, val price : Int, val imageUrl : S
     fun getPreviewAttributes(): List<Attribute> {
         return attributes.filterValues { attribute -> attribute.isPreview }.values.toList()
     }
+
+    fun getAttrById (idValue: Int): Attribute? {
+        return attributes.filterValues { it.id == id }[0]
+    }
 }
+

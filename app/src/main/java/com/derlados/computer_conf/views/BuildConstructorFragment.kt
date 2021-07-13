@@ -26,12 +26,11 @@ import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.presenters.BuildConstructorPresenter
 import com.derlados.computer_conf.views.dialog_fragments.SaveDialogFragment
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
-import com.google.android.material.navigation.NavigationBarItemView
 import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_build.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
+import org.w3c.dom.Text
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -51,6 +50,7 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
             ComponentCategory.POWER_SUPPLY to Pair(R.id.fragment_build_bt_head_ps, R.id.fragment_build_expll_power_supply),
             ComponentCategory.CASE to Pair(R.id.fragment_build_bt_head_case, R.id.fragment_build_expll_case),
     )
+    private var componentsTvCount: HashMap<Int, TextView> = HashMap()
 
     private lateinit var frListener: OnFragmentInteractionListener
     private lateinit var currentFragment: View
@@ -138,14 +138,12 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         }
     }
 
-    override fun setBuildData(build: BuildData) {
-        etName.setText(build.name)
-        tvPrice.text = App.app.getString(R.string.component_price, build.price)
-        etDesc.setText(build.description)
-
-        for ((category, value) in build.components) {
-            addNewComponent(category, value, false)
-        }
+    /**
+     * Установка заголовочных данных (название сборки и её описание)
+     */
+    override fun setHeaderData(name: String, desc: String) {
+        etName.setText(name)
+        etDesc.setText(desc)
     }
 
     override fun setImage(image: Bitmap) {
@@ -156,9 +154,20 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         Picasso.get().load(url).into(imgBuild)
     }
 
+    /**
+     * Установка статуса сборки.
+     * @param status - короткое описание статуса
+     * @param message - сообщение о не корректности сборки, не совместимости
+     */
     override fun setStatus(status: String, message: String?) {
         tvStatus.text = status
         tvCompatibility.text = message
+    }
+
+    override fun setCountComponents(id: Int, count: Int) {
+        componentsTvCount[id]?.let {
+            it.text = count.toString()
+        }
     }
 
     override fun updatePrice(price: Int) {
@@ -171,14 +180,15 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
      * необходимо переинициализировать каждый раз когда пользователь выбирает новое комплектующее
      * и только в этом случае !!!!
      * @param category - категория комплектующего
-     * @param component - комплектующее
+     * @param isMultiple - флаг, если установлено в true, к блоку будет добавлен интерфейс для изменения количества комплектующего
+     * @param buildComponent - комплектующее из сборки (расширенный объект с количеством)
      * @param init - флаг, необходимо ли переинициализировать ExpandableLinearLayout
      */
-    override fun addNewComponent(category: ComponentCategory, component: Component, init: Boolean) {
+    override fun addNewComponent(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildData.BuildComponent, init: Boolean) {
         componentContainers[category]?.let { (btId, containerId) ->
             val btHeader: Button = currentFragment.findViewById(btId)
             val expandContainer: ExpandableLinearLayout = currentFragment.findViewById(containerId)
-            createComponentCard(component, category, expandContainer.getChildAt(0) as LinearLayout)
+            createComponentCard(category, isMultiple, buildComponent, expandContainer.getChildAt(0) as LinearLayout)
             if (init)
                 expandContainer.initLayout()
 
@@ -192,9 +202,18 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         frListener.popBackStack()
     }
 
-    // Создание бланка предмета, бланк состоит из 3 частей (изображение, таблица информации, цена)
-    private fun createComponentCard(component: Component, category: ComponentCategory, container: LinearLayout) {
-        val card = layoutInflater.inflate(R.layout.inflate_component_item, container, false) as LinearLayout
+    /**
+     * Отрисовка "карточки" комплектюущего. Модифицированный аналог того, что появляется при поиске
+     * @param category - категория комплектующего
+     * @param isMultiple - флаг, если установлено в true, к блоку будет добавлен интерфейс для изменения количества комплектующего
+     * @param buildComponent - комплектующее из сборки (расширенный объект с количеством)
+     * @param parent - отсовский лаяут, куда будет прекреплена "карточка"
+     */
+    private fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildData.BuildComponent, parent: LinearLayout) {
+        val card = layoutInflater.inflate(R.layout.inflate_component_item, parent, false) as LinearLayout
+
+        val component = buildComponent.component
+        val count = buildComponent.count
 
         card.component_item_tv_name.text = component.name
         card.component_item_tv_price.text = App.app.resources.getString(R.string.component_price, component.price)
@@ -225,7 +244,7 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         val ibtDelete = card.inflate_component_item_bt_favorite
         ibtDelete.setOnClickListener {
             removeComponent(category, component)
-            container.removeView(card) // Удаление комплектующего
+            parent.removeView(card) // Удаление комплектующего
         }
         ibtDelete.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_trash, App.app.theme)) // Отрисовка значка
 
@@ -233,18 +252,17 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
             openComponentInfo(category, component)
         }
 
-        //TODO реализовать в будущем
-        // Если это ОЗУ или внешняя память - открывается блок для изменения количества в сборке
-//        if (currentBuild!!.isMultipleGood(typeGoodBlank)) {
-//            card.findViewById<View>(R.id.inflate_good_blank_ll_count).visibility = View.VISIBLE
-//            val tvCount = card.findViewById<TextView>(R.id.inflate_good_blank_tv_count)
-//            tvCount.text = Integer.toString(currentBuild!!.getCountComponents(typeGoodBlank))
-//            card.findViewById<View>(R.id.inflate_good_blank_bt_increase_count).setOnClickListener { view -> countChange(view, typeGoodBlank, tvCount) }
-//            card.findViewById<View>(R.id.inflate_good_blank_bt_reduce_count).setOnClickListener { view -> countChange(view, typeGoodBlank, tvCount) }
-//        }
+        // Открытие блока на изменение количества комплектующего (для ОЗУ, накопителей и т.д.)
+        if (isMultiple) {
+            card.inflate_component_item_ll_count.visibility = View.VISIBLE
+            card.inflate_component_item_tv_count.text = count.toString()
+            card.inflate_component_item_bt_increase.setOnClickListener { presenter.increaseComponent(category, component) }
+            card.inflate_component_item_bt_reduce.setOnClickListener { presenter.reduceComponent(category, component) }
 
+            componentsTvCount[component.id] = card.inflate_component_item_tv_count
+        }
 
-        container.addView(card)
+        parent.addView(card)
     }
 
     ///////////////////////////////// Обработчики кнопок ///////////////////////////////////////////
@@ -291,17 +309,6 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         frListener.nextFragment(this, ComponentInfoFragment(),  BackStackTag.COMPONENT_INFO)
     }
 
-//    // Уменьшение или увелечение количества комплектующих одного типа в сборке (Доступно только для SSD, HDD, RAM)
-//    fun countChange(view: View, typeComp: TypeComp?, tvCount: TextView) {
-//        when (view.id) {
-//            R.id.inflate_good_blank_bt_increase_count -> currentBuild!!.increaseCountGoods(typeComp)
-//            R.id.inflate_good_blank_bt_reduce_count -> currentBuild!!.reduceCountGoods(typeComp)
-//        }
-//        tvCount.text = Integer.toString(currentBuild!!.getCountComponents(typeComp))
-//        setHeaderData()
-//    }
-//
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.build_constructor_menu_nav_publish -> {
@@ -331,6 +338,4 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
             presenter.setDescription(text)
         }
     }
-
-
 }

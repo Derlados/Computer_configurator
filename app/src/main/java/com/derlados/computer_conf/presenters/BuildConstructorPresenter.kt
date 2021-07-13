@@ -12,11 +12,50 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     var isShouldClose: Boolean = false
 
     fun init() {
-        BuildModel.selectedBuild?.let {
-            view.setBuildData(it)
-            //view.setImage()
-            view.setStatus(resourceProvider.getString(ResourceProvider.ResString.NOT_COMPLETE))
+        BuildModel.selectedBuild?.let { build ->
+            // Восстановление сохраненных данных
+            view.setHeaderData(build.name, build.description)
+            for ((category, buildComponents) in build.components) {
+                for (i in 0 until buildComponents.size) {
+                    view.addNewComponent(category, build.isMultipleCategory(category), buildComponents[i], false)
+                }
+            }
+
+            // Обновление динамичных полей
+            updateBuild()
         }
+    }
+
+    fun setName(name: String) {
+        BuildModel.isSaved = false
+        BuildModel.selectedBuild?.name = name
+    }
+
+    fun setDescription(desc: String) {
+        BuildModel.isSaved = false
+        BuildModel.selectedBuild?.description = desc
+    }
+
+    fun removeComponent(category: ComponentCategory, component: Component) {
+        BuildModel.isSaved = false
+        BuildModel.selectedBuild?.removeComponent(category, component.id)
+        updateBuild()
+    }
+
+    fun increaseComponent(category: ComponentCategory, component: Component) {
+        BuildModel.selectedBuild?.increaseComponents(category, component.id)
+        BuildModel.selectedBuild?.getBuildComponent(category, component.id)?.count?.let {
+            view.setCountComponents(component.id, it)
+        }
+        updateBuild()
+    }
+
+    fun reduceComponent(category: ComponentCategory, component: Component) {
+        BuildModel.selectedBuild?.reduceComponents(category, component.id)
+        BuildModel.selectedBuild?.getBuildComponent(category, component.id)?.count?.let {
+            view.setCountComponents(component.id, it)
+        }
+        updateBuild()
     }
 
     fun selectCategoryToSearch(category: ComponentCategory) {
@@ -44,40 +83,42 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
             view.exitView()
     }
 
+    /**
+     * Провека пользовательского выбора, если пользователь выбрал комплектующее для сборки, то
+     * необходимо обновить отображение
+     */
     fun checkUserChoice() {
-        BuildModel.selectedBuild?.lastAdded?.let { (category, component) ->
-            BuildModel.isSaved = false
-            view.addNewComponent(category, component, true)
-            BuildModel.selectedBuild?.clearLastAdded()
-            updateBuild()
+        BuildModel.selectedBuild?.let { build ->
+            build.lastAdded?.let { (category, buildComponent) ->
+                val isMultiple = build.isMultipleCategory(category)
+                BuildModel.isSaved = false
+                view.addNewComponent(category, isMultiple, buildComponent, true)
+                BuildModel.selectedBuild?.clearLastAdded()
+                updateBuild()
+            }
         }
     }
 
-    //TODO В дальнейшем должен удалять именно комплектующее.
-    // Развитие в плане того что некоторых компонентов может быть больше чем 1
-    fun removeComponent(category: ComponentCategory, component: Component? = null) {
-        BuildModel.isSaved = false
-        BuildModel.selectedBuild?.removeComponent(category)
-        updateBuild()
-    }
-
-    fun setName(name: String) {
-        BuildModel.isSaved = false
-        BuildModel.selectedBuild?.name = name
-    }
-
-    fun setDescription(desc: String) {
-        BuildModel.isSaved = false
-        BuildModel.selectedBuild?.description = desc
-    }
-
+    /**
+     * Обновление динамичных информационных полей в конструкторе
+     */
     private fun updateBuild() {
         BuildModel.selectedBuild?.let { build ->
             view.updatePrice(build.price)
-            build.getComponent(ComponentCategory.CASE)?.let { component ->
-                view.setImage(component.imageUrl)
+            build.image?.let { image ->
+                view.setImage(image)
             }
-            view.setStatus(resourceProvider.getString(ResourceProvider.ResString.NOT_COMPLETE))
+
+            val compatibilityInfo = build.getCompatibilityInfo()
+            if (compatibilityInfo.isNotEmpty()) {
+                var message: String? = null
+                for (i in 0 until compatibilityInfo.size) {
+                    message += compatibilityInfo[i].toString() + "\n"
+                }
+                view.setStatus(resourceProvider.getString(ResourceProvider.ResString.NOT_COMPATIBILITY), message)
+            } else {
+                view.setStatus(resourceProvider.getString(ResourceProvider.ResString.NOT_COMPLETE))
+            }
         }
     }
 }

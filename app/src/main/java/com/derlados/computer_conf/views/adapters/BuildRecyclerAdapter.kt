@@ -34,7 +34,7 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
         val img: ImageView = itemView.inflate_build_item_img
         val btDelete: ImageButton = itemView.inflate_build_item_ibt_delete
         private val btComponentList: ImageButton = itemView.inflate_build_item_ibt_hide
-        private val llComponentList: ExpandableLinearLayout = itemView.inflate_build_item_component_list
+        val llComponentList: ExpandableLinearLayout = itemView.inflate_build_item_component_list
 
         init {
             btComponentList.setOnClickListener {
@@ -70,10 +70,14 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
         }
 
         for ((key, value) in holder.tvComponents) {
-            build.components[key]?.let {
-                value.text = it.name
+            build.components[key]?.let { buildComponents ->
+                for (i in 0 until buildComponents.size) {
+                    value.text = buildComponents[i].component.name
+                }
             }
         }
+
+        holder.llComponentList.initLayout()
 
         holder.itemView.setOnClickListener {
             onItemClick(build.id)

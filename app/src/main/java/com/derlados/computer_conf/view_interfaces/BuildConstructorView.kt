@@ -6,12 +6,13 @@ import com.derlados.computer_conf.models.BuildData
 import com.derlados.computer_conf.models.Component
 
 interface BuildConstructorView {
-    fun setBuildData(build: BuildData)
+    fun setHeaderData(name: String, desc: String)
     fun setImage(image: Bitmap)
     fun setImage(url: String)
     fun setStatus(status: String, message: String? = null)
+    fun setCountComponents(id: Int, count: Int)
 
-    fun addNewComponent(category: ComponentCategory, component: Component, init: Boolean)
+    fun addNewComponent(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildData.BuildComponent, init: Boolean)
     fun updatePrice(price: Int)
 
     fun showSaveDialog()

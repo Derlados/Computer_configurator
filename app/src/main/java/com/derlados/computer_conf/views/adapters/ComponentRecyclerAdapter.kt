@@ -68,12 +68,8 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
         holder.tvPrice.text = App.app.resources.getString(R.string.component_price, component.price)
 
         // Если изображение не было закешировано, будет скачано новое и сохранено. Пока изображения нету - устанавливается по умолчанию
-        if (component.image != null) {
-            holder.img.setImageBitmap(component.image)
-        } else {
-            holder.img.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, defaultImageId, App.app.theme))
-            Picasso.get().load(component.imageUrl).into(holder.img)
-        }
+        holder.img.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, defaultImageId, App.app.theme))
+        Picasso.get().load(component.imageUrl).into(holder.img)
 
         val attributes: List<Component.Attribute> = component.getPreviewAttributes()
         for (i in attributes.indices) {
