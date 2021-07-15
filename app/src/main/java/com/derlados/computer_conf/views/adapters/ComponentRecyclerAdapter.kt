@@ -2,6 +2,7 @@ package com.derlados.computer_conf.views.adapters
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.telecom.Call
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,8 +69,14 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
         holder.tvPrice.text = App.app.resources.getString(R.string.component_price, component.price)
 
         // Если изображение не было закешировано, будет скачано новое и сохранено. Пока изображения нету - устанавливается по умолчанию
-        holder.img.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, defaultImageId, App.app.theme))
-        Picasso.get().load(component.imageUrl).into(holder.img)
+
+        Picasso.get().load(component.imageUrl).into(holder.img, object : Callback {
+            override fun onSuccess() { }
+
+            override fun onError(e: Exception?) {
+                holder.img.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, defaultImageId, App.app.theme))
+            }
+        })
 
         val attributes: List<Component.Attribute> = component.getPreviewAttributes()
         for (i in attributes.indices) {

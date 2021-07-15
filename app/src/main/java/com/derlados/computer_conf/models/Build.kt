@@ -9,6 +9,9 @@ class Build : Cloneable, BuildData {
      * ID атрибутов которые необходимы для проверки совместимости сборки
      */
     companion object {
+        const val TDP_PORT = 10
+        const val TDP_RAM = 4
+
         const val CPU_SOCKET = 2
         const val CPU_GPU_CORE = 7 // Для проверки полноты
         const val CPU_GPU_CORE_EXIST_VALUE = 75
@@ -29,6 +32,7 @@ class Build : Cloneable, BuildData {
 
         const val RAM_TYPE = 24
         const val RAM_SIZE = 83
+        const val RAM_IN_PACK = 101
 
         const val PS_POWER = 113
 
@@ -40,6 +44,8 @@ class Build : Cloneable, BuildData {
             WRONG_RAM_SIZE,
             WRONG_RAM_COUNT,
             WRONG_CASE_FORM_FACTOR,
+            WRONG_SATA_COUNT,
+            WRONG_M2_COUNT,
             NOT_ENOUGH_PS_POWER,
         }
     }
@@ -66,10 +72,10 @@ class Build : Cloneable, BuildData {
          */
         get() = BuildModel.selectedBuild?.components?.get(ComponentCategory.CASE)?.getOrNull(0)?.component?.imageUrl
 
-    override val isCompatibility: Boolean = true
+    override var isCompatibility: Boolean = true
     override val isComplete: Boolean
         get() {
-            val gpuCore: Component.Attribute? = components[ComponentCategory.CPU]?.get(0)?.component?.getAttrById(CPU_GPU_CORE)
+            val gpuCore: Component.Attribute? = components[ComponentCategory.CPU]?.getOrNull(0)?.component?.getAttrById(CPU_GPU_CORE)
             var isExistGpuCore = false
             if (gpuCore != null && gpuCore.idValue != CPU_GPU_CORE_EXIST_VALUE) {
                 isExistGpuCore = true
@@ -92,6 +98,161 @@ class Build : Cloneable, BuildData {
         return (category == ComponentCategory.RAM || category == ComponentCategory.HDD || category == ComponentCategory.SSD )
     }
 
+    fun getCompatibilityInfo(): ArrayList<CompatibilityError> {
+        val compatibilityErrors = ArrayList<CompatibilityError>()
+
+        val cpu = components[ComponentCategory.CPU]?.getOrNull(0)?.component
+        val motherboard = components[ComponentCategory.MOTHERBOARD]?.getOrNull(0)?.component
+        val gpu = components[ComponentCategory.GPU]?.getOrNull(0)?.component
+        val ram = components[ComponentCategory.RAM]?.getOrNull(0)?.component
+        val case = components[ComponentCategory.CASE]?.getOrNull(0)?.component
+        val hdd = components[ComponentCategory.HDD]
+        val ssd = components[ComponentCategory.SSD]
+        val ps = components[ComponentCategory.POWER_SUPPLY]?.getOrNull(0)?.component
+        var currentPower = 0
+
+        // Проверка сокета процессора
+        if (cpu != null && motherboard != null) {
+            val cpuSocket: String? = cpu.getAttrById(CPU_SOCKET)?.value
+            val mbSocket: String? = motherboard.getAttrById(MB_SOCKET)?.value
+
+            if (cpuSocket == null || mbSocket == null || !compareValue(cpuSocket, mbSocket)) {
+                compatibilityErrors.add(CompatibilityError.WRONG_CPU_SOCKET)
+            }
+
+            cpu.getAttrById(CPU_TDP)?.toIntValue()?.let {
+                currentPower += it
+            }
+        }
+
+        // Проверка оперативной памяти
+        if (ram != null && motherboard != null) {
+            val ramType: String? =ram.getAttrById(RAM_TYPE)?.value
+            val ramSize: Int? =  ram.getAttrById(RAM_SIZE)?.toIntValue()
+            var ramCount = 0
+            components[ComponentCategory.RAM]?.let { it ->
+                it.forEach { buildComponent ->
+                    val ramPack: Int? = buildComponent.component.getAttrById(RAM_IN_PACK)?.toIntValue()
+                    ramCount += if (ramPack != null) {
+                        buildComponent.count * ramPack
+                    } else {
+                        buildComponent.count
+                    }
+                }
+            }
+            val ramTypeMB: String? = motherboard.getAttrById(MB_RAM_TYPE)?.value
+            val ramSizeMB: Int? = motherboard.getAttrById(MB_RAM_SIZE)?.toIntValue()
+            val ramCountMB: Int? = motherboard.getAttrById(MB_RAM_COUNT)?.toIntValue()
+
+            if (ramType == null || ramTypeMB == null || !compareValue(ramType, ramTypeMB)) {
+                compatibilityErrors.add(CompatibilityError.WRONG_RAM_TYPE)
+            }
+            if (ramSize == null || ramSizeMB == null || ramSize > ramSizeMB) {
+                compatibilityErrors.add(CompatibilityError.WRONG_RAM_SIZE)
+            }
+            if (ramCountMB == null || ramCount > ramCountMB) {
+                compatibilityErrors.add(CompatibilityError.WRONG_RAM_COUNT)
+            }
+
+            currentPower += (ramCount) * TDP_RAM
+        }
+
+        // Проверка форм фактора материнской платы и корпуса
+        if (case != null && motherboard != null) {
+            val caseFormFactor = case.getAttrById(CASE_SUPPORT_FORM_FACTORS)?.value
+            val mbFormFactor = motherboard.getAttrById(MB_FROM_FACTOR)?.value
+
+            if (caseFormFactor == null || mbFormFactor == null || !compareValue(caseFormFactor, mbFormFactor)) {
+                compatibilityErrors.add(CompatibilityError.WRONG_CASE_FORM_FACTOR)
+            }
+        }
+
+        // Проверка портов SATA и M.2
+        if ((hdd != null || ssd != null) && motherboard != null) {
+            val ports = motherboard.getAttrById(MB_PORTS)?.value
+
+            ports?.let {
+                var mbM2Count = 0
+                var mbSataCount = 0
+
+                var sataCount = 0
+                var m2Count = 0
+
+                val m2Matches = Regex ("([0-9]+ x m.2)").findAll(ports.toLowerCase(Locale.ROOT))
+                m2Matches.forEach {
+                    val countMatch = Regex("([0-9]+)").find(it.groupValues[1])?.value
+                    countMatch?.let {
+                        mbM2Count += countMatch.toInt()
+                    }
+                }
+
+                val sataMatches =  Regex ("([0-9]+ x sata)").findAll(ports.toLowerCase(Locale.ROOT))
+                sataMatches.forEach {
+                    val countMatch = Regex("([0-9]+)").find(it.groupValues[1])?.value
+                    countMatch?.let {
+                        mbSataCount += countMatch.toInt()
+                    }
+                }
+
+                hdd?.forEach {
+                    sataCount += it.count
+                }
+
+                ssd?.forEach {
+                    val formFactor = it.component.getAttrById(SSD_FORM_FACTOR)?.value
+                    formFactor?.let {
+                        if (formFactor.toLowerCase(Locale.ROOT).contains("m.2")) {
+                            ++m2Count
+                        } else {
+                            ++sataCount
+                        }
+                    }
+                }
+
+                if (sataCount > mbSataCount) {
+                    compatibilityErrors.add(CompatibilityError.WRONG_SATA_COUNT)
+                }
+
+                if (m2Count > mbM2Count) {
+                    compatibilityErrors.add(CompatibilityError.WRONG_M2_COUNT)
+                }
+
+                currentPower += (sataCount + mbM2Count) * TDP_PORT
+            }
+
+        }
+
+        // Если присутствует видеокарта,
+        if (gpu != null && motherboard != null) {
+            gpu.getAttrById(GPU_TDP)?.toIntValue()?.let {
+                currentPower = it
+            }
+        }
+
+        // Проверка мощности блока питания
+        if (ps != null && motherboard != null) {
+            ps.getAttrById(PS_POWER)?.toIntValue()?.let {
+                if (gpu == null && it < currentPower * 1.5) {
+                    compatibilityErrors.add(CompatibilityError.NOT_ENOUGH_PS_POWER)
+                } else if (gpu != null && it < currentPower) {
+                    compatibilityErrors.add(Companion.CompatibilityError.NOT_ENOUGH_PS_POWER)
+                }
+                Unit
+            }
+        }
+
+        isCompatibility =  compatibilityErrors.isEmpty()
+
+        return compatibilityErrors
+    }
+
+    private fun compareValue(value1: String, value2: String): Boolean {
+        val value1ToCompare = value1.toLowerCase(Locale.ROOT).replace(" ", "")
+        val value2ToCompare = value2.toLowerCase(Locale.ROOT).replace(" ", "")
+
+        return value1ToCompare.contains(value2ToCompare) || value2ToCompare.contains(value1ToCompare)
+    }
+
     /** Добавление комплектующего в сборку
      * Параметры:
      * @param category - тип комплектующего
@@ -108,69 +269,8 @@ class Build : Cloneable, BuildData {
         lastAdded = null
     }
 
-    fun getCompatibilityInfo(): ArrayList<CompatibilityError> {
-        val compatibilityErrors = ArrayList<CompatibilityError>()
-
-        val cpu = components[ComponentCategory.CPU]?.getOrNull(0)?.component
-        val motherboard = components[ComponentCategory.MOTHERBOARD]?.getOrNull(0)?.component
-        val ram = components[ComponentCategory.RAM]?.getOrNull(0)?.component
-        val case = components[ComponentCategory.CASE]?.getOrNull(0)?.component
-
-        // Проверка сокета процессора
-        if (cpu != null && motherboard != null) {
-            val cpuSocket: String? = cpu.getAttrById(CPU_SOCKET)?.value
-            val mbSocket: String? = motherboard.getAttrById(MB_SOCKET)?.value
-            if (cpuSocket == null || mbSocket == null || !compareValue(cpuSocket, mbSocket)) {
-                compatibilityErrors.add(CompatibilityError.WRONG_CPU_SOCKET)
-            }
-        }
-
-        // Проверка оперативной памяти
-        if (ram != null && motherboard != null) {
-            val ramType: String? =ram.getAttrById(RAM_TYPE)?.value
-            val ramSize: Int? =  ram.getAttrById(RAM_SIZE)?.toInt()
-            var ramCount = 0
-            components[ComponentCategory.RAM]?.let { it ->
-                it.forEach { buildComponent ->
-                    ramCount += buildComponent.count
-                }
-            }
-            val ramTypeMB: String? = motherboard.getAttrById(MB_RAM_TYPE)?.value
-            val ramSizeMB: Int? = motherboard.getAttrById(MB_RAM_SIZE)?.toInt()
-            val ramCountMB: Int? = motherboard.getAttrById(MB_RAM_COUNT)?.toInt()
-
-            if (ramType == null || ramTypeMB == null || !compareValue(ramType, ramTypeMB)) {
-                compatibilityErrors.add(CompatibilityError.WRONG_RAM_TYPE)
-            }
-            if (ramSize == null || ramSizeMB == null || ramSize > ramSizeMB) {
-                compatibilityErrors.add(CompatibilityError.WRONG_RAM_SIZE)
-            }
-            if (ramCountMB == null || ramCount > ramCountMB) {
-                compatibilityErrors.add(CompatibilityError.WRONG_RAM_COUNT)
-            }
-        }
-
-        // Проверка форм фактора материнской платы и корпуса
-        if (case != null && motherboard != null) {
-            val caseFormFactor = case.getAttrById(CASE_SUPPORT_FORM_FACTORS)?.value
-            val mbFormFactor = case.getAttrById(MB_FROM_FACTOR)?.value
-
-            if (caseFormFactor == null || mbFormFactor == null || !compareValue(caseFormFactor, mbFormFactor)) {
-                compatibilityErrors.add(CompatibilityError.WRONG_CASE_FORM_FACTOR)
-            }
-        }
-
-        //TODO Проверка портов SATA и M.2
-        //TODO Проверка мощности блока питания
-
-        return compatibilityErrors
-    }
-
-    private fun compareValue(value1: String, value2: String): Boolean {
-        val value1ToCompare = value1.toLowerCase(Locale.ROOT)
-        val value2ToCompare = value2.toLowerCase(Locale.ROOT)
-
-        return value1ToCompare.contains(value2ToCompare) || value2ToCompare.contains(value1ToCompare)
+    fun getBuildComponent(category: ComponentCategory, idComponent: Int): BuildData.BuildComponent? {
+        return components[category]?.find { it.component.id == idComponent }
     }
 
     /**
@@ -181,7 +281,7 @@ class Build : Cloneable, BuildData {
     fun increaseComponents(category: ComponentCategory, idComponent: Int) {
         val buildComponent = components[category]?.find { it.component.id == idComponent }
         buildComponent?.let {
-            buildComponent.count++
+            ++buildComponent.count
             price += buildComponent.component.price
         }
     }
@@ -195,14 +295,10 @@ class Build : Cloneable, BuildData {
         val buildComponent = components[category]?.find { it.component.id == idComponent }
         buildComponent?.let {
             if (buildComponent.count != 1) {
-                buildComponent.count--
+                --buildComponent.count
                 price -= buildComponent.component.price
             }
         }
-    }
-
-    fun getBuildComponent(category: ComponentCategory, idComponent: Int): BuildData.BuildComponent? {
-        return components[category]?.find { it.component.id == idComponent }
     }
 
     /**

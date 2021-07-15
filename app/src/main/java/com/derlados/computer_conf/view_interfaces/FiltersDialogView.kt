@@ -8,4 +8,5 @@ interface FiltersDialogView {
     fun resetPricesInvalidWarning()
     fun resetAll(maxPrice: Int)
     fun closeProgressBar()
+    fun showError(message: String)
 }

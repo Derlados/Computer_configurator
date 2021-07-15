@@ -9,7 +9,7 @@ interface BuildConstructorView {
     fun setHeaderData(name: String, desc: String)
     fun setImage(image: Bitmap)
     fun setImage(url: String)
-    fun setStatus(status: String, message: String? = null)
+    fun setStatus(status: String, colorStatus: Int, message: String? = null)
     fun setCountComponents(id: Int, count: Int)
 
     fun addNewComponent(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildData.BuildComponent, init: Boolean)

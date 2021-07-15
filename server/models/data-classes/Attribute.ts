@@ -1,6 +1,6 @@
 export class Attribute {
-    id: number;
     name: string;
     value: string;
+    idValue: number;
     isPreview: boolean;
 }

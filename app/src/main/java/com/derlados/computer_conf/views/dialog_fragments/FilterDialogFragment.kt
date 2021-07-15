@@ -94,6 +94,11 @@ class FilterDialogFragment(private val resultListener: () -> Unit) : DialogFragm
         return thisDialog
     }
 
+    override fun onStop() {
+        presenter.finish()
+        super.onStop()
+    }
+
     override fun initFilters(filters: HashMap<Int, FilterAttribute>, maxPrice: Int) {
         val container = thisView.dialog_fragment_filters_ll_main_container
 
@@ -164,6 +169,10 @@ class FilterDialogFragment(private val resultListener: () -> Unit) : DialogFragm
     override fun closeProgressBar() {
         thisView.dialog_fragment_filters_ll_progress_bar.visibility = View.GONE
         thisView.dialog_fragment_filters_sv_filters.visibility = View.VISIBLE
+    }
+
+    override fun showError(message: String) {
+        Toast.makeText(App.app.applicationContext, "No connection", Toast.LENGTH_SHORT).show()
     }
 
     /**

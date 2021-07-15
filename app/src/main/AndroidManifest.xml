@@ -19,7 +19,7 @@
         tools:targetApi="n">
         <activity
             android:name="com.derlados.computer_conf.MainActivity"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

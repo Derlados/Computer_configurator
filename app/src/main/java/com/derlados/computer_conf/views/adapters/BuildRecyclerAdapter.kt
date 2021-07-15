@@ -1,5 +1,7 @@
 package com.derlados.computer_conf.views.adapters
 
+import android.os.Handler
+import android.os.Looper.getMainLooper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +11,13 @@ import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.models.BuildData
+import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.inflate_build_item.view.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, private val onItemClick: (id: String) -> Unit, private val removeItem: (id: String) -> Unit):
         RecyclerView.Adapter<BuildRecyclerAdapter.BuildHolder>() {
@@ -30,26 +36,37 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
 
         val tvName: TextView = itemView.inflate_build_item_tv_name
         val tvPrice: TextView = itemView.inflate_build_item_tv_price
-        val tvStatus: TextView = itemView.inflate_build_item_tv_price
+        val tvStatus: TextView = itemView.inflate_build_item_tv_status
         val img: ImageView = itemView.inflate_build_item_img
         val btDelete: ImageButton = itemView.inflate_build_item_ibt_delete
-        private val btComponentList: ImageButton = itemView.inflate_build_item_ibt_hide
+        val btComponentList: ImageButton = itemView.inflate_build_item_ibt_hide
         val llComponentList: ExpandableLinearLayout = itemView.inflate_build_item_component_list
 
         init {
             btComponentList.setOnClickListener {
-                toggleComponentList()
+                if (llComponentList.currentPosition != 0) {
+                    btComponentList.setImageResource(R.drawable.ic_arrow_down_36)
+                } else {
+                    btComponentList.setImageResource(R.drawable.ic_arrow_up_36)
+                }
+
+                llComponentList.toggle()
             }
         }
 
-        private fun toggleComponentList() {
-            if (llComponentList.isExpanded) {
-                btComponentList.setImageResource(R.drawable.ic_arrow_down_36)
-            } else {
-                btComponentList.setImageResource(R.drawable.ic_arrow_up_36)
-            }
 
-            llComponentList.toggle()
+        /**
+         * Инициализация ExpandedLayout. По сути является костылем, так как пересчет размера
+         * сложного контейнера выполняется не сразу - необходимо выполнить его с задержкой. Так же
+         * появляется баг при первом перемыкании, потому необходимо его вызвать без анимации1
+         */
+        fun initExpandLayout() {
+            Handler(getMainLooper()).postDelayed({
+                llComponentList.initLayout()
+                llComponentList.setDuration(0)
+                llComponentList.toggle()
+                llComponentList.setDuration(300)
+            }, 100)
         }
     }
 
@@ -64,20 +81,32 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
 
         holder.tvName.text = build.name
         holder.tvPrice.text = App.app.getString(R.string.component_price, build.price)
-        //TODO holder.tvStatus
+
+        if (!build.isCompatibility) {
+            holder.tvStatus.text = App.app.resourceProvider.getString(ResourceProvider.ResString.NOT_COMPATIBILITY)
+            holder.tvStatus.setTextColor(App.app.resourceProvider.getColor(ResourceProvider.ResColor.RED))
+        } else if (!build.isComplete) {
+            holder.tvStatus.text = App.app.resourceProvider.getString(ResourceProvider.ResString.NOT_COMPLETE)
+            holder.tvStatus.setTextColor(App.app.resourceProvider.getColor(ResourceProvider.ResColor.RED))
+        } else {
+            holder.tvStatus.text = App.app.resourceProvider.getString(ResourceProvider.ResString.COMPLETE)
+            holder.tvStatus.setTextColor(App.app.resourceProvider.getColor(ResourceProvider.ResColor.GREEN))
+        }
+
         build.image?.let {
             Picasso.get().load(it).into(holder.img)
         }
 
         for ((key, value) in holder.tvComponents) {
-            build.components[key]?.let { buildComponents ->
+            val buildComponents = build.components[key]
+            if (buildComponents != null) {
                 for (i in 0 until buildComponents.size) {
                     value.text = buildComponents[i].component.name
                 }
+            } else {
+                value.text = App.app.applicationContext.getString(R.string.not_chosen)
             }
         }
-
-        holder.llComponentList.initLayout()
 
         holder.itemView.setOnClickListener {
             onItemClick(build.id)
@@ -85,6 +114,8 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
         holder.btDelete.setOnClickListener {
             removeItem(build.id)
         }
+
+        holder.initExpandLayout()
     }
 
     override fun getItemCount(): Int = builds.size

@@ -1,5 +1,6 @@
 *.iml
 .gradle
+/heroku_server
 /server/node_modules
 /server/dist
 /local.properties
@@ -15,3 +16,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+

@@ -90,7 +90,7 @@
                     android:textColor="@color/white"/>
 
                 <TextView
-                    android:id="@+id/inflate_build_item_tv_complete"
+                    android:id="@+id/inflate_build_item_tv_status"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -110,10 +110,10 @@
     <com.github.aakira.expandablelayout.ExpandableLinearLayout
         android:id="@+id/inflate_build_item_component_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:background="@color/element_3"
-        app:ael_duration="200"
+        app:ael_duration="300"
         app:ael_orientation="vertical"
         app:ael_expanded="false"
         app:ael_interpolator="accelerateDecelerate">

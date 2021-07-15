@@ -55,7 +55,7 @@ export default class ComponentModel {
                     });
 
                     const sqlFullData: string = `SELECT comp_attr.id_component, attribute.id_characteristic AS id, attribute.characteristic AS name,  attribute_value.value, 
-                                                    attribute.is_preview AS isPreview, attribute.preview_text
+                                                attribute_value.id_value AS idValue, attribute.is_preview AS isPreview, attribute.preview_text
                                                 FROM comp_attr 
                                                 JOIN (SELECT id_component FROM component
                                                         WHERE id_category = ?) AS curComp 
@@ -71,9 +71,9 @@ export default class ComponentModel {
                         const comp: Component = components.get(row.id_component);
 
                         const attribute: Attribute = new Attribute();
-                        attribute.id = row.id;
                         attribute.isPreview = row.isPreview == 1;
                         attribute.value = row.value;
+                        attribute.idValue = row.idValue;
                         attribute.name = attribute.isPreview ? row.preview_text : row.name
 
                         comp.attributes[row.id] = attribute;

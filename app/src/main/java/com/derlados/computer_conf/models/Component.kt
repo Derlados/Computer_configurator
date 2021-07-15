@@ -3,7 +3,6 @@ package com.derlados.computer_conf.models
 import android.graphics.Bitmap
 import com.derlados.computer_conf.managers.FileManager
 import java.io.FileNotFoundException
-import kotlin.collections.ArrayList
 
 class Component(val id: Int, val name: String, val price : Int, val imageUrl : String, val attributes: HashMap<Int, Attribute>) {
 
@@ -12,8 +11,8 @@ class Component(val id: Int, val name: String, val price : Int, val imageUrl : S
         /**
          * Взятие числового значение из атрибута. К примеру объем памяти, количество портов и т.д.
          */
-        fun toInt(): Int? {
-            return Regex("([^/]+)\$").find(value)?.value?.toInt()
+        fun toIntValue(): Int? {
+            return Regex("([0-9]+)").find(value)?.value?.toInt()
         }
     }
 
@@ -37,8 +36,8 @@ class Component(val id: Int, val name: String, val price : Int, val imageUrl : S
         return attributes.filterValues { attribute -> attribute.isPreview }.values.toList()
     }
 
-    fun getAttrById (idValue: Int): Attribute? {
-        return attributes.filterValues { it.id == id }[0]
+    fun getAttrById (id: Int): Attribute? {
+        return attributes[id]
     }
 }
 

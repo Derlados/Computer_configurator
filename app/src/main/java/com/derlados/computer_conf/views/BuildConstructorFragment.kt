@@ -159,8 +159,9 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
      * @param status - короткое описание статуса
      * @param message - сообщение о не корректности сборки, не совместимости
      */
-    override fun setStatus(status: String, message: String?) {
+    override fun setStatus(status: String, colorStatus: Int, message: String?) {
         tvStatus.text = status
+        tvStatus.setTextColor(colorStatus)
         tvCompatibility.text = message
     }
 
@@ -189,11 +190,15 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
             val btHeader: Button = currentFragment.findViewById(btId)
             val expandContainer: ExpandableLinearLayout = currentFragment.findViewById(containerId)
             createComponentCard(category, isMultiple, buildComponent, expandContainer.getChildAt(0) as LinearLayout)
-            if (init)
+            if (init) {
                 expandContainer.initLayout()
+                expandContainer.expand()
+                btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_up_36, 0)
+            } else {
+                btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0)
+            }
 
             // Вместо перехода к поиску комплектующего, кнопка раскрывает список с комплектуюшими
-            btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0)
             btHeader.setOnClickListener { toggleCompListVisibility(btHeader, expandContainer) }
         }
     }

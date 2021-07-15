@@ -43,6 +43,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     }
 
     fun increaseComponent(category: ComponentCategory, component: Component) {
+        BuildModel.isSaved = false
         BuildModel.selectedBuild?.increaseComponents(category, component.id)
         BuildModel.selectedBuild?.getBuildComponent(category, component.id)?.count?.let {
             view.setCountComponents(component.id, it)
@@ -51,6 +52,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     }
 
     fun reduceComponent(category: ComponentCategory, component: Component) {
+        BuildModel.isSaved = false
         BuildModel.selectedBuild?.reduceComponents(category, component.id)
         BuildModel.selectedBuild?.getBuildComponent(category, component.id)?.count?.let {
             view.setCountComponents(component.id, it)
@@ -111,13 +113,15 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
 
             val compatibilityInfo = build.getCompatibilityInfo()
             if (compatibilityInfo.isNotEmpty()) {
-                var message: String? = null
+                var message = ""
                 for (i in 0 until compatibilityInfo.size) {
-                    message += compatibilityInfo[i].toString() + "\n"
+                    message += " * " + resourceProvider.getCompatibilityErrors(compatibilityInfo[i]) + "\n"
                 }
-                view.setStatus(resourceProvider.getString(ResourceProvider.ResString.NOT_COMPATIBILITY), message)
+                view.setStatus(resourceProvider.getString(ResourceProvider.ResString.NOT_COMPATIBILITY), resourceProvider.getColor(ResourceProvider.ResColor.RED), message)
+            } else if (build.isComplete) {
+                view.setStatus(resourceProvider.getString(ResourceProvider.ResString.COMPLETE), resourceProvider.getColor(ResourceProvider.ResColor.GREEN))
             } else {
-                view.setStatus(resourceProvider.getString(ResourceProvider.ResString.NOT_COMPLETE))
+                view.setStatus(resourceProvider.getString(ResourceProvider.ResString.NOT_COMPLETE), resourceProvider.getColor(ResourceProvider.ResColor.RED))
             }
         }
     }
