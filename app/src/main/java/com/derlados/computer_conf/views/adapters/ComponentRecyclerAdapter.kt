@@ -63,44 +63,49 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
     }
 
     override fun onBindViewHolder(holder: ComponentHolder, position: Int) {
-        val component: Component = components[position]
+        try {
+            val component: Component = components[position]
 
-        holder.tvName.text = component.name
-        holder.tvPrice.text = App.app.resources.getString(R.string.component_price, component.price)
+            holder.tvName.text = component.name
+            holder.tvPrice.text = App.app.resources.getString(R.string.component_price, component.price)
 
-        // Если изображение не было закешировано, будет скачано новое и сохранено. Пока изображения нету - устанавливается по умолчанию
+            // Если изображение не было закешировано, будет скачано новое и сохранено. Пока изображения нету - устанавливается по умолчанию
 
-        Picasso.get().load(component.imageUrl).into(holder.img, object : Callback {
-            override fun onSuccess() { }
+            Picasso.get().load(component.imageUrl).into(holder.img, object : Callback {
+                override fun onSuccess() { }
 
-            override fun onError(e: Exception?) {
-                holder.img.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, defaultImageId, App.app.theme))
+                override fun onError(e: Exception?) {
+                    holder.img.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, defaultImageId, App.app.theme))
+                }
+            })
+
+            val attributes: List<Component.Attribute> = component.getPreviewAttributes()
+            for (i in attributes.indices) {
+                holder.tvHeaders[i].text = attributes[i].name
+                holder.tvValues[i].text = attributes[i].value
             }
-        })
 
-        val attributes: List<Component.Attribute> = component.getPreviewAttributes()
-        for (i in attributes.indices) {
-            holder.tvHeaders[i].text = attributes[i].name
-            holder.tvValues[i].text = attributes[i].value
+            holder.itemView.setOnClickListener {
+                onItemClicked(component)
+            }
+
+            holder.btFavorite.setOnClickListener {
+                onBtFavoriteClick(component.id)
+            }
+            if (trackPrices.containsKey(component.id)) {
+                holder.btFavorite.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_active_star_24, App.app.theme))
+            } else {
+                holder.btFavorite.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_inactive_star_24, App.app.theme))
+            }
+
+            trackPrices[component.id]?.let {
+                holder.llMonitoring.visibility = View.VISIBLE
+                holder.tvTrackPrice.setText(it.toString())
+            }
+        } catch (e: Exception) {
+
         }
 
-        holder.itemView.setOnClickListener {
-            onItemClicked(component)
-        }
-
-        holder.btFavorite.setOnClickListener {
-            onBtFavoriteClick(component.id)
-        }
-        if (trackPrices.containsKey(component.id)) {
-            holder.btFavorite.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_active_star_24, App.app.theme))
-        } else {
-            holder.btFavorite.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_inactive_star_24, App.app.theme))
-        }
-
-        trackPrices[component.id]?.let {
-            holder.llMonitoring.visibility = View.VISIBLE
-            holder.tvTrackPrice.setText(it.toString())
-        }
     }
 
     override fun getItemCount(): Int = components.size

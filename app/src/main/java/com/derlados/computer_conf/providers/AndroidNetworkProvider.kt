@@ -23,7 +23,6 @@ class AndroidNetworkProvider(private val context: Context): NetworkProvider {
     fun registerNetworkCallback() {
         try {
             val connectivityManager = context.getSystemService(Application.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val builder = NetworkRequest.Builder()
             connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     Log.d("INTERNET_CONNECTION", "AVAILABLE")

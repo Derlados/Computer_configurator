@@ -12,8 +12,8 @@ import kotlin.collections.HashMap
 
 interface ComponentAPI {
     companion object {
-        const val BASE_URL: String = "http://192.168.1.3:3000/api/components/"
-       // const val BASE_URL: String = "https://ancient-sea-58127.herokuapp.com/api/components/"
+        //const val BASE_URL: String = "http://192.168.1.3:3000/api/components/"
+        const val BASE_URL: String = "https://ancient-sea-58127.herokuapp.com/api/components/"
     }
 
     @GET("${BASE_URL}category={category}")

@@ -61,7 +61,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     }
 
     fun selectCategoryToSearch(category: ComponentCategory) {
-        ComponentModel.chosenCategory = category
+        ComponentModel.chooseCategory(category)
     }
 
     fun selectComponentToVIew(category: ComponentCategory, component: Component) {

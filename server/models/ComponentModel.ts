@@ -91,7 +91,7 @@ export default class ComponentModel {
                             JOIN attribute_value ON attribute_value.id_value = comp_attr.id_value 
                             JOIN component ON component.id_component = comp_attr.id_component
                             WHERE component.id_category = ?
-                            ORDER BY CONVERT(attribute_value.value, INT), attribute_value.value ASC`;
+                            ORDER BY CONVERT(attribute_value.value, SIGNED), attribute_value.value ASC`;
 
         return new Promise<Map<number, FilterAttribute>>((resolve, reject) => {
             this.pool.execute(sql, [this.CategoriesId.get(category).toString()])

@@ -61,6 +61,8 @@ object ComponentModel {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         api = retrofit.create(ComponentAPI::class.java)
+
+        restoreFavorite()
     }
 
     /**
@@ -70,7 +72,6 @@ object ComponentModel {
      */
     fun chooseCategory(category: ComponentCategory) {
         chosenCategory = category
-        restoreDataFromCache()
     }
 
     /**
@@ -79,6 +80,7 @@ object ComponentModel {
      */
     suspend fun getComponents(): ArrayList<Component> {
        return suspendCoroutine { continuation ->
+           restoreDataFromCache()
            // Есди данные присутствуют и они актуальные или если нету интернет соединения - используются данные с кеша
            if ((components.isNotEmpty() && isRelevanceCache())) {
                continuation.resume(components)
@@ -167,8 +169,6 @@ object ComponentModel {
      * Чтение информации о комплектующих с устройства
      */
     private fun restoreDataFromCache() {
-        restoreFavorite() // Сначала беруться из кэша избранные комплектующие
-
         if (chosenCategory == ComponentCategory.FAVORITE) {
             components = favoriteComponents
             return

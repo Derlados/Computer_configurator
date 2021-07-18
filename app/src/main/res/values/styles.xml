@@ -3,9 +3,11 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/element_2</item>
+        <item name="colorPrimaryDark">#0C1347</item>
         <item name="android:shadowRadius">0</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowBackground">#00000000</item>
+        <item name="android:navigationBarColor">#0C1347</item>
     </style>
     <style name="build_desc_text_name">
         <item name="android:layout_width">0dp</item>

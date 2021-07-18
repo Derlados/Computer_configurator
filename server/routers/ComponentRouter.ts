@@ -6,4 +6,3 @@ const componentController: ComponentController = new ComponentController();
 
 componentRouter.get('/category=:category', componentController.getComponents);
 componentRouter.get('/category=:category/filters', componentController.getFilters);
-

@@ -93,10 +93,14 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
         super.onHiddenChanged(hidden)
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
         rvComponents.adapter?.notifyItemRangeChanged(0, 0)
+        if (filterDialog.isAdded) {
+            filterDialog.dismiss()
+        }
         presenter.finish()
+
+        super.onDestroy()
     }
 
     override fun setDefaultImageByCategory(id: Int) {
