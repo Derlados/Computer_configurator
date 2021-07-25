@@ -3,8 +3,6 @@ import { HttpCodes } from "../constants/HttpCodes";
 import ComponentModel from "../models/ComponentModel";
 
 export default class ComponentController {
-
-
     private componentModel: ComponentModel;
 
     constructor() {
