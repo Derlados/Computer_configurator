@@ -65,4 +65,10 @@
     <string name="price_low_to_high">От дешевых к дорогим</string>
     <string name="price_high_to_low">От дорогих к дешевым</string>
     <string name="publish">Опубликовать</string>
+    <string name="enter_username">Enter username</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="enter_password">Enter password</string>
+    <string name="enter_email">Enter email</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
 </resources>

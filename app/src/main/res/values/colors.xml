@@ -17,7 +17,6 @@
     <color name="element_3">#141F40</color>
     <color name="appbar">#010739</color>
     <color name="hint_color">#94FFFFFF</color>
-    <color name="drop_down_item_color_1">#161932</color>
-
-
+    <color name="gray_blue">#161932</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

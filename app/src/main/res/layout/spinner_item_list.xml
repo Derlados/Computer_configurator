@@ -8,4 +8,4 @@
     android:textSize="14sp"
     android:textColor="@color/white"
     android:padding="10dp"
-    android:background="@color/drop_down_item_color_1"/>
+    android:background="@color/gray_blue"/>
