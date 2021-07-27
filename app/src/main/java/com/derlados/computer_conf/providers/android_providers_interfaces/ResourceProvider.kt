@@ -15,9 +15,17 @@ interface ResourceProvider {
         NOT_COMPATIBILITY,
         NOT_COMPLETE,
         COMPLETE,
-        SAVED
+        SAVED,
+        INVALID_AUTH_DATA,
+        PASSWORD_DO_NOT_MATCH,
+        USERNAME_EXISTS,
+        EMAIL_EXISTS,
+        INCORRECT_LOGIN_OR_PASSWORD,
+        NO_CONNECTION,
+        INTERNAL_SERVER_ERROR,
+        UNEXPECTED_ERROR,
+        INCORRECT_FIELDS_LENGTH
     }
-
     fun getDefaultImageByCategory(category: ComponentCategory): Int
     fun getCompatibilityErrors(error: Build.Companion.CompatibilityError): String
     fun getString(resString: ResString): String

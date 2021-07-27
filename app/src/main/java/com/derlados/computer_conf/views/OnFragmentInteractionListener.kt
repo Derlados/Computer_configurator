@@ -15,6 +15,7 @@ interface OnFragmentInteractionListener {
      * @param backStackTag - тег бекстека для возврата если это необъодимо
      */
     fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, backStackTag: BackStackTag)
+    fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment)
 
 
     /**

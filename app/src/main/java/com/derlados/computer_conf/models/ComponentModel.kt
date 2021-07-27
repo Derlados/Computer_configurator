@@ -6,7 +6,7 @@ import com.derlados.computer_conf.consts.SortType
 import com.derlados.computer_conf.data_classes.FilterAttribute
 import com.derlados.computer_conf.data_classes.UserFilterChoice
 import com.derlados.computer_conf.data_classes.clear
-import com.derlados.computer_conf.internet.ComponentAPI
+import com.derlados.computer_conf.internet.ComponentApi
 import com.derlados.computer_conf.managers.FileManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -28,7 +28,7 @@ object ComponentModel {
     private const val TRACK_PRICES_FILENAME = "TRACK_PRICES"
 
     private val retrofit: Retrofit
-    private val api: ComponentAPI
+    private val API: ComponentApi
 
     private var filters: HashMap<Int, FilterAttribute> = HashMap()
     var components: ArrayList<Component>
@@ -57,10 +57,10 @@ object ComponentModel {
         )
 
         retrofit = Retrofit.Builder()
-                .baseUrl(ComponentAPI.BASE_URL)
+                .baseUrl(ComponentApi.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-        api = retrofit.create(ComponentAPI::class.java)
+        API = retrofit.create(ComponentApi::class.java)
 
         restoreFavorite()
     }
@@ -85,7 +85,7 @@ object ComponentModel {
            if ((components.isNotEmpty() && isRelevanceCache())) {
                continuation.resume(components)
            } else {
-               val call: Call<ArrayList<Component>> = api.getGoodsBlock(chosenCategory.toString())
+               val call: Call<ArrayList<Component>> = API.getGoodsBlock(chosenCategory.toString())
                call.enqueue(object : Callback<ArrayList<Component>> {
                    override fun onResponse(call: Call<ArrayList<Component>>, response: Response<ArrayList<Component>>) {
                        val newComponents: ArrayList<Component>? = response.body()
@@ -118,7 +118,7 @@ object ComponentModel {
             if (filters.isNotEmpty()) {
                 continuation.resume(filters)
             } else {
-                val call: Call<HashMap<Int, FilterAttribute>> = api.getFilters(chosenCategory.toString())
+                val call: Call<HashMap<Int, FilterAttribute>> = API.getFilters(chosenCategory.toString())
                 call.enqueue(object : Callback<HashMap<Int, FilterAttribute>> {
                     override fun onResponse(call: Call<HashMap<Int, FilterAttribute>>, response: Response<HashMap<Int, FilterAttribute>>) {
                         val result: HashMap<Int, FilterAttribute>? = response.body()

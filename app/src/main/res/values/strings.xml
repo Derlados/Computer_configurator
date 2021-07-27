@@ -71,4 +71,22 @@
     <string name="enter_email">Enter email</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
+    <string name="authorization">Авторизация</string>
+    <string name="register">Register</string>
+    <string name="enter_secret_word">Enter secret word</string>
+    <string name="i_have_an_email">I have an email</string>
+    <string name="login">Login</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="already_have_an_account">Already have an account ?</string>
+    <string name="invalid_auth_data">Invalid data (For all fields, use only letters and the underscore character)</string>
+    <string name="pass_do_not_match">Your password and confirmation password do not match</string>
+    <string name="username_exists">User with this username already exists</string>
+    <string name="email_exists">User with this email already exists</string>
+    <string name="incorrect_login_or_password">Incorrect login or password</string>
+    <string name="no_connection">No connection with our server, try later</string>
+    <string name="internal_server_error">Internal server error, try later</string>
+    <string name="unexpected_error">Unexpected error</string>
+    <string name="incorrect_fields_length">Login and password must contain at least 6 characters</string>
+    <string name="no_email">No email</string>
+    <string name="don_t_have_an_account">Don\'t have an account ?</string>
 </resources>

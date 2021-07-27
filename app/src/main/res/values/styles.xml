@@ -3,11 +3,11 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/element_2</item>
-        <item name="colorPrimaryDark">#0C1347</item>
+        <item name="colorPrimaryDark">#101B5E</item>
         <item name="android:shadowRadius">0</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowBackground">#00000000</item>
-        <item name="android:navigationBarColor">#0C1347</item>
+        <item name="android:navigationBarColor">#101B5E</item>
     </style>
     <style name="build_desc_text_name">
         <item name="android:layout_width">0dp</item>
@@ -84,17 +84,15 @@
         <item name="ael_expanded">false</item>
         <item name="ael_interpolator">accelerateDecelerate</item>
     </style>
-
     <style name="auth_field">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginTop">15dp</item>
-        <item name="android:padding">15dp</item>
+        <item name="android:padding">10dp</item>
         <item name="android:textColorHint">@color/hint_color</item>
         <item name="android:backgroundTint">@color/gray_blue</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:inputType">text</item>
         <item name="android:drawablePadding">10dp</item>
         <item name="android:background">@color/gray_blue</item>
     </style>

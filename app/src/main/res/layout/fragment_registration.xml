@@ -11,7 +11,8 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
-        android:src="@mipmap/csn"/>
+        android:padding="20dp"
+        android:src="@drawable/icon_img"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,40 +23,89 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/fragment_registration_et_username"
             style="@style/auth_field"
             android:hint="@string/enter_username"
-            android:drawableStart="@drawable/ic_user_24"/>
+            android:drawableStart="@drawable/ic_user_24"
+            android:inputType="text"/>
 
         <EditText
+            android:id="@+id/fragment_registration_et_password"
             style="@style/auth_field"
             android:hint="@string/enter_password"
-            android:drawableStart="@drawable/ic_key_24"/>
+            android:drawableStart="@drawable/ic_key_24"
+            android:inputType="textPassword"/>
 
+        <EditText
+            android:id="@+id/fragment_registration_et_confirm_password"
+            style="@style/auth_field"
+            android:hint="@string/confirm_password"
+            android:drawableStart="@drawable/ic_key_24"
+            android:inputType="textPassword"/>
+
+        <LinearLayout
+            android:id="@+id/fragment_registration_ll_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/fragment_registration_et_email"
+                style="@style/auth_field"
+                android:hint="@string/enter_email"
+                android:drawableStart="@drawable/ic_email_24"
+                android:inputType="textEmailAddress"/>
+
+            <TextView
+                android:id="@+id/fragment_registration_swap_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_email"
+                android:textColor="@color/light_blue"
+                android:textSize="18sp"
+                android:paddingStart="10dp"
+                android:paddingEnd="0dp"
+                android:paddingTop="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fragment_registration_ll_secret"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/fragment_registration_et_secret"
+                style="@style/auth_field"
+                android:hint="@string/enter_secret_word"
+                android:drawableStart="@drawable/ic_top_secret_24"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_email"
+                android:textColor="@color/light_blue"
+                android:textSize="18sp"
+                android:paddingStart="10dp"
+                android:paddingEnd="0dp"
+                android:paddingTop="5dp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <android.widget.Button
+        android:id="@+id/fragment_registration_bt_reg"
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="@string/sign_in"
+        android:text="@string/register"
         android:textColor="@color/white"
         android:textAllCaps="false"
         android:textSize="22sp"
         android:background="@drawable/button_border_blue"/>
-
-    <android.widget.Button
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Sign in with Google"
-        android:textColor="#4284f5"
-        android:textAllCaps="false"
-        android:textSize="22sp"
-        android:paddingStart="20dp"
-        android:paddingEnd="10dp"
-        android:drawableStart="@drawable/ic_google_24"
-        android:background="@drawable/button_border_white"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -63,10 +113,11 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/fragment_registration_tv_to_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Don't have an account? "
+            android:text="@string/already_have_an_account"
             android:textSize="18sp"
             android:textColor="@color/white"
             android:textAlignment="center"/>
@@ -75,7 +126,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/sign_up"
+            android:text="@string/login"
             android:textSize="18sp"
             android:textColor="@color/light_blue"
             android:textAlignment="center"/>

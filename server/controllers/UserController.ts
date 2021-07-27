@@ -6,6 +6,7 @@ import UserModel, { UserError } from "../models/UserModel";
 
 
 export default class UserController {
+    private thisModel = this;
     private userModel: UserModel;
 
     constructor() {
@@ -13,58 +14,78 @@ export default class UserController {
     }
 
     public register = (req: any, res: Response) => {
-        const nickname = req.body.nickname;
+        const username = req.body.username;
         const email = req.body.email;
         const password = req.body.password;
         const secret = req.body.secret;
-        const google = req.body.google;
-        const user = new User(nickname, password, email, secret, google);
+        const googleId = req.body.googleId;
+        const photoUrl = req.body.photoUrl;
+        const user = new User(username, password, email, secret, googleId, photoUrl);
 
         this.userModel.register(user)
-            .then((id: number) => {
-                user.id = id;
-                const token = this.createKey(user);
-
-                res.status(HttpCodes.OK).send(JSON.stringify(token))
+            .then((user: User) => {
+                const sendData = this.prepareSendData(user);
+                res.status(HttpCodes.OK).send(JSON.stringify(sendData))
             })
             .catch((err: UserError | any) => {
-                if (Object.values(UserError).includes(err)) {
-                    if (err == UserError.USER_EXIST) {
-                        res.status(HttpCodes.CONFLICT).send(JSON.stringify("User already exists"))
-                    }
-                } else {
-                    res.status(HttpCodes.INTERNAL_SERVER_ERROR).send(JSON.stringify(err))
-                }
+                this.sendError(err, res);
             })
     }
 
     public login = (req: any, res: Response) => {
-        const nickname = req.body.nickname;
-        const email = req.body.email;
+        const username = req.body.username;
         const password = req.body.password;
         const secret = req.body.secret;
-        const google = req.body.google;
-        const user = new User(nickname, password, email, secret, google);
+        const googleId = req.body.googleId;
+        const user = new User(username, password, null, secret, googleId, null);
 
         this.userModel.login(user)
-            .then((id: number) => {
-                user.id = id;
-                const token = this.createKey(user);
-                res.status(HttpCodes.OK).send(JSON.stringify(token))
+            .then((user: User) => {
+                const sendData = this.prepareSendData(user);
+                res.status(HttpCodes.OK).send(JSON.stringify(sendData))
             })
             .catch((err: UserError | any) => {
-                console.error(err);
-                if (Object.values(UserError).includes(err)) {
-                    if (err == UserError.USER_NOT_FOUND) {
-                        res.status(HttpCodes.NOT_FOUND).send(JSON.stringify(err))
-                    } else if (err == UserError.DATABASE_ERROR) {
-                        res.status(HttpCodes.BAD_REQUEST).send(JSON.stringify(err))
-                    }
-                } else {
-                    res.status(HttpCodes.INTERNAL_SERVER_ERROR).send(JSON.stringify(err))
-                }
-
+                this.sendError(err, res);
             })
+    }
+
+    /**
+     * Вход через гугл сервис, если записи не будет в базе данных - будет создана новая
+     */
+    public googleSignIn = (req: any, res: Response) => {
+        const googleId = req.body.googleId;
+        const username = req.body.username;
+        const photoUrl = req.body.photoUrl;
+        const user = new User(username, null, null, null, googleId, photoUrl);
+
+
+        this.userModel.login(user)
+            .then((user: User) => {
+                const sendData = this.prepareSendData(user);
+                res.status(HttpCodes.OK).send(JSON.stringify(sendData))
+            })
+            .catch((err: UserError | any) => {
+                if (Object.values(UserError).includes(err) && err == UserError.USER_NOT_FOUND) {
+                    this.userModel.register(user)
+                        .then((user: User) => {
+                            const sendData = this.prepareSendData(user);
+                            res.status(HttpCodes.OK).send(JSON.stringify(sendData))
+                        })
+                        .catch((err: UserError | any) => {
+                            this.sendError(err, res);
+                        })
+                } else {
+                    this.sendError(err, res);
+                }
+            })
+    }
+
+    public update = (req: any, res: Response) => {
+
+    }
+
+    public removeAccout = (req: any, res: Response) => {
+
     }
 
     public checkAuth = (req: any, res: Response, next) => {
@@ -102,6 +123,42 @@ export default class UserController {
         token = `${header}.${body}.${signature}`;
 
         return token;
+
+    }
+
+    private prepareSendData(user: User): Object {
+        const sendData: Object = {
+            id: user.id,
+            username: user.username,
+            photoUrl: user.photoUrl,
+            token: this.createKey(user)
+        }
+        return sendData;
+    }
+
+    private sendError(err: UserError | any, res: Response) {
+        if (Object.values(UserError).includes(err)) {
+            switch (err) {
+                case UserError.USER_NOT_FOUND:
+                    res.status(HttpCodes.NOT_FOUND).end()
+                    break;
+                case UserError.DATABASE_ERROR:
+                    res.status(HttpCodes.BAD_REQUEST).end()
+                    break;
+                case UserError.USER_EXIST_USERNAME:
+                    res.statusMessage = "username";
+                    res.status(HttpCodes.CONFLICT).end();
+                    break;
+                case UserError.USER_EXIST_EMAIL:
+                    res.statusMessage = "email";
+                    res.status(HttpCodes.CONFLICT).end();
+                    break;
+            }
+
+
+        } else {
+            res.status(HttpCodes.INTERNAL_SERVER_ERROR).end()
+        }
 
     }
 }

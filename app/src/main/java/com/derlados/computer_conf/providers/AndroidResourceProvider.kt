@@ -42,6 +42,15 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.NOT_COMPLETE -> context.getString(R.string.not_complete)
             ResourceProvider.ResString.COMPLETE -> context.getString(R.string.complete)
             ResourceProvider.ResString.SAVED -> context.getString(R.string.saved)
+            ResourceProvider.ResString.INVALID_AUTH_DATA -> context.getString(R.string.invalid_auth_data)
+            ResourceProvider.ResString.PASSWORD_DO_NOT_MATCH -> context.getString(R.string.pass_do_not_match)
+            ResourceProvider.ResString.USERNAME_EXISTS -> context.getString(R.string.username_exists)
+            ResourceProvider.ResString.EMAIL_EXISTS -> context.getString(R.string.email_exists)
+            ResourceProvider.ResString.INCORRECT_LOGIN_OR_PASSWORD -> context.getString(R.string.incorrect_login_or_password)
+            ResourceProvider.ResString.NO_CONNECTION -> context.getString(R.string.no_connection)
+            ResourceProvider.ResString.INTERNAL_SERVER_ERROR -> context.getString(R.string.internal_server_error)
+            ResourceProvider.ResString.UNEXPECTED_ERROR -> context.getString(R.string.unexpected_error)
+            ResourceProvider.ResString.INCORRECT_FIELDS_LENGTH -> context.getString(R.string.incorrect_fields_length)
         }
     }
 
