@@ -1,6 +1,7 @@
 package com.derlados.computer_conf.presenters
 
 import android.accounts.NetworkErrorException
+import android.util.Log
 import com.derlados.computer_conf.models.UserModel
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.view_interfaces.AuthView
@@ -41,7 +42,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
         if (username.length < MIN_FIELD_LENGTH && password.length < MIN_FIELD_LENGTH) {
             view.showError(resourceProvider.getString(ResourceProvider.ResString.INCORRECT_FIELDS_LENGTH))
         } else if (!validRegEx.matches(username) || !validRegEx.matches(password) || !validRegEx.matches(confirmPass) ||
-                (email.isNotEmpty() && emailRegex.matches(email) || (secret.isNotEmpty() && validRegEx.matches(secret)))) {
+                (email.isNotEmpty() && !emailRegex.matches(email) || (secret.isNotEmpty() && !validRegEx.matches(secret)))) {
 
             view.showError(resourceProvider.getString(ResourceProvider.ResString.INVALID_AUTH_DATA))
         } else if (password != confirmPass) {

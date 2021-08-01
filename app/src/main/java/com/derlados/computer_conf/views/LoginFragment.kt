@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
+import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.presenters.AuthPresenter
 import com.derlados.computer_conf.view_interfaces.AuthView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -76,7 +77,7 @@ class LoginFragment: Fragment(), AuthView {
     }
 
     override fun returnBack() {
-        fragmentListener.popBackStack()
+        fragmentListener.popBackStack(BackStackTag.MAIN)
     }
 
     private fun login() {
@@ -110,7 +111,7 @@ class LoginFragment: Fragment(), AuthView {
             val account = completedTask.getResult(ApiException::class.java)
             val id = account.id
             val username = account.displayName
-            Toast.makeText(context, username, Toast.LENGTH_SHORT).show()
+
             if (id != null && username != null) {
                 presenter.tryGoogleSingIn(id, username, account.photoUrl?.toString())
             }
@@ -122,6 +123,6 @@ class LoginFragment: Fragment(), AuthView {
     }
 
     private fun changeToReg() {
-        fragmentListener.nextFragment(this, RegFragment())
+        fragmentListener.nextFragment(this, RegFragment(), BackStackTag.REG)
     }
 }

@@ -29,15 +29,14 @@ export default class UserController {
             })
             .catch((err: UserError | any) => {
                 this.sendError(err, res);
+
             })
     }
 
     public login = (req: any, res: Response) => {
         const username = req.body.username;
         const password = req.body.password;
-        const secret = req.body.secret;
-        const googleId = req.body.googleId;
-        const user = new User(username, password, null, secret, googleId, null);
+        const user = new User(username, password, null, null, null, null);
 
         this.userModel.login(user)
             .then((user: User) => {

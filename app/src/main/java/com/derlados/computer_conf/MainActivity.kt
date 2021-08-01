@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
         // Открытие фрагмента главного меню
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_ll_container, mainMenuFragment)
+                .addToBackStack(BackStackTag.MAIN.name)
                 .commit()
     }
 
@@ -97,17 +98,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
         }
 
         fTrans.add(R.id.activity_main_ll_container, fragmentReceiver)
-        fTrans.addToBackStack(backStackTag.toString()) // Добавление изменнений в стек
-        fTrans.commit()
-    }
-
-    override fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment) {
-        val fTrans = fragmentManager.beginTransaction().setCustomAnimations(
-            R.anim.flip_fragment_in,
-            R.anim.flip_fragment_out, R.anim.flip_fragment_in, R.anim.flip_fragment_out
-        )
-
-        fTrans.replace(R.id.activity_main_ll_container, fragmentReceiver)
+        fTrans.addToBackStack(backStackTag.name) // Добавление изменнений в стек
         fTrans.commit()
     }
 
@@ -116,7 +107,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
     }
 
     override fun popBackStack(backStackTag: BackStackTag) {
-        fragmentManager.popBackStack(backStackTag.toString(), 0)
+        fragmentManager.popBackStack(backStackTag.name, 0)
     }
 
     // Отклик на BackPressed во фрагментах.

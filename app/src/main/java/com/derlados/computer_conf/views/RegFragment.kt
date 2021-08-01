@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
+import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.presenters.AuthPresenter
 import com.derlados.computer_conf.view_interfaces.AuthView
 import kotlinx.android.synthetic.main.fragment_registration.view.*
@@ -67,7 +68,7 @@ class RegFragment: Fragment(), AuthView {
     }
 
     override fun returnBack() {
-        fragmentListener.popBackStack()
+        fragmentListener.popBackStack(BackStackTag.MAIN)
     }
 
     /**
@@ -86,11 +87,11 @@ class RegFragment: Fragment(), AuthView {
     }
 
     private fun register() {
-        presenter.tryReg(etUsername.text.toString(), etPassword.text.toString(), etConfirmPassword.toString(),
-                            etEmail.toString(), etSecret.toString())
+        presenter.tryReg(etUsername.text.toString(), etPassword.text.toString(), etConfirmPassword.text.toString(),
+                            etEmail.text.toString(), etSecret.text.toString())
     }
 
     private fun changeToLogin() {
-        fragmentListener.nextFragment(this, LoginFragment())
+        fragmentListener.popBackStack(BackStackTag.AUTH)
     }
 }
