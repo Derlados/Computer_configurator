@@ -5,14 +5,17 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingBottom="30dp"
+    android:weightSum="1">
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="250dp"
+        android:layout_height="0dp"
         android:layout_gravity="center"
-        android:padding="20dp"
-        android:src="@drawable/icon_img"/>
+        android:layout_weight="0.7"
+        android:src="@drawable/icon_img" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -96,16 +99,25 @@
 
     </LinearLayout>
 
-    <android.widget.Button
-        android:id="@+id/fragment_registration_bt_reg"
-        android:layout_width="280dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/register"
-        android:textColor="@color/white"
-        android:textAllCaps="false"
-        android:textSize="22sp"
-        android:background="@drawable/button_border_blue"/>
+        android:gravity="center"
+        android:weightSum="1"
+        android:layout_marginTop="30dp">
+
+        <android.widget.Button
+            android:id="@+id/fragment_registration_bt_reg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:text="@string/register"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:textSize="22sp"
+            android:background="@drawable/button_border_blue"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -118,7 +130,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/already_have_an_account"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="@color/white"
             android:textAlignment="center"/>
 
@@ -127,7 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/login"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="@color/light_blue"
             android:textAlignment="center"/>
 

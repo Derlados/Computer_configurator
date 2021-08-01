@@ -1,67 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingBottom="30dp"
+    android:weightSum="1">
 
     <ImageView
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="250dp"
+        android:layout_height="0dp"
         android:layout_gravity="center"
-        android:src="@drawable/icon_img"/>
+        android:layout_weight="0.7"
+        android:src="@drawable/icon_img" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
         android:orientation="vertical">
 
         <EditText
             android:id="@+id/fragment_login_et_username"
             style="@style/auth_field"
-            android:hint="@string/enter_username"
             android:drawableStart="@drawable/ic_user_24"
-            android:inputType="text"/>
+            android:hint="@string/enter_username"
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/fragment_login_et_password"
             style="@style/auth_field"
-            android:hint="@string/enter_password"
             android:drawableStart="@drawable/ic_key_24"
-            android:inputType="textPassword"/>
+            android:hint="@string/enter_password"
+            android:inputType="textPassword" />
 
 
     </LinearLayout>
 
-    <android.widget.Button
-        android:id="@+id/fragment_login_bt_login"
-        android:layout_width="280dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/login"
-        android:textColor="@color/white"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:background="@drawable/button_border_blue"/>
+        android:gravity="center"
+        android:weightSum="1">
 
-    <android.widget.Button
-        android:id="@+id/fragment_login_google_sign_in"
-        android:layout_width="280dp"
+        <android.widget.Button
+            android:id="@+id/fragment_login_bt_login"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:background="@drawable/button_border_blue"
+            android:text="@string/login"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/sign_in_with_google"
-        android:textColor="#4284f5"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        android:paddingStart="20dp"
-        android:paddingEnd="10dp"
-        android:drawableStart="@drawable/ic_google_24"
-        android:background="@drawable/button_border_white"/>
+        android:gravity="center"
+        android:weightSum="1"
+        android:layout_marginTop="20dp">
+
+        <android.widget.Button
+            android:id="@+id/fragment_login_google_sign_in"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:background="@drawable/button_border_white"
+            android:drawableStart="@drawable/ic_google_24"
+            android:paddingStart="20dp"
+            android:paddingEnd="10dp"
+            android:text="@string/sign_in_with_google"
+            android:textAllCaps="false"
+            android:textColor="#4284f5"
+            android:textSize="20sp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -73,9 +94,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/don_t_have_an_account"
-            android:textSize="16sp"
+            android:textAlignment="center"
             android:textColor="@color/white"
-            android:textAlignment="center"/>
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/fragment_login_tv_to_reg"
@@ -85,9 +106,9 @@
             android:paddingStart="3dp"
             android:paddingEnd="0dp"
             android:text="@string/register"
-            android:textSize="16sp"
+            android:textAlignment="center"
             android:textColor="@color/light_blue"
-            android:textAlignment="center"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 
