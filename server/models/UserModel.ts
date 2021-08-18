@@ -1,7 +1,7 @@
 import { RowDataPacket } from "mysql2";
 import { Pool, ResultSetHeader } from "mysql2/promise";
 import { DataBase } from "../controllers/database";
-import User from "./data-classes/User";
+import User from "../types/User";
 
 export default class UserModel {
     private pool: Pool; // Пул базы данных

@@ -1,12 +1,11 @@
 import { Response } from "express";
 import { HttpCodes } from "../constants/HttpCodes";
 import * as crypto from "crypto";
-import User from "../models/data-classes/User";
+import User from "../types/User";
 import UserModel, { UserError } from "../models/UserModel";
 
 
 export default class UserController {
-    private thisModel = this;
     private userModel: UserModel;
 
     constructor() {
@@ -88,17 +87,30 @@ export default class UserController {
     }
 
     public checkAuth = (req: any, res: Response, next) => {
-        const token: string = req.headers.auth;
+        const token: string = req.headers.token;
+        const idUser: number = req.params.idUser;
+
+        if (!token || !idUser) {
+            res.status(HttpCodes.UNAUTHORIZED).end();
+            return;
+        }
+
         const tokenParts: string[] = token.split('.');
         const signature: string = crypto.createHmac('SHA256', process.env.AUTH_TOKEN_KEY).update(`${tokenParts[0]}.${tokenParts[1]}`).digest('base64');
-        if (tokenParts[2] == signature) {
+
+        const buff = Buffer.from(tokenParts[1], 'base64');
+        const tokenIdUser: number = JSON.parse(buff.toString('utf-8')).id;
+
+        if (tokenParts[2] == signature && idUser == tokenIdUser) {
             next();
+        } else if (idUser != tokenIdUser) {
+            res.status(HttpCodes.FORBIDDEN).end();
         } else {
             res.status(HttpCodes.UNAUTHORIZED).send('not authorized');
         }
     }
 
-    private createKey(user: User): String {
+    private createToken(user: User): String {
         let header: string;
         let body: string = "";
         let signature: string = "";
@@ -130,7 +142,7 @@ export default class UserController {
             id: user.id,
             username: user.username,
             photoUrl: user.photoUrl,
-            token: this.createKey(user)
+            token: this.createToken(user)
         }
         return sendData;
     }

@@ -17,7 +17,6 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     private var currentComponentList: List<Component> = listOf()
 
     fun init() {
-
         view.setDefaultImageByCategory(resourceProvider.getDefaultImageByCategory(ComponentModel.chosenCategory))
 
         if (ComponentModel.chosenCategory != ComponentCategory.FAVORITE) {

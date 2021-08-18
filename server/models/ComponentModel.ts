@@ -1,9 +1,8 @@
 import { RowDataPacket } from "mysql2";
 import { Pool } from "mysql2/promise";
 import { DataBase } from "../controllers/database";
-import { Attribute } from "./data-classes/Attribute";
-import { Component } from "./data-classes/Component";
-import { FilterAttribute } from "./data-classes/FilterAttribute";
+import { Component } from "../types/Component";
+import { FilterAttribute } from "../types/FilterAttribute";
 
 export type filterValue = {
     idValue: number,
@@ -70,7 +69,7 @@ export default class ComponentModel {
                     (result as RowDataPacket[])[0].forEach(row => {
                         const comp: Component = components.get(row.id_component);
 
-                        const attribute: Attribute = new Attribute();
+                        const attribute: Component.Attribute = new Component.Attribute();
                         attribute.isPreview = row.isPreview == 1;
                         attribute.value = row.value;
                         attribute.idValue = row.idValue;

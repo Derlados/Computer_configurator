@@ -50,6 +50,7 @@ class Build : Cloneable, BuildData {
         }
     }
 
+    override var serverId: Int = -1
     override var id: String = UUID.randomUUID().toString().replace("-", "")
     override var components: HashMap<ComponentCategory, ArrayList<BuildData.BuildComponent>> = hashMapOf(
             ComponentCategory.CPU to ArrayList(),

@@ -1,5 +1,3 @@
-import { Attribute } from "./Attribute";
-
 export class Component {
     id: number;
     name: string;
@@ -9,5 +7,14 @@ export class Component {
 
     constructor() {
         this.attributes = {};
+    }
+}
+
+export namespace Component {
+    export class Attribute {
+        name: string;
+        value: string;
+        idValue: number;
+        isPreview: boolean;
     }
 }

@@ -1,7 +1,8 @@
 *.iml
+*.env
 .gradle
 /heroku_server
-/server/.env
+
 /server/node_modules
 /server/dist
 /local.properties

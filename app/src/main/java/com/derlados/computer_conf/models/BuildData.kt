@@ -6,6 +6,7 @@ import java.util.HashMap
 interface BuildData {
     data class BuildComponent(var component: Component, var count: Int)
 
+    val serverId: Int
     val id: String
     val components: HashMap<ComponentCategory, ArrayList<BuildComponent>>
     val price: Int
