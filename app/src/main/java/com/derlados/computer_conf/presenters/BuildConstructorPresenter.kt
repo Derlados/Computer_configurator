@@ -78,7 +78,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
         }
     }
 
-    fun saveBuild() {
+    fun saveBuildOnServer() {
         BuildModel.saveSelectedBuild()
         view.showToast(resourceProvider.getString(ResourceProvider.ResString.SAVED))
         if (isShouldClose)

@@ -30,7 +30,6 @@ import com.google.android.material.navigation.NavigationBarView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_build.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
-import org.w3c.dom.Text
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -114,6 +113,7 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
      * Управление выходом из экрана переходит под управление презентера
      */
     override fun onBackPressed(): Boolean {
+        presenter.saveBuildOnServer()
         presenter.finish()
         return false
     }
@@ -132,7 +132,7 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         if (requestKey == SAVE_BUILD) {
-            presenter.saveBuild()
+            presenter.saveBuildOnServer()
         } else {
             exitView()
         }
@@ -318,9 +318,6 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         when (item.itemId) {
             R.id.build_constructor_menu_nav_publish -> {
                 // TODO доделать публикацию
-            }
-            R.id.build_constructor_menu_nav_save -> {
-                presenter.saveBuild()
             }
         }
         return false

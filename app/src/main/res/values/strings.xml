@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Собери свой ПК</string>
     <string name="shop">Магазин</string>
-    <string name="builds">Сборки</string>
+    <string name="builds">Ваши сборки</string>
     <string name="info">Инфо</string>
     <string name="motherboards">Материнские платы</string>
     <string name="CPUs">Процессоры</string>
@@ -89,4 +89,7 @@
     <string name="incorrect_fields_length">Login and password must contain at least 6 characters</string>
     <string name="no_email">No email</string>
     <string name="don_t_have_an_account">Don\'t have an account ? </string>
+    <string name="components">Комплектующие</string>
+    <string name="user_builds">Польз. сборки</string>
+    <string name="save_on_server">Сохранить на сервере</string>
 </resources>

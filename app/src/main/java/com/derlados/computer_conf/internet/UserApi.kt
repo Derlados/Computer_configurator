@@ -10,21 +10,21 @@ interface UserApi {
       //  const val BASE_URL: String = "https://ancient-sea-58127.herokuapp.com/api/users/"
     }
 
-    @GET("${BASE_URL}{id}")
+    @GET("{id}")
     fun getUser(@Path("id") id: Int, @Body map: HashMap<String, String>): Call<User>
 
-    @POST("${BASE_URL}reg")
+    @POST("reg")
     fun register(@Body map: HashMap<String, String>): Call<User>
 
-    @POST("${BASE_URL}login")
+    @POST("login")
     fun login(@Body map: HashMap<String, String>): Call<User>
 
-    @POST("${BASE_URL}google-sign")
+    @POST("google-sign")
     fun googleSignIn(@Body map: HashMap<String, String>): Call<User>
 
-    @PUT("${BASE_URL}{id}/update")
+    @PUT("{id}/update")
     fun update(@Path("id") id: Int, @Body map: HashMap<String, String>): Call<Unit>
 
-    @DELETE("${BASE_URL}{id}/remove")
+    @DELETE("{id}/remove")
     fun removeAccount(@Path("id") id: Int): Call<Unit>
 }

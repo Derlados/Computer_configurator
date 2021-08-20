@@ -9,8 +9,6 @@ import com.derlados.computer_conf.consts.SortType
 import com.derlados.computer_conf.data_classes.UserFilterChoice
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.Component
-import java.util.*
-import kotlin.collections.ArrayList
 
 class ComponentSearchPresenter(private val view: ComponentSearchView, private val resourceProvider: ResourceProvider) {
     private var downloadJob: Job? = null

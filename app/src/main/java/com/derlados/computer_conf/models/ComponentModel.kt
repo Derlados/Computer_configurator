@@ -28,7 +28,7 @@ object ComponentModel {
     private const val TRACK_PRICES_FILENAME = "TRACK_PRICES"
 
     private val retrofit: Retrofit
-    private val API: ComponentApi
+    private val api: ComponentApi
 
     private var filters: HashMap<Int, FilterAttribute> = HashMap()
     var components: ArrayList<Component>
@@ -60,7 +60,7 @@ object ComponentModel {
                 .baseUrl(ComponentApi.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-        API = retrofit.create(ComponentApi::class.java)
+        api = retrofit.create(ComponentApi::class.java)
 
         restoreFavorite()
     }
@@ -85,7 +85,7 @@ object ComponentModel {
            if ((components.isNotEmpty() && isRelevanceCache())) {
                continuation.resume(components)
            } else {
-               val call: Call<ArrayList<Component>> = API.getGoodsBlock(chosenCategory.toString())
+               val call: Call<ArrayList<Component>> = api.getGoodsBlock(chosenCategory.toString())
                call.enqueue(object : Callback<ArrayList<Component>> {
                    override fun onResponse(call: Call<ArrayList<Component>>, response: Response<ArrayList<Component>>) {
                        val newComponents: ArrayList<Component>? = response.body()
@@ -118,7 +118,7 @@ object ComponentModel {
             if (filters.isNotEmpty()) {
                 continuation.resume(filters)
             } else {
-                val call: Call<HashMap<Int, FilterAttribute>> = API.getFilters(chosenCategory.toString())
+                val call: Call<HashMap<Int, FilterAttribute>> = api.getFilters(chosenCategory.toString())
                 call.enqueue(object : Callback<HashMap<Int, FilterAttribute>> {
                     override fun onResponse(call: Call<HashMap<Int, FilterAttribute>>, response: Response<HashMap<Int, FilterAttribute>>) {
                         val result: HashMap<Int, FilterAttribute>? = response.body()

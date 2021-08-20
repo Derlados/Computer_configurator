@@ -8,11 +8,13 @@ interface BuildData {
 
     val serverId: Int
     val id: String
-    val components: HashMap<ComponentCategory, ArrayList<BuildComponent>>
-    val price: Int
     val name: String
     val description: String
+    val price: Int
+    val components: HashMap<ComponentCategory, ArrayList<BuildComponent>>
     var image: String?
+    val isPublic: Boolean
+
     val isCompatibility: Boolean
     val isComplete: Boolean
 

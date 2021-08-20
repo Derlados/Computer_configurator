@@ -16,7 +16,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.*
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R

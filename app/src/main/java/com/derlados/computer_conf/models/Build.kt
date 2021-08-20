@@ -52,26 +52,24 @@ class Build : Cloneable, BuildData {
 
     override var serverId: Int = -1
     override var id: String = UUID.randomUUID().toString().replace("-", "")
-    override var components: HashMap<ComponentCategory, ArrayList<BuildData.BuildComponent>> = hashMapOf(
-            ComponentCategory.CPU to ArrayList(),
-            ComponentCategory.MOTHERBOARD to ArrayList(),
-            ComponentCategory.GPU to ArrayList(),
-            ComponentCategory.RAM to ArrayList(),
-            ComponentCategory.HDD to ArrayList(),
-            ComponentCategory.SSD to ArrayList(),
-            ComponentCategory.POWER_SUPPLY to ArrayList(),
-            ComponentCategory.CASE to ArrayList(),
-    ) // Комплетующие, разбиты по категориям, где каждый элемент пара (<комлпектующее>, <количество>)
-    override var price: Int = 0 // Цена сборки
     override var name: String = ""
     override var description: String = "" // Описание в сборке
-
+    override var price: Int = 0 // Цена сборки
+    // Комплетующие, разбиты по категориям, где каждый элемент пара (<комлпектующее>, <количество>)
+    override var components: HashMap<ComponentCategory, ArrayList<BuildData.BuildComponent>> = hashMapOf(
+        ComponentCategory.CPU to ArrayList(),
+        ComponentCategory.MOTHERBOARD to ArrayList(),
+        ComponentCategory.GPU to ArrayList(),
+        ComponentCategory.RAM to ArrayList(),
+        ComponentCategory.HDD to ArrayList(),
+        ComponentCategory.SSD to ArrayList(),
+        ComponentCategory.POWER_SUPPLY to ArrayList(),
+        ComponentCategory.CASE to ArrayList(),
+    )
+    // В качестве изображение берется изображение корпуса, если он есть в сборке
     override var image: String? = null
-    //TODO нужно разобраться с кешированиев ретрофита и если оно работает не так как хотелось бы - придется вручную всё сохранять
-        /**
-         * Получение изображения, если оно есть
-         */
         get() = BuildModel.selectedBuild?.components?.get(ComponentCategory.CASE)?.getOrNull(0)?.component?.imageUrl
+    override var isPublic: Boolean = false
 
     override var isCompatibility: Boolean = true
     override val isComplete: Boolean

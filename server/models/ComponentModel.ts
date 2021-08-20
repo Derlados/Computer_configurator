@@ -13,19 +13,6 @@ export default class ComponentModel {
     private pool: Pool; // Пул базы данных
     private readonly BLOCK_SIZE: number = 10000;
 
-    // Оптимизация, чтобы не искать Id. Реализация на сервере дает возможность корректировать id без клиента
-    private readonly CategoriesId: Map<string, number> = new Map<string, number>([
-        ["CPU", 1],
-        ["GPU", 2],
-        ["MOTHERBOARD", 3],
-        ["SSD", 4],
-        ["HDD", 5],
-        ["RAM", 6],
-        ["POWER_SUPPLY", 7],
-        ["CASE", 8],
-        ["COOLER", 9]
-    ]);
-
     constructor() {
         this.pool = DataBase.getDatabase().getPool();
     }
@@ -41,7 +28,7 @@ export default class ComponentModel {
         const sql: string = `SELECT id_component AS id, name, price, img AS imageUrl FROM component 
                             WHERE id_category = ?`;
 
-        const data: string[] = [this.CategoriesId.get(category).toString()];
+        const data: string[] = [Component.CategoriesId.get(category).toString()];
         const components: Map<number, Component> = new Map<number, Component>()
 
         return new Promise<Array<Component>>((resolve, reject) => {
@@ -93,7 +80,7 @@ export default class ComponentModel {
                             ORDER BY CONVERT(attribute_value.value, SIGNED), attribute_value.value ASC`;
 
         return new Promise<Map<number, FilterAttribute>>((resolve, reject) => {
-            this.pool.execute(sql, [this.CategoriesId.get(category).toString()])
+            this.pool.execute(sql, [Component.CategoriesId.get(category).toString()])
                 .then(result => {
                     const filters: Map<number, FilterAttribute> = new Map<number, FilterAttribute>();
 
@@ -130,4 +117,6 @@ export default class ComponentModel {
             }
         });
     }
+
+
 }
