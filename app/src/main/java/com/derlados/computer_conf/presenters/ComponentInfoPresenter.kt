@@ -13,7 +13,7 @@ class ComponentInfoPresenter(private val view: ComponentInfoView, private val re
         view.setDefaultImage(resourceProvider.getDefaultImageByCategory(ComponentModel.chosenCategory))
         view.setComponentInfo(ComponentModel.chosenComponent)
 
-        if (BuildModel.selectedBuild != null) {
+        if (BuildModel.editableBuild != null) {
             view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_BUILD), ::addToBuild)
         } else {
             view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_FAVORITE), ::addToFavorite)
@@ -26,7 +26,7 @@ class ComponentInfoPresenter(private val view: ComponentInfoView, private val re
     }
 
     private fun addToBuild() {
-        BuildModel.selectedBuild?.addToBuild(ComponentModel.chosenCategory, ComponentModel.chosenComponent)
+        BuildModel.editableBuild?.addToBuild(ComponentModel.chosenCategory, ComponentModel.chosenComponent)
         view.returnToBuild()
     }
 }

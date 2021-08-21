@@ -37,11 +37,11 @@ export default class BuildModel {
         for (const row of rows) {
             if (!builds.has(row.id)) {
                 const build = new Build();
-                build.id = row.id;
+                build.serverId = row.id;
                 build.idUser = row.id_user;
                 build.name = row.name;
                 build.description = row.description;
-                build.isPublic = row.is_public;
+                build.isPublic = row.is_public == 1;
 
                 builds.set(row.id, build);
             }

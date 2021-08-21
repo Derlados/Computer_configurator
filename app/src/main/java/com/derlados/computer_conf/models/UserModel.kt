@@ -150,17 +150,14 @@ object UserModel {
 
     }
 
-    private fun tryRestoreUser(): Boolean {
+    fun tryRestoreUser() {
         val id = userPreferences.getInt(APP_PREFERENCES_ID, -1)
         val username = userPreferences.getString(APP_PREFERENCES_USERNAME, null)
         val photoUrl = userPreferences.getString(APP_PREFERENCES_PHOTO_URL, null)
         val token = userPreferences.getString(APP_PREFERENCES_TOKEN, null)
 
-        return if (id != -1 && username != null && token != null) {
+        if (id != -1 && username != null && token != null) {
             currentUser = User(id, username, photoUrl, token)
-            true
-        } else {
-            false
         }
     }
 

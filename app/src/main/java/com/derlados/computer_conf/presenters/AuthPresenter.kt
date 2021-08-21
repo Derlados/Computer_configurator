@@ -2,6 +2,7 @@ package com.derlados.computer_conf.presenters
 
 import android.accounts.NetworkErrorException
 import android.util.Log
+import com.derlados.computer_conf.models.BuildModel
 import com.derlados.computer_conf.models.UserModel
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.view_interfaces.AuthView
@@ -14,9 +15,11 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
     private val emailRegex = Regex("([A-Z,a-z]|[А-Я,а-я]|[ІЇЄiїєЁё]|[0-9]|_)+") // Регулярка для проверки валидации
 
     private var networkJob: Job? = null
+    private var restoreDataJob: Job? = null
 
     fun finish() {
         networkJob?.cancel()
+        restoreDataJob?.cancel()
     }
 
     fun tryLogin(username: String, password: String) {
@@ -26,9 +29,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
             networkJob = CoroutineScope(Dispatchers.Main).launch {
                 try {
                     UserModel.login(username, password)
-                    if (isActive) {
-                        view.returnBack()
-                    }
+                    loadUserData()
                 } catch (e: NetworkErrorException) {
                     if (isActive) {
                         errorHandle(e.message)
@@ -43,7 +44,6 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
             view.showError(resourceProvider.getString(ResourceProvider.ResString.INCORRECT_FIELDS_LENGTH))
         } else if (!validRegEx.matches(username) || !validRegEx.matches(password) || !validRegEx.matches(confirmPass) ||
                 (email.isNotEmpty() && !emailRegex.matches(email) || (secret.isNotEmpty() && !validRegEx.matches(secret)))) {
-
             view.showError(resourceProvider.getString(ResourceProvider.ResString.INVALID_AUTH_DATA))
         } else if (password != confirmPass) {
             view.showError(resourceProvider.getString(ResourceProvider.ResString.PASSWORD_DO_NOT_MATCH))
@@ -51,9 +51,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
             networkJob = CoroutineScope(Dispatchers.Main).launch {
                 try {
                     UserModel.register(username, password, email, secret)
-                    if (isActive) {
-                        view.returnBack()
-                    }
+                    loadUserData()
                 } catch (e: NetworkErrorException) {
                     if (isActive) {
                         errorHandle(e.message)
@@ -67,9 +65,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
         networkJob = CoroutineScope(Dispatchers.Main).launch {
             try {
                 UserModel.googleSignIn(googleId, username, photoUrl)
-                if (isActive) {
-                    view.returnBack()
-                }
+                loadUserData()
             } catch (e: NetworkErrorException) {
                 if (isActive) {
                     errorHandle(e.message)
@@ -94,6 +90,21 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
             }
         } catch (e: Exception) {
             view.showError(resourceProvider.getString(ResourceProvider.ResString.UNEXPECTED_ERROR))
+        }
+    }
+
+    private fun loadUserData() {
+        val user = UserModel.currentUser
+        if (user != null) {
+            restoreDataJob = CoroutineScope(Dispatchers.Main).launch {
+                BuildModel.restoreBuildsFromServer(user.token, user.id)
+                BuildModel.isChanged = true
+
+                //TODO load favorite
+                if (isActive) {
+                    view.returnBack()
+                }
+            }
         }
     }
 }

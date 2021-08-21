@@ -2,7 +2,7 @@ import { BuildComponent } from "../types/BuildComponent";
 import { Component } from "../types/Component";
 
 export class Build {
-    id: number;
+    serverId: number;
     idUser: number;
     name: string;
     description: string;

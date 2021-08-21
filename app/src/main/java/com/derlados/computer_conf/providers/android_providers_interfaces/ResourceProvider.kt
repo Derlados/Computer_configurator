@@ -24,7 +24,9 @@ interface ResourceProvider {
         NO_CONNECTION,
         INTERNAL_SERVER_ERROR,
         UNEXPECTED_ERROR,
-        INCORRECT_FIELDS_LENGTH
+        INCORRECT_FIELDS_LENGTH,
+        BUILD_MUST_BE_COMPLETED,
+        BUILD_WILL_BE_SAVED_ON_SERVER
     }
     fun getDefaultImageByCategory(category: ComponentCategory): Int
     fun getCompatibilityErrors(error: Build.Companion.CompatibilityError): String

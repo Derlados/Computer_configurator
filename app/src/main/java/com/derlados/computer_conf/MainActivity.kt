@@ -3,25 +3,32 @@ package com.derlados.computer_conf
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.models.BuildModel
+import com.derlados.computer_conf.presenters.MainAppPresenter
+import com.derlados.computer_conf.view_interfaces.MainView
 import com.derlados.computer_conf.views.LoginFragment
 import com.derlados.computer_conf.views.MainMenuFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMenu.OnMenuItemClickListener {
+class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMenu.OnMenuItemClickListener, MainView {
     var fragmentManager = supportFragmentManager
     private lateinit var mainMenuFragment: MainMenuFragment;
+    private lateinit var presenter: MainAppPresenter
+    private lateinit var menu: Menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        presenter = MainAppPresenter(this, App.app.resourceProvider)
+        presenter.init()
 
         // Инициализация менеджера смены фрагментов
         mainMenuFragment = MainMenuFragment()
@@ -55,9 +62,18 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.app_menu, menu)
+        menu?.let {
+            this.menu = menu
+            val inflater = menuInflater
+            inflater.inflate(R.menu.app_menu, menu)
+            presenter.menuCreated()
+        }
         return true
+    }
+
+    override fun changeAuthItemMenu(isAuth: Boolean) {
+        menu.findItem(R.id.app_menu_exit).isVisible = isAuth
+        menu.findItem(R.id.app_menu_auth).isVisible = !isAuth
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -120,4 +136,6 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
          */
         fun onBackPressed(): Boolean
     }
+
+
 }

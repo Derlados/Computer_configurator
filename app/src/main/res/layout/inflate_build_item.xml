@@ -39,13 +39,20 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.85"
-                    android:layout_margin="3dp"
                     android:text="name_build"
                     android:gravity="start|center"
                     android:paddingStart="20dp"
                     android:paddingEnd="0dp"
                     android:textSize="20sp"
                     android:textColor="@color/turquoise"/>
+
+                <ImageButton
+                    android:id="@+id/inflate_build_item_ibt_publish"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15"
+                    android:src="@drawable/ic_internet_on_24"
+                    android:background="@color/invisible"/>
 
                 <ImageButton
                     android:id="@+id/inflate_build_item_ibt_delete"
@@ -57,13 +64,11 @@
 
             </LinearLayout>
 
-
             <TextView
                 android:id="@+id/inflate_build_item_tv_price"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.3"
-                android:layout_margin="3dp"
+                android:layout_weight="0.35"
                 android:text="price_build"
                 android:textSize="20sp"
                 android:gravity="start|center"
@@ -81,7 +86,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_margin="3dp"
+
                     android:text="@string/status"
                     android:gravity="start|center"
                     android:textSize="16sp"
@@ -94,7 +99,6 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_margin="3dp"
                     android:text="status_value"
                     android:gravity="center"
                     android:textSize="16sp"

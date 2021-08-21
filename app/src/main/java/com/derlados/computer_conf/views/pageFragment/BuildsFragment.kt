@@ -1,22 +1,26 @@
 package com.derlados.computer_conf.views.pageFragment
 
+import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.derlados.computer_conf.views.OnFragmentInteractionListener
+import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
-import com.derlados.computer_conf.view_interfaces.PageBuildsView
 import com.derlados.computer_conf.models.BuildData
 import com.derlados.computer_conf.presenters.PageBuildsPresenter
-import com.derlados.computer_conf.views.adapters.BuildRecyclerAdapter
+import com.derlados.computer_conf.view_interfaces.PageBuildsView
 import com.derlados.computer_conf.views.BuildConstructorFragment
+import com.derlados.computer_conf.views.OnFragmentInteractionListener
+import com.derlados.computer_conf.views.adapters.BuildRecyclerAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_build_list.view.*
+import org.w3c.dom.Text
+
 
 class BuildsFragment : PageFragment(), PageBuildsView {
     private lateinit var frListener: OnFragmentInteractionListener
@@ -40,7 +44,7 @@ class BuildsFragment : PageFragment(), PageBuildsView {
             createBuild()
         }
 
-        presenter = PageBuildsPresenter(this)
+        presenter = PageBuildsPresenter(this, App.app.resourceProvider)
         presenter.init()
         return currentFragment
     }
@@ -53,21 +57,67 @@ class BuildsFragment : PageFragment(), PageBuildsView {
         }
     }
 
+    /**
+     * Установка данных о сборке
+     * @see BuildData
+     * @param buildsData - список сборок. Отправляется массив Builds, однако доступ предоставляется
+     * в соответствии с интерфейсом BuildData, все элементы должны его наследовать
+     */
     override fun <T : BuildData> setBuildsData(buildsData: ArrayList<T>) {
         rvBuildRecycler.layoutManager = LinearLayoutManager(context)
-        rvBuildRecycler.adapter = BuildRecyclerAdapter(buildsData, ::selectBuild, ::removeBuild)
+        rvBuildRecycler.adapter = BuildRecyclerAdapter(buildsData, ::selectBuild, ::removeBuild, ::changePublicStatus)
     }
 
+    /**
+     * Обновление списка через адаптер, если изменяется содержимое списка сборок
+     * @param size - размер нового списка
+     */
     override fun updateRangeBuildList(size: Int) {
         rvBuildRecycler.adapter?.notifyItemRangeChanged(0, size)
     }
 
+    /**
+     * Обновление конкретного элемента
+     * @param index - индекс изменяемого элемента
+     */
     override fun updateItemBuildList(index: Int) {
         rvBuildRecycler.adapter?.notifyItemChanged(index)
     }
 
+    /**
+     * Удаление конкретного элемента
+     * @param index - индекс изменяемого элемента
+     */
     override fun removeItemBuildList(index: Int) {
         rvBuildRecycler.adapter?.notifyItemRemoved(index)
+    }
+
+    /**
+     * Диаологовое окно с предупреждением. На данный момент сообщает что нельзя по определенным
+     * причинам сохранить сборку.
+     */
+    override fun showWarnDialog(message: String) {
+        val tvDialog = layoutInflater.inflate(R.layout.inflate_dialog_text, null) as TextView
+        tvDialog.text = message
+
+        AlertDialog.Builder(context, R.style.DarkAlert)
+                .setCustomTitle(tvDialog)
+                .setPositiveButton("Ок") { _, _ ->  }
+                .show()
+    }
+
+    /**
+     * Диаологовое окно для подтверждения того, что сборка будет сохранена на сервере
+     */
+    override fun showDialogAcceptSave(message: String) {
+        val tvDialog = layoutInflater.inflate(R.layout.inflate_dialog_text, null) as TextView
+        tvDialog.text = message
+
+        AlertDialog.Builder(context, R.style.DarkAlert)
+                .setCustomTitle(tvDialog)
+                .setPositiveButton("Да") { _, _ -> presenter.saveBuildOnServer() }
+                .setNegativeButton("Нет") { _, _ -> }
+                .show()
     }
 
     override fun openBuildConstructor() {
@@ -78,11 +128,18 @@ class BuildsFragment : PageFragment(), PageBuildsView {
         presenter.createNewBuild()
     }
 
+    /** Обработчики кнопок для каждого элемента, по сути вызывают один метод, так как необходимо передать в адаптер их */
+    //TODO может найдется способ передать напрямую из презентера и удалить эти методы отсюда
+
     private fun selectBuild(id: String) {
         presenter.selectBuild(id)
     }
 
     private fun removeBuild(id: String) {
         presenter.removeBuild(id)
+    }
+
+    private fun changePublicStatus(id: String) {
+        presenter.changePublicStatus(id)
     }
 }

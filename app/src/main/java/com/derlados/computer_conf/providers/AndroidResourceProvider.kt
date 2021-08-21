@@ -51,6 +51,8 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.INTERNAL_SERVER_ERROR -> context.getString(R.string.internal_server_error)
             ResourceProvider.ResString.UNEXPECTED_ERROR -> context.getString(R.string.unexpected_error)
             ResourceProvider.ResString.INCORRECT_FIELDS_LENGTH -> context.getString(R.string.incorrect_fields_length)
+            ResourceProvider.ResString.BUILD_MUST_BE_COMPLETED -> context.getString(R.string.build_must_be_completed)
+            ResourceProvider.ResString.BUILD_WILL_BE_SAVED_ON_SERVER -> context.getString(R.string.build_will_be_saved_on_server)
         }
     }
 

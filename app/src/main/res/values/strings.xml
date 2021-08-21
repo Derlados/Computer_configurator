@@ -92,4 +92,7 @@
     <string name="components">Комплектующие</string>
     <string name="user_builds">Польз. сборки</string>
     <string name="save_on_server">Сохранить на сервере</string>
+    <string name="build_will_be_saved_on_server">Ваша сборка будет сохранена на сервер и доступна все пользователям. Вы согласны ?</string>
+    <string name="build_must_be_completed">Для публикации сборки, необходимо чтобы она была закончена, а так же полностью совместима</string>
+    <string name="exit">Выход</string>
 </resources>

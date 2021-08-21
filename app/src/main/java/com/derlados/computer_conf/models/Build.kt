@@ -68,7 +68,7 @@ class Build : Cloneable, BuildData {
     )
     // В качестве изображение берется изображение корпуса, если он есть в сборке
     override var image: String? = null
-        get() = BuildModel.selectedBuild?.components?.get(ComponentCategory.CASE)?.getOrNull(0)?.component?.imageUrl
+        get() = BuildModel.editableBuild?.components?.get(ComponentCategory.CASE)?.getOrNull(0)?.component?.imageUrl
     override var isPublic: Boolean = false
 
     override var isCompatibility: Boolean = true

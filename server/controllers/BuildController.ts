@@ -26,11 +26,11 @@ export default class BuildController {
     }
 
     public addBuild = (req: any, res: Response) => {
-        console.log(req.body);
         const idUser = req.params.idUser;
         const build = new Build();
         build.name = req.body.name;
         build.description = req.body.desc;
+        build.isPublic = req.body.isPublic;
         const components = Array<Pair>();
         for (const component of req.body.components) {
             components.push(new Pair(component.first, component.second))
@@ -81,7 +81,6 @@ export default class BuildController {
 
         for (let i = 0; i < responseData.length; i++) {
             responseData[i].components = Object.fromEntries(builds[i].components);
-            console.log(builds[i].components);
         }
 
         return responseData;

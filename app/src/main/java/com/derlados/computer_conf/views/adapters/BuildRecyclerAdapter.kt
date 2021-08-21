@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
@@ -19,7 +20,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, private val onItemClick: (id: String) -> Unit, private val removeItem: (id: String) -> Unit):
+class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, private val onItemClick: (id: String) -> Unit,
+                                             private val removeItem: (id: String) -> Unit, private val changePublicStatus: (id: String) -> Unit):
         RecyclerView.Adapter<BuildRecyclerAdapter.BuildHolder>() {
 
     class BuildHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -38,6 +40,7 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
         val tvPrice: TextView = itemView.inflate_build_item_tv_price
         val tvStatus: TextView = itemView.inflate_build_item_tv_status
         val img: ImageView = itemView.inflate_build_item_img
+        val btPublish: ImageView = itemView.inflate_build_item_ibt_publish
         val btDelete: ImageButton = itemView.inflate_build_item_ibt_delete
         val btComponentList: ImageButton = itemView.inflate_build_item_ibt_hide
         val llComponentList: ExpandableLinearLayout = itemView.inflate_build_item_component_list
@@ -82,6 +85,7 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
         holder.tvName.text = build.name
         holder.tvPrice.text = App.app.getString(R.string.component_price, build.price)
 
+        // Сообщение о статусе готовности и совместимости сборки
         if (!build.isCompatibility) {
             holder.tvStatus.text = App.app.resourceProvider.getString(ResourceProvider.ResString.NOT_COMPATIBILITY)
             holder.tvStatus.setTextColor(App.app.resourceProvider.getColor(ResourceProvider.ResColor.RED))
@@ -93,10 +97,10 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
             holder.tvStatus.setTextColor(App.app.resourceProvider.getColor(ResourceProvider.ResColor.GREEN))
         }
 
+        // Список комплектующих присутствующих в сборках
         build.image?.let {
             Picasso.get().load(it).into(holder.img)
         }
-
         for ((key, value) in holder.tvComponents) {
             val buildComponents = build.components[key]
             if (buildComponents != null) {
@@ -108,11 +112,22 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
             }
         }
 
+        // Настройка изображения статуса публикации
+        if (build.isPublic) {
+            holder.btPublish.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_internet_on_24, App.app.theme))
+        } else {
+            holder.btPublish.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_internet_off_24, App.app.theme))
+        }
+
+        // Настройка обработчиков нажаатий
         holder.itemView.setOnClickListener {
             onItemClick(build.id)
         }
         holder.btDelete.setOnClickListener {
             removeItem(build.id)
+        }
+        holder.btPublish.setOnClickListener {
+            changePublicStatus(build.id)
         }
 
         holder.initExpandLayout()

@@ -5,10 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
@@ -33,7 +30,7 @@ import kotlinx.android.synthetic.main.inflate_component_item.view.*
 import java.util.*
 import kotlin.collections.HashMap
 
-class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPressedListener, BuildConstructorView, FragmentResultListener, NavigationBarView.OnItemSelectedListener {
+class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPressedListener, BuildConstructorView, FragmentResultListener {
     companion object  {
         const val SAVE_BUILD = "SAVE_BUILD"
         const val WITHOUT_SAVE = "WITHOUT_SAVE"
@@ -70,11 +67,10 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        setHasOptionsMenu(true)
         currentFragment = inflater.inflate(R.layout.fragment_build, container, false)
         setFragmentResultListener(SAVE_BUILD, ::onFragmentResult)
         setFragmentResultListener(WITHOUT_SAVE, ::onFragmentResult)
-
-        currentFragment.fragment_build_full_menu_bottom_navigator.setOnItemSelectedListener(this)
 
         etName = currentFragment.fragment_build_et_name
         etName.addTextChangedListener(this)
@@ -95,6 +91,10 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
         presenter = BuildConstructorPresenter(this, App.app.resourceProvider)
         presenter.init()
         return currentFragment
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.build_menu, menu)
     }
 
     /**
@@ -312,15 +312,6 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
     private fun openComponentInfo(category: ComponentCategory, component: Component) {
         presenter.selectComponentToVIew(category, component)
         frListener.nextFragment(this, ComponentInfoFragment(),  BackStackTag.COMPONENT_INFO)
-    }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.build_constructor_menu_nav_publish -> {
-                // TODO доделать публикацию
-            }
-        }
-        return false
     }
 
     //////////////////////////////////////////////Обработчик ввода текста//////////////////////////////////////////////////

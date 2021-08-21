@@ -9,4 +9,7 @@ interface PageBuildsView {
     fun updateRangeBuildList(size: Int)
     fun updateItemBuildList(index: Int)
     fun removeItemBuildList(index: Int)
+
+    fun showWarnDialog(message: String)
+    fun showDialogAcceptSave(message: String)
 }

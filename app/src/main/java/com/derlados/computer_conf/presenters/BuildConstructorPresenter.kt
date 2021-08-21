@@ -12,7 +12,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     var isShouldClose: Boolean = false
 
     fun init() {
-        BuildModel.selectedBuild?.let { build ->
+        BuildModel.editableBuild?.let { build ->
             // Восстановление сохраненных данных
             view.setHeaderData(build.name, build.description)
             for ((category, buildComponents) in build.components) {
@@ -28,24 +28,24 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
 
     fun setName(name: String) {
         BuildModel.isSaved = false
-        BuildModel.selectedBuild?.name = name
+        BuildModel.editableBuild?.name = name
     }
 
     fun setDescription(desc: String) {
         BuildModel.isSaved = false
-        BuildModel.selectedBuild?.description = desc
+        BuildModel.editableBuild?.description = desc
     }
 
     fun removeComponent(category: ComponentCategory, component: Component) {
         BuildModel.isSaved = false
-        BuildModel.selectedBuild?.removeComponent(category, component.id)
+        BuildModel.editableBuild?.removeComponent(category, component.id)
         updateBuild()
     }
 
     fun increaseComponent(category: ComponentCategory, component: Component) {
         BuildModel.isSaved = false
-        BuildModel.selectedBuild?.increaseComponents(category, component.id)
-        BuildModel.selectedBuild?.getBuildComponent(category, component.id)?.count?.let {
+        BuildModel.editableBuild?.increaseComponents(category, component.id)
+        BuildModel.editableBuild?.getBuildComponent(category, component.id)?.count?.let {
             view.setCountComponents(component.id, it)
         }
         updateBuild()
@@ -53,8 +53,8 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
 
     fun reduceComponent(category: ComponentCategory, component: Component) {
         BuildModel.isSaved = false
-        BuildModel.selectedBuild?.reduceComponents(category, component.id)
-        BuildModel.selectedBuild?.getBuildComponent(category, component.id)?.count?.let {
+        BuildModel.editableBuild?.reduceComponents(category, component.id)
+        BuildModel.editableBuild?.getBuildComponent(category, component.id)?.count?.let {
             view.setCountComponents(component.id, it)
         }
         updateBuild()
@@ -79,7 +79,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     }
 
     fun saveBuildOnServer() {
-        BuildModel.saveSelectedBuild()
+        BuildModel.saveEditableBuild()
         view.showToast(resourceProvider.getString(ResourceProvider.ResString.SAVED))
         if (isShouldClose)
             view.exitView()
@@ -90,12 +90,12 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
      * необходимо обновить отображение
      */
     fun checkUserChoice() {
-        BuildModel.selectedBuild?.let { build ->
+        BuildModel.editableBuild?.let { build ->
             build.lastAdded?.let { (category, buildComponent) ->
                 val isMultiple = build.isMultipleCategory(category)
                 BuildModel.isSaved = false
                 view.addNewComponent(category, isMultiple, buildComponent, true)
-                BuildModel.selectedBuild?.clearLastAdded()
+                BuildModel.editableBuild?.clearLastAdded()
                 updateBuild()
             }
         }
@@ -105,7 +105,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
      * Обновление динамичных информационных полей в конструкторе
      */
     private fun updateBuild() {
-        BuildModel.selectedBuild?.let { build ->
+        BuildModel.editableBuild?.let { build ->
             view.updatePrice(build.price)
             build.image?.let { image ->
                 view.setImage(image)
