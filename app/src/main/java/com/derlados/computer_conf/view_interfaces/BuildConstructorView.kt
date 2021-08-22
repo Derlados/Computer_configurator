@@ -17,5 +17,4 @@ interface BuildConstructorView {
 
     fun showSaveDialog()
     fun showToast(message: String)
-    fun exitView()
 }

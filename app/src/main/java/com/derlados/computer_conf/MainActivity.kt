@@ -8,6 +8,7 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.models.BuildModel
 import com.derlados.computer_conf.presenters.MainAppPresenter
@@ -36,7 +37,6 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
         // Открытие фрагмента главного меню
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_ll_container, mainMenuFragment)
-                .addToBackStack(BackStackTag.MAIN.name)
                 .commit()
     }
 
@@ -124,7 +124,11 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
     }
 
     override fun popBackStack(backStackTag: BackStackTag) {
-        fragmentManager.popBackStack(backStackTag.name, 0)
+        if (backStackTag == BackStackTag.MAIN) {
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        } else {
+            fragmentManager.popBackStack(backStackTag.name, 0)
+        }
     }
 
     // Отклик на BackPressed во фрагментах.

@@ -33,7 +33,7 @@ class SearchFragment : PageFragment(), View.OnClickListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val fragment = inflater.inflate(R.layout.fragment_search, container, false)
+        val fragment = inflater.inflate(R.layout.fragment_component_catalogue, container, false)
 
         for ((btId, _) in btCategories) {
             fragment.findViewById<Button>(btId).setOnClickListener(this)

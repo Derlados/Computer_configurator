@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:orientation="vertical"
-    android:background="@color/element_3">
+    android:background="@color/gray_blue">
 
     <LinearLayout
         android:id="@+id/inflate_build_blank_ll_preview_info_header"
@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_margin="5dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.25"
             android:src="@drawable/ic_case_24"/>
 
         <LinearLayout
@@ -40,11 +40,12 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.85"
                     android:text="name_build"
+                    android:textStyle="bold"
                     android:gravity="start|center"
                     android:paddingStart="20dp"
                     android:paddingEnd="0dp"
-                    android:textSize="20sp"
-                    android:textColor="@color/turquoise"/>
+                    android:textSize="18sp"
+                    android:textColor="@color/light_blue"/>
 
                 <ImageButton
                     android:id="@+id/inflate_build_item_ibt_publish"
@@ -70,7 +71,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.35"
                 android:text="price_build"
-                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textSize="18sp"
                 android:gravity="start|center"
                 android:paddingStart="20dp"
                 android:paddingEnd="0dp"
@@ -89,10 +91,10 @@
 
                     android:text="@string/status"
                     android:gravity="start|center"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:paddingStart="20dp"
                     android:paddingEnd="0dp"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/light_blue"/>
 
                 <TextView
                     android:id="@+id/inflate_build_item_tv_status"
@@ -101,8 +103,7 @@
                     android:layout_weight="1"
                     android:text="status_value"
                     android:gravity="center"
-                    android:textSize="16sp"
-
+                    android:textSize="14sp"
                     android:textColor="@color/red"/>
 
             </LinearLayout>
@@ -116,7 +117,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:background="@color/element_3"
+        android:background="@color/gray_blue"
         app:ael_duration="300"
         app:ael_orientation="vertical"
         app:ael_expanded="false"
@@ -165,8 +166,9 @@
 
             <TextView
                 style="@style/build_desc_text_name"
+                android:layout_height="match_parent"
                 android:layout_weight="0.35"
-                android:text="@string/gpu"/>
+                android:text="@string/gpu" />
 
             <TextView
                 android:id="@+id/inflate_build_item_tv_chosen_gpu"

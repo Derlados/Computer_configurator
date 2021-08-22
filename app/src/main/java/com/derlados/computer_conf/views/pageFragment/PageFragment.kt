@@ -22,7 +22,7 @@ abstract class PageFragment : Fragment() {
         * */
         fun newInstance(numPage: Int): PageFragment {
             return when (PageMenu.values()[numPage]) {
-                PageMenu.BUILDS -> BuildsFragment()
+                PageMenu.BUILDS -> BuildsListFragment()
                 PageMenu.SEARCH -> SearchFragment()
                 PageMenu.INFO -> InfoFragment()
             }

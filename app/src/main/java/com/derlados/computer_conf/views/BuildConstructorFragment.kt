@@ -113,9 +113,8 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
      * Управление выходом из экрана переходит под управление презентера
      */
     override fun onBackPressed(): Boolean {
-        presenter.saveBuildOnServer()
         presenter.finish()
-        return false
+        return true
     }
 
     /**
@@ -133,8 +132,6 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         if (requestKey == SAVE_BUILD) {
             presenter.saveBuildOnServer()
-        } else {
-            exitView()
         }
     }
 
@@ -201,10 +198,6 @@ class BuildConstructorFragment : Fragment(), TextWatcher, MainActivity.OnBackPre
             // Вместо перехода к поиску комплектующего, кнопка раскрывает список с комплектуюшими
             btHeader.setOnClickListener { toggleCompListVisibility(btHeader, expandContainer) }
         }
-    }
-
-    override fun exitView() {
-        frListener.popBackStack()
     }
 
     /**

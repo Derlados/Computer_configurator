@@ -25,6 +25,6 @@
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
         app:labelVisibilityMode="labeled"
-        android:background="@color/element_2"/>
+        android:background="#101B5E"/>
 
 </LinearLayout>

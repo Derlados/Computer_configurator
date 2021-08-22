@@ -2,33 +2,31 @@ package com.derlados.computer_conf.views.pageFragment
 
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.models.BuildData
-import com.derlados.computer_conf.presenters.PageBuildsPresenter
-import com.derlados.computer_conf.view_interfaces.PageBuildsView
+import com.derlados.computer_conf.presenters.BuildsListPresenter
+import com.derlados.computer_conf.view_interfaces.BuildsListView
 import com.derlados.computer_conf.views.BuildConstructorFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
 import com.derlados.computer_conf.views.adapters.BuildRecyclerAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_build_list.view.*
-import org.w3c.dom.Text
 
-
-class BuildsFragment : PageFragment(), PageBuildsView {
+class BuildsListFragment : PageFragment(), BuildsListView {
     private lateinit var frListener: OnFragmentInteractionListener
     private lateinit var currentFragment: View
     private lateinit var rvBuildRecycler: RecyclerView // Основной контейнер для бланков сборок
     private lateinit var createBt: FloatingActionButton
 
-    private lateinit var presenter: PageBuildsPresenter
+    private lateinit var listPresenter: BuildsListPresenter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -44,17 +42,9 @@ class BuildsFragment : PageFragment(), PageBuildsView {
             createBuild()
         }
 
-        presenter = PageBuildsPresenter(this, App.app.resourceProvider)
-        presenter.init()
+        listPresenter = BuildsListPresenter(this, App.app.resourceProvider)
+        listPresenter.init()
         return currentFragment
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-
-        if (!hidden) {
-            presenter.userReturn()
-        }
     }
 
     /**
@@ -65,7 +55,7 @@ class BuildsFragment : PageFragment(), PageBuildsView {
      */
     override fun <T : BuildData> setBuildsData(buildsData: ArrayList<T>) {
         rvBuildRecycler.layoutManager = LinearLayoutManager(context)
-        rvBuildRecycler.adapter = BuildRecyclerAdapter(buildsData, ::selectBuild, ::removeBuild, ::changePublicStatus)
+        rvBuildRecycler.adapter = BuildRecyclerAdapter(buildsData, ::selectBuild, ::showDeleteDialog, ::showDialogAcceptPublish)
     }
 
     /**
@@ -109,15 +99,30 @@ class BuildsFragment : PageFragment(), PageBuildsView {
     /**
      * Диаологовое окно для подтверждения того, что сборка будет сохранена на сервере
      */
-    override fun showDialogAcceptSave(message: String) {
+    private fun showDialogAcceptPublish(id: String) {
         val tvDialog = layoutInflater.inflate(R.layout.inflate_dialog_text, null) as TextView
-        tvDialog.text = message
+        tvDialog.text =  getString(R.string.build_will_be_saved_on_server)
 
         AlertDialog.Builder(context, R.style.DarkAlert)
                 .setCustomTitle(tvDialog)
-                .setPositiveButton("Да") { _, _ -> presenter.saveBuildOnServer() }
+                .setPositiveButton("Да") { _, _ -> listPresenter.saveBuildOnServer(id) }
                 .setNegativeButton("Нет") { _, _ -> }
                 .show()
+    }
+
+    private fun showDeleteDialog(id: String) {
+        val tvDialog = layoutInflater.inflate(R.layout.inflate_dialog_text, null) as TextView
+        tvDialog.text = getString(R.string.accept_delete)
+
+        AlertDialog.Builder(context, R.style.DarkAlert)
+                .setCustomTitle(tvDialog)
+                .setPositiveButton("Да") { _, _ ->   listPresenter.removeBuild(id) }
+                .setNegativeButton("Нет") { _, _ -> }
+                .show()
+   }
+
+    override fun showError(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun openBuildConstructor() {
@@ -125,21 +130,13 @@ class BuildsFragment : PageFragment(), PageBuildsView {
     }
 
     private fun createBuild() {
-        presenter.createNewBuild()
+        listPresenter.createNewBuild()
     }
 
     /** Обработчики кнопок для каждого элемента, по сути вызывают один метод, так как необходимо передать в адаптер их */
     //TODO может найдется способ передать напрямую из презентера и удалить эти методы отсюда
 
     private fun selectBuild(id: String) {
-        presenter.selectBuild(id)
-    }
-
-    private fun removeBuild(id: String) {
-        presenter.removeBuild(id)
-    }
-
-    private fun changePublicStatus(id: String) {
-        presenter.changePublicStatus(id)
+        listPresenter.selectBuild(id)
     }
 }

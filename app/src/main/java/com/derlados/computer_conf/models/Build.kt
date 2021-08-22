@@ -51,10 +51,18 @@ class Build : Cloneable, BuildData {
     }
 
     override var serverId: Int = -1
-    override var id: String = UUID.randomUUID().toString().replace("-", "")
+    override var id: String = ""
+        get() {
+            if (field == "")  {
+                field = UUID.randomUUID().toString().replace("-", "")
+            }
+            return field
+        }
     override var name: String = ""
     override var description: String = "" // Описание в сборке
     override var price: Int = 0 // Цена сборки
+    override var isPublic: Boolean = false // Статус публикации (публичности)
+
     // Комплетующие, разбиты по категориям, где каждый элемент пара (<комлпектующее>, <количество>)
     override var components: HashMap<ComponentCategory, ArrayList<BuildData.BuildComponent>> = hashMapOf(
         ComponentCategory.CPU to ArrayList(),
@@ -69,7 +77,7 @@ class Build : Cloneable, BuildData {
     // В качестве изображение берется изображение корпуса, если он есть в сборке
     override var image: String? = null
         get() = BuildModel.editableBuild?.components?.get(ComponentCategory.CASE)?.getOrNull(0)?.component?.imageUrl
-    override var isPublic: Boolean = false
+
 
     override var isCompatibility: Boolean = true
     override val isComplete: Boolean

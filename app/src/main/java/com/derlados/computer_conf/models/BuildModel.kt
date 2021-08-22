@@ -12,12 +12,16 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
-object BuildModel {
+object BuildModel: Observable() {
+    const val ALL_CHANGED = -1
+
     var publicBuilds = ArrayList<Build>()
     enum class ServerErrors {
         INTERNAL_SERVER_ERROR,
@@ -26,8 +30,6 @@ object BuildModel {
 
     var currentUserBuilds = ArrayList<Build>() // Список всех сборок пользователя
     var editableBuild: Build? = null // Выбранная сборка, должна являться клоном из списка
-    var isSaved: Boolean = true
-    var isChanged: Boolean = false
     private val retrofit: Retrofit
     private val api: BuildsApi
 
@@ -37,6 +39,10 @@ object BuildModel {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         api = retrofit.create(BuildsApi::class.java)
+    }
+
+    fun setObserver(presenterObserver: Observer) {
+        addObserver(presenterObserver)
     }
 
     ////////////////////////////////////API////////////////////////////
@@ -74,7 +80,17 @@ object BuildModel {
                 override fun onResponse(call: Call<ArrayList<Build>>, response: Response<ArrayList<Build>>) {
                     val builds = response.body()
                     if (builds != null && response.code() == 200) {
-                        currentUserBuilds.addAll(builds)
+                        // В список и на устройство должны быть добавлены только те сборки, которых еще нету у пользователя
+                        for (serverBuild in builds) {
+                            val build = currentUserBuilds.find { localBuild -> serverBuild.serverId == localBuild.serverId }
+                            if (build == null) {
+                                currentUserBuilds.add(serverBuild)
+                                FileManager.saveJsonData(FileManager.Entity.BUILD, serverBuild.id, Gson().toJson(serverBuild))
+                            }
+                        }
+                        setChanged()
+                        notifyObservers(ALL_CHANGED)
+
                         continuation.resume(Unit)
                     } else {
                         continuation.resumeWithException(NetworkErrorException(ServerErrors.INTERNAL_SERVER_ERROR.name))
@@ -82,7 +98,6 @@ object BuildModel {
                 }
 
                 override fun onFailure(call: Call<ArrayList<Build>>, t: Throwable) {
-                    Log.e("ERROR", t.toString())
                     continuation.resumeWithException(NetworkErrorException(ServerErrors.CONNECTION_ERROR.name))
                 }
             })
@@ -93,7 +108,7 @@ object BuildModel {
      * Сохранение сборки на сервер
      * @param token - токе пользователя
      * @param idUser - id пользователя
-     * @param idBuild - id сборки (локальное)
+     * @param idBuild - локальное id сборки
      * @param isPublic - начальный статус публикации
      * */
     suspend fun saveBuildOnServer(token: String, idUser: Int, idBuild: String, isPublic: Boolean) {
@@ -123,7 +138,7 @@ object BuildModel {
 
     }
 
-    /**TESTED*/
+    /** CURRENTLY UNUSED */
     fun updateBuildOnServer(token: String, idUser: Int) {
         val buildToUpdate = currentUserBuilds[0] ?: return
 
@@ -144,6 +159,7 @@ object BuildModel {
         })
     }
 
+    /** CURRENTLY UNUSED */
     /**
      * Изменение статуса публикации сборки
      * @param token - токен пользователя
@@ -173,10 +189,12 @@ object BuildModel {
         }
     }
 
-    /**TESTED*/
-    fun deleteBuild(token: String, idUser: Int, idServerBuild: Int = 39) {
-        val buildToDelete = currentUserBuilds[0] ?: return
-
+    /** Удаление сборки с аккаунта
+     * @param token - токе пользователя
+     * @param idUser - id пользователя
+     * @param idServerBuild - серверное id сборки
+     * */
+    fun deleteBuildFromServer(token: String, idUser: Int, idServerBuild: Int) {
         val call = api.deleteBuild(token, idUser, idServerBuild)
         call.enqueue(object : Callback<Unit> {
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
@@ -222,15 +240,17 @@ object BuildModel {
     }
 
     /**
-     * Сохранение ихменений текущей сборки (которая редактируется). Сохранеяет так же на устройство
+     * Сохранение ихменений текущей сборки (которая редактируется). Сохранеяет так же на устройстве
      */
     fun saveEditableBuild() {
         editableBuild?.run {
             val buildToRemove = currentUserBuilds.find { build -> build.id == this.id }
-            currentUserBuilds[currentUserBuilds.indexOf(buildToRemove)] = this.clone()
+            val lastChangeIndex = currentUserBuilds.indexOf(buildToRemove)
+            currentUserBuilds[lastChangeIndex] = this.clone()
             FileManager.saveJsonData(FileManager.Entity.BUILD, this.id, Gson().toJson(this))
+            setChanged()
+            notifyObservers(lastChangeIndex)
         }
-        isSaved = true
     }
 
     /**
@@ -238,10 +258,6 @@ object BuildModel {
      */
     fun deselectBuild() {
         editableBuild = null
-    }
-
-    fun indexOfSelectedBuild(): Int {
-        return currentUserBuilds.indexOfFirst { it.id == editableBuild?.id }
     }
 
     fun indexOfBuildById(id: String): Int {

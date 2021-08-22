@@ -98,7 +98,6 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
         if (user != null) {
             restoreDataJob = CoroutineScope(Dispatchers.Main).launch {
                 BuildModel.restoreBuildsFromServer(user.token, user.id)
-                BuildModel.isChanged = true
 
                 //TODO load favorite
                 if (isActive) {

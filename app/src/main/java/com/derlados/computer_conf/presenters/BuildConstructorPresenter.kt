@@ -9,8 +9,6 @@ import com.derlados.computer_conf.models.ComponentModel
 
 class BuildConstructorPresenter(private val view: BuildConstructorView, private val resourceProvider: ResourceProvider) {
 
-    var isShouldClose: Boolean = false
-
     fun init() {
         BuildModel.editableBuild?.let { build ->
             // Восстановление сохраненных данных
@@ -20,30 +18,30 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
                     view.addNewComponent(category, build.isMultipleCategory(category), buildComponents[i], false)
                 }
             }
-
             // Обновление динамичных полей
             updateBuild()
         }
     }
 
+    fun finish() {
+        BuildModel.saveEditableBuild()
+        BuildModel.deselectBuild()
+    }
+
     fun setName(name: String) {
-        BuildModel.isSaved = false
         BuildModel.editableBuild?.name = name
     }
 
     fun setDescription(desc: String) {
-        BuildModel.isSaved = false
         BuildModel.editableBuild?.description = desc
     }
 
     fun removeComponent(category: ComponentCategory, component: Component) {
-        BuildModel.isSaved = false
         BuildModel.editableBuild?.removeComponent(category, component.id)
         updateBuild()
     }
 
     fun increaseComponent(category: ComponentCategory, component: Component) {
-        BuildModel.isSaved = false
         BuildModel.editableBuild?.increaseComponents(category, component.id)
         BuildModel.editableBuild?.getBuildComponent(category, component.id)?.count?.let {
             view.setCountComponents(component.id, it)
@@ -52,7 +50,6 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     }
 
     fun reduceComponent(category: ComponentCategory, component: Component) {
-        BuildModel.isSaved = false
         BuildModel.editableBuild?.reduceComponents(category, component.id)
         BuildModel.editableBuild?.getBuildComponent(category, component.id)?.count?.let {
             view.setCountComponents(component.id, it)
@@ -69,20 +66,8 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
         ComponentModel.chosenComponent = component
     }
 
-    fun finish() {
-        if (!BuildModel.isSaved) {
-            view.showSaveDialog()
-            isShouldClose = true
-        } else {
-            view.exitView()
-        }
-    }
-
     fun saveBuildOnServer() {
-        BuildModel.saveEditableBuild()
-        view.showToast(resourceProvider.getString(ResourceProvider.ResString.SAVED))
-        if (isShouldClose)
-            view.exitView()
+
     }
 
     /**
@@ -93,7 +78,6 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
         BuildModel.editableBuild?.let { build ->
             build.lastAdded?.let { (category, buildComponent) ->
                 val isMultiple = build.isMultipleCategory(category)
-                BuildModel.isSaved = false
                 view.addNewComponent(category, isMultiple, buildComponent, true)
                 BuildModel.editableBuild?.clearLastAdded()
                 updateBuild()

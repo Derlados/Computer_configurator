@@ -1,707 +1,803 @@
 {
-    "build": {
-        "components": {
-            "GPU": [],
-            "RAM": [
-                {
-                    "component": {
-                        "attributes": {
-                            "108": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Охлаждение",
-                                "value": "+ радиатор"
-                            },
-                            "105": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Форм-фактор памяти",
-                                "value": "288-pin DIMM"
-                            },
-                            "106": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Проверка и коррекция ошибок (ECC)",
-                                "value": "non-ECC"
-                            },
-                            "103": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Тайминги",
-                                "value": "CL16"
-                            },
-                            "24": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": true,
-                                "name": "Тип памяти",
-                                "value": "DDR4"
-                            },
-                            "101": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Количество модулей в наборе",
-                                "value": "2"
-                            },
-                            "107": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Буферизация",
-                                "value": "unbuffered"
-                            },
-                            "102": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Стандарты памяти",
-                                "value": "PC4-25600"
-                            },
-                            "27": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Частота памяти",
-                                "value": "3200 MHz"
-                            },
-                            "83": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Объём памяти",
-                                "value": "16 ГБ"
-                            },
-                            "104": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Напряжение",
-                                "value": "1.35 V"
-                            }
+    "components": {
+        "CPU": [
+            {
+                "component": {
+                    "attributes": {
+                        "8": {
+                            "id": 0,
+                            "idValue": 94,
+                            "isPreview": false,
+                            "name": "Объем кеш-памяти 2-го уровня",
+                            "value": "L2: 2MB"
                         },
-                        "id": 8333,
-                        "imageUrl": "https://brain.com.ua/static/images/prod_img/3/9/U0376139.jpg",
-                        "name": "Модуль памяти для компьютера DDR4 16GB (2x8GB) 3200 MHz HyperX FURY Black HyperX (HX432C16FB3K2/16)",
-                        "price": 2789
-                    },
-                    "count": 1
-                }
-            ],
-            "CPU": [
-                {
-                    "component": {
-                        "attributes": {
-                            "8": {
-                                "id": 0,
-                                "idValue": 94,
-                                "isPreview": false,
-                                "name": "Объем кеш-памяти 2-го уровня",
-                                "value": "L2: 2MB"
-                            },
-                            "11": {
-                                "id": 0,
-                                "idValue": 130,
-                                "isPreview": false,
-                                "name": "Теплопакет (TDP)",
-                                "value": "65W"
-                            },
-                            "13": {
-                                "id": 0,
-                                "idValue": 167,
-                                "isPreview": false,
-                                "name": "Тип поставки",
-                                "value": "Tray+кулер"
-                            },
-                            "9": {
-                                "id": 0,
-                                "idValue": 114,
-                                "isPreview": false,
-                                "name": "Объем кеш-памяти 3-го уровня",
-                                "value": "L3: 4MB"
-                            },
-                            "3": {
-                                "id": 0,
-                                "idValue": 26,
-                                "isPreview": false,
-                                "name": "Количество ядер",
-                                "value": "4 ядра"
-                            },
-                            "4": {
-                                "id": 0,
-                                "idValue": 35,
-                                "isPreview": false,
-                                "name": "Количество потоков",
-                                "value": "8 потоков"
-                            },
-                            "1": {
-                                "id": 0,
-                                "idValue": 2,
-                                "isPreview": false,
-                                "name": "Семейство процессора",
-                                "value": "AMD Ryzen 5"
-                            },
-                            "211": {
-                                "id": 0,
-                                "idValue": 147,
-                                "isPreview": false,
-                                "name": "Архитектура ядра AMD",
-                                "value": "Zen+"
-                            },
-                            "208": {
-                                "id": 0,
-                                "idValue": 46,
-                                "isPreview": false,
-                                "name": "Тактовая частота ядра, ГГц",
-                                "value": "3.7"
-                            },
-                            "7": {
-                                "id": 0,
-                                "idValue": 76,
-                                "isPreview": false,
-                                "name": "Графическое ядро",
-                                "value": "Radeon Vega 11"
-                            },
-                            "6": {
-                                "id": 0,
-                                "idValue": 63,
-                                "isPreview": false,
-                                "name": "Частота ядра в Boost режиме, ГГц",
-                                "value": "4.2"
-                            },
-                            "2": {
-                                "id": 0,
-                                "idValue": 17,
-                                "isPreview": false,
-                                "name": "Тип сокета",
-                                "value": "AM4"
-                            }
+                        "11": {
+                            "id": 0,
+                            "idValue": 130,
+                            "isPreview": false,
+                            "name": "Теплопакет (TDP)",
+                            "value": "65W"
                         },
-                        "id": 6711,
-                        "imageUrl": "https://brain.com.ua/static/images/prod_img/2/4/U0539724.jpg",
-                        "name": "Процессор AMD Ryzen 5 3400G (YD340GC5FIMPK)",
-                        "price": 6699
-                    },
-                    "count": 1
-                }
-            ],
-            "MOTHERBOARD": [
-                {
-                    "component": {
-                        "attributes": {
-                            "68": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Форм-фактор",
-                                "value": "Micro-ATX"
-                            },
-                            "45": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Производитель чипсета",
-                                "value": "AMD"
-                            },
-                            "72": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Разрядность звука, бит(а)",
-                                "value": "24"
-                            },
-                            "53": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Тип аудиосистемы",
-                                "value": "HDA (High Definition Audio)"
-                            },
-                            "71": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Поддержка ECC",
-                                "value": "нет"
-                            },
-                            "62": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Основное питание",
-                                "value": "24 пиновый ATX"
-                            },
-                            "50": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Максимальний объем памяти",
-                                "value": "32 ГБ"
-                            },
-                            "56": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Тип сетевой карты",
-                                "value": "Realtek RTL8111H"
-                            },
-                            "41": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Сокет",
-                                "value": "AM4"
-                            },
-                            "54": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Аудиоконтроллер",
-                                "value": "Realtek ALC887"
-                            },
-                            "42": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Процессорная совместимость",
-                                "value": "1st, 2nd and 3rd Gen AMD Ryzen/Ryzen with Radeon Vega Graphics and 2nd Gen AMD Ryzen with Radeon Graphics/Athlon with Radeon Vega Graphics"
-                            },
-                            "60": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Внутренние разъемы и порты",
-                                "value": "1 x M.2, 4 x Sata 6.0 Gb/s"
-                            },
-                            "58": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Скорость",
-                                "value": "10/100/1000 Мбит/с"
-                            },
-                            "55": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Многоканальный звук",
-                                "value": "7.1"
-                            },
-                            "46": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Модель чипсета",
-                                "value": "AMD A320"
-                            },
-                            "51": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Поддержка двухканального режима",
-                                "value": "есть"
-                            },
-                            "64": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "4-пиновый для вентилятора, шт.",
-                                "value": "1"
-                            },
-                            "49": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Количество разъемов, шт.",
-                                "value": "2"
-                            },
-                            "44": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Слоты расширения",
-                                "value": "1 x PCIe 3.0/2.0 x16, 2 x PCI-Eх 2.0 x1"
-                            },
-                            "67": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Поддержка RAID",
-                                "value": "RAID 0, 1, 10"
-                            },
-                            "69": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Высота, мм",
-                                "value": "226"
-                            },
-                            "47": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Тип оперативной памяти",
-                                "value": "DDR4"
-                            },
-                            "48": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Частота, МГц",
-                                "value": "2933 (O.C.), 2666, 3200 (O.C.), 2400, 2133"
-                            },
-                            "57": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Количество LAN-контроллеров, шт",
-                                "value": "1"
-                            },
-                            "61": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Колодки",
-                                "value": "2 x USB 2.0, 1 x USB 3.0"
-                            },
-                            "70": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Ширина, мм",
-                                "value": "221"
-                            },
-                            "59": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Внешние порты",
-                                "value": "1 x VGA, 1 x RJ45, 2 x USB 2.0, 4 x USB 3.0, 2 x PS/2, 1 x HDMI, 3 x Audio"
-                            },
-                            "73": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Тип BIOS",
-                                "value": "UEFI"
-                            },
-                            "40": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Назначение",
-                                "value": "обычная"
-                            },
-                            "63": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Питание CPU 12В",
-                                "value": "4 пиновый ATX 12В"
-                            }
+                        "13": {
+                            "id": 0,
+                            "idValue": 167,
+                            "isPreview": false,
+                            "name": "Тип поставки",
+                            "value": "Tray+кулер"
                         },
-                        "id": 7590,
-                        "imageUrl": "https://brain.com.ua/static/images/prod_img/9/7/U0242597.jpg",
-                        "name": "Материнская плата ASUS PRIME A320M-K",
-                        "price": 1450
-                    },
-                    "count": 1
-                }
-            ],
-            "SSD": [
-                {
-                    "component": {
-                        "attributes": {
-                            "68": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Форм-фактор",
-                                "value": "2.5\u0026quot;"
-                            },
-                            "223": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Інтерфейс",
-                                "value": "SATA 6Gb/s"
-                            },
-                            "13": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Тип поставки",
-                                "value": "BOX"
-                            },
-                            "219": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Серія",
-                                "value": "A400"
-                            },
-                            "225": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Швидкість запису, макс.",
-                                "value": "350 Mb/s"
-                            },
-                            "221": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Тип флеш-пам\u0026#039;яті",
-                                "value": "3D TLC"
-                            },
-                            "227": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Габарити",
-                                "value": "100 x 69.9 x 7 мм"
-                            },
-                            "224": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Швидкість читання, макс.",
-                                "value": "500 Mb/s"
-                            },
-                            "220": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Об\u0026#039;єм пам\u0026#039;яті",
-                                "value": "240 GB"
-                            }
+                        "9": {
+                            "id": 0,
+                            "idValue": 114,
+                            "isPreview": false,
+                            "name": "Объем кеш-памяти 3-го уровня",
+                            "value": "L3: 4MB"
                         },
-                        "id": 8920,
-                        "imageUrl": "https://brain.com.ua/static/images/prod_img/3/3/U0245933.jpg",
-                        "name": "Накопичувач SSD 2.5\u0026quot; 240GB Kingston (SA400S37/240G)",
-                        "price": 1092
-                    },
-                    "count": 1
-                }
-            ],
-            "CASE": [
-                {
-                    "component": {
-                        "attributes": {
-                            "134": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Класс корпуса",
-                                "value": "Классические"
-                            },
-                            "143": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Количество внутренних отсеков 2.5\u0026quot;",
-                                "value": "2"
-                            },
-                            "147": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Внешние разъемы",
-                                "value": "2 x USB 2.0, 1 x USB 3.0, 2 x Audio"
-                            },
-                            "145": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Места для дополнительных вентиляторов",
-                                "value": "Side 2x12 см, Back 1x12 см, Front 2x12 см"
-                            },
-                            "151": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Материал корпуса",
-                                "value": "металл 0,5 мм, пластик"
-                            },
-                            "135": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Типоразмер",
-                                "value": "Miditower"
-                            },
-                            "92": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Производитель",
-                                "value": "Vinga"
-                            },
-                            "149": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Максимальная высота процессорного кулера",
-                                "value": "166 мм"
-                            },
-                            "136": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Способ установки",
-                                "value": "вертикальный"
-                            },
-                            "93": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Модель",
-                                "value": "CS210B"
-                            },
-                            "142": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Количество внутренних отсеков 3.5\u0026quot;",
-                                "value": "2"
-                            },
-                            "98": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Гарантия, мес",
-                                "value": "12"
-                            },
-                            "99": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Штрихкод",
-                                "value": "4823093305564"
-                            },
-                            "141": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Количество внешних отсеков 5.25”",
-                                "value": "1"
-                            },
-                            "146": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Охлаждающие элементы",
-                                "value": "вентиляционные решетки"
-                            },
-                            "94": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Артикул",
-                                "value": "CS210B"
-                            },
-                            "138": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Наличие блока питания",
-                                "value": "без блока питания"
-                            },
-                            "100": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Примечание",
-                                "value": "Производитель может менять свойства, характеристики, внешний вид и комплектацию товаров без предварительного уведомления"
-                            },
-                            "139": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Расположение блока питания",
-                                "value": "верхнее"
-                            },
-                            "152": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Габариты, мм",
-                                "value": "413 x 198 x 422 мм"
-                            },
-                            "137": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Поддерживаемые материнские платы",
-                                "value": "ATX, Micro - ATX, Mini - ITX"
-                            },
-                            "144": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Количество слотов расширения",
-                                "value": "7"
-                            },
-                            "150": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Максимальная длина БП",
-                                "value": "без ограничений"
-                            },
-                            "140": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Базовая модель VINGA",
-                                "value": "CS210B"
-                            },
-                            "148": {
-                                "id": 0,
-                                "idValue": 0,
-                                "isPreview": false,
-                                "name": "Установка длинных видеокарт",
-                                "value": "до 370 мм"
-                            }
+                        "3": {
+                            "id": 0,
+                            "idValue": 26,
+                            "isPreview": false,
+                            "name": "Количество ядер",
+                            "value": "4 ядра"
                         },
-                        "id": 3628,
-                        "imageUrl": "U0277421.jpg",
-                        "name": "Корпус Vinga CS210B",
-                        "price": 557
+                        "4": {
+                            "id": 0,
+                            "idValue": 35,
+                            "isPreview": false,
+                            "name": "Количество потоков",
+                            "value": "8 потоков"
+                        },
+                        "1": {
+                            "id": 0,
+                            "idValue": 2,
+                            "isPreview": false,
+                            "name": "Семейство процессора",
+                            "value": "AMD Ryzen 5"
+                        },
+                        "211": {
+                            "id": 0,
+                            "idValue": 147,
+                            "isPreview": false,
+                            "name": "Архитектура ядра AMD",
+                            "value": "Zen+"
+                        },
+                        "208": {
+                            "id": 0,
+                            "idValue": 46,
+                            "isPreview": false,
+                            "name": "Тактовая частота ядра, ГГц",
+                            "value": "3.7"
+                        },
+                        "7": {
+                            "id": 0,
+                            "idValue": 76,
+                            "isPreview": false,
+                            "name": "Графическое ядро",
+                            "value": "Radeon Vega 11"
+                        },
+                        "6": {
+                            "id": 0,
+                            "idValue": 63,
+                            "isPreview": false,
+                            "name": "Частота ядра в Boost режиме, ГГц",
+                            "value": "4.2"
+                        },
+                        "2": {
+                            "id": 0,
+                            "idValue": 17,
+                            "isPreview": false,
+                            "name": "Тип сокета",
+                            "value": "AM4"
+                        }
                     },
-                    "count": 1
-                }
-            ],
-            "POWER_SUPPLY": [
-                {
-                    "component": {
-                        "attributes": {},
-                        "id": 3302,
-                        "imageUrl": "U0370114.jpg",
-                        "name": "Блок питания AeroCool 500W VX PLUS 500 (4713105962758)",
-                        "price": 739
+                    "id": 6711,
+                    "imageUrl": "https://brain.com.ua/static/images/prod_img/2/4/U0539724.jpg",
+                    "name": "Процессор AMD Ryzen 5 3400G (YD340GC5FIMPK)",
+                    "price": 6699
+                },
+                "count": 1
+            }
+        ],
+        "CASE": [
+            {
+                "component": {
+                    "attributes": {
+                        "143": {
+                            "id": 0,
+                            "idValue": 2692,
+                            "isPreview": false,
+                            "name": "Количество внутренних отсеков 2.5\u0026quot;",
+                            "value": "7"
+                        },
+                        "134": {
+                            "id": 0,
+                            "idValue": 3108,
+                            "isPreview": false,
+                            "name": "Класс корпуса",
+                            "value": "Геймерские"
+                        },
+                        "147": {
+                            "id": 0,
+                            "idValue": 3087,
+                            "isPreview": false,
+                            "name": "Внешние разъемы",
+                            "value": "2 x USB 2.0, 1 x USB 3.0, 2 x Audio"
+                        },
+                        "145": {
+                            "id": 0,
+                            "idValue": 3110,
+                            "isPreview": false,
+                            "name": "Места для дополнительных вентиляторов",
+                            "value": "Front 3x12 or 2х14 см, Back 1x12 см, Top 2x12/14 см"
+                        },
+                        "151": {
+                            "id": 0,
+                            "idValue": 3114,
+                            "isPreview": false,
+                            "name": "Материал корпуса",
+                            "value": "металл 0,7 мм, стекло, пластик"
+                        },
+                        "135": {
+                            "id": 0,
+                            "idValue": 3079,
+                            "isPreview": false,
+                            "name": "Типоразмер",
+                            "value": "Miditower"
+                        },
+                        "149": {
+                            "id": 0,
+                            "idValue": 3112,
+                            "isPreview": false,
+                            "name": "Максимальная высота процессорного кулера",
+                            "value": "165 мм"
+                        },
+                        "136": {
+                            "id": 0,
+                            "idValue": 3080,
+                            "isPreview": false,
+                            "name": "Способ установки",
+                            "value": "вертикальный"
+                        },
+                        "142": {
+                            "id": 0,
+                            "idValue": 653,
+                            "isPreview": false,
+                            "name": "Количество внутренних отсеков 3.5\u0026quot;",
+                            "value": "2"
+                        },
+                        "146": {
+                            "id": 0,
+                            "idValue": 3086,
+                            "isPreview": false,
+                            "name": "Охлаждающие элементы",
+                            "value": "вентиляционные решетки"
+                        },
+                        "138": {
+                            "id": 0,
+                            "idValue": 3082,
+                            "isPreview": false,
+                            "name": "Наличие блока питания",
+                            "value": "без блока питания"
+                        },
+                        "139": {
+                            "id": 0,
+                            "idValue": 3096,
+                            "isPreview": false,
+                            "name": "Расположение блока питания",
+                            "value": "нижнее"
+                        },
+                        "152": {
+                            "id": 0,
+                            "idValue": 3115,
+                            "isPreview": false,
+                            "name": "Габариты, мм",
+                            "value": "210 x 510 x 388 мм"
+                        },
+                        "14": {
+                            "id": 0,
+                            "idValue": 3100,
+                            "isPreview": false,
+                            "name": "Особенности",
+                            "value": "окно на боковой панели"
+                        },
+                        "137": {
+                            "id": 0,
+                            "idValue": 3081,
+                            "isPreview": false,
+                            "name": "Поддерживаемые материнские платы",
+                            "value": "ATX, Micro - ATX, Mini - ITX"
+                        },
+                        "144": {
+                            "id": 0,
+                            "idValue": 1487,
+                            "isPreview": false,
+                            "name": "Количество слотов расширения",
+                            "value": "8"
+                        },
+                        "150": {
+                            "id": 0,
+                            "idValue": 3113,
+                            "isPreview": false,
+                            "name": "Максимальная длина БП",
+                            "value": "225 мм"
+                        },
+                        "148": {
+                            "id": 0,
+                            "idValue": 3111,
+                            "isPreview": false,
+                            "name": "Установка длинных видеокарт",
+                            "value": "до 380 мм"
+                        },
+                        "140": {
+                            "id": 0,
+                            "idValue": 3109,
+                            "isPreview": false,
+                            "name": "Базовая модель VINGA",
+                            "value": "Tank"
+                        }
                     },
-                    "count": 1
-                }
-            ],
-            "HDD": []
-        },
-        "description": "My favorite build",
-        "id": "db282022f7a94405b6ef6358d8a39494",
-        "isCompatibility": true,
-        "name": "My build",
-        "price": 13326
+                    "id": 12206,
+                    "imageUrl": "https://brain.com.ua/static/images/prod_img/3/8/U0350438.jpg",
+                    "name": "Корпус Vinga Tank",
+                    "price": 1456
+                },
+                "count": 1
+            }
+        ],
+        "SSD": [
+            {
+                "component": {
+                    "attributes": {
+                        "84": {
+                            "id": 0,
+                            "idValue": 968,
+                            "isPreview": false,
+                            "name": "Тип флеш-памяти",
+                            "value": "3D TLC"
+                        },
+                        "68": {
+                            "id": 0,
+                            "idValue": 832,
+                            "isPreview": false,
+                            "name": "Форм-фактор",
+                            "value": "2.5\u0026quot;"
+                        },
+                        "87": {
+                            "id": 0,
+                            "idValue": 1051,
+                            "isPreview": false,
+                            "name": "Наработка на отказ",
+                            "value": "1м. ч."
+                        },
+                        "86": {
+                            "id": 0,
+                            "idValue": 1015,
+                            "isPreview": false,
+                            "name": "Скорость записи, макс.",
+                            "value": "350 Mb/s"
+                        },
+                        "82": {
+                            "id": 0,
+                            "idValue": 910,
+                            "isPreview": false,
+                            "name": "Серия",
+                            "value": "A400"
+                        },
+                        "81": {
+                            "id": 0,
+                            "idValue": 902,
+                            "isPreview": false,
+                            "name": "Тип",
+                            "value": "внутренний"
+                        },
+                        "13": {
+                            "id": 0,
+                            "idValue": 161,
+                            "isPreview": false,
+                            "name": "Тип поставки",
+                            "value": "BOX"
+                        },
+                        "22": {
+                            "id": 0,
+                            "idValue": 230,
+                            "isPreview": false,
+                            "name": "Интерфейс",
+                            "value": "SATA 6Gb/s"
+                        },
+                        "85": {
+                            "id": 0,
+                            "idValue": 984,
+                            "isPreview": false,
+                            "name": "Скорость чтения, макс.",
+                            "value": "500 Mb/s"
+                        },
+                        "88": {
+                            "id": 0,
+                            "idValue": 1066,
+                            "isPreview": false,
+                            "name": "Габариты",
+                            "value": "100 x 69.9 x 7 мм"
+                        },
+                        "83": {
+                            "id": 0,
+                            "idValue": 957,
+                            "isPreview": false,
+                            "name": "Объём памяти",
+                            "value": "240 GB"
+                        }
+                    },
+                    "id": 9940,
+                    "imageUrl": "https://brain.com.ua/static/images/prod_img/3/3/U0245933.jpg",
+                    "name": "Накопитель SSD 2.5\u0026quot; 240GB Kingston (SA400S37/240G)",
+                    "price": 1092
+                },
+                "count": 1
+            }
+        ],
+        "MOTHERBOARD": [
+            {
+                "component": {
+                    "attributes": {
+                        "68": {
+                            "id": 0,
+                            "idValue": 827,
+                            "isPreview": false,
+                            "name": "Форм-фактор",
+                            "value": "Micro-ATX"
+                        },
+                        "45": {
+                            "id": 0,
+                            "idValue": 195,
+                            "isPreview": false,
+                            "name": "Производитель чипсета",
+                            "value": "AMD"
+                        },
+                        "72": {
+                            "id": 0,
+                            "idValue": 873,
+                            "isPreview": false,
+                            "name": "Разрядность звука, бит(а)",
+                            "value": "24"
+                        },
+                        "53": {
+                            "id": 0,
+                            "idValue": 667,
+                            "isPreview": false,
+                            "name": "Тип аудиосистемы",
+                            "value": "HDA (High Definition Audio)"
+                        },
+                        "71": {
+                            "id": 0,
+                            "idValue": 75,
+                            "isPreview": false,
+                            "name": "Поддержка ECC",
+                            "value": "нет"
+                        },
+                        "62": {
+                            "id": 0,
+                            "idValue": 802,
+                            "isPreview": false,
+                            "name": "Основное питание",
+                            "value": "24 пиновый ATX"
+                        },
+                        "50": {
+                            "id": 0,
+                            "idValue": 655,
+                            "isPreview": false,
+                            "name": "Максимальний объем памяти",
+                            "value": "32 ГБ"
+                        },
+                        "56": {
+                            "id": 0,
+                            "idValue": 683,
+                            "isPreview": false,
+                            "name": "Тип сетевой карты",
+                            "value": "Realtek RTL8111H"
+                        },
+                        "41": {
+                            "id": 0,
+                            "idValue": 17,
+                            "isPreview": false,
+                            "name": "Сокет",
+                            "value": "AM4"
+                        },
+                        "54": {
+                            "id": 0,
+                            "idValue": 669,
+                            "isPreview": false,
+                            "name": "Аудиоконтроллер",
+                            "value": "Realtek ALC887"
+                        },
+                        "42": {
+                            "id": 0,
+                            "idValue": 1130,
+                            "isPreview": false,
+                            "name": "Процессорная совместимость",
+                            "value": "1st, 2nd and 3rd Gen AMD Ryzen/Ryzen with Radeon Vega Graphics and 2nd Gen AMD Ryzen with Radeon Graphics/Athlon with Radeon Vega Graphics"
+                        },
+                        "60": {
+                            "id": 0,
+                            "idValue": 713,
+                            "isPreview": false,
+                            "name": "Внутренние разъемы и порты",
+                            "value": "1 x M.2, 4 x Sata 6.0 Gb/s"
+                        },
+                        "58": {
+                            "id": 0,
+                            "idValue": 709,
+                            "isPreview": false,
+                            "name": "Скорость",
+                            "value": "10/100/1000 Мбит/с"
+                        },
+                        "55": {
+                            "id": 0,
+                            "idValue": 682,
+                            "isPreview": false,
+                            "name": "Многоканальный звук",
+                            "value": "7.1"
+                        },
+                        "46": {
+                            "id": 0,
+                            "idValue": 594,
+                            "isPreview": false,
+                            "name": "Модель чипсета",
+                            "value": "AMD A320"
+                        },
+                        "51": {
+                            "id": 0,
+                            "idValue": 658,
+                            "isPreview": false,
+                            "name": "Поддержка двухканального режима",
+                            "value": "есть"
+                        },
+                        "64": {
+                            "id": 0,
+                            "idValue": 708,
+                            "isPreview": false,
+                            "name": "4-пиновый для вентилятора, шт.",
+                            "value": "1"
+                        },
+                        "49": {
+                            "id": 0,
+                            "idValue": 653,
+                            "isPreview": false,
+                            "name": "Количество разъемов, шт.",
+                            "value": "2"
+                        },
+                        "44": {
+                            "id": 0,
+                            "idValue": 544,
+                            "isPreview": false,
+                            "name": "Слоты расширения",
+                            "value": "1 x PCIe 3.0/2.0 x16, 2 x PCI-Eх 2.0 x1"
+                        },
+                        "67": {
+                            "id": 0,
+                            "idValue": 822,
+                            "isPreview": false,
+                            "name": "Поддержка RAID",
+                            "value": "RAID 0, 1, 10"
+                        },
+                        "69": {
+                            "id": 0,
+                            "idValue": 836,
+                            "isPreview": false,
+                            "name": "Высота, мм",
+                            "value": "226"
+                        },
+                        "47": {
+                            "id": 0,
+                            "idValue": 613,
+                            "isPreview": false,
+                            "name": "Тип оперативной памяти",
+                            "value": "DDR4"
+                        },
+                        "48": {
+                            "id": 0,
+                            "idValue": 617,
+                            "isPreview": false,
+                            "name": "Частота, МГц",
+                            "value": "2933 (O.C.), 2666, 3200 (O.C.), 2400, 2133"
+                        },
+                        "57": {
+                            "id": 0,
+                            "idValue": 708,
+                            "isPreview": false,
+                            "name": "Количество LAN-контроллеров, шт",
+                            "value": "1"
+                        },
+                        "61": {
+                            "id": 0,
+                            "idValue": 3310,
+                            "isPreview": false,
+                            "name": "Колодки",
+                            "value": "2 x USB 2.0, 1 x USB 3.0"
+                        },
+                        "70": {
+                            "id": 0,
+                            "idValue": 849,
+                            "isPreview": false,
+                            "name": "Ширина, мм",
+                            "value": "221"
+                        },
+                        "59": {
+                            "id": 0,
+                            "idValue": 1146,
+                            "isPreview": false,
+                            "name": "Внешние порты",
+                            "value": "1 x VGA, 1 x RJ45, 2 x USB 2.0, 4 x USB 3.0, 2 x PS/2, 1 x HDMI, 3 x Audio"
+                        },
+                        "73": {
+                            "id": 0,
+                            "idValue": 875,
+                            "isPreview": false,
+                            "name": "Тип BIOS",
+                            "value": "UEFI"
+                        },
+                        "40": {
+                            "id": 0,
+                            "idValue": 516,
+                            "isPreview": false,
+                            "name": "Назначение",
+                            "value": "обычная"
+                        },
+                        "63": {
+                            "id": 0,
+                            "idValue": 805,
+                            "isPreview": false,
+                            "name": "Питание CPU 12В",
+                            "value": "4 пиновый ATX 12В"
+                        }
+                    },
+                    "id": 7590,
+                    "imageUrl": "https://brain.com.ua/static/images/prod_img/9/7/U0242597.jpg",
+                    "name": "Материнская плата ASUS PRIME A320M-K",
+                    "price": 1450
+                },
+                "count": 1
+            }
+        ],
+        "POWER_SUPPLY": [
+            {
+                "component": {
+                    "attributes": {
+                        "130": {
+                            "id": 0,
+                            "idValue": 2598,
+                            "isPreview": false,
+                            "name": "Размеры, мм",
+                            "value": "150 x 140 x 87 мм"
+                        },
+                        "121": {
+                            "id": 0,
+                            "idValue": 653,
+                            "isPreview": false,
+                            "name": "Количество разъемов Peripheral",
+                            "value": "2"
+                        },
+                        "115": {
+                            "id": 0,
+                            "idValue": 346,
+                            "isPreview": false,
+                            "name": "Модуль PFC",
+                            "value": "активный"
+                        },
+                        "122": {
+                            "id": 0,
+                            "idValue": 2611,
+                            "isPreview": false,
+                            "name": "OutputСurrent +5V",
+                            "value": "22A"
+                        },
+                        "120": {
+                            "id": 0,
+                            "idValue": 814,
+                            "isPreview": false,
+                            "name": "Количество разъемов SATA",
+                            "value": "6"
+                        },
+                        "113": {
+                            "id": 0,
+                            "idValue": 365,
+                            "isPreview": false,
+                            "name": "Мощность",
+                            "value": "700 Вт"
+                        },
+                        "128": {
+                            "id": 0,
+                            "idValue": 2578,
+                            "isPreview": false,
+                            "name": "Диаметр вентиляторов",
+                            "value": "1x120 мм"
+                        },
+                        "125": {
+                            "id": 0,
+                            "idValue": 2575,
+                            "isPreview": false,
+                            "name": "OutputСurrent -12V",
+                            "value": "0.3А"
+                        },
+                        "119": {
+                            "id": 0,
+                            "idValue": 2595,
+                            "isPreview": false,
+                            "name": "Подключение видеокарты",
+                            "value": "2x6+2 pin"
+                        },
+                        "118": {
+                            "id": 0,
+                            "idValue": 653,
+                            "isPreview": false,
+                            "name": "Кол-во разъемов дополнительного питания для видеок",
+                            "value": "2"
+                        },
+                        "117": {
+                            "id": 0,
+                            "idValue": 2570,
+                            "isPreview": false,
+                            "name": "Подключение процессора",
+                            "value": "4+4 pin"
+                        },
+                        "116": {
+                            "id": 0,
+                            "idValue": 2585,
+                            "isPreview": false,
+                            "name": "Подключение материнской платы",
+                            "value": "24 pin"
+                        },
+                        "111": {
+                            "id": 0,
+                            "idValue": 2568,
+                            "isPreview": false,
+                            "name": "Тип БП",
+                            "value": "для компьютеров"
+                        },
+                        "112": {
+                            "id": 0,
+                            "idValue": 2594,
+                            "isPreview": false,
+                            "name": "Стандарт БП",
+                            "value": "ATX 12V v2.3"
+                        },
+                        "126": {
+                            "id": 0,
+                            "idValue": 2576,
+                            "isPreview": false,
+                            "name": "OutputСurrent +5Vsb",
+                            "value": "2.5А"
+                        },
+                        "127": {
+                            "id": 0,
+                            "idValue": 2577,
+                            "isPreview": false,
+                            "name": "Тип охлаждения",
+                            "value": "вентилятор"
+                        },
+                        "123": {
+                            "id": 0,
+                            "idValue": 2611,
+                            "isPreview": false,
+                            "name": "OutputСurrent +3,3V",
+                            "value": "22A"
+                        },
+                        "114": {
+                            "id": 0,
+                            "idValue": 75,
+                            "isPreview": false,
+                            "name": "Модульное подключение кабелей",
+                            "value": "нет"
+                        },
+                        "124": {
+                            "id": 0,
+                            "idValue": 2644,
+                            "isPreview": false,
+                            "name": "OutputCurrent +12V1",
+                            "value": "54A"
+                        }
+                    },
+                    "id": 11335,
+                    "imageUrl": "https://brain.com.ua/static/images/prod_img/4/1/U0024641.jpg",
+                    "name": "Блок питания Chieftec 700W (GPS-700A8)",
+                    "price": 1289
+                },
+                "count": 1
+            }
+        ],
+        "RAM": [
+            {
+                "component": {
+                    "attributes": {
+                        "108": {
+                            "id": 0,
+                            "idValue": 1964,
+                            "isPreview": false,
+                            "name": "Охлаждение",
+                            "value": "+ радиатор"
+                        },
+                        "105": {
+                            "id": 0,
+                            "idValue": 1961,
+                            "isPreview": false,
+                            "name": "Форм-фактор памяти",
+                            "value": "288-pin DIMM"
+                        },
+                        "106": {
+                            "id": 0,
+                            "idValue": 1962,
+                            "isPreview": false,
+                            "name": "Проверка и коррекция ошибок (ECC)",
+                            "value": "non-ECC"
+                        },
+                        "103": {
+                            "id": 0,
+                            "idValue": 1959,
+                            "isPreview": false,
+                            "name": "Тайминги",
+                            "value": "CL16"
+                        },
+                        "101": {
+                            "id": 0,
+                            "idValue": 653,
+                            "isPreview": false,
+                            "name": "Количество модулей в наборе",
+                            "value": "2"
+                        },
+                        "24": {
+                            "id": 0,
+                            "idValue": 613,
+                            "isPreview": true,
+                            "name": "Тип памяти",
+                            "value": "DDR4"
+                        },
+                        "107": {
+                            "id": 0,
+                            "idValue": 1963,
+                            "isPreview": false,
+                            "name": "Буферизация",
+                            "value": "unbuffered"
+                        },
+                        "102": {
+                            "id": 0,
+                            "idValue": 1957,
+                            "isPreview": false,
+                            "name": "Стандарты памяти",
+                            "value": "PC4-25600"
+                        },
+                        "27": {
+                            "id": 0,
+                            "idValue": 1958,
+                            "isPreview": false,
+                            "name": "Частота памяти",
+                            "value": "3200 MHz"
+                        },
+                        "83": {
+                            "id": 0,
+                            "idValue": 252,
+                            "isPreview": false,
+                            "name": "Объём памяти",
+                            "value": "16 ГБ"
+                        },
+                        "104": {
+                            "id": 0,
+                            "idValue": 1960,
+                            "isPreview": false,
+                            "name": "Напряжение",
+                            "value": "1.35 V"
+                        }
+                    },
+                    "id": 8333,
+                    "imageUrl": "https://brain.com.ua/static/images/prod_img/3/9/U0376139.jpg",
+                    "name": "Модуль памяти для компьютера DDR4 16GB (2x8GB) 3200 MHz HyperX FURY Black HyperX (HX432C16FB3K2/16)",
+                    "price": 2789
+                },
+                "count": 1
+            }
+        ]
     },
-    "ids": [
-        8333,
-        6711,
-        7590,
-        8920,
-        3628,
-        3302
-    ]
+    "description": "My favorite build",
+    "id": "0d0427555b2142d1b7cb70f953a912f6",
+    "isCompatibility": true,
+    "isPublic": true,
+    "name": "My build 2",
+    "price": 14775,
+    "serverId": 51
 }

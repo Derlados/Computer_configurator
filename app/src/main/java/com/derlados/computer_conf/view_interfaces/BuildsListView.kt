@@ -2,7 +2,7 @@ package com.derlados.computer_conf.view_interfaces
 
 import com.derlados.computer_conf.models.BuildData
 
-interface PageBuildsView {
+interface BuildsListView {
     fun <T : BuildData> setBuildsData(buildsData: ArrayList<T>)
     fun openBuildConstructor()
 
@@ -11,5 +11,5 @@ interface PageBuildsView {
     fun removeItemBuildList(index: Int)
 
     fun showWarnDialog(message: String)
-    fun showDialogAcceptSave(message: String)
+    fun showError(message: String)
 }

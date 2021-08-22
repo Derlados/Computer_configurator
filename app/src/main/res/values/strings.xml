@@ -61,7 +61,6 @@
     <string name="wrong_m2_count">Мат. плата не поддерживает данное количество M2 портов</string>
     <string name="not_enough_ps_power">Недостаточная мощность блока питания</string>
 
-
     <string name="price_low_to_high">От дешевых к дорогим</string>
     <string name="price_high_to_low">От дорогих к дешевым</string>
     <string name="publish">Опубликовать</string>
@@ -92,7 +91,8 @@
     <string name="components">Комплектующие</string>
     <string name="user_builds">Польз. сборки</string>
     <string name="save_on_server">Сохранить на сервере</string>
-    <string name="build_will_be_saved_on_server">Ваша сборка будет сохранена на сервер и доступна все пользователям. Вы согласны ?</string>
+    <string name="build_will_be_saved_on_server">После публикации сборку невозможно будет изменить и она будет видна всем пользователям. Вы хотите её опубликовать ?</string>
     <string name="build_must_be_completed">Для публикации сборки, необходимо чтобы она была закончена, а так же полностью совместима</string>
     <string name="exit">Выход</string>
+    <string name="accept_delete">Данная сборка будет удалена с аккаунта (если привязана к нему) и с устройства. Вы точно хотите её удалить ?</string>
 </resources>

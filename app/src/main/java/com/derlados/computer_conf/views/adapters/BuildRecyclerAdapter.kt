@@ -16,12 +16,11 @@ import com.derlados.computer_conf.providers.android_providers_interfaces.Resourc
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.inflate_build_item.view.*
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, private val onItemClick: (id: String) -> Unit,
-                                             private val removeItem: (id: String) -> Unit, private val changePublicStatus: (id: String) -> Unit):
+                                             private val removeItem: (id: String) -> Unit, private val publishBuild: (id: String) -> Unit):
         RecyclerView.Adapter<BuildRecyclerAdapter.BuildHolder>() {
 
     class BuildHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -115,8 +114,10 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
         // Настройка изображения статуса публикации
         if (build.isPublic) {
             holder.btPublish.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_internet_on_24, App.app.theme))
+            holder.btPublish.setOnClickListener(null)
         } else {
             holder.btPublish.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_internet_off_24, App.app.theme))
+            holder.btPublish.setOnClickListener { publishBuild(build.id) }
         }
 
         // Настройка обработчиков нажаатий
@@ -125,9 +126,6 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
         }
         holder.btDelete.setOnClickListener {
             removeItem(build.id)
-        }
-        holder.btPublish.setOnClickListener {
-            changePublicStatus(build.id)
         }
 
         holder.initExpandLayout()
