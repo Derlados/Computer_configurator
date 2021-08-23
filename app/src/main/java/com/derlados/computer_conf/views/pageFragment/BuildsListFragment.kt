@@ -13,8 +13,10 @@ import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.models.BuildData
 import com.derlados.computer_conf.presenters.BuildsListPresenter
+import com.derlados.computer_conf.view_interfaces.BuildOnlineView
 import com.derlados.computer_conf.view_interfaces.BuildsListView
 import com.derlados.computer_conf.views.BuildConstructorFragment
+import com.derlados.computer_conf.views.BuildOnlineViewFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
 import com.derlados.computer_conf.views.adapters.BuildRecyclerAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -126,7 +128,11 @@ class BuildsListFragment : PageFragment(), BuildsListView {
     }
 
     override fun openBuildConstructor() {
-        frListener.nextFragment(this, BuildConstructorFragment(), BackStackTag.BUILD)
+        frListener.nextFragment(this, BuildConstructorFragment(), BackStackTag.BUILD_CONSTRUCTOR)
+    }
+
+    override fun openBuildOnlineView() {
+        frListener.nextFragment(this, BuildOnlineViewFragment(), BackStackTag.BUILD_VIEW)
     }
 
     private fun createBuild() {

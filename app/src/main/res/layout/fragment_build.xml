@@ -28,13 +28,16 @@
                     android:id="@+id/fragment_build_img"
                     android:layout_width="0dp"
                     android:layout_height="100dp"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_weight="0.3"
                     android:src="@drawable/ic_case_24"/>
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="0.7"
                     android:orientation="vertical">
 
@@ -42,14 +45,15 @@
                         android:id="@+id/fragment_build_et_name"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="0.4"
-                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
                         android:hint="@string/build_name"
                         android:gravity="start|center"
-                        android:paddingStart="20dp"
+                        android:paddingStart="10dp"
                         android:paddingEnd="0dp"
                         android:textSize="20sp"
-                        android:textColor="@color/turquoise"
+                        android:textColor="@color/light_blue"
                         android:textColorHint="@color/hint_color"
                         android:backgroundTint="@color/hint_color"
                         android:imeOptions="actionDone"
@@ -59,37 +63,41 @@
                         android:id="@+id/fragment_build_tv_price"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="0.3"
-                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
                         android:text="X XXX ГРН"
                         android:textSize="20sp"
                         android:gravity="start|center"
-                        android:paddingStart="20dp"
+                        android:paddingStart="10dp"
                         android:paddingEnd="0dp"
                         android:textColor="@color/green"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="0.3"
+                        android:layout_weight="1"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/fragment_build_tv_status_or_user_head"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="0.4"
+                            android:layout_weight="0.5"
                             android:gravity="start|center"
-                            android:paddingStart="20dp"
+                            android:paddingStart="10dp"
                             android:paddingEnd="0dp"
                             android:text="@string/status"
-                            android:textColor="@color/white"
+                            android:textColor="@color/light_blue"
                             android:textSize="16sp" />
 
                         <TextView
-                            android:id="@+id/fragment_build_tv_status"
+                            android:id="@+id/fragment_build_tv_status_or_user_value"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="0.6"
+                            android:layout_weight="0.5"
                             android:text="@string/not_complete"
                             android:gravity="center"
                             android:textSize="16sp"
@@ -113,9 +121,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/description"
                 android:textSize="20sp"
-                android:textColor="@color/turquoise"/>
+                android:textColor="@color/light_blue"/>
 
             <EditText
                 android:id="@+id/fragment_build_et_desc"
@@ -124,6 +135,8 @@
                 android:hint="@string/build_desc"
                 android:textColor="@color/white"
                 android:textColorHint="@color/hint_color"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:backgroundTint="@color/hint_color"
                 android:layout_marginBottom="15dp"/>
 

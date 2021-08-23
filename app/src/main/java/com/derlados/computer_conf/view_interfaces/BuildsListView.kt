@@ -5,6 +5,7 @@ import com.derlados.computer_conf.models.BuildData
 interface BuildsListView {
     fun <T : BuildData> setBuildsData(buildsData: ArrayList<T>)
     fun openBuildConstructor()
+    fun openBuildOnlineView()
 
     fun updateRangeBuildList(size: Int)
     fun updateItemBuildList(index: Int)

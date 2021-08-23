@@ -61,7 +61,6 @@ class Build : Cloneable, BuildData {
     override var name: String = ""
     override var description: String = "" // Описание в сборке
     override var price: Int = 0 // Цена сборки
-    override var isPublic: Boolean = false // Статус публикации (публичности)
 
     // Комплетующие, разбиты по категориям, где каждый элемент пара (<комлпектующее>, <количество>)
     override var components: HashMap<ComponentCategory, ArrayList<BuildData.BuildComponent>> = hashMapOf(
@@ -76,8 +75,7 @@ class Build : Cloneable, BuildData {
     )
     // В качестве изображение берется изображение корпуса, если он есть в сборке
     override var image: String? = null
-        get() = BuildModel.editableBuild?.components?.get(ComponentCategory.CASE)?.getOrNull(0)?.component?.imageUrl
-
+        get() = components[ComponentCategory.CASE]?.getOrNull(0)?.component?.imageUrl
 
     override var isCompatibility: Boolean = true
     override val isComplete: Boolean
@@ -93,6 +91,11 @@ class Build : Cloneable, BuildData {
                     && components[ComponentCategory.RAM]?.isNotEmpty() == true && components[ComponentCategory.CASE]?.isNotEmpty() == true
                     && (components[ComponentCategory.HDD]?.isNotEmpty() == true || components[ComponentCategory.SSD]?.isNotEmpty() == true)
         }
+
+    override var idUser: Int = -1
+    override var username: String = ""
+    override var isPublic: Boolean = false // Статус публикации (публичности)
+    override val publishDate: String = ""
 
     var lastAdded: Pair<ComponentCategory, BuildData.BuildComponent>? = null
 
@@ -267,7 +270,12 @@ class Build : Cloneable, BuildData {
      * */
     fun addToBuild(category: ComponentCategory, component: Component) {
         val newBuildComponent = BuildData.BuildComponent(component, 1)
+
+        if (components[category] == null) {
+            components[category] = ArrayList()
+        }
         components[category]?.add(newBuildComponent)
+
         price += component.price // Подсчет общей цены
         lastAdded = Pair(category, newBuildComponent)
     }

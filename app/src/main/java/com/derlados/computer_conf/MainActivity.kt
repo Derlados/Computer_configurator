@@ -3,20 +3,17 @@ package com.derlados.computer_conf
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.derlados.computer_conf.consts.BackStackTag
-import com.derlados.computer_conf.models.BuildModel
 import com.derlados.computer_conf.presenters.MainAppPresenter
 import com.derlados.computer_conf.view_interfaces.MainView
 import com.derlados.computer_conf.views.LoginFragment
 import com.derlados.computer_conf.views.MainMenuFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMenu.OnMenuItemClickListener, MainView {

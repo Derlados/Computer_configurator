@@ -4,7 +4,7 @@ import android.widget.Toast
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.view_interfaces.ComponentInfoView
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
-import com.derlados.computer_conf.models.BuildModel
+import com.derlados.computer_conf.models.LocalAccBuildModel
 import com.derlados.computer_conf.models.ComponentModel
 
 class ComponentInfoPresenter(private val view: ComponentInfoView, private val resourceProvider: ResourceProvider) {
@@ -13,7 +13,7 @@ class ComponentInfoPresenter(private val view: ComponentInfoView, private val re
         view.setDefaultImage(resourceProvider.getDefaultImageByCategory(ComponentModel.chosenCategory))
         view.setComponentInfo(ComponentModel.chosenComponent)
 
-        if (BuildModel.editableBuild != null) {
+        if (LocalAccBuildModel.editableBuild != null) {
             view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_BUILD), ::addToBuild)
         } else {
             view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_FAVORITE), ::addToFavorite)
@@ -26,7 +26,7 @@ class ComponentInfoPresenter(private val view: ComponentInfoView, private val re
     }
 
     private fun addToBuild() {
-        BuildModel.editableBuild?.addToBuild(ComponentModel.chosenCategory, ComponentModel.chosenComponent)
+        LocalAccBuildModel.editableBuild?.addToBuild(ComponentModel.chosenCategory, ComponentModel.chosenComponent)
         view.returnToBuild()
     }
 }

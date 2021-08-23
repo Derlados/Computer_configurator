@@ -66,7 +66,7 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView {
     }
 
     override fun returnToBuild() {
-        fragmentListener.popBackStack(BackStackTag.BUILD)
+        fragmentListener.popBackStack(BackStackTag.BUILD_CONSTRUCTOR)
     }
 
     override fun setDefaultImage(defaultId: Int) {

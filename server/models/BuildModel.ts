@@ -18,11 +18,12 @@ export default class BuildModel {
      * @returns список соответствующих сборок с полной информацией
      */
     public async getBuilds(idUser?: number): Promise<Build[]> {
-        let sql = ` SELECT build.id, build.id_user, build.name, build.description, build.is_public, build_components.id_component, 
-                        build_components.count_components AS countUsed, component.id_category
+        let sql = ` SELECT build.id, build.id_user, users.username, build.name, build.description, build.is_public, build.publish_date,
+                            build_components.id_component, build_components.count_components AS countUsed, component.id_category
                     FROM build 
                     JOIN build_components ON build_components.id_build = id
                     JOIN component ON component.id_component = build_components.id_component
+                    JOIN users ON build.id_user = users.id
                     ${idUser ? 'WHERE build.id_user = ?' : 'WHERE is_public = true'}`;
         const data = new Array<string>();
 
@@ -38,10 +39,13 @@ export default class BuildModel {
             if (!builds.has(row.id)) {
                 const build = new Build();
                 build.serverId = row.id;
-                build.idUser = row.id_user;
                 build.name = row.name;
                 build.description = row.description;
+
+                build.idUser = row.id_user;
+                build.username = row.username;
                 build.isPublic = row.is_public == 1;
+                build.publishDate = row.publish_date;
 
                 builds.set(row.id, build);
             }
@@ -56,8 +60,8 @@ export default class BuildModel {
 
     public async addBuild(idUser: number, build: Build, components: Pair[]): Promise<number> {
         // Формирование запроса на добавление сборки
-        const sqlAddBuild = `   INSERT INTO build(id_user, name, description, is_public) 
-                                VALUES (?, ?, ?, ?)`;
+        const sqlAddBuild = `   INSERT INTO build(id_user, name, description, is_public, publish_date) 
+                                VALUES (?, ?, ?, ?, CURDATE())`;
         const dataAddBuild = [idUser.toString(), build.name, build.description, build.isPublic ? "1" : "0"]
         const res: ResultSetHeader = (await this.pool.execute(sqlAddBuild, dataAddBuild))[0] as ResultSetHeader;
 
@@ -126,9 +130,9 @@ export default class BuildModel {
         return isPublic;
     }
 
-    public async deleteBuild(idUser: number, id: number): Promise<void> {
+    public async deleteBuild(idUser: number, idBuild: number): Promise<void> {
         const sql = `DELETE FROM build WHERE id = ? AND id_user = ?`;
-        const res = (await this.pool.execute(sql, [id.toString(), idUser.toString()]))[0] as ResultSetHeader;;
+        const res = (await this.pool.execute(sql, [idBuild.toString(), idUser.toString()]))[0] as ResultSetHeader;;
 
         if (res.affectedRows == 0) {
             throw BuildError.BUILD_NOT_FOUND;

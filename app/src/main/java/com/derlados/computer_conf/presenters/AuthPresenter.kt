@@ -1,8 +1,7 @@
 package com.derlados.computer_conf.presenters
 
 import android.accounts.NetworkErrorException
-import android.util.Log
-import com.derlados.computer_conf.models.BuildModel
+import com.derlados.computer_conf.models.LocalAccBuildModel
 import com.derlados.computer_conf.models.UserModel
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.view_interfaces.AuthView
@@ -97,7 +96,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
         val user = UserModel.currentUser
         if (user != null) {
             restoreDataJob = CoroutineScope(Dispatchers.Main).launch {
-                BuildModel.restoreBuildsFromServer(user.token, user.id)
+                LocalAccBuildModel.restoreBuildsFromServer(user.token, user.id)
 
                 //TODO load favorite
                 if (isActive) {

@@ -3,12 +3,15 @@ import { Component } from "../types/Component";
 
 export class Build {
     serverId: number;
-    idUser: number;
     name: string;
     description: string;
     price: number;
-    isPublic: boolean;
     components: Map<String, Array<BuildComponent>>;
+
+    idUser: number;
+    username: string;
+    isPublic: boolean;
+    publishDate: string;
 
     constructor() {
         this.components = new Map();

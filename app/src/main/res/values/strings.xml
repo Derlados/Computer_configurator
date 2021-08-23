@@ -95,4 +95,6 @@
     <string name="build_must_be_completed">Для публикации сборки, необходимо чтобы она была закончена, а так же полностью совместима</string>
     <string name="exit">Выход</string>
     <string name="accept_delete">Данная сборка будет удалена с аккаунта (если привязана к нему) и с устройства. Вы точно хотите её удалить ?</string>
+    <string name="user">Пользователь :</string>
+    <string name="creator">Создатель :</string>
 </resources>

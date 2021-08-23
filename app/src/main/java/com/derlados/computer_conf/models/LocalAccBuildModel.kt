@@ -19,10 +19,9 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
-object BuildModel: Observable() {
+object LocalAccBuildModel: Observable() {
     const val ALL_CHANGED = -1
 
-    var publicBuilds = ArrayList<Build>()
     enum class ServerErrors {
         INTERNAL_SERVER_ERROR,
         CONNECTION_ERROR
@@ -46,27 +45,6 @@ object BuildModel: Observable() {
     }
 
     ////////////////////////////////////API////////////////////////////
-    /**TESTED*/
-    fun getPublicBuilds() {
-        val call = api.getPublicBuilds()
-        call.enqueue(object : Callback<ArrayList<Build>> {
-            override fun onResponse(
-                call: Call<ArrayList<Build>>,
-                response: Response<ArrayList<Build>>
-            ) {
-                val builds = response.body()
-                if (builds != null && response.code() == 200) {
-                    publicBuilds = builds
-                } else {
-                    TODO("Not yet implemented")
-                }
-            }
-
-            override fun onFailure(call: Call<ArrayList<Build>>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-        })
-    }
 
     /**
      * Восстановление сборок пользователя с сервера (после того как пользователь вошел в аккаунт)

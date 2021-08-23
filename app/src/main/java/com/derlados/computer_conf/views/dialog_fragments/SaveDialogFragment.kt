@@ -13,9 +13,9 @@ class SaveDialogFragment : DialogFragment() {
         builder
                 .setTitle("Сохранить изменения ?")
                 .setPositiveButton("Да") { _, _ -> parentFragmentManager.setFragmentResult(
-                    BuildConstructorFragment.SAVE_BUILD, Bundle())}
+                    "SAVE", Bundle())}
                 .setNegativeButton("Нет") { _, _ -> parentFragmentManager.setFragmentResult(
-                    BuildConstructorFragment.WITHOUT_SAVE, Bundle())}
+                   "NOT_SAVE", Bundle())}
         return builder.create()
     }
 }

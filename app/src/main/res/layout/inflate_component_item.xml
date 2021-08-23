@@ -163,7 +163,7 @@
     <LinearLayout
         android:id="@+id/inflate_component_item_ll_count"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="41dp"
         android:gravity="center"
         android:layout_marginTop="5dp"
         android:visibility="gone">
@@ -174,7 +174,7 @@
             android:text="Количество: "
             android:textSize="18sp"
             android:textColor="@color/turquoise"
-            android:layout_marginEnd="10dp"/>
+            android:layout_marginEnd="10dp" />
 
         <android.widget.Button
             android:id="@+id/inflate_component_item_bt_increase"
@@ -212,7 +212,6 @@
             android:textColor="@color/white">
 
         </android.widget.Button>
-
 
     </LinearLayout>
 

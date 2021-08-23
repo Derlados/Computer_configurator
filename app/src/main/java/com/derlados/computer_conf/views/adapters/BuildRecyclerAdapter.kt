@@ -19,8 +19,8 @@ import kotlinx.android.synthetic.main.inflate_build_item.view.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, private val onItemClick: (id: String) -> Unit,
-                                             private val removeItem: (id: String) -> Unit, private val publishBuild: (id: String) -> Unit):
+open class  BuildRecyclerAdapter <T : BuildData> (protected open val builds: ArrayList<T>, protected open val onItemClick: (id: String) -> Unit,
+                                                  protected open val removeItem: (id: String) -> Unit, protected open val publishBuild: (id: String) -> Unit):
         RecyclerView.Adapter<BuildRecyclerAdapter.BuildHolder>() {
 
     class BuildHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,10 +37,14 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
 
         val tvName: TextView = itemView.inflate_build_item_tv_name
         val tvPrice: TextView = itemView.inflate_build_item_tv_price
-        val tvStatus: TextView = itemView.inflate_build_item_tv_status
+        val tvUserOrStatusValue: TextView = itemView.inflate_build_item_tv_status_or_user_value
+        val tvUserOrStatusHeader: TextView = itemView.inflate_build_item_tv_status_or_user_head
+
         val img: ImageView = itemView.inflate_build_item_img
+        val llActionBtns: LinearLayout = itemView.inflate_build_item_ll_action_btns
         val btPublish: ImageView = itemView.inflate_build_item_ibt_publish
         val btDelete: ImageButton = itemView.inflate_build_item_ibt_delete
+        val tvPublishDate: TextView = itemView.inflate_build_item_tv_date
         val btComponentList: ImageButton = itemView.inflate_build_item_ibt_hide
         val llComponentList: ExpandableLinearLayout = itemView.inflate_build_item_component_list
 
@@ -85,16 +89,18 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
         holder.tvPrice.text = App.app.getString(R.string.component_price, build.price)
 
         // Сообщение о статусе готовности и совместимости сборки
+        holder.tvUserOrStatusHeader.setText(R.string.status)
         if (!build.isCompatibility) {
-            holder.tvStatus.text = App.app.resourceProvider.getString(ResourceProvider.ResString.NOT_COMPATIBILITY)
-            holder.tvStatus.setTextColor(App.app.resourceProvider.getColor(ResourceProvider.ResColor.RED))
+            holder.tvUserOrStatusValue.text = App.app.resourceProvider.getString(ResourceProvider.ResString.NOT_COMPATIBILITY)
+            holder.tvUserOrStatusValue.setTextColor(App.app.resourceProvider.getColor(ResourceProvider.ResColor.RED))
         } else if (!build.isComplete) {
-            holder.tvStatus.text = App.app.resourceProvider.getString(ResourceProvider.ResString.NOT_COMPLETE)
-            holder.tvStatus.setTextColor(App.app.resourceProvider.getColor(ResourceProvider.ResColor.RED))
+            holder.tvUserOrStatusValue.text = App.app.resourceProvider.getString(ResourceProvider.ResString.NOT_COMPLETE)
+            holder.tvUserOrStatusValue.setTextColor(App.app.resourceProvider.getColor(ResourceProvider.ResColor.RED))
         } else {
-            holder.tvStatus.text = App.app.resourceProvider.getString(ResourceProvider.ResString.COMPLETE)
-            holder.tvStatus.setTextColor(App.app.resourceProvider.getColor(ResourceProvider.ResColor.GREEN))
+            holder.tvUserOrStatusValue.text = App.app.resourceProvider.getString(ResourceProvider.ResString.COMPLETE)
+            holder.tvUserOrStatusValue.setTextColor(App.app.resourceProvider.getColor(ResourceProvider.ResColor.GREEN))
         }
+
 
         // Список комплектующих присутствующих в сборках
         build.image?.let {
@@ -115,6 +121,8 @@ class  BuildRecyclerAdapter <T : BuildData> (private val builds: ArrayList<T>, p
         if (build.isPublic) {
             holder.btPublish.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_internet_on_24, App.app.theme))
             holder.btPublish.setOnClickListener(null)
+
+
         } else {
             holder.btPublish.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_internet_off_24, App.app.theme))
             holder.btPublish.setOnClickListener { publishBuild(build.id) }

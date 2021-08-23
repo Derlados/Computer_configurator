@@ -796,8 +796,8 @@
     "description": "My favorite build",
     "id": "0d0427555b2142d1b7cb70f953a912f6",
     "isCompatibility": true,
-    "isPublic": true,
+    "isPublic": false,
     "name": "My build 2",
     "price": 14775,
-    "serverId": 51
+    "serverId": -1
 }

@@ -3,19 +3,19 @@ package com.derlados.computer_conf.presenters
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.view_interfaces.BuildConstructorView
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
-import com.derlados.computer_conf.models.BuildModel
+import com.derlados.computer_conf.models.LocalAccBuildModel
 import com.derlados.computer_conf.models.Component
 import com.derlados.computer_conf.models.ComponentModel
 
 class BuildConstructorPresenter(private val view: BuildConstructorView, private val resourceProvider: ResourceProvider) {
 
     fun init() {
-        BuildModel.editableBuild?.let { build ->
+        LocalAccBuildModel.editableBuild?.let { build ->
             // Восстановление сохраненных данных
             view.setHeaderData(build.name, build.description)
             for ((category, buildComponents) in build.components) {
                 for (i in 0 until buildComponents.size) {
-                    view.addNewComponent(category, build.isMultipleCategory(category), buildComponents[i], false)
+                    view.addComponent(category, build.isMultipleCategory(category), buildComponents[i], false)
                 }
             }
             // Обновление динамичных полей
@@ -24,34 +24,34 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     }
 
     fun finish() {
-        BuildModel.saveEditableBuild()
-        BuildModel.deselectBuild()
+        LocalAccBuildModel.saveEditableBuild()
+        LocalAccBuildModel.deselectBuild()
     }
 
     fun setName(name: String) {
-        BuildModel.editableBuild?.name = name
+        LocalAccBuildModel.editableBuild?.name = name
     }
 
     fun setDescription(desc: String) {
-        BuildModel.editableBuild?.description = desc
+        LocalAccBuildModel.editableBuild?.description = desc
     }
 
     fun removeComponent(category: ComponentCategory, component: Component) {
-        BuildModel.editableBuild?.removeComponent(category, component.id)
+        LocalAccBuildModel.editableBuild?.removeComponent(category, component.id)
         updateBuild()
     }
 
     fun increaseComponent(category: ComponentCategory, component: Component) {
-        BuildModel.editableBuild?.increaseComponents(category, component.id)
-        BuildModel.editableBuild?.getBuildComponent(category, component.id)?.count?.let {
+        LocalAccBuildModel.editableBuild?.increaseComponents(category, component.id)
+        LocalAccBuildModel.editableBuild?.getBuildComponent(category, component.id)?.count?.let {
             view.setCountComponents(component.id, it)
         }
         updateBuild()
     }
 
     fun reduceComponent(category: ComponentCategory, component: Component) {
-        BuildModel.editableBuild?.reduceComponents(category, component.id)
-        BuildModel.editableBuild?.getBuildComponent(category, component.id)?.count?.let {
+        LocalAccBuildModel.editableBuild?.reduceComponents(category, component.id)
+        LocalAccBuildModel.editableBuild?.getBuildComponent(category, component.id)?.count?.let {
             view.setCountComponents(component.id, it)
         }
         updateBuild()
@@ -75,11 +75,11 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
      * необходимо обновить отображение
      */
     fun checkUserChoice() {
-        BuildModel.editableBuild?.let { build ->
+        LocalAccBuildModel.editableBuild?.let { build ->
             build.lastAdded?.let { (category, buildComponent) ->
                 val isMultiple = build.isMultipleCategory(category)
-                view.addNewComponent(category, isMultiple, buildComponent, true)
-                BuildModel.editableBuild?.clearLastAdded()
+                view.addComponent(category, isMultiple, buildComponent, true)
+                LocalAccBuildModel.editableBuild?.clearLastAdded()
                 updateBuild()
             }
         }
@@ -89,7 +89,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
      * Обновление динамичных информационных полей в конструкторе
      */
     private fun updateBuild() {
-        BuildModel.editableBuild?.let { build ->
+        LocalAccBuildModel.editableBuild?.let { build ->
             view.updatePrice(build.price)
             build.image?.let { image ->
                 view.setImage(image)

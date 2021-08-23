@@ -24,7 +24,7 @@ abstract class PageFragment : Fragment() {
             return when (PageMenu.values()[numPage]) {
                 PageMenu.BUILDS -> BuildsListFragment()
                 PageMenu.SEARCH -> SearchFragment()
-                PageMenu.INFO -> InfoFragment()
+                PageMenu.INFO -> BuildsOnlineListFragment()
             }
         }
     }

@@ -1,9 +1,9 @@
 package com.derlados.computer_conf.presenters
 
 import android.accounts.NetworkErrorException
-import com.derlados.computer_conf.models.Build
 import com.derlados.computer_conf.view_interfaces.BuildsListView
-import com.derlados.computer_conf.models.BuildModel
+import com.derlados.computer_conf.models.LocalAccBuildModel
+import com.derlados.computer_conf.models.OnlineBuildModel
 import com.derlados.computer_conf.models.UserModel
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import kotlinx.coroutines.*
@@ -15,15 +15,15 @@ class BuildsListPresenter(private val view: BuildsListView, private val resource
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun init() {
-        BuildModel.setObserver(this)
-        BuildModel.loadBuildsFromCache()
-        view.setBuildsData(BuildModel.currentUserBuilds)
+        LocalAccBuildModel.setObserver(this)
+        LocalAccBuildModel.loadBuildsFromCache()
+        view.setBuildsData(LocalAccBuildModel.currentUserBuilds)
 
         val user = UserModel.currentUser
         if (user != null) {
             coroutineScope.launch {
                 try {
-                    BuildModel.restoreBuildsFromServer(user.token, user.id)
+                    LocalAccBuildModel.restoreBuildsFromServer(user.token, user.id)
                 } catch (e: NetworkErrorException) {
                     if (isActive) {
                         errorHandle(e.message)
@@ -38,20 +38,20 @@ class BuildsListPresenter(private val view: BuildsListView, private val resource
     }
 
     fun removeBuild(id: String) {
-        val build = BuildModel.getBuildById(id)
+        val build = LocalAccBuildModel.getBuildById(id)
 
         if (build.serverId != -1) {
             coroutineScope.launch {
                 val user = UserModel.currentUser
                 user?.let {
                     try {
-                        BuildModel.deleteBuildFromServer(it.token, it.id, build.serverId)
+                        LocalAccBuildModel.deleteBuildFromServer(it.token, it.id, build.serverId)
 
                         if (isActive) {
-                            view.removeItemBuildList(BuildModel.indexBuildById(id))
+                            view.removeItemBuildList(LocalAccBuildModel.indexBuildById(id))
                         }
 
-                        BuildModel.removeBuild(build.id)
+                        LocalAccBuildModel.removeBuild(build.id)
                     } catch (e: NetworkErrorException) {
                         if (isActive) {
                             errorHandle(e.message)
@@ -60,20 +60,31 @@ class BuildsListPresenter(private val view: BuildsListView, private val resource
                 }
             }
         } else {
-            view.removeItemBuildList(BuildModel.indexBuildById(id))
-            BuildModel.removeBuild(id)
+            view.removeItemBuildList(LocalAccBuildModel.indexBuildById(id))
+            LocalAccBuildModel.removeBuild(id)
         }
     }
 
+    /**
+     * Выбор сборки из списка пользователя. Если сборка уже опубликована, то она открывается для
+     * просмотра, иначе в режиме конструктора
+     */
     fun selectBuild(id: String) {
-        BuildModel.selectBuild(id)
-        view.openBuildConstructor()
+        val build = LocalAccBuildModel.getBuildById(id)
+
+        if (build.isPublic) {
+            OnlineBuildModel.selectedBuild = build
+            view.openBuildOnlineView()
+        } else {
+            LocalAccBuildModel.editableBuild = build
+            view.openBuildConstructor()
+        }
     }
 
     fun createNewBuild() {
-        BuildModel.createNewBuild()
+        LocalAccBuildModel.createNewBuild()
         view.openBuildConstructor()
-        view.updateRangeBuildList(BuildModel.currentUserBuilds.size)
+        view.updateRangeBuildList(LocalAccBuildModel.currentUserBuilds.size)
     }
 
     /**
@@ -81,7 +92,7 @@ class BuildsListPresenter(private val view: BuildsListView, private val resource
      * то сохранение сборки идет с автоматической публикацией
      */
     fun saveBuildOnServer(id: String) {
-        val selectedBuild = BuildModel.getBuildById(id)
+        val selectedBuild = LocalAccBuildModel.getBuildById(id)
 
         if (!selectedBuild.isCompatibility || !selectedBuild.isComplete) {
             view.showWarnDialog(resourceProvider.getString(ResourceProvider.ResString.BUILD_MUST_BE_COMPLETED))
@@ -92,9 +103,9 @@ class BuildsListPresenter(private val view: BuildsListView, private val resource
             val user = UserModel.currentUser
             user?.let {
                 try {
-                    BuildModel.saveBuildOnServer(user.token, user.id, id, true)
+                    LocalAccBuildModel.saveBuildOnServer(user.token, user.id, id, true)
                     if (isActive) {
-                        view.updateItemBuildList(BuildModel.indexOfBuildById(id))
+                        view.updateItemBuildList(LocalAccBuildModel.indexOfBuildById(id))
                     }
                 } catch (e: NetworkErrorException) {
                     if (isActive) {
@@ -112,9 +123,9 @@ class BuildsListPresenter(private val view: BuildsListView, private val resource
         }
 
         try {
-            when (BuildModel.ServerErrors.valueOf(message)) {
-                BuildModel.ServerErrors.CONNECTION_ERROR -> { view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION)) }
-                BuildModel.ServerErrors.INTERNAL_SERVER_ERROR -> { view.showError(resourceProvider.getString(ResourceProvider.ResString.INTERNAL_SERVER_ERROR)) }
+            when (LocalAccBuildModel.ServerErrors.valueOf(message)) {
+                LocalAccBuildModel.ServerErrors.CONNECTION_ERROR -> { view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION)) }
+                LocalAccBuildModel.ServerErrors.INTERNAL_SERVER_ERROR -> { view.showError(resourceProvider.getString(ResourceProvider.ResString.INTERNAL_SERVER_ERROR)) }
             }
         } catch (e: Exception) {
             view.showError(resourceProvider.getString(ResourceProvider.ResString.UNEXPECTED_ERROR))
@@ -123,8 +134,8 @@ class BuildsListPresenter(private val view: BuildsListView, private val resource
 
     override fun update(o: Observable?, arg: Any?) {
         val indexChanged = arg as Int
-        if (indexChanged == BuildModel.ALL_CHANGED) {
-            view.setBuildsData(BuildModel.currentUserBuilds)
+        if (indexChanged == LocalAccBuildModel.ALL_CHANGED) {
+            view.setBuildsData(LocalAccBuildModel.currentUserBuilds)
         } else {
             view.updateItemBuildList(indexChanged)
         }

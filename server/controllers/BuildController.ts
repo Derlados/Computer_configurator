@@ -87,6 +87,7 @@ export default class BuildController {
     }
 
     private sendError(err: BuildError | any, res: Response) {
+        console.log(err);
         if (Object.values(BuildError).includes(err)) {
             switch (err) {
                 case BuildError.BUILD_NOT_FOUND:
