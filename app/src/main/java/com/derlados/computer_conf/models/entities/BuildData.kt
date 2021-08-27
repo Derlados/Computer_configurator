@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.models
+package com.derlados.computer_conf.models.entities
 
 import com.derlados.computer_conf.consts.ComponentCategory
 import java.util.*
@@ -18,7 +18,7 @@ interface BuildData {
     val idUser: Int
     val username: String
     val isPublic: Boolean
-    val publishDate: String
+    val publishDate: Date
 
     val isCompatibility: Boolean
     val isComplete: Boolean

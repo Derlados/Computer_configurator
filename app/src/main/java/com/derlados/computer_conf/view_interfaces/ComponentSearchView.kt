@@ -1,6 +1,6 @@
 package com.derlados.computer_conf.view_interfaces
 
-import com.derlados.computer_conf.models.Component
+import com.derlados.computer_conf.models.entities.Component
 
 interface ComponentSearchView {
     fun showError(message: String)

@@ -76,10 +76,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
-                    android:text="08.09.21"
+                    android:text=""
                     android:textColor="@color/light_blue"
                     android:gravity="center"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:visibility="gone"/>
 
 

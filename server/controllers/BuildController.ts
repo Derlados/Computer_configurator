@@ -4,6 +4,7 @@ import BuildModel, { BuildError } from "../models/BuildModel";
 import { Build } from "../models/Build";
 import { BuildComponent } from "../types/BuildComponent";
 import { Pair } from "../types/Pair";
+import { Comment } from "../types/Comment";
 
 export default class BuildController {
     private buildModel: BuildModel;
@@ -11,6 +12,8 @@ export default class BuildController {
     constructor() {
         this.buildModel = new BuildModel();
     }
+
+    //////////////////////GET///////////////////////
 
     public getBuildsByUser = (req: any, res: Response) => {
         const idUser = req.params.idUser;
@@ -24,6 +27,16 @@ export default class BuildController {
             .then((builds: Build[]) => res.status(HttpCodes.OK).json(this.getJsonFromatBuilds(builds)))
             .catch((err) => this.sendError(err, res));
     }
+
+    public getComments = (req: any, res: Response) => {
+        const idBuild = req.params.idBuild;
+
+        this.buildModel.getComments(idBuild)
+            .then((comments: Comment[]) => res.status(HttpCodes.OK).json(comments))
+            .catch((err) => this.sendError(err, res));
+    }
+
+    //////////////////////POST///////////////////////
 
     public addBuild = (req: any, res: Response) => {
         const idUser = req.params.idUser;
@@ -40,6 +53,19 @@ export default class BuildController {
             .then((serverId) => res.status(HttpCodes.OK).json(serverId))
             .catch((err) => this.sendError(err, res));
     }
+
+    public addComment = (req: any, res: Response) => {
+        const idUser = req.params.idUser;
+        const idBuild = req.params.idBuild;
+        const idParent = req.params.idParentComment;
+        const text = req.body.text;
+
+        this.buildModel.addComment(idUser, idBuild, text, idParent)
+            .then((comment) => res.status(HttpCodes.OK).json(comment))
+            .catch((err) => this.sendError(err, res));
+    }
+
+    //////////////////////PUT///////////////////////
 
     public updateBuild = (req: any, res: Response) => {
         const idBuild = req.params.idBuild;
@@ -67,6 +93,8 @@ export default class BuildController {
             .catch((err) => this.sendError(err, res));
     }
 
+    //////////////////////DELETE///////////////////////
+
     public removeBuild = (req: any, res: Response) => {
         const idUser = req.params.idUser;
         const idBuild = req.params.idBuild;
@@ -76,9 +104,14 @@ export default class BuildController {
             .catch((err) => this.sendError(err, res));
     }
 
+    /**
+     * Преобразование сборок в формат JSON. Комлпектующие представляют собой сложную мапу, 
+     * которую необходимо вручную перевести в объект
+     * @param builds - массив сборок
+     * @returns - форматированный массив 
+     */
     private getJsonFromatBuilds(builds: Build[]): any {
         const responseData: any = JSON.parse(JSON.stringify(builds));
-
         for (let i = 0; i < responseData.length; i++) {
             responseData[i].components = Object.fromEntries(builds[i].components);
         }

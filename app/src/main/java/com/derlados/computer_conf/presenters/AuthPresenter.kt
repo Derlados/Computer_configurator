@@ -76,19 +76,8 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
     private fun errorHandle(message: String?) {
         if (message == null) {
             view.showError(resourceProvider.getString(ResourceProvider.ResString.UNEXPECTED_ERROR))
-            return
-        }
-
-        try {
-            when (UserModel.ServerErrors.valueOf(message)) {
-                UserModel.ServerErrors.USERNAME_EXISTS -> { view.showError(resourceProvider.getString(ResourceProvider.ResString.USERNAME_EXISTS)) }
-                UserModel.ServerErrors.EMAIL_EXISTS -> { view.showError(resourceProvider.getString(ResourceProvider.ResString.EMAIL_EXISTS)) }
-                UserModel.ServerErrors.USER_NOT_FOUND -> { view.showError(resourceProvider.getString(ResourceProvider.ResString.INCORRECT_LOGIN_OR_PASSWORD)) }
-                UserModel.ServerErrors.CONNECTION_ERROR -> { view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION)) }
-                UserModel.ServerErrors.INTERNAL_SERVER_ERROR -> { view.showError(resourceProvider.getString(ResourceProvider.ResString.INTERNAL_SERVER_ERROR)) }
-            }
-        } catch (e: Exception) {
-            view.showError(resourceProvider.getString(ResourceProvider.ResString.UNEXPECTED_ERROR))
+        } else {
+            view.showError(resourceProvider.getString(ResourceProvider.ResString.valueOf(message)))
         }
     }
 

@@ -11,9 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
-import com.derlados.computer_conf.models.BuildData
-import com.derlados.computer_conf.presenters.BuildsListPresenter
-import com.derlados.computer_conf.view_interfaces.BuildOnlineView
+import com.derlados.computer_conf.models.entities.BuildData
+import com.derlados.computer_conf.presenters.BuildListPresenter
 import com.derlados.computer_conf.view_interfaces.BuildsListView
 import com.derlados.computer_conf.views.BuildConstructorFragment
 import com.derlados.computer_conf.views.BuildOnlineViewFragment
@@ -28,7 +27,7 @@ class BuildsListFragment : PageFragment(), BuildsListView {
     private lateinit var rvBuildRecycler: RecyclerView // Основной контейнер для бланков сборок
     private lateinit var createBt: FloatingActionButton
 
-    private lateinit var listPresenter: BuildsListPresenter
+    private lateinit var listPresenter: BuildListPresenter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -37,6 +36,7 @@ class BuildsListFragment : PageFragment(), BuildsListView {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         currentFragment = inflater.inflate(R.layout.fragment_build_list, container, false)
+        currentFragment.fragment_build_list_srl_refresh.isEnabled = false
 
         rvBuildRecycler = currentFragment.fragment_build_list_rv
         createBt = currentFragment.fragment_build_list_bt_add
@@ -44,7 +44,7 @@ class BuildsListFragment : PageFragment(), BuildsListView {
             createBuild()
         }
 
-        listPresenter = BuildsListPresenter(this, App.app.resourceProvider)
+        listPresenter = BuildListPresenter(this, App.app.resourceProvider)
         listPresenter.init()
         return currentFragment
     }

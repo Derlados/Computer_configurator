@@ -10,7 +10,7 @@ import kotlinx.coroutines.*
 import java.lang.Exception
 import java.util.*
 
-class BuildsListPresenter(private val view: BuildsListView, private val resourceProvider: ResourceProvider): Observer {
+class BuildListPresenter(private val view: BuildsListView, private val resourceProvider: ResourceProvider): Observer {
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -73,10 +73,10 @@ class BuildsListPresenter(private val view: BuildsListView, private val resource
         val build = LocalAccBuildModel.getBuildById(id)
 
         if (build.isPublic) {
-            OnlineBuildModel.selectedBuild = build
+            OnlineBuildModel.selectBuild(build.serverId)
             view.openBuildOnlineView()
         } else {
-            LocalAccBuildModel.editableBuild = build
+            LocalAccBuildModel.selectBuild(id)
             view.openBuildConstructor()
         }
     }
@@ -119,16 +119,8 @@ class BuildsListPresenter(private val view: BuildsListView, private val resource
     private fun errorHandle(message: String?) {
         if (message == null) {
             view.showError(resourceProvider.getString(ResourceProvider.ResString.UNEXPECTED_ERROR))
-            return
-        }
-
-        try {
-            when (LocalAccBuildModel.ServerErrors.valueOf(message)) {
-                LocalAccBuildModel.ServerErrors.CONNECTION_ERROR -> { view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION)) }
-                LocalAccBuildModel.ServerErrors.INTERNAL_SERVER_ERROR -> { view.showError(resourceProvider.getString(ResourceProvider.ResString.INTERNAL_SERVER_ERROR)) }
-            }
-        } catch (e: Exception) {
-            view.showError(resourceProvider.getString(ResourceProvider.ResString.UNEXPECTED_ERROR))
+        } else {
+            view.showError(resourceProvider.getString(ResourceProvider.ResString.valueOf(message)))
         }
     }
 

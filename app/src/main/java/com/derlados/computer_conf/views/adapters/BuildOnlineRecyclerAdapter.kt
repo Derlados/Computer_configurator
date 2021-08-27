@@ -1,12 +1,16 @@
 package com.derlados.computer_conf.views.adapters
 
+import android.view.View
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
-import com.derlados.computer_conf.models.BuildData
+import com.derlados.computer_conf.models.entities.BuildData
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.*
 
-class OnlineBuildRecyclerAdapter <T : BuildData> (override val builds: ArrayList<T>, override val onItemClick: (id: String) -> Unit):
-        BuildRecyclerAdapter<T>(builds, onItemClick, fun(_:String) = Unit, fun(_:String) = Unit) {
+
+class BuildOnlineRecyclerAdapter<T : BuildData>(override val builds: ArrayList<T>, val onServerBuildChoose: (id: Int) -> Unit):
+        BuildRecyclerAdapter<T>(builds, fun(_: String) = Unit, fun(_: String) = Unit, fun(_: String) = Unit) {
 
     override fun onBindViewHolder(holder: BuildHolder, position: Int) {
         val build: BuildData = builds[position]
@@ -14,9 +18,13 @@ class OnlineBuildRecyclerAdapter <T : BuildData> (override val builds: ArrayList
         // Установка всех заголовочных данных
         holder.tvName.text = build.name
         holder.tvPrice.text = App.app.getString(R.string.component_price, build.price)
-        holder.tvUserOrStatusHeader.setText(R.string.user)
+        holder.tvUserOrStatusHeader.setText(R.string.creator)
         holder.tvUserOrStatusValue.text = build.username
-        holder.tvPublishDate.text = build.publishDate
+        holder.llActionBtns.visibility = View.GONE
+        holder.tvPublishDate.visibility = View.VISIBLE
+
+        val formatter = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
+        holder.tvPublishDate.text = formatter.format(build.publishDate)
 
         // Список комплектующих присутствующих в сборках
         build.image?.let {
@@ -35,7 +43,7 @@ class OnlineBuildRecyclerAdapter <T : BuildData> (override val builds: ArrayList
 
         // Настройка обработчиков нажаатий
         holder.itemView.setOnClickListener {
-            onItemClick(build.id)
+            onServerBuildChoose(build.serverId)
         }
 
         holder.initExpandLayout()

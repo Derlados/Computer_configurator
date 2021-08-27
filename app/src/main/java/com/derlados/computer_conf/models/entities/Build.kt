@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.models
+package com.derlados.computer_conf.models.entities
 
 import com.derlados.computer_conf.consts.ComponentCategory
 import java.util.*
@@ -95,7 +95,7 @@ class Build : Cloneable, BuildData {
     override var idUser: Int = -1
     override var username: String = ""
     override var isPublic: Boolean = false // Статус публикации (публичности)
-    override val publishDate: String = ""
+    override var publishDate: Date = Date()
 
     var lastAdded: Pair<ComponentCategory, BuildData.BuildComponent>? = null
 
@@ -245,7 +245,7 @@ class Build : Cloneable, BuildData {
                 if (gpu == null && it < currentPower * 1.5) {
                     compatibilityErrors.add(CompatibilityError.NOT_ENOUGH_PS_POWER)
                 } else if (gpu != null && it < currentPower) {
-                    compatibilityErrors.add(Companion.CompatibilityError.NOT_ENOUGH_PS_POWER)
+                    compatibilityErrors.add(CompatibilityError.NOT_ENOUGH_PS_POWER)
                 }
                 Unit
             }

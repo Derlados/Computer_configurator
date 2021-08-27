@@ -1,22 +1,16 @@
 package com.derlados.computer_conf.views.adapters
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import android.telecom.Call
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
-import com.derlados.computer_conf.managers.FileManager
-import com.derlados.computer_conf.models.Component
+import com.derlados.computer_conf.models.entities.Component
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
 import java.lang.Exception
 

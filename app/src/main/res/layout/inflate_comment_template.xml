@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginBottom="10dp"
+    android:layout_marginStart="20dp">
+
+    <ImageView
+        android:id="@+id/inflate_comment_template_img_new_comment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="72dp"
+        android:layout_weight="0.2"
+        android:src="@drawable/ic_user_24"
+        android:padding="5dp"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.78"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/inflate_comment_template_et_new_comment_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:hint="Напишите комментарий"
+            android:backgroundTint="@color/hint_color"
+            android:textColorHint="@color/hint_color"/>
+
+        <Button
+            android:id="@+id/inflate_comment_template_bt_add_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Оставить"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:layout_gravity="end"/>
+
+    </LinearLayout>
+
+</LinearLayout>

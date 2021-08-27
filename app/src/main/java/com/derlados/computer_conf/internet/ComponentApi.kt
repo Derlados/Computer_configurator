@@ -2,7 +2,7 @@ package com.derlados.computer_conf.internet
 
 
 import com.derlados.computer_conf.data_classes.FilterAttribute
-import com.derlados.computer_conf.models.Component
+import com.derlados.computer_conf.models.entities.Component
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

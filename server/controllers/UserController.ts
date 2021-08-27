@@ -56,7 +56,6 @@ export default class UserController {
         const photoUrl = req.body.photoUrl;
         const user = new User(username, null, null, null, googleId, photoUrl);
 
-
         this.userModel.login(user)
             .then((user: User) => {
                 const sendData = this.prepareSendData(user);
@@ -141,7 +140,7 @@ export default class UserController {
         const sendData: Object = {
             id: user.id,
             username: user.username,
-            photoUrl: user.photoUrl,
+            photoUrl: user.imgUrl,
             token: this.createToken(user)
         }
         return sendData;

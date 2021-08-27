@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.ComponentCategory
-import com.derlados.computer_conf.models.BuildData
+import com.derlados.computer_conf.models.entities.BuildData
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import com.squareup.picasso.Picasso

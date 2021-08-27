@@ -2,15 +2,11 @@ package com.derlados.computer_conf.view_interfaces
 
 import com.derlados.computer_conf.models.entities.BuildData
 
-interface BuildsListView {
+interface BuildsOnlineListView {
     fun <T : BuildData> setBuildsData(buildsData: ArrayList<T>)
-    fun openBuildConstructor()
     fun openBuildOnlineView()
-
     fun updateRangeBuildList(size: Int)
-    fun updateItemBuildList(index: Int)
-    fun removeItemBuildList(index: Int)
-
-    fun showWarnDialog(message: String)
     fun showError(message: String)
+    fun disableRefreshAnim()
+    fun initRefreshing()
 }

@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.ComponentCategory
-import com.derlados.computer_conf.models.BuildData
-import com.derlados.computer_conf.models.Component
+import com.derlados.computer_conf.models.entities.BuildData
+import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.view_interfaces.BaseBuildView
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import com.squareup.picasso.Picasso
@@ -57,6 +57,10 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView {
 
     override fun setImage(url: String) {
         Picasso.get().load(url).into(imgBuild)
+    }
+
+    override fun setPrice(price: Int) {
+        tvPrice.text = App.app.resources.getString(R.string.component_price, price)
     }
 
     /**

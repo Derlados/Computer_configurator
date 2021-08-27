@@ -1,34 +1,23 @@
 package com.derlados.computer_conf.views
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.*
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentResultListener
-import androidx.fragment.app.setFragmentResultListener
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.view_interfaces.BuildConstructorView
-import com.derlados.computer_conf.models.BuildData
-import com.derlados.computer_conf.models.Component
+import com.derlados.computer_conf.models.entities.BuildData
+import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.presenters.BuildConstructorPresenter
-import com.derlados.computer_conf.views.dialog_fragments.SaveDialogFragment
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
-import com.google.android.material.navigation.NavigationBarView
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_build.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
-import java.util.*
-import kotlin.collections.HashMap
 
 open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActivity.OnBackPressedListener, BuildConstructorView {
     private lateinit var frListener: OnFragmentInteractionListener
@@ -62,8 +51,6 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
             }
         }
     }
-
-
 
     /**
      * Каждый раз когда пользователь возвращается к экрану, необходимо проверять его выбор.
@@ -104,10 +91,6 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
         componentsTvCount[id]?.let {
             it.text = count.toString()
         }
-    }
-
-    override fun updatePrice(price: Int) {
-        tvPrice.text = App.app.resources.getString(R.string.component_price, price)
     }
 
     /**

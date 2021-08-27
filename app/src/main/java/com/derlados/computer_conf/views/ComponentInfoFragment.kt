@@ -12,7 +12,7 @@ import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.view_interfaces.ComponentInfoView
-import com.derlados.computer_conf.models.Component
+import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.presenters.ComponentInfoPresenter
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_component_data.view.*

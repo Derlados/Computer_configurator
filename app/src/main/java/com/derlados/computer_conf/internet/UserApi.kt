@@ -1,6 +1,6 @@
 package com.derlados.computer_conf.internet
 
-import com.derlados.computer_conf.models.User
+import com.derlados.computer_conf.models.entities.User
 import retrofit2.Call
 import retrofit2.http.*
 

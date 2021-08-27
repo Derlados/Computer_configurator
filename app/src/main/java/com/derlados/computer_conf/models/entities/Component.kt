@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.models
+package com.derlados.computer_conf.models.entities
 
 import android.graphics.Bitmap
 import com.derlados.computer_conf.managers.FileManager

@@ -1,8 +1,11 @@
+import moment from 'moment';
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { DataBase } from "../controllers/database";
 import { Build } from "./Build";
 import { Component } from "../types/Component";
 import { Pair } from "../types/Pair";
+import { Comment } from '../types/Comment';
+import { Console } from 'console';
 
 export default class BuildModel {
     private pool: Pool; // Пул базы данных
@@ -18,7 +21,7 @@ export default class BuildModel {
      * @returns список соответствующих сборок с полной информацией
      */
     public async getBuilds(idUser?: number): Promise<Build[]> {
-        let sql = ` SELECT build.id, build.id_user, users.username, build.name, build.description, build.is_public, build.publish_date,
+        const sql = ` SELECT build.id, build.id_user, users.username, build.name, build.description, build.is_public, DATE_FORMAT(build.publish_date, "%Y-%m-%d") AS publish_date,
                             build_components.id_component, build_components.count_components AS countUsed, component.id_category
                     FROM build 
                     JOIN build_components ON build_components.id_build = id
@@ -58,6 +61,32 @@ export default class BuildModel {
         return Array.from(builds, ([key, value]) => (value));
     }
 
+
+    public async getComments(idBuild: number): Promise<Comment[]> {
+        const sql = `   SELECT build_comments.id, id_build, id_user, id_parent, text, creation_date, users.username, users.photoUrl AS img
+                        FROM build_comments
+                        JOIN users ON users.id = build_comments.id_user
+                        WHERE id_build = ?`
+        const rows = (await this.pool.execute(sql, [idBuild.toString()]))[0] as RowDataPacket[];
+
+        const comments: Array<Comment> = new Array<Comment>();
+        for (const row of rows) {
+            const comment = new Comment()
+            comment.id = row.id;
+            comment.idBuild = row.id_build;
+            comment.idUser = row.id_user;
+            comment.idParent = row.id_parent;
+            comment.text = row.text;
+            comment.creationDate = row.creation_date;
+            comment.username = row.username;
+            comment.img = row.img;
+
+            comments.push(comment);
+        }
+
+        return comments;
+    }
+
     public async addBuild(idUser: number, build: Build, components: Pair[]): Promise<number> {
         // Формирование запроса на добавление сборки
         const sqlAddBuild = `   INSERT INTO build(id_user, name, description, is_public, publish_date) 
@@ -77,6 +106,36 @@ export default class BuildModel {
         await this.pool.execute(sqlAddComponents, dataAddComponents);
 
         return res.insertId;
+    }
+
+    public async addComment(idUser: number, idBuild: number, text: string, idParent?: number): Promise<Comment> {
+        if (!idParent) {
+            idParent = -1;
+        }
+
+        const sql = `   INSERT INTO build_comments(id_build, id_user, id_parent, text, creation_date) 
+                        VALUES (?, ?, ?, ?, NOW())`;
+        const data = [idBuild.toString(), idUser.toString(), idParent.toString(), text];
+        const res: ResultSetHeader = (await this.pool.execute(sql, data))[0] as ResultSetHeader;
+
+        const sqlGetInsertedComment = ` SELECT build_comments.id, id_build, id_user, id_parent, text, creation_date, users.username, users.photoUrl AS img
+                                        FROM build_comments
+                                        JOIN users ON users.id = build_comments.id_user
+                                        WHERE build_comments.id = ?`
+        const rows = (await this.pool.execute(sqlGetInsertedComment, [res.insertId.toString()]))[0] as RowDataPacket[];
+        const commentRow = rows[0];
+
+        const insertedComment = new Comment()
+        insertedComment.id = commentRow.id;
+        insertedComment.idBuild = commentRow.id_build;
+        insertedComment.idUser = commentRow.id_user;
+        insertedComment.idParent = commentRow.id_parent;
+        insertedComment.text = commentRow.text;
+        insertedComment.creationDate = commentRow.creation_date;
+        insertedComment.username = commentRow.username;
+        insertedComment.img = commentRow.img;
+
+        return insertedComment;
     }
 
     /**

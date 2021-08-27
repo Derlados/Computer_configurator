@@ -1,6 +1,6 @@
 package com.derlados.computer_conf.data_classes
 
-import com.derlados.computer_conf.models.Build
+import com.derlados.computer_conf.models.entities.Build
 
 /**
  * Данные о сборке для передачи в запросе, так как большинство данные является лищними

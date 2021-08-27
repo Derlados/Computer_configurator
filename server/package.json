@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "hbs": "^4.1.1",
+    "moment": "^2.29.1",
     "mysql2": "^2.2.5",
     "socket.io": "^2.0.0"
   },

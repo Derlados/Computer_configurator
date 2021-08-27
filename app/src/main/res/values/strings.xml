@@ -97,4 +97,7 @@
     <string name="accept_delete">Данная сборка будет удалена с аккаунта (если привязана к нему) и с устройства. Вы точно хотите её удалить ?</string>
     <string name="user">Пользователь :</string>
     <string name="creator">Создатель :</string>
+    <string name="answer">Ответить</string>
+    <string name="comments">%1$d комментария</string>
+    <string name="loading_comments">Загрузка комментариев...</string>
 </resources>

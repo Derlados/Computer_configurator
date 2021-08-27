@@ -16,7 +16,7 @@ import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.view_interfaces.ComponentSearchView
-import com.derlados.computer_conf.models.Component
+import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.presenters.ComponentSearchPresenter
 import com.derlados.computer_conf.views.adapters.ComponentRecyclerAdapter
 import com.derlados.computer_conf.views.dialog_fragments.FilterDialogFragment
@@ -74,6 +74,8 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
 
         return currentFragment
     }
+
+
 
     /**
      * Решение проблемы с анимацией, по скольку вызывается 2 popBackStack метода то и анимация играет дважды,

@@ -1,6 +1,5 @@
 package com.derlados.computer_conf.presenters
 
-import com.derlados.computer_conf.models.User
 import com.derlados.computer_conf.models.UserModel
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.view_interfaces.MainView

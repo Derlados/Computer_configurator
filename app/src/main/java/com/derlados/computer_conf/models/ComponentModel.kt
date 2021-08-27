@@ -8,6 +8,7 @@ import com.derlados.computer_conf.data_classes.UserFilterChoice
 import com.derlados.computer_conf.data_classes.clear
 import com.derlados.computer_conf.internet.ComponentApi
 import com.derlados.computer_conf.managers.FileManager
+import com.derlados.computer_conf.models.entities.Component
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call

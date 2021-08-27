@@ -5,6 +5,8 @@ import android.util.Log
 import com.derlados.computer_conf.data_classes.RequestBuildData
 import com.derlados.computer_conf.internet.BuildsApi
 import com.derlados.computer_conf.managers.FileManager
+import com.derlados.computer_conf.models.entities.Build
+import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,11 +23,6 @@ import kotlin.coroutines.suspendCoroutine
 
 object LocalAccBuildModel: Observable() {
     const val ALL_CHANGED = -1
-
-    enum class ServerErrors {
-        INTERNAL_SERVER_ERROR,
-        CONNECTION_ERROR
-    }
 
     var currentUserBuilds = ArrayList<Build>() // Список всех сборок пользователя
     var editableBuild: Build? = null // Выбранная сборка, должна являться клоном из списка
@@ -71,12 +68,12 @@ object LocalAccBuildModel: Observable() {
 
                         continuation.resume(Unit)
                     } else {
-                        continuation.resumeWithException(NetworkErrorException(ServerErrors.INTERNAL_SERVER_ERROR.name))
+                        continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
                     }
                 }
 
                 override fun onFailure(call: Call<ArrayList<Build>>, t: Throwable) {
-                    continuation.resumeWithException(NetworkErrorException(ServerErrors.CONNECTION_ERROR.name))
+                    continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.NO_CONNECTION.name))
                 }
             })
         }
@@ -104,12 +101,12 @@ object LocalAccBuildModel: Observable() {
                         FileManager.saveJsonData(FileManager.Entity.BUILD, buildToSave.id, Gson().toJson(buildToSave))
                         continuation.resume(Unit)
                     } else {
-                        continuation.resumeWithException(NetworkErrorException(ServerErrors.INTERNAL_SERVER_ERROR.name))
+                        continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
                     }
                 }
 
                 override fun onFailure(call: Call<Int>, t: Throwable) {
-                    continuation.resumeWithException(NetworkErrorException(ServerErrors.CONNECTION_ERROR.name))
+                    continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.NO_CONNECTION.name))
                 }
             })
         }
@@ -156,12 +153,12 @@ object LocalAccBuildModel: Observable() {
                         currentUserBuilds.find { build -> build.serverId == idServerBuild }?.isPublic = updatedStatus
                         continuation.resume(Unit)
                     } else {
-                        continuation.resumeWithException(NetworkErrorException(ServerErrors.INTERNAL_SERVER_ERROR.name))
+                        continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
                     }
                 }
 
                 override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                    continuation.resumeWithException(NetworkErrorException(ServerErrors.CONNECTION_ERROR.name))
+                    continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.NO_CONNECTION.name))
                 }
             })
         }

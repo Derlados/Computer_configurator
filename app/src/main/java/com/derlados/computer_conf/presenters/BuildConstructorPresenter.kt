@@ -4,7 +4,7 @@ import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.view_interfaces.BuildConstructorView
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.LocalAccBuildModel
-import com.derlados.computer_conf.models.Component
+import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.models.ComponentModel
 
 class BuildConstructorPresenter(private val view: BuildConstructorView, private val resourceProvider: ResourceProvider) {
@@ -90,7 +90,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
      */
     private fun updateBuild() {
         LocalAccBuildModel.editableBuild?.let { build ->
-            view.updatePrice(build.price)
+            view.setPrice(build.price)
             build.image?.let { image ->
                 view.setImage(image)
             }

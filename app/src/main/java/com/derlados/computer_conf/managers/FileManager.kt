@@ -10,7 +10,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-//TODO(перенести работу с файлами сюда)
 object FileManager {
 
     enum class Entity {

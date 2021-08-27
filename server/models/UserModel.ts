@@ -20,7 +20,7 @@ export default class UserModel {
                 user.email ?? null,
                 user.secret ?? null,
                 user.googleId ?? null,
-                user.photoUrl ?? null
+                user.imgUrl ?? null
             ];
 
             this.pool.execute(sql, data)
@@ -60,7 +60,7 @@ export default class UserModel {
                     if (row.length == 0) {
                         reject(UserError.USER_NOT_FOUND)
                     } else {
-                        user.photoUrl = row[0].photoUrl;
+                        user.imgUrl = row[0].photoUrl;
                         user.id = row[0].id;
                         resolve(user)
                     }

@@ -7,12 +7,21 @@
     android:background="@color/background"
     android:layout_weight="0.9">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id ="@+id/fragment_build_list_rv"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/fragment_build_list_srl_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:swipeRefreshLayoutProgressSpinnerBackgroundColor="@color/light_blue">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id ="@+id/fragment_build_list_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fragment_build_list_bt_add"

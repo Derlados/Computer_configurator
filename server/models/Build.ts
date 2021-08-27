@@ -11,7 +11,7 @@ export class Build {
     idUser: number;
     username: string;
     isPublic: boolean;
-    publishDate: string;
+    publishDate: Date;
 
     constructor() {
         this.components = new Map();
