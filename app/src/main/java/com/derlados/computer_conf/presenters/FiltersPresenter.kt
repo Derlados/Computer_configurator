@@ -3,6 +3,7 @@ package com.derlados.computer_conf.presenters
 import android.accounts.NetworkErrorException
 import com.derlados.computer_conf.consts.SortType
 import com.derlados.computer_conf.models.ComponentModel
+import com.derlados.computer_conf.models.LocalAccBuildModel
 import com.derlados.computer_conf.view_interfaces.FiltersDialogView
 import kotlinx.coroutines.*
 
@@ -64,6 +65,10 @@ class FiltersPresenter(val view: FiltersDialogView) {
         }
     }
 
+    fun toggleCompatibilityFilter(isChecked: Boolean) {
+        ComponentModel.isCheckCompatibility = isChecked
+    }
+
     fun resetFilters() {
         userChoice.chosenRangeFilters.clear()
         userChoice.chosenFilters.clear()
@@ -78,6 +83,7 @@ class FiltersPresenter(val view: FiltersDialogView) {
                 val filters = ComponentModel.getFilters()
                 maxPrice = ComponentModel.components.maxByOrNull { it.price }?.price ?: 0
                 userChoice.chosenRangePrice = Pair(0, maxPrice)
+
                 view.initFilters(filters, maxPrice)
             } catch (e: NetworkErrorException) {
                 if (isActive) {

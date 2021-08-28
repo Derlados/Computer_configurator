@@ -6,6 +6,7 @@ import com.derlados.computer_conf.providers.android_providers_interfaces.Resourc
 import com.derlados.computer_conf.models.LocalAccBuildModel
 import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.models.ComponentModel
+import com.derlados.computer_conf.models.entities.Build
 
 class BuildConstructorPresenter(private val view: BuildConstructorView, private val resourceProvider: ResourceProvider) {
 
@@ -41,12 +42,24 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
         updateBuild()
     }
 
+    /**
+     * Увеличение количества конкретного комплектующего. Перед добавление проверяется будет ли такое
+     * количество совместимым
+     * @param category - категория комплектующего
+     * @param component - само комплектующее
+     */
     fun increaseComponent(category: ComponentCategory, component: Component) {
-        LocalAccBuildModel.editableBuild?.increaseComponents(category, component.id)
-        LocalAccBuildModel.editableBuild?.getBuildComponent(category, component.id)?.count?.let {
-            view.setCountComponents(component.id, it)
+        LocalAccBuildModel.editableBuild?.let {
+            if (it.checkCompatibility(category, component) == Build.Companion.CompatibilityError.OK) {
+                it.increaseComponents(category, component.id)
+                it.getBuildComponent(category, component.id)?.count?.let { count ->
+                    view.setCountComponents(component.id, count)
+                }
+                updateBuild()
+            } else {
+                view.showToast(resourceProvider.getString(ResourceProvider.ResString.CANNOT_ADD_MORE))
+            }
         }
-        updateBuild()
     }
 
     fun reduceComponent(category: ComponentCategory, component: Component) {

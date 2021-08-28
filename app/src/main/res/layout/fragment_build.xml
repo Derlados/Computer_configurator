@@ -92,7 +92,7 @@
                             android:paddingEnd="0dp"
                             android:text="@string/status"
                             android:textColor="@color/light_blue"
-                            android:textSize="16sp" />
+                            android:textSize="15sp" />
 
                         <TextView
                             android:id="@+id/fragment_build_tv_status_or_user_value"
@@ -101,7 +101,7 @@
                             android:layout_weight="0.5"
                             android:text="@string/not_complete"
                             android:gravity="center"
-                            android:textSize="16sp"
+                            android:textSize="15sp"
 
                             android:textColor="@color/red"/>
 
@@ -298,7 +298,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/fragment_build_tv_comments_head"

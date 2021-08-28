@@ -80,6 +80,9 @@ class FilterDialogFragment(private val resultListener: () -> Unit) : DialogFragm
             }
         })
 
+        thisView.dialog_fragment_filters_cb_compatibility.setOnCheckedChangeListener { _, isChecked ->
+            presenter.toggleCompatibilityFilter(isChecked)
+        }
         thisView.dialog_fragment_filters_bt_reset.setOnClickListener {
             presenter.resetFilters()
             thisDialog.hide()

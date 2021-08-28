@@ -58,7 +58,7 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
         searchString.setOnEditorActionListener(OnEditorActionListener { _, actionId, _ -> // Реакация на кнопку submit
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchText = searchString.text.toString()
-                presenter.searchComponent(searchText)
+                presenter.searchComponentByText(searchText)
                 return@OnEditorActionListener true
             }
             return@OnEditorActionListener false

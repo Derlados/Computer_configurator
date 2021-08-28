@@ -99,5 +99,7 @@
     <string name="creator">Создатель :</string>
     <string name="answer">Ответить</string>
     <string name="comments">%1$d комментария</string>
-    <string name="loading_comments">Загрузка комментариев...</string>
+    <string name="loading_comments">Загрузка комментариев…</string>
+    <string name="compatibility_filter">Фильтр по совместимсоти</string>
+    <string name="cannot_add_more">Невозможно добавить больше</string>
 </resources>

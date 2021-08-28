@@ -31,6 +31,7 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             Build.Companion.CompatibilityError.NOT_ENOUGH_PS_POWER -> context.getString(R.string.not_enough_ps_power)
             Build.Companion.CompatibilityError.WRONG_SATA_COUNT -> context.getString(R.string.wrong_sata_count)
             Build.Companion.CompatibilityError.WRONG_M2_COUNT -> context.getString(R.string.wrong_m2_count)
+            else -> ""
         }
     }
 
@@ -53,6 +54,7 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.INCORRECT_FIELDS_LENGTH -> context.getString(R.string.incorrect_fields_length)
             ResourceProvider.ResString.BUILD_MUST_BE_COMPLETED -> context.getString(R.string.build_must_be_completed)
             ResourceProvider.ResString.BUILD_WILL_BE_SAVED_ON_SERVER -> context.getString(R.string.build_will_be_saved_on_server)
+            ResourceProvider.ResString.CANNOT_ADD_MORE -> context.getString(R.string.cannot_add_more)
         }
     }
 

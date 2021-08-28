@@ -12,6 +12,6 @@ data class UserFilterChoice (
 fun UserFilterChoice.clear() {
     chosenFilters.clear()
     chosenRangeFilters.clear()
-    chosenRangePrice = Pair(0, 0)
+    chosenRangePrice = Pair(0, Int.MAX_VALUE)
     chosenSortType = SortType.DEFAULT
 }

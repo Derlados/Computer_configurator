@@ -44,6 +44,7 @@ object ComponentModel {
     lateinit var chosenComponent: Component
     lateinit var chosenCategory: ComponentCategory
     val userFilterChoice: UserFilterChoice
+    var isCheckCompatibility: Boolean = true
 
     init {
         components = ArrayList()
@@ -53,7 +54,7 @@ object ComponentModel {
         userFilterChoice = UserFilterChoice(
                 HashMap(),
                 HashMap(),
-                Pair(0, 0),
+                Pair(0, Int.MAX_VALUE),
                 SortType.DEFAULT
         )
 

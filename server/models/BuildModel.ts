@@ -61,7 +61,6 @@ export default class BuildModel {
         return Array.from(builds, ([key, value]) => (value));
     }
 
-
     public async getComments(idBuild: number): Promise<Comment[]> {
         const sql = `   SELECT build_comments.id, id_build, id_user, id_parent, text, creation_date, users.username, users.photoUrl AS img
                         FROM build_comments

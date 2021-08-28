@@ -13,6 +13,7 @@ interface BuildData {
     val description: String
     val price: Int
     val components: HashMap<ComponentCategory, ArrayList<BuildComponent>>
+    var usedPower: Int
     var image: String?
 
     val idUser: Int

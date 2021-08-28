@@ -7,19 +7,22 @@ import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.consts.SortType
 import com.derlados.computer_conf.data_classes.UserFilterChoice
+import com.derlados.computer_conf.models.LocalAccBuildModel
+import com.derlados.computer_conf.models.entities.Build
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.entities.Component
 
 class ComponentSearchPresenter(private val view: ComponentSearchView, private val resourceProvider: ResourceProvider) {
     private var downloadJob: Job? = null
     private var currentComponentList: List<Component> = listOf()
+    private var searchText: String = ""
 
     fun init() {
         view.setDefaultImageByCategory(resourceProvider.getDefaultImageByCategory(ComponentModel.chosenCategory))
 
         if (ComponentModel.chosenCategory != ComponentCategory.FAVORITE) {
             view.setComponents(currentComponentList, ComponentModel.trackPrices)
-            download()
+            downloadComponents()
         } else {
             view.setComponents(ComponentModel.favoriteComponents, ComponentModel.trackPrices)
         }
@@ -32,16 +35,34 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
         view.updateComponentList()
     }
 
-    fun searchComponent(searchText: String) {
-        currentComponentList = ComponentModel.components.filter { component -> component.name.contains(searchText) }
-        view.setComponents(currentComponentList, ComponentModel.trackPrices)
-        view.updateComponentList()
+    /**
+     * Поиск по тексту, утснавливает значение поисковому тексту и производите фильтрацию всех комплектующих
+     * @param text - поисковый текст
+     */
+    fun searchComponentByText(text: String) {
+        searchText = text
+        filterComponents()
     }
 
+    /**
+     * Фильтрация списка комплектующих. Для фильтрации извлекается текущий список всех комплектующих,
+     * после чего происходит фильтрация по совместимости если ключена, по всем выбранным фильтрам пользователя
+     * и по тексту который введен в поисковой строке
+     */
     fun filterComponents() {
+        currentComponentList = ComponentModel.components
+
+        LocalAccBuildModel.editableBuild?.let {
+            if (ComponentModel.isCheckCompatibility) {
+                currentComponentList = currentComponentList.filter {
+                    component ->  it.checkCompatibility(ComponentModel.chosenCategory, component) == Build.Companion.CompatibilityError.OK
+                }
+            }
+        }
+
         val userChoice = ComponentModel.userFilterChoice
         // Фильтрация по атрибутам
-        currentComponentList = ComponentModel.components.filter { component -> isFilterValid(component, userChoice) }
+        currentComponentList = currentComponentList.filter { component -> isFilterValid(component, userChoice) }
 
         // Сортировка комплектующих
         when (userChoice.chosenSortType) {
@@ -49,6 +70,8 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
             SortType.PRICE_LOW_TO_HIGH -> currentComponentList = currentComponentList.sortedBy { component -> component.price  }
             else -> {}
         }
+
+        currentComponentList = currentComponentList.filter { component -> component.name.contains(searchText) }
 
         view.setComponents(currentComponentList, ComponentModel.trackPrices)
         view.updateComponentList()
@@ -121,11 +144,12 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
         return true
     }
 
-    private fun download() {
+    private fun downloadComponents() {
          downloadJob = CoroutineScope(Dispatchers.Main).launch {
              try {
                  if (isActive) {
                      currentComponentList = ComponentModel.getComponents()
+                     filterComponents() // Применение фильтрации, если есть например проверка совместимости сборки
                  }
              } catch (e: NetworkErrorException) {
                  if (isActive) {

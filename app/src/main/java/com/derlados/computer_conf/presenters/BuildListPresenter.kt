@@ -9,6 +9,7 @@ import com.derlados.computer_conf.providers.android_providers_interfaces.Resourc
 import kotlinx.coroutines.*
 import java.lang.Exception
 import java.util.*
+import kotlin.collections.ArrayList
 
 class BuildListPresenter(private val view: BuildsListView, private val resourceProvider: ResourceProvider): Observer {
 
@@ -17,6 +18,10 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
     fun init() {
         LocalAccBuildModel.setObserver(this)
         LocalAccBuildModel.loadBuildsFromCache()
+
+        val localOnlineBuilds = LocalAccBuildModel.currentUserBuilds.filter { build -> build.isPublic }
+        OnlineBuildModel.publicBuilds = ArrayList(localOnlineBuilds)
+
         view.setBuildsData(LocalAccBuildModel.currentUserBuilds)
 
         val user = UserModel.currentUser

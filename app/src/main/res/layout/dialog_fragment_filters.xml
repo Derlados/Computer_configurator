@@ -17,6 +17,17 @@
         android:paddingStart="20dp"
         android:paddingEnd="20dp"/>
 
+    <CheckBox
+        android:id="@+id/dialog_fragment_filters_cb_compatibility"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/compatibility_filter"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:buttonTint="@color/light_blue"
+        android:lines="2"
+        android:checked="true"/>
+
     <LinearLayout
         android:id="@+id/dialog_fragment_filters_ll_progress_bar"
         android:layout_width="match_parent"
@@ -30,8 +41,6 @@
             android:indeterminateTint="@color/light_blue"/>
 
     </LinearLayout>
-
-
 
     <ScrollView
         android:id="@+id/dialog_fragment_filters_sv_filters"
