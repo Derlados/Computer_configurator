@@ -3,6 +3,7 @@ import { HttpCodes } from "../constants/HttpCodes";
 import * as crypto from "crypto";
 import User from "../types/User";
 import UserModel, { UserError } from "../models/UserModel";
+import { imageRoot } from "../app";
 
 
 export default class UserController {
@@ -13,13 +14,7 @@ export default class UserController {
     }
 
     public register = (req: any, res: Response) => {
-        const username = req.body.username;
-        const email = req.body.email;
-        const password = req.body.password;
-        const secret = req.body.secret;
-        const googleId = req.body.googleId;
-        const photoUrl = req.body.photoUrl;
-        const user = new User(username, password, email, secret, googleId, photoUrl);
+        const user = this.parseUserData(req);
 
         this.userModel.register(user)
             .then((user: User) => {
@@ -33,9 +28,7 @@ export default class UserController {
     }
 
     public login = (req: any, res: Response) => {
-        const username = req.body.username;
-        const password = req.body.password;
-        const user = new User(username, password, null, null, null, null);
+        const user = this.parseUserData(req);
 
         this.userModel.login(user)
             .then((user: User) => {
@@ -51,10 +44,7 @@ export default class UserController {
      * Вход через гугл сервис, если записи не будет в базе данных - будет создана новая
      */
     public googleSignIn = (req: any, res: Response) => {
-        const googleId = req.body.googleId;
-        const username = req.body.username;
-        const photoUrl = req.body.photoUrl;
-        const user = new User(username, null, null, null, googleId, photoUrl);
+        const user = this.parseUserData(req);
 
         this.userModel.login(user)
             .then((user: User) => {
@@ -78,7 +68,19 @@ export default class UserController {
     }
 
     public update = (req: any, res: Response) => {
+        const id = req.params.idUser;
+        const user = this.parseUserData(req);
+        const img = req.files?.img;
 
+        this.userModel.updateData(id, user, img)
+            .then((user: User) => {
+                const sendData = this.prepareSendData(user);
+                res.status(HttpCodes.OK).send(JSON.stringify(sendData))
+            })
+            .catch((err: UserError | any) => {
+                console.error(err);
+                this.sendError(err, res);
+            })
     }
 
     public removeAccout = (req: any, res: Response) => {
@@ -107,6 +109,23 @@ export default class UserController {
         } else {
             res.status(HttpCodes.UNAUTHORIZED).send('not authorized');
         }
+    }
+
+    /**
+     * Парсинг данных пользователя с запроса
+     * @param req - запрос
+     * @returns объект пользователя
+     */
+    private parseUserData(req: any): User {
+        const username = req.body.username;
+        const email = req.body.email;
+        const password = req.body.password;
+        const secret = req.body.secret;
+        const googleId = req.body.googleId;
+        const photoUrl = req.body.photoUrl;
+        const user = new User(username, password, email, secret, googleId, photoUrl);
+
+        return user;
     }
 
     private createToken(user: User): String {
@@ -140,7 +159,8 @@ export default class UserController {
         const sendData: Object = {
             id: user.id,
             username: user.username,
-            photoUrl: user.imgUrl,
+            email: user.email,
+            photoUrl: user.photoUrl,
             token: this.createToken(user)
         }
         return sendData;
@@ -157,6 +177,10 @@ export default class UserController {
                     break;
                 case UserError.USER_EXIST_USERNAME:
                     res.statusMessage = "username";
+                    res.status(HttpCodes.CONFLICT).end();
+                    break;
+                case UserError.USER_EXIST_GOOGLE_ACC:
+                    res.statusMessage = "googleId";
                     res.status(HttpCodes.CONFLICT).end();
                     break;
                 case UserError.USER_EXIST_EMAIL:

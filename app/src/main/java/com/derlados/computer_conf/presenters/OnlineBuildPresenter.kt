@@ -37,7 +37,15 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
         }
         view.deleteEmptyLists()
 
-        // Комментарии к сборке
+        // Комментарии к сборке, если пользователь не авторизован - удаляется всё что касается добавления комментариев
+        if (UserModel.currentUser == null) {
+            view.disableCommentsAddMode()
+        } else {
+            UserModel.currentUser?.photoUrl?.let {
+                view.setUserPhoto(it)
+            }
+        }
+
         downloadComments()
     }
 

@@ -5,10 +5,13 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
+import android.text.InputType
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
@@ -32,12 +35,17 @@ import java.util.*
 class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
     private val CHILD_COMMENT_MARGIN = 20f
     private lateinit var frListener: OnFragmentInteractionListener
-    private lateinit var presenter: OnlineBuildPresenter
     private lateinit var llComments: LinearLayout
     private lateinit var tvCommentsHead: TextView
     private lateinit var btAddComment: Button
     private lateinit var etNewComment: EditText
+    private lateinit var imgNewComment: ImageView
     private var createdTemplate: View? = null
+
+
+    private var newCommentPhotoUrl: String? = null
+    private var isActiveAddCommentsMode = true
+    private lateinit var presenter: OnlineBuildPresenter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -60,10 +68,6 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
         super.onDestroy()
     }
 
-    //    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-    //        inflater.inflate(R.menu.build_menu, menu)
-    //    }
-
     override fun initFields() {
         super.initFields()
         // Отключение полей EditText которые используются в конструкторе
@@ -77,8 +81,10 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
         llComments = currentFragment.fragment_build_ll_comments
         currentFragment.fragment_build_ll_comments_container.visibility = View.VISIBLE
         tvCommentsHead = currentFragment.fragment_build_tv_comments_head
-        etNewComment = currentFragment.fragment_build_et_new_comment_text
-        btAddComment = currentFragment.fragment_build_bt_add_comment
+
+        imgNewComment = currentFragment.fragment_build_inc_new_comment.inflate_comment_template_img_new_comment
+        etNewComment = currentFragment.fragment_build_inc_new_comment.inflate_comment_template_et_new_comment_text
+        btAddComment = currentFragment.fragment_build_inc_new_comment.inflate_comment_template_bt_add_comment
         btAddComment.setOnClickListener {
             val text = etNewComment.text.toString()
             etNewComment.setText("")
@@ -86,8 +92,10 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
         }
     }
 
+    /**
+     * Удаление пустых групп комплектующих
+     */
     override fun deleteEmptyLists() {
-        // Все пустые группы комплектующих скрываются
         for ((_, value) in componentContainers) {
             val componentContainer = currentFragment.findViewById<ExpandableLinearLayout>(value.second)
             val componentBt = currentFragment.findViewById<Button>(value.first)
@@ -158,6 +166,15 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
     }
 
     /**
+     * Инициализация аватарки текущего пользователя
+     * @param photoUrl - url аватарки пользователя
+     */
+    override fun setUserPhoto(photoUrl: String) {
+        newCommentPhotoUrl = photoUrl
+        Picasso.get().load(photoUrl).into(imgNewComment)
+    }
+
+    /**
      * Отрисовка всех комментариев. Комментарии отрисовуются в соответствии с иерархией, сначала
      * комментарий у которого нету родителя, а потом все его дочерние с отступом
      * @param comments - массив с комментариями
@@ -179,6 +196,11 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
                 }
             }
         }
+    }
+
+    override fun disableCommentsAddMode() {
+        currentFragment.fragment_build_inc_new_comment.visibility = View.GONE
+        isActiveAddCommentsMode = false
     }
 
     /**
@@ -213,10 +235,27 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
         val indexToAdd = llComments.indexOfChild(commentToAnswer) + 1
 
         createdTemplate = layoutInflater.inflate(R.layout.inflate_comment_template, llComments, false)
+        newCommentPhotoUrl?.let {
+            Picasso.get().load(newCommentPhotoUrl).into(createdTemplate?.inflate_comment_template_img_new_comment)
+        }
         createdTemplate?.inflate_comment_template_bt_add_comment?.setOnClickListener {
             val text = createdTemplate?.inflate_comment_template_et_new_comment_text?.text.toString()
             presenter.addComment(indexToAdd, text, commentId)
         }
+        createdTemplate?.inflate_comment_template_et_new_comment_text?.requestFocus()
+        createdTemplate?.inflate_comment_template_et_new_comment_text?.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                val text = createdTemplate?.inflate_comment_template_et_new_comment_text?.text.toString()
+                presenter.addComment(indexToAdd, text, commentId)
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
+        createdTemplate?.inflate_comment_template_et_new_comment_text?.setRawInputType(InputType.TYPE_CLASS_TEXT)
+
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
         llComments.addView(createdTemplate, indexToAdd)
     }
 
@@ -235,8 +274,12 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
         val formatter = SimpleDateFormat("dd.MM.yy в HH:mm", Locale.getDefault())
         commentView.inflate_comment_tv_date.text = formatter.format(comment.creationDate)
 
-        commentView.inflate_comment_tv_answer.setOnClickListener {
-            createAnswerTemplate(comment.id, commentView)
+        if (isActiveAddCommentsMode) {
+            commentView.inflate_comment_tv_answer.setOnClickListener {
+                createAnswerTemplate(comment.id, commentView)
+            }
+        } else {
+            commentView.inflate_comment_tv_answer.visibility = View.GONE
         }
 
         return commentView

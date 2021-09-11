@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import { buildRouter } from "./routers/BuildRouter";
 dotenv.config();
 
+export const imageRoot = __dirname + '/images';
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -15,6 +16,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static(__dirname));
 app.use(fileUpload());
+
+app.use(express.static('/images'));
 
 app.use('/api/builds', buildRouter);
 app.use('/api/users/:idUser([0-9]+)/builds', buildRouter);

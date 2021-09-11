@@ -28,25 +28,24 @@
                 <ImageView
                     android:id="@+id/fragment_build_img"
                     android:layout_width="0dp"
-                    android:layout_height="100dp"
+                    android:layout_height="120dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.35"
                     android:src="@drawable/ic_case_24"/>
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_weight="0.7"
+                    android:layout_weight="0.65"
                     android:orientation="vertical">
 
                     <EditText
                         android:id="@+id/fragment_build_et_name"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         android:hint="@string/build_name"
@@ -86,7 +85,7 @@
                             android:id="@+id/fragment_build_tv_status_or_user_head"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="0.5"
+                            android:layout_weight="0.4"
                             android:gravity="start|center"
                             android:paddingStart="10dp"
                             android:paddingEnd="0dp"
@@ -98,7 +97,7 @@
                             android:id="@+id/fragment_build_tv_status_or_user_value"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="0.5"
+                            android:layout_weight="0.6"
                             android:text="@string/not_complete"
                             android:gravity="center"
                             android:textSize="15sp"
@@ -298,7 +297,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/fragment_build_tv_comments_head"
@@ -312,49 +311,12 @@
                     android:text="@string/loading_comments"
                     android:gravity="center_vertical"/>
 
-                <LinearLayout
+                <include
+                    android:id="@+id/fragment_build_inc_new_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="10dp">
-
-                    <ImageView
-                        android:id="@+id/fragment_build_img_new_comment"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:minHeight="72dp"
-                        android:layout_weight="0.2"
-                        android:src="@drawable/ic_user_24"
-                        android:padding="5dp"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.78"
-                        android:orientation="vertical">
-
-                        <EditText
-                            android:id="@+id/fragment_build_et_new_comment_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/white"
-                            android:textSize="14sp"
-                            android:hint="Напишите комментарий"
-                            android:backgroundTint="@color/hint_color"
-                            android:textColorHint="@color/hint_color"/>
-
-                        <Button
-                            android:id="@+id/fragment_build_bt_add_comment"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Оставить"
-                            android:textSize="16sp"
-                            android:textAllCaps="false"
-                            android:layout_gravity="end"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
+                    android:layout_marginBottom="20dp"
+                    layout="@layout/inflate_comment_template" />
 
                 <LinearLayout
                     android:id="@+id/fragment_build_ll_comments"

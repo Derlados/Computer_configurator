@@ -60,10 +60,10 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
         }
     }
 
-    fun tryGoogleSingIn(googleId: String, username: String, photoUrl: String?) {
+    fun tryGoogleSingIn(googleId: String, username: String, email: String, photoUrl: String?) {
         networkJob = CoroutineScope(Dispatchers.Main).launch {
             try {
-                UserModel.googleSignIn(googleId, username, photoUrl)
+                UserModel.googleSignIn(googleId, username,email, photoUrl)
                 loadUserData()
             } catch (e: NetworkErrorException) {
                 if (isActive) {

@@ -7,5 +7,6 @@ enum class BackStackTag {
     COMPONENT_INFO,
     MAIN,
     AUTH,
+    SETTINGS,
     REG
 }

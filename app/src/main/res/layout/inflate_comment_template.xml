@@ -12,9 +12,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minHeight="72dp"
+        android:adjustViewBounds="true"
         android:layout_weight="0.2"
         android:src="@drawable/ic_user_24"
-        android:padding="5dp"/>
+        android:padding="10dp"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -30,7 +31,9 @@
             android:textSize="14sp"
             android:hint="Напишите комментарий"
             android:backgroundTint="@color/hint_color"
-            android:textColorHint="@color/hint_color"/>
+            android:textColorHint="@color/hint_color"
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine"/>
 
         <Button
             android:id="@+id/inflate_comment_template_bt_add_comment"

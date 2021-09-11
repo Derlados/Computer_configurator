@@ -9,5 +9,5 @@ userRouter.get('/:idUser([0-9]+)', userController.checkAuth)
 userRouter.post('/reg', userController.register);
 userRouter.post('/login', userController.login);
 userRouter.post('/google-sign', userController.googleSignIn);
-userRouter.put('/:idUser([0-9]+)/update', userController.checkAuth)
+userRouter.put('/:idUser([0-9]+)/update', userController.checkAuth, userController.update)
 userRouter.delete('/:idUser([0-9]+)/delete', userController.checkAuth)

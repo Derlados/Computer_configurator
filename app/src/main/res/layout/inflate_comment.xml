@@ -17,9 +17,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:minHeight="72dp"
+            android:adjustViewBounds="true"
             android:layout_weight="0.2"
             android:src="@drawable/ic_user_24"
-            android:padding="5dp"/>
+            android:padding="10dp"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -46,7 +47,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="@color/white"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    android:textAlignment="viewEnd"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="0dp"/>
 
             </LinearLayout>
 
@@ -64,11 +68,11 @@
 
     <TextView
         android:id="@+id/inflate_comment_tv_answer"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:paddingStart="10dp"
-        android:paddingEnd="0dp"
+        android:paddingEnd="10dp"
         android:text="@string/answer"
         android:textColor="@color/light_blue"/>
 

@@ -55,6 +55,7 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.BUILD_MUST_BE_COMPLETED -> context.getString(R.string.build_must_be_completed)
             ResourceProvider.ResString.BUILD_WILL_BE_SAVED_ON_SERVER -> context.getString(R.string.build_will_be_saved_on_server)
             ResourceProvider.ResString.CANNOT_ADD_MORE -> context.getString(R.string.cannot_add_more)
+            ResourceProvider.ResString.INVALID_USERNAME -> context.getString(R.string.invalid_username)
         }
     }
 

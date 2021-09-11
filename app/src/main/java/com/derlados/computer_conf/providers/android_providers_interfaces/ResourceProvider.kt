@@ -16,6 +16,7 @@ interface ResourceProvider {
         NOT_COMPLETE,
         COMPLETE,
         SAVED,
+        INVALID_USERNAME,
         INVALID_AUTH_DATA,
         PASSWORD_DO_NOT_MATCH,
         USERNAME_EXISTS,

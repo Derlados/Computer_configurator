@@ -5,7 +5,7 @@ export default class User {
     public email?: string;
     public secret?: string;
     public googleId?: string;
-    public imgUrl?: string;
+    public photoUrl?: string;
 
     constructor(nickname: string, password: string, email: string, secret: string, google: string, photoUrl: string) {
         this.username = nickname;
@@ -13,6 +13,6 @@ export default class User {
         this.email = email;
         this.secret = secret;
         this.googleId = google;
-        this.imgUrl = photoUrl;
+        this.photoUrl = photoUrl;
     }
 }

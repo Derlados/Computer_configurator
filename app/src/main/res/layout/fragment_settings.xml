@@ -1,0 +1,169 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:paddingTop="30dp"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/fragment_settings_img"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/ic_user_24"/>
+
+            <ProgressBar
+                android:id="@+id/fragment_settings_pb_img"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/light_blue"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/fragment_settings_tv_add_img"
+                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_profile_image"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/setting_filed"
+            android:padding="7dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.9"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/settings_filed_text"
+                    android:textColor="@color/hint_color"
+                    android:text="@string/username"/>
+
+                <EditText
+                    android:id="@+id/fragment_settings_et_username"
+                    style="@style/settings_filed_text"
+                    android:hint="@string/enter_username"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/fragment_settings_img_edit_username"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"
+                android:padding="5dp"
+                android:src="@drawable/ic_edit_24"
+                />
+
+            <ImageView
+                android:id="@+id/fragment_settings_img_accept_username"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"
+                android:padding="5dp"
+                android:src="@drawable/ic_check_mark_24"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/fragment_settings_img_reset_username"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"
+                android:padding="5dp"
+                android:src="@drawable/ic_cross_24"
+                android:visibility="gone"/>
+
+            <ProgressBar
+                android:id="@+id/fragment_settings_pb_img_edit_username"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/light_blue"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/setting_filed"
+            android:padding="7dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.9"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/settings_filed_text"
+                    android:textColor="@color/hint_color"
+                    android:text="Google аккаунт"/>
+
+                <TextView
+                    style="@style/settings_filed_text"
+                    android:hint="@string/enter_username"
+                    android:text="derladoshome@gmail.com"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fragment_settings_ll_google_add"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/setting_filed"
+            android:padding="7dp"
+            android:gravity="center">
+
+            <TextView
+                style="@style/settings_filed_text"
+                android:layout_width="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:text="Добавить гугл аккаунт"
+                android:drawablePadding="10dp"
+                app:drawableStartCompat="@drawable/ic_google_white"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
