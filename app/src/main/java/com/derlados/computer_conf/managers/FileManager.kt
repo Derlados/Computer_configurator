@@ -77,19 +77,6 @@ object FileManager {
         }
     }
 
-    // Сохранение изображений
-    fun saveImage(img: Bitmap, imgName: String) {
-        val jpgImage = File(dirs[Entity.IMAGE], imgName)
-        if (!jpgImage.exists()) {
-            jpgImage.createNewFile()
-            val fout = FileOutputStream(jpgImage)
-
-            // Запись изображения
-            val bmpDraw = BitmapDrawable(appContext.resources, img)
-            bmpDraw.bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fout)
-        }
-    }
-
     // Чтение изображения с устройства
     fun restoreImage(imgName: String): Bitmap {
         val imgFile = File(dirs[Entity.IMAGE]?.path + '/' + imgName)

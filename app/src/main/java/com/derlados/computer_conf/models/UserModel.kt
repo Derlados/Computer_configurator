@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.webkit.MimeTypeMap
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.internet.UserApi
+import com.derlados.computer_conf.managers.Crypto
 import com.derlados.computer_conf.models.entities.User
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import okhttp3.MediaType
@@ -17,12 +18,14 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import java.util.*
+import kotlin.collections.HashMap
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
-object UserModel {
+object UserModel: Observable() {
     private const val APP_PREFERENCES_FILE_USER = "USER"
     private const val APP_PREFERENCES_FILE_SETTINGS = "SETTINGS"
 
@@ -30,6 +33,8 @@ object UserModel {
     private const val APP_PREFERENCES_USERNAME = "username"
     private const val APP_PREFERENCES_PHOTO_URL = "photoURL"
     private const val APP_PREFERENCES_TOKEN = "token"
+    private const val APP_PREFERENCES_EMAIL = "email"
+
 
     var currentUser: User? = null
     var userPreferences: SharedPreferences = App.app.applicationContext.getSharedPreferences(
@@ -48,14 +53,11 @@ object UserModel {
         api = retrofit.create(UserApi::class.java)
     }
 
-    suspend fun register(username: String, password: String, email: String?, secret: String?) {
+    suspend fun register(username: String, password: String, secret: String?) {
         return suspendCoroutine { continuation ->
             val body: HashMap<String, String> = HashMap()
             body["username"] = username
-            body["password"] = password
-            email?.let {
-                body["email"] = it
-            }
+            body["password"] = Crypto.getHash(password)
             secret?.let {
                 body["secret"] = it
             }
@@ -63,15 +65,16 @@ object UserModel {
             val call: Call<User> = api.register(body)
             call.enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
-
                     if (response.code() == 200 && response.body() != null) {
                         currentUser = response.body()
                         saveUser()
+                        setChanged()
+                        notifyObservers()
                         continuation.resume(Unit)
                     } else if (response.code() == 409 && response.message() == "username") {
                         continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.USERNAME_EXISTS.name))
                     } else if (response.code() == 409 && response.message() == "email") {
-                        continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.EMAIL_EXISTS.name))
+                        continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.GOOGLE_ACC_ALREADY_USED.name))
                     } else {
                         continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
                     }
@@ -88,7 +91,7 @@ object UserModel {
         return suspendCoroutine { continuation ->
             val body: HashMap<String, String> = HashMap()
             body["username"] = username
-            body["password"] = password
+            body["password"] = Crypto.getHash(password)
 
             val call: Call<User> = api.login(body)
             call.enqueue(object : Callback<User> {
@@ -96,6 +99,8 @@ object UserModel {
                     if (response.code() == 200 && response.body() != null) {
                         currentUser = response.body()
                         saveUser()
+                        setChanged()
+                        notifyObservers()
                         continuation.resume(Unit)
                     } else if (response.code() == 404) {
                         continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INCORRECT_LOGIN_OR_PASSWORD.name))
@@ -125,6 +130,8 @@ object UserModel {
                     if (response.code() == 200 && response.body() != null) {
                         currentUser = response.body()
                         saveUser()
+                        setChanged()
+                        notifyObservers()
                         continuation.resume(Unit)
                     } else {
                         continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
@@ -185,34 +192,38 @@ object UserModel {
 
     suspend fun addGoogleAcc(googleId: String, email: String, photoUrl: String?) {
         return suspendCoroutine { continuation ->
-//            val user = currentUser ?: throw Exception("User not found")
-//
-//            val builderBody = MultipartBody.Builder()
-//                    .addFormDataPart("googleId", googleId)
-//                    .addFormDataPart("email", email)
-//            photoUrl?.let {
-//                builderBody.addFormDataPart("photoUrl", photoUrl)
-//            }
-//            val body = builderBody.build()
-//
-//            val call: Call<User> = api.update(user.token, user.id, body)
-//            call.enqueue(object : Callback<User> {
-//                override fun onResponse(call: Call<User>, response: Response<User>) {
-//                    if (response.code() == 200 && response.body() != null) {
-//                        currentUser = response.body()
-//                        continuation.resume(Unit)
-//                    }  else if (response.code() == 409 && response.message() == "googleId") {
-//                        //TODO
-//                        continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.USERNAME_EXISTS.name))
-//                    } else {
-//                        continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<User>, t: Throwable) {
-//                    continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.NO_CONNECTION.name))
-//                }
-//            })
+            val user = currentUser ?: throw Exception("User not found")
+
+            val body: HashMap<String, String> = HashMap()
+            body["googleId"] = googleId
+            body["email"] = email
+            photoUrl?.let {
+                body["photoUrl"] = photoUrl
+            }
+
+            val call: Call<User> = api.addGoogleAcc(user.token, user.id, body)
+            call.enqueue(object : Callback<User> {
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+                    val updatedUser = response.body()
+
+                    if (response.code() == 200 && updatedUser != null) {
+                        updatedUser.photoUrl?.let {
+                            currentUser?.photoUrl = it
+                        }
+                        currentUser?.email = email
+
+                        continuation.resume(Unit)
+                    }  else if (response.code() == 409 && response.message() == "googleId") {
+                        continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.GOOGLE_ACC_ALREADY_USED.name))
+                    } else {
+                        continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
+                    }
+                }
+
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                    continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.NO_CONNECTION.name))
+                }
+            })
         }
     }
 
@@ -220,11 +231,21 @@ object UserModel {
         val id = userPreferences.getInt(APP_PREFERENCES_ID, -1)
         val username = userPreferences.getString(APP_PREFERENCES_USERNAME, null)
         val photoUrl = userPreferences.getString(APP_PREFERENCES_PHOTO_URL, null)
+        val email = userPreferences.getString(APP_PREFERENCES_EMAIL, null)
         val token = userPreferences.getString(APP_PREFERENCES_TOKEN, null)
 
         if (id != -1 && username != null && token != null) {
-            currentUser = User(id, username, photoUrl, token)
+            setChanged()
+            notifyObservers()
+            currentUser = User(id, username, email, photoUrl, token)
         }
+    }
+
+    fun logout() {
+        currentUser = null
+        userPreferences.edit().clear().apply()
+        setChanged()
+        notifyObservers()
     }
 
     private fun saveUser() {
@@ -232,6 +253,7 @@ object UserModel {
             val editor: SharedPreferences.Editor = userPreferences.edit()
             editor.putInt(APP_PREFERENCES_ID, it.id)
             editor.putString(APP_PREFERENCES_USERNAME, it.username)
+            editor.putString(APP_PREFERENCES_EMAIL, it.email)
             editor.putString(APP_PREFERENCES_PHOTO_URL, it.photoUrl)
             editor.putString(APP_PREFERENCES_TOKEN, it.token)
             editor.apply()

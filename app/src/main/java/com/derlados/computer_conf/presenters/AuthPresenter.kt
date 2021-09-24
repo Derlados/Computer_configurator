@@ -6,12 +6,10 @@ import com.derlados.computer_conf.models.UserModel
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.view_interfaces.AuthView
 import kotlinx.coroutines.*
-import java.lang.Exception
 
 class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) {
     private val MIN_FIELD_LENGTH = 6
     private val validRegEx = Regex("([A-Z,a-z]|[А-Я,а-я]|[ІЇЄiїєЁё]|[0-9]|_)+") // Регулярка для проверки валидации
-    private val emailRegex = Regex("([A-Z,a-z]|[А-Я,а-я]|[ІЇЄiїєЁё]|[0-9]|_)+") // Регулярка для проверки валидации
 
     private var networkJob: Job? = null
     private var restoreDataJob: Job? = null
@@ -23,33 +21,33 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
 
     fun tryLogin(username: String, password: String) {
         if (!validRegEx.matches(username) || !validRegEx.matches(password)) {
-            view.showError(resourceProvider.getString(ResourceProvider.ResString.INVALID_AUTH_DATA))
+            view.showMessage(resourceProvider.getString(ResourceProvider.ResString.INVALID_AUTH_DATA))
         } else {
             networkJob = CoroutineScope(Dispatchers.Main).launch {
                 try {
                     UserModel.login(username, password)
                     loadUserData()
+                    ensureActive()
+                    view.showMessage(resourceProvider.getString(ResourceProvider.ResString.LOGIN_SUCCESS))
                 } catch (e: NetworkErrorException) {
-                    if (isActive) {
-                        errorHandle(e.message)
-                    }
+                    ensureActive()
+                    errorHandle(e.message)
                 }
             }
         }
     }
 
-    fun tryReg(username: String, password: String, confirmPass: String, email: String, secret: String) {
+    fun tryReg(username: String, password: String, confirmPass: String, secret: String) {
         if (username.length < MIN_FIELD_LENGTH && password.length < MIN_FIELD_LENGTH) {
-            view.showError(resourceProvider.getString(ResourceProvider.ResString.INCORRECT_FIELDS_LENGTH))
-        } else if (!validRegEx.matches(username) || !validRegEx.matches(password) || !validRegEx.matches(confirmPass) ||
-                (email.isNotEmpty() && !emailRegex.matches(email) || (secret.isNotEmpty() && !validRegEx.matches(secret)))) {
-            view.showError(resourceProvider.getString(ResourceProvider.ResString.INVALID_AUTH_DATA))
+            view.showMessage(resourceProvider.getString(ResourceProvider.ResString.INCORRECT_FIELDS_LENGTH))
+        } else if (!validRegEx.matches(username) || !validRegEx.matches(password) || !validRegEx.matches(confirmPass) || (secret.isNotEmpty() && !validRegEx.matches(secret))) {
+            view.showMessage(resourceProvider.getString(ResourceProvider.ResString.INVALID_AUTH_DATA))
         } else if (password != confirmPass) {
-            view.showError(resourceProvider.getString(ResourceProvider.ResString.PASSWORD_DO_NOT_MATCH))
+            view.showMessage(resourceProvider.getString(ResourceProvider.ResString.PASSWORD_DO_NOT_MATCH))
         } else {
             networkJob = CoroutineScope(Dispatchers.Main).launch {
                 try {
-                    UserModel.register(username, password, email, secret)
+                    UserModel.register(username, password, secret)
                     loadUserData()
                 } catch (e: NetworkErrorException) {
                     if (isActive) {
@@ -75,9 +73,9 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
 
     private fun errorHandle(message: String?) {
         if (message == null) {
-            view.showError(resourceProvider.getString(ResourceProvider.ResString.UNEXPECTED_ERROR))
+            view.showMessage(resourceProvider.getString(ResourceProvider.ResString.UNEXPECTED_ERROR))
         } else {
-            view.showError(resourceProvider.getString(ResourceProvider.ResString.valueOf(message)))
+            view.showMessage(resourceProvider.getString(ResourceProvider.ResString.valueOf(message)))
         }
     }
 

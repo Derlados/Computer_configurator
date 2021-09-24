@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.InsetDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.text.method.KeyListener
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.presenters.SettingsPresenter
+import com.derlados.computer_conf.view_interfaces.MainView
 import com.derlados.computer_conf.view_interfaces.SettingsView
 import com.derlados.computer_conf.views.components.GoogleSign
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -36,12 +38,12 @@ import java.io.File
 
 class SettingsFragment: Fragment(), SettingsView, MainActivity.OnBackPressedListener {
     private lateinit var fragmentListener: OnFragmentInteractionListener
+    private lateinit var mainView: MainView
     private lateinit var currentFragment: View
 
     private lateinit var originalEtDrawable: Drawable
     private lateinit var originalEtKeyListener: KeyListener
 
-    private lateinit var googleSign: GoogleSign
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
     private lateinit var imageLauncher: ActivityResultLauncher<Intent>
     private lateinit var cropLauncher: ActivityResultLauncher<Intent>
@@ -51,6 +53,7 @@ class SettingsFragment: Fragment(), SettingsView, MainActivity.OnBackPressedList
     override fun onAttach(context: Context) {
         super.onAttach(context)
         fragmentListener = context as OnFragmentInteractionListener
+        mainView = context as MainView
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -74,8 +77,7 @@ class SettingsFragment: Fragment(), SettingsView, MainActivity.OnBackPressedList
 
         // Инициализация GoogleSignIn
         resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult(), ::signInGoogle)
-        googleSign = GoogleSign(context, resultLauncher)
-        currentFragment.fragment_settings_ll_google_add.setOnClickListener { googleSign.openGoogleSignIn() }
+        currentFragment.fragment_settings_ll_google_add.setOnClickListener { mainView.googleSign.openGoogleSignIn(resultLauncher) }
 
         presenter = SettingsPresenter(this, App.app.resourceProvider)
         presenter.init()
@@ -83,10 +85,15 @@ class SettingsFragment: Fragment(), SettingsView, MainActivity.OnBackPressedList
         return currentFragment
     }
 
-    override fun setUserData(username: String, photoUrl: String?) {
+    override fun updateUserData(username: String, photoUrl: String?, email: String?) {
         currentFragment.fragment_settings_et_username.setText(username)
         photoUrl?.let {
             Picasso.get().load(photoUrl).into(currentFragment.fragment_settings_img)
+        }
+        email?.let {
+            currentFragment.fragment_settings_ll_google_acc.visibility = View.VISIBLE
+            currentFragment.fragment_settings_ll_google_add.visibility = View.GONE
+            currentFragment.fragment_settings_tv_used_google_acc.text = email
         }
     }
 
@@ -144,14 +151,20 @@ class SettingsFragment: Fragment(), SettingsView, MainActivity.OnBackPressedList
     }
 
     private fun signInGoogle(result: ActivityResult) {
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        val account = googleSign.getAccount(task)
+        if (result.resultCode != 0 && result.data != null) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            val account = mainView.googleSign.getAccount(task)
 
-        val id = account.id
-        val email = account.email
-        if (id != null && email != null) {
-            presenter.addGoogleAcc(id, email, account.photoUrl?.toString())
+            val id = account.id
+            val email = account.email
+            if (id != null && email != null) {
+                presenter.addGoogleAcc(id, email, account.photoUrl?.toString())
+            }
         }
+    }
+
+    override fun signOutGoogle() {
+        mainView.googleSign.signOut()
     }
 
     private fun acceptUsernameEdit() {

@@ -7,7 +7,6 @@ import com.derlados.computer_conf.models.OnlineBuildModel
 import com.derlados.computer_conf.models.UserModel
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import kotlinx.coroutines.*
-import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -56,7 +55,7 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
                             view.removeItemBuildList(LocalAccBuildModel.indexBuildById(id))
                         }
 
-                        LocalAccBuildModel.removeBuild(build.id)
+                        LocalAccBuildModel.deleteBuild(build.id)
                     } catch (e: NetworkErrorException) {
                         if (isActive) {
                             errorHandle(e.message)
@@ -66,7 +65,7 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
             }
         } else {
             view.removeItemBuildList(LocalAccBuildModel.indexBuildById(id))
-            LocalAccBuildModel.removeBuild(id)
+            LocalAccBuildModel.deleteBuild(id)
         }
     }
 

@@ -20,7 +20,7 @@ interface ResourceProvider {
         INVALID_AUTH_DATA,
         PASSWORD_DO_NOT_MATCH,
         USERNAME_EXISTS,
-        EMAIL_EXISTS,
+        GOOGLE_ACC_ALREADY_USED,
         INCORRECT_LOGIN_OR_PASSWORD,
         NO_CONNECTION,
         INTERNAL_SERVER_ERROR,
@@ -28,7 +28,9 @@ interface ResourceProvider {
         INCORRECT_FIELDS_LENGTH,
         BUILD_MUST_BE_COMPLETED,
         BUILD_WILL_BE_SAVED_ON_SERVER,
-        CANNOT_ADD_MORE
+        CANNOT_ADD_MORE,
+        LOGIN_SUCCESS,
+        LOGOUT_SUCCESS
     }
     fun getDefaultImageByCategory(category: ComponentCategory): Int
     fun getCompatibilityErrors(error: Build.Companion.CompatibilityError): String

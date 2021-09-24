@@ -17,6 +17,7 @@ import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.presenters.AuthPresenter
 import com.derlados.computer_conf.view_interfaces.AuthView
+import com.derlados.computer_conf.view_interfaces.MainView
 import com.derlados.computer_conf.views.components.GoogleSign
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -25,11 +26,12 @@ import kotlinx.android.synthetic.main.fragment_login.view.*
 
 class LoginFragment: Fragment(), AuthView {
     private lateinit var fragmentListener: OnFragmentInteractionListener
+    private lateinit var mainView: MainView
+
     private lateinit var currentFragment: View
 
     private lateinit var etUsername: EditText
     private lateinit var etPassword: EditText
-    private lateinit var googleSign: GoogleSign
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     private lateinit var presenter: AuthPresenter
@@ -38,6 +40,7 @@ class LoginFragment: Fragment(), AuthView {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         fragmentListener = context as OnFragmentInteractionListener
+        mainView = context as MainView
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -52,8 +55,7 @@ class LoginFragment: Fragment(), AuthView {
 
         // Инициализация GoogleSignIn
         resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult(), ::signInGoogle)
-        googleSign = GoogleSign(context, resultLauncher)
-        currentFragment.fragment_login_google_sign_in.setOnClickListener { googleSign.openGoogleSignIn() }
+        currentFragment.fragment_login_google_sign_in.setOnClickListener { mainView.googleSign.openGoogleSignIn(resultLauncher) }
 
         return currentFragment
     }
@@ -63,7 +65,7 @@ class LoginFragment: Fragment(), AuthView {
         super.onDestroy()
     }
 
-    override fun showError(message: String) {
+    override fun showMessage(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
@@ -80,7 +82,7 @@ class LoginFragment: Fragment(), AuthView {
      */
     private fun signInGoogle(result: ActivityResult) {
         val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        val account = googleSign.getAccount(task)
+        val account = mainView.googleSign.getAccount(task)
 
         val id = account.id
         val username = account.displayName

@@ -46,7 +46,7 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.INVALID_AUTH_DATA -> context.getString(R.string.invalid_auth_data)
             ResourceProvider.ResString.PASSWORD_DO_NOT_MATCH -> context.getString(R.string.pass_do_not_match)
             ResourceProvider.ResString.USERNAME_EXISTS -> context.getString(R.string.username_exists)
-            ResourceProvider.ResString.EMAIL_EXISTS -> context.getString(R.string.email_exists)
+            ResourceProvider.ResString.GOOGLE_ACC_ALREADY_USED -> context.getString(R.string.google_acc_already_used)
             ResourceProvider.ResString.INCORRECT_LOGIN_OR_PASSWORD -> context.getString(R.string.incorrect_login_or_password)
             ResourceProvider.ResString.NO_CONNECTION -> context.getString(R.string.no_connection)
             ResourceProvider.ResString.INTERNAL_SERVER_ERROR -> context.getString(R.string.internal_server_error)
@@ -56,6 +56,8 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.BUILD_WILL_BE_SAVED_ON_SERVER -> context.getString(R.string.build_will_be_saved_on_server)
             ResourceProvider.ResString.CANNOT_ADD_MORE -> context.getString(R.string.cannot_add_more)
             ResourceProvider.ResString.INVALID_USERNAME -> context.getString(R.string.invalid_username)
+            ResourceProvider.ResString.LOGIN_SUCCESS -> context.getString(R.string.login_success)
+            ResourceProvider.ResString.LOGOUT_SUCCESS -> context.getString(R.string.logout_success)
         }
     }
 

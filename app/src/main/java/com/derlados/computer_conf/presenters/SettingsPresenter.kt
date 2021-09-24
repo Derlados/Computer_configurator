@@ -15,7 +15,7 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
 
     fun init() {
         UserModel.currentUser?.let {
-            view.setUserData(it.username, it.photoUrl)
+            view.updateUserData(it.username, it.photoUrl, it.email)
         }
     }
 
@@ -46,10 +46,14 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
         coroutineScope.launch {
             try {
                 UserModel.addGoogleAcc(googleId, email, photoUrl)
-            } catch (e: NetworkErrorException) {
-                if (isActive) {
-                    errorHandle(e.message)
+                UserModel.currentUser?.let {
+                    ensureActive()
+                    view.updateUserData(it.username, it.photoUrl, it.email)
                 }
+            } catch (e: NetworkErrorException) {
+                ensureActive()
+                errorHandle(e.message)
+                view.signOutGoogle()
             }
         }
     }

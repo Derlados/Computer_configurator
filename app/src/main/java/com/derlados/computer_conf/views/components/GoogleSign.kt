@@ -6,12 +6,16 @@ import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 
-class GoogleSign(context: Context?, private val resultLauncher: ActivityResultLauncher<Intent>) {
+
+class GoogleSign(context: Context?) {
     private val signInIntent: Intent;
+    private val mGoogleSignInClient: GoogleSignInClient
 
     init {
         // Инициализация клиента
@@ -19,17 +23,21 @@ class GoogleSign(context: Context?, private val resultLauncher: ActivityResultLa
                 .requestIdToken("768086134086-kbt53st09v1402m4kku2ghi5seeohto3.apps.googleusercontent.com")
                 .requestEmail()
                 .build()
-        val mGoogleSignInClient = GoogleSignIn.getClient(context, gso)
+        mGoogleSignInClient = GoogleSignIn.getClient(context, gso)
 
-        // Запуска активити с выбором гугл аккаунта
+        // Интент для запуска активити с выбором гугл аккаунта
         signInIntent = mGoogleSignInClient.signInIntent
     }
 
     /**
      * Открытие меню для выбора гугл аккаунта и авторизации
      */
-    fun openGoogleSignIn() {
+    fun openGoogleSignIn(resultLauncher: ActivityResultLauncher<Intent>) {
         resultLauncher.launch(signInIntent)
+    }
+
+    fun signOut() {
+        mGoogleSignInClient.signOut()
     }
 
     fun getAccount(completedTask: Task<GoogleSignInAccount>): GoogleSignInAccount {

@@ -77,10 +77,23 @@ export default class UserController {
                 const sendData = this.prepareSendData(user);
                 res.status(HttpCodes.OK).send(JSON.stringify(sendData))
             })
-            .catch((err: UserError | any) => {
-                console.error(err);
-                this.sendError(err, res);
+            .catch((err: UserError | any) => this.sendError(err, res))
+    }
+
+    public addGoogleAcc = (req: any, res: Response) => {
+        const id = req.params.idUser;
+        const googleId = req.body.googleId;
+        const email = req.body.email;
+        const photoUrl = req.body.photoUrl;
+
+        console.log(email, photoUrl, googleId, id);
+
+        this.userModel.addGoogleAcc(id, googleId, email, photoUrl)
+            .then((user: User) => {
+                const sendData = this.prepareSendData(user);
+                res.status(HttpCodes.OK).send(JSON.stringify(sendData))
             })
+            .catch((err: UserError | any) => this.sendError(err, res))
     }
 
     public removeAccout = (req: any, res: Response) => {
@@ -163,6 +176,7 @@ export default class UserController {
             photoUrl: user.photoUrl,
             token: this.createToken(user)
         }
+
         return sendData;
     }
 

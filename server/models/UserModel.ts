@@ -64,8 +64,10 @@ export default class UserModel {
                     if (row.length == 0) {
                         reject(UserError.USER_NOT_FOUND)
                     } else {
-                        user.photoUrl = row[0].photoUrl;
                         user.id = row[0].id;
+                        user.email = row[0].email;
+                        user.photoUrl = row[0].photoUrl;
+
                         resolve(user)
                     }
                 })
@@ -105,13 +107,48 @@ export default class UserModel {
                 .catch((err) => {
                     if (err.code == 'ER_DUP_ENTRY' && /username/.test(err.sqlMessage)) {
                         reject(UserError.USER_EXIST_USERNAME)
-                    } else if (err.code == 'ER_DUP_ENTRY' && /googleId/.test(err.sqlMessage)) {
-                        reject(UserError.USER_EXIST_GOOGLE_ACC)
                     } else {
                         reject(UserError.DATABASE_ERROR)
                     }
                 })
         });
+    }
+
+
+    public async addGoogleAcc(idUser: number, googleId: string, email: string, photoUrl?: string): Promise<User> {
+        return new Promise<User>((resolve, reject) => {
+            const sql = `UPDATE users SET
+                            googleId=?,
+                            email=?,
+                            photoUrl=IFNULL(photoUrl, ?)
+                        WHERE id=?`;
+
+            const data: string[] = [
+                googleId,
+                email,
+                photoUrl ?? null,
+                idUser.toString()
+            ];
+
+            this.pool.execute(sql, data)
+                .then(() => {
+                    const user: User = new User();
+                    user.googleId = googleId;
+                    user.email = email;
+                    user.photoUrl = photoUrl;
+
+                    resolve(user)
+                })
+                .catch((err) => {
+                    if (err.code == 'ER_DUP_ENTRY' && /googleId/.test(err.sqlMessage)) {
+                        reject(UserError.USER_EXIST_GOOGLE_ACC)
+                    } else {
+                        reject(UserError.DATABASE_ERROR)
+                    }
+
+                    reject(err);
+                })
+        })
     }
 
     public async updatePassword() {

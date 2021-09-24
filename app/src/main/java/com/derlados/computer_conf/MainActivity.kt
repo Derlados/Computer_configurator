@@ -15,6 +15,7 @@ import com.derlados.computer_conf.views.LoginFragment
 import com.derlados.computer_conf.views.MainMenuFragment
 import com.derlados.computer_conf.views.OnFragmentInteractionListener
 import com.derlados.computer_conf.views.SettingsFragment
+import com.derlados.computer_conf.views.components.GoogleSign
 import java.lang.Exception
 
 
@@ -23,10 +24,16 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
     private lateinit var mainMenuFragment: MainMenuFragment;
     private lateinit var presenter: MainAppPresenter
     private lateinit var menu: Menu
+    override lateinit var googleSign: GoogleSign
+
+    override var isMenuCreated: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        initServices()
+
         presenter = MainAppPresenter(this, App.app.resourceProvider)
         presenter.init()
 
@@ -37,6 +44,10 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_ll_container, mainMenuFragment)
                 .commit()
+    }
+
+    private fun initServices() {
+        googleSign = GoogleSign(this)
     }
 
     /**
@@ -67,6 +78,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
             inflater.inflate(R.menu.app_menu, menu)
             presenter.menuCreated()
         }
+        isMenuCreated = true
         return true
     }
 
@@ -74,6 +86,10 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
         menu.findItem(R.id.app_menu_exit).isVisible = isAuth
         menu.findItem(R.id.app_menu_settings).isVisible = isAuth
         menu.findItem(R.id.app_menu_auth).isVisible = !isAuth
+    }
+
+    override fun showMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -90,6 +106,10 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
                 tag = BackStackTag.SETTINGS
                 fragment = SettingsFragment()
             }
+            R.id.app_menu_exit -> {
+                presenter.exitAccount()
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
 
@@ -103,7 +123,6 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
     }
 
     override fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, backStackTag: BackStackTag) {
-        val tag: String? = getCurrentTag()
         if (getCurrentTag() == backStackTag.name) {
             return
         }

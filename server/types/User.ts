@@ -7,7 +7,9 @@ export default class User {
     public googleId?: string;
     public photoUrl?: string;
 
-    constructor(nickname: string, password: string, email: string, secret: string, google: string, photoUrl: string) {
+    constructor();
+    constructor(nickname: string, password: string, email: string, secret: string, google: string, photoUrl: string);
+    constructor(nickname?: string, password?: string, email?: string, secret?: string, google?: string, photoUrl?: string) {
         this.username = nickname;
         this.password = password;
         this.email = email;

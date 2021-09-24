@@ -46,56 +46,11 @@
             android:drawableStart="@drawable/ic_key_24"
             android:inputType="textPassword"/>
 
-        <LinearLayout
-            android:id="@+id/fragment_registration_ll_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/fragment_registration_et_email"
-                style="@style/auth_field"
-                android:hint="@string/enter_email"
-                android:drawableStart="@drawable/ic_email_24"
-                android:inputType="textEmailAddress"/>
-
-            <TextView
-                android:id="@+id/fragment_registration_swap_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no_email"
-                android:textColor="@color/light_blue"
-                android:textSize="18sp"
-                android:paddingStart="10dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="5dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/fragment_registration_ll_secret"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <EditText
-                android:id="@+id/fragment_registration_et_secret"
-                style="@style/auth_field"
-                android:hint="@string/enter_secret_word"
-                android:drawableStart="@drawable/ic_top_secret_24"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no_email"
-                android:textColor="@color/light_blue"
-                android:textSize="18sp"
-                android:paddingStart="10dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="5dp"/>
-
-        </LinearLayout>
+        <EditText
+            android:id="@+id/fragment_registration_et_secret"
+            style="@style/auth_field"
+            android:hint="@string/enter_secret_word"
+            android:drawableStart="@drawable/ic_top_secret_24"/>
 
     </LinearLayout>
 

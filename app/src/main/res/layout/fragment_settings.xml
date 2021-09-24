@@ -113,6 +113,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/fragment_settings_ll_google_acc"
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,12 +131,12 @@
                 <TextView
                     style="@style/settings_filed_text"
                     android:textColor="@color/hint_color"
-                    android:text="Google аккаунт"/>
+                    android:text="@string/Google_account"/>
 
                 <TextView
+                    android:id="@+id/fragment_settings_tv_used_google_acc"
                     style="@style/settings_filed_text"
-                    android:hint="@string/enter_username"
-                    android:text="derladoshome@gmail.com"/>
+                    android:hint="@string/enter_username"/>
 
             </LinearLayout>
 

@@ -198,9 +198,23 @@ object LocalAccBuildModel: Observable() {
         editableBuild = (currentUserBuilds.find { build -> build.id == id })?.clone()
     }
 
-    fun removeBuild(id: String) {
+    fun deleteBuild(id: String) {
         FileManager.remove(FileManager.Entity.BUILD, id)
         currentUserBuilds.remove(currentUserBuilds.find { build -> build.id == id })
+    }
+
+    /**
+     * Удаление всех сборок касающихся пользователя с кеша и с текуших, загруженных сборок
+     */
+    fun removeServerBuilds() {
+        currentUserBuilds.forEach {
+            if (it.serverId != -1) {
+                FileManager.remove(FileManager.Entity.BUILD, it.id)
+            }
+        }
+        currentUserBuilds = currentUserBuilds.filter { build -> build.serverId == -1 } as ArrayList<Build>
+        setChanged()
+        notifyObservers(ALL_CHANGED)
     }
 
     /**

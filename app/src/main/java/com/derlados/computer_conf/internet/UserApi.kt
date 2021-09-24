@@ -28,6 +28,9 @@ interface UserApi {
     @PUT("{id}/update")
     fun update(@Header("token") token: String, @Path("id") id: Int,  @Part("username") username: RequestBody, @Part img: MultipartBody.Part? = null): Call<User>
 
+    @PUT("{id}/google-sign")
+    fun addGoogleAcc(@Header("token") token: String, @Path("id") id: Int, @Body map: HashMap<String, String>): Call<User>
+
     @DELETE("{id}/remove")
     fun removeAccount(@Path("id") id: Int): Call<Unit>
 }
