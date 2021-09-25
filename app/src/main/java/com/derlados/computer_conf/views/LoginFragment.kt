@@ -1,5 +1,6 @@
 package com.derlados.computer_conf.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -18,10 +19,8 @@ import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.presenters.AuthPresenter
 import com.derlados.computer_conf.view_interfaces.AuthView
 import com.derlados.computer_conf.view_interfaces.MainView
-import com.derlados.computer_conf.views.components.GoogleSign
+import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.tasks.Task
 import kotlinx.android.synthetic.main.fragment_login.view.*
 
 class LoginFragment: Fragment(), AuthView {
@@ -43,6 +42,7 @@ class LoginFragment: Fragment(), AuthView {
         mainView = context as MainView
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         currentFragment = inflater.inflate(R.layout.fragment_login, container, false)
         presenter = AuthPresenter(this, App.app.resourceProvider)
@@ -50,7 +50,10 @@ class LoginFragment: Fragment(), AuthView {
         etUsername = currentFragment.fragment_login_et_username
         etPassword = currentFragment.fragment_login_et_password
 
-        currentFragment.fragment_login_bt_login.setOnClickListener { login() }
+        currentFragment.fragment_login_bt_login.setOnTouchListener(AnimOnTouchListener { _, _ ->
+            login()
+            true
+        })
         currentFragment.fragment_login_tv_to_reg.setOnClickListener { changeToReg() }
 
         // Инициализация GoogleSignIn

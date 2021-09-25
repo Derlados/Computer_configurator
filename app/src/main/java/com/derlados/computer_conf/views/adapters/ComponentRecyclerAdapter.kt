@@ -1,5 +1,6 @@
 package com.derlados.computer_conf.views.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.models.entities.Component
+import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
@@ -56,50 +58,48 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
         return ComponentHolder(itemView)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ComponentHolder, position: Int) {
-        try {
-            val component: Component = components[position]
+        val component: Component = components[position]
 
-            holder.tvName.text = component.name
-            holder.tvPrice.text = App.app.resources.getString(R.string.component_price, component.price)
+        holder.tvName.text = component.name
+        holder.tvPrice.text = App.app.resources.getString(R.string.component_price, component.price)
 
-            // Если изображение не было закешировано, будет скачано новое и сохранено. Пока изображения нету - устанавливается по умолчанию
+        // Если изображение не было закешировано, будет скачано новое и сохранено. Пока изображения нету - устанавливается по умолчанию
 
-            Picasso.get().load(component.imageUrl).into(holder.img, object : Callback {
-                override fun onSuccess() { }
+        Picasso.get().load(component.imageUrl).into(holder.img, object : Callback {
+            override fun onSuccess() { }
 
-                override fun onError(e: Exception?) {
-                    holder.img.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, defaultImageId, App.app.theme))
-                }
-            })
-
-            val attributes: List<Component.Attribute> = component.getPreviewAttributes()
-            for (i in attributes.indices) {
-                holder.tvHeaders[i].text = attributes[i].name
-                holder.tvValues[i].text = attributes[i].value
+            override fun onError(e: Exception?) {
+                holder.img.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, defaultImageId, App.app.theme))
             }
+        })
 
-            holder.itemView.setOnClickListener {
-                onItemClicked(component)
-            }
-
-            holder.btFavorite.setOnClickListener {
-                onBtFavoriteClick(component.id)
-            }
-            if (trackPrices.containsKey(component.id)) {
-                holder.btFavorite.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_active_star_24, App.app.theme))
-            } else {
-                holder.btFavorite.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_inactive_star_24, App.app.theme))
-            }
-
-            trackPrices[component.id]?.let {
-                holder.llMonitoring.visibility = View.VISIBLE
-                holder.tvTrackPrice.setText(it.toString())
-            }
-        } catch (e: Exception) {
-
+        val attributes: List<Component.Attribute> = component.getPreviewAttributes()
+        for (i in attributes.indices) {
+            holder.tvHeaders[i].text = attributes[i].name
+            holder.tvValues[i].text = attributes[i].value
         }
 
+        holder.itemView.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
+            onItemClicked(component)
+            return@OnTouchListener true
+        }))
+
+        holder.btFavorite.setOnClickListener {
+            onBtFavoriteClick(component.id)
+        }
+
+        if (trackPrices.containsKey(component.id)) {
+            holder.btFavorite.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_active_star_24, App.app.theme))
+        } else {
+            holder.btFavorite.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_inactive_star_24, App.app.theme))
+        }
+
+//        trackPrices[component.id]?.let {
+//            holder.llMonitoring.visibility = View.VISIBLE
+//            holder.tvTrackPrice.setText(it.toString())
+//        }
     }
 
     override fun getItemCount(): Int = components.size

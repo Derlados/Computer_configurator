@@ -7,11 +7,11 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="2dp">
 
-    <Button
+    <android.widget.Button
         android:id="@+id/inflate_filter_block_bt_attribute"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/element_2"
+        android:background="@drawable/transition_second_blue"
         android:drawableEnd="@drawable/ic_arrow_down_36"
         android:textAlignment="viewStart"
         android:textAllCaps="false"
@@ -23,7 +23,7 @@
         android:paddingTop="0dp"
         android:paddingBottom="0dp">
 
-    </Button>
+    </android.widget.Button>
 
     <com.github.aakira.expandablelayout.ExpandableLinearLayout
         android:id="@+id/inflate_filter_block_ll_attribute_values"

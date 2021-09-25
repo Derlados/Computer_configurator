@@ -38,8 +38,8 @@
         <item name="android:textSize">11sp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:theme">@style/Theme.MaterialComponents.Light</item>
-        <item name="android:background">#212B4A</item>
-        <item name="backgroundTint">@color/gray_blue</item>
+        <item name="android:background">@drawable/transition_gray_blue</item>
+        <item name="backgroundTint">@null</item>
         <item name="iconSize">@dimen/icon_size</item>
         <item name="iconGravity">textTop</item>
         <item name="iconPadding">20dp</item>

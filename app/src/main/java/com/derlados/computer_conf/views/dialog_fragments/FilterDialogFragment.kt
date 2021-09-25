@@ -23,6 +23,7 @@ import com.derlados.computer_conf.consts.SortType
 import com.derlados.computer_conf.data_classes.FilterAttribute
 import com.derlados.computer_conf.presenters.FiltersPresenter
 import com.derlados.computer_conf.view_interfaces.FiltersDialogView
+import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.google.android.material.slider.RangeSlider
 import kotlinx.android.synthetic.main.dialog_fragment_filters.view.*
 import kotlinx.android.synthetic.main.inflate_filter_block.view.*
@@ -49,7 +50,7 @@ class FilterDialogFragment(private val resultListener: () -> Unit) : DialogFragm
     private lateinit var thisView: View
     private lateinit var presenter: FiltersPresenter
 
-    @SuppressLint("InflateParams")
+    @SuppressLint("InflateParams", "ClickableViewAccessibility")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         presenter = FiltersPresenter(this)
 
@@ -69,7 +70,7 @@ class FilterDialogFragment(private val resultListener: () -> Unit) : DialogFragm
         }
 
         thisDialog = builder.create()
-        thisDialog.setCanceledOnTouchOutside(false);
+        thisDialog.setCanceledOnTouchOutside(false)
         thisDialog.setOnKeyListener(object : DialogInterface.OnKeyListener {
             override fun onKey(dialogInterface: DialogInterface?, keyCode: Int, event: KeyEvent?): Boolean {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -83,15 +84,17 @@ class FilterDialogFragment(private val resultListener: () -> Unit) : DialogFragm
         thisView.dialog_fragment_filters_cb_compatibility.setOnCheckedChangeListener { _, isChecked ->
             presenter.toggleCompatibilityFilter(isChecked)
         }
-        thisView.dialog_fragment_filters_bt_reset.setOnClickListener {
+        thisView.dialog_fragment_filters_bt_reset.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
             presenter.resetFilters()
             thisDialog.hide()
             resultListener()
-        }
-        thisView.dialog_fragment_filters_bt_apply.setOnClickListener {
+            return@OnTouchListener true
+        }))
+        thisView.dialog_fragment_filters_bt_apply.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
             thisDialog.hide()
             resultListener()
-        }
+            return@OnTouchListener true
+        }))
 
         return thisDialog
     }
@@ -101,6 +104,7 @@ class FilterDialogFragment(private val resultListener: () -> Unit) : DialogFragm
         super.onStop()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun initFilters(filters: HashMap<Int, FilterAttribute>, maxPrice: Int) {
         val container = thisView.dialog_fragment_filters_ll_main_container
 
@@ -118,7 +122,8 @@ class FilterDialogFragment(private val resultListener: () -> Unit) : DialogFragm
             val btAttribute = dialogBlock.inflate_filter_block_bt_attribute
 
             btAttribute.text = filterAttribute.name
-            btAttribute.setOnClickListener {
+
+            btAttribute.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
                 // Поворот изображения на 180 градусов стрелки
                 if (ellValues.isExpanded) {
                     btAttribute.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0)
@@ -127,7 +132,8 @@ class FilterDialogFragment(private val resultListener: () -> Unit) : DialogFragm
                 }
 
                 ellValues.toggle()
-            }
+                return@OnTouchListener true
+            }))
 
             if (filterAttribute.isRange) {
                 val range = Pair(

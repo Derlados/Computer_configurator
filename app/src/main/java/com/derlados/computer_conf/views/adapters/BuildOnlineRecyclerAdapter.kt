@@ -1,9 +1,11 @@
 package com.derlados.computer_conf.views.adapters
 
+import android.annotation.SuppressLint
 import android.view.View
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.models.entities.BuildData
+import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
@@ -12,6 +14,7 @@ import java.util.*
 class BuildOnlineRecyclerAdapter<T : BuildData>(override val builds: ArrayList<T>, val onServerBuildChoose: (id: Int) -> Unit):
         BuildRecyclerAdapter<T>(builds, fun(_: String) = Unit, fun(_: String) = Unit, fun(_: String) = Unit) {
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: BuildHolder, position: Int) {
         val build: BuildData = builds[position]
 
@@ -42,9 +45,10 @@ class BuildOnlineRecyclerAdapter<T : BuildData>(override val builds: ArrayList<T
         }
 
         // Настройка обработчиков нажаатий
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
             onServerBuildChoose(build.serverId)
-        }
+            return@OnTouchListener true
+        }))
 
         holder.initExpandLayout()
     }

@@ -48,21 +48,15 @@
                     android:textColor="#2AFAD0"
                     android:textSize="20sp" />
 
-                <RelativeLayout
+                <android.widget.Button
+                    android:id="@+id/fragment_component_data_bt_mark"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/transition_light_blue"
+                    android:visibility="visible"/>
 
-                    <Button
-                        android:id="@+id/fragment_component_data_bt_mark"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-
-                        android:textSize="14sp"
-                        android:background="@color/light_blue"
-                        android:visibility="visible"/>
-
-
-                </RelativeLayout>
 
             </LinearLayout>
 

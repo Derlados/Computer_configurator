@@ -138,8 +138,6 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView {
         if (isMultiple) {
             card.inflate_component_item_ll_count.visibility = View.VISIBLE
             card.inflate_component_item_tv_count.text = count.toString()
-
-
             componentsTvCount[component.id] = card.inflate_component_item_tv_count
         }
 

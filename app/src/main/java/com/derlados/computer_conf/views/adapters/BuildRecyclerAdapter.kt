@@ -1,5 +1,6 @@
 package com.derlados.computer_conf.views.adapters
 
+import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper.getMainLooper
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.models.entities.BuildData
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
+import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.inflate_build_item.view.*
@@ -82,6 +84,7 @@ open class  BuildRecyclerAdapter <T : BuildData> (protected open val builds: Arr
         return BuildHolder(itemView)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: BuildHolder, position: Int) {
         val build: BuildData = builds[position]
 
@@ -121,17 +124,17 @@ open class  BuildRecyclerAdapter <T : BuildData> (protected open val builds: Arr
         if (build.isPublic) {
             holder.btPublish.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_internet_on_24, App.app.theme))
             holder.btPublish.setOnClickListener(null)
-
-
         } else {
             holder.btPublish.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_internet_off_24, App.app.theme))
             holder.btPublish.setOnClickListener { publishBuild(build.id) }
         }
 
         // Настройка обработчиков нажаатий
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
             onItemClick(build.id)
-        }
+            return@OnTouchListener true
+        }))
+
         holder.btDelete.setOnClickListener {
             removeItem(build.id)
         }

@@ -1,5 +1,6 @@
 package com.derlados.computer_conf.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -16,6 +17,7 @@ import com.derlados.computer_conf.view_interfaces.BuildConstructorView
 import com.derlados.computer_conf.models.entities.BuildData
 import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.presenters.BuildConstructorPresenter
+import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
 
@@ -100,6 +102,7 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
      * @param buildComponent - комплектующее из сборки (расширенный объект с количеством)
      * @param parent - отсовский лаяут, куда будет прекреплена "карточка"
      */
+    @SuppressLint("ClickableViewAccessibility")
     override fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildData.BuildComponent, parent: LinearLayout): View {
         val card = super.createComponentCard(category, isMultiple, buildComponent, parent)
         val component = buildComponent.component
@@ -112,9 +115,11 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
         }
         ibtDelete.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_trash, App.app.theme)) // Отрисовка значка
 
-        card.setOnClickListener {
+        card.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
             openComponentInfo(category, component)
-        }
+            return@OnTouchListener true
+        }))
+
 
         // Открытие блока на изменение количества комплектующего (для ОЗУ, накопителей и т.д.)
         if (isMultiple) {

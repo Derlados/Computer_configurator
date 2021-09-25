@@ -1,5 +1,6 @@
 package com.derlados.computer_conf.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
@@ -22,6 +23,7 @@ import com.derlados.computer_conf.models.entities.Comment
 import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.presenters.OnlineBuildPresenter
 import com.derlados.computer_conf.view_interfaces.BuildOnlineView
+import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_build.view.*
@@ -137,15 +139,18 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
      * @param buildComponent - комплектующее из сборки (расширенный объект с количеством)
      * @param parent - отсовский лаяут, куда будет прекреплена "карточка"
      */
+    @SuppressLint("ClickableViewAccessibility")
     override fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildData.BuildComponent, parent: LinearLayout): View {
         val card = super.createComponentCard(category, isMultiple, buildComponent, parent)
         val component = buildComponent.component
 
         card.inflate_component_item_bt_favorite.visibility = View.GONE
 
-        card.setOnClickListener {
+        card.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
             openComponentInfo(category, component)
-        }
+            return@OnTouchListener true
+        }))
+
 
         // Открытие блока на изменение количества комплектующего (для ОЗУ, накопителей и т.д.)
         if (isMultiple) {

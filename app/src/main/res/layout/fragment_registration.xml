@@ -70,7 +70,7 @@
             android:textColor="@color/white"
             android:textAllCaps="false"
             android:textSize="22sp"
-            android:background="@drawable/button_border_blue"/>
+            android:background="@drawable/transition_light_blue_border"/>
 
     </LinearLayout>
 

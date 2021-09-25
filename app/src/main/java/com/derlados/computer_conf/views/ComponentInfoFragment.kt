@@ -1,5 +1,6 @@
 package com.derlados.computer_conf.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.view_interfaces.ComponentInfoView
 import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.presenters.ComponentInfoPresenter
+import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_component_data.view.*
 import kotlinx.android.synthetic.main.inflate_attribute_string.view.*
@@ -38,12 +40,14 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView {
         return currentFragment
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun initMarkBt(text: String, onClickAction: () -> Unit ) {
         val btMark = currentFragment.findViewById<Button>(R.id.fragment_component_data_bt_mark)
         btMark.text = text
-        btMark.setOnClickListener {
+        btMark.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
             onClickAction()
-        }
+            return@OnTouchListener true
+        }))
     }
 
     override fun setComponentInfo(component: Component) {

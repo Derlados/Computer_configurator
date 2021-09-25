@@ -3,7 +3,7 @@
     android:id="@+id/inflate_good_blank_rl_blank"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#0A0C2E"
+    android:background="@drawable/transition_gray_blue"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
