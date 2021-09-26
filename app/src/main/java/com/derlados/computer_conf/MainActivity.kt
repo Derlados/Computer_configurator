@@ -11,10 +11,7 @@ import androidx.fragment.app.FragmentManager
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.presenters.MainAppPresenter
 import com.derlados.computer_conf.view_interfaces.MainView
-import com.derlados.computer_conf.views.LoginFragment
-import com.derlados.computer_conf.views.MainMenuFragment
-import com.derlados.computer_conf.views.OnFragmentInteractionListener
-import com.derlados.computer_conf.views.SettingsFragment
+import com.derlados.computer_conf.views.*
 import com.derlados.computer_conf.views.components.GoogleSign
 import java.lang.Exception
 
@@ -83,14 +80,14 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
         return true
     }
 
+    override fun showMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
     override fun changeAuthItemMenu(isAuth: Boolean) {
         menu.findItem(R.id.app_menu_exit).isVisible = isAuth
         menu.findItem(R.id.app_menu_settings).isVisible = isAuth
         menu.findItem(R.id.app_menu_auth).isVisible = !isAuth
-    }
-
-    override fun showMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -102,6 +99,10 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
             R.id.app_menu_auth -> {
                 tag = BackStackTag.AUTH
                 fragment = LoginFragment()
+            }
+            R.id.app_menu_info -> {
+                tag = BackStackTag.INFO
+                fragment = InfoFragment()
             }
             R.id.app_menu_settings -> {
                 tag = BackStackTag.SETTINGS

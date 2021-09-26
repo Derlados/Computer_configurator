@@ -8,5 +8,6 @@ enum class BackStackTag {
     MAIN,
     AUTH,
     SETTINGS,
-    REG
+    REG,
+    INFO
 }
