@@ -1,7 +1,5 @@
 package com.derlados.computer_conf.presenters
 
-import android.widget.Toast
-import com.derlados.computer_conf.App
 import com.derlados.computer_conf.view_interfaces.ComponentInfoView
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.LocalAccBuildModel
@@ -12,21 +10,35 @@ class ComponentInfoPresenter(private val view: ComponentInfoView, private val re
     fun init() {
         view.setDefaultImage(resourceProvider.getDefaultImageByCategory(ComponentModel.chosenCategory))
         view.setComponentInfo(ComponentModel.chosenComponent)
-
-        if (LocalAccBuildModel.editableBuild != null) {
-            view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_BUILD), ::addToBuild)
-        } else {
-            view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_FAVORITE), ::addToFavorite)
-        }
+        defineBtAction()
     }
 
-    private fun addToFavorite() {
-        Toast.makeText(App.app.applicationContext, "favorite", Toast.LENGTH_SHORT).show()
-       // TODO("Сделать избранное")
+    private fun addToFavourite() {
+        ComponentModel.addToFavorite(ComponentModel.chosenComponent.id)
+        defineBtAction()
+    }
+
+    private fun deleteFromFavourite() {
+        ComponentModel.deleteFromFavorite(ComponentModel.chosenComponent.id)
+        defineBtAction()
     }
 
     private fun addToBuild() {
         LocalAccBuildModel.editableBuild?.addToBuild(ComponentModel.chosenCategory, ComponentModel.chosenComponent)
         view.returnToBuild()
+    }
+
+    private fun defineBtAction() {
+        when {
+            LocalAccBuildModel.editableBuild != null -> {
+                view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_BUILD), ::addToBuild)
+            }
+            ComponentModel.favouriteComponents.find { c -> c.id == ComponentModel.chosenComponent.id } == null -> {
+                view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_FAVOURITE), ::addToFavourite)
+            }
+            else -> {
+                view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.DELETE_FROM_FAVOURITE), ::deleteFromFavourite)
+            }
+        }
     }
 }

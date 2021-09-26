@@ -10,7 +10,8 @@ interface ResourceProvider {
     }
 
     enum class ResString {
-        ADD_TO_FAVORITE,
+        ADD_TO_FAVOURITE,
+        DELETE_FROM_FAVOURITE,
         ADD_TO_BUILD,
         NOT_COMPATIBILITY,
         NOT_COMPLETE,

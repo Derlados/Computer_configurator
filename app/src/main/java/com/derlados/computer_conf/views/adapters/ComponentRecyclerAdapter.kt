@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
 import java.lang.Exception
 
-class ComponentRecyclerAdapter(private  val components: List<Component>, private val trackPrices: HashMap<Int, Int>, private val defaultImageId: Int,
+class ComponentRecyclerAdapter(private  val components: List<Component>, private val favoriteComponents: List<Component>, private val defaultImageId: Int,
                                private val onItemClicked: (Component) -> Unit, private val onBtFavoriteClick: (Int) -> Unit)
     : RecyclerView.Adapter<ComponentRecyclerAdapter.ComponentHolder>() {
 
@@ -41,11 +41,13 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
                 val row: TableRow = tlData.getChildAt(i) as TableRow
 
                 if (i % 2 == 0) {
-                    for (j in 0 until row.childCount)
+                    for (j in 0 until row.childCount) {
                         tvValues.add(row.getChildAt(j) as TextView)
+                    }
                 } else {
-                    for (j in 0 until row.childCount)
+                    for (j in 0 until row.childCount) {
                         tvHeaders.add(row.getChildAt(j) as TextView)
+                    }
                 }
             }
         }
@@ -58,6 +60,12 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
         return ComponentHolder(itemView)
     }
 
+    /**
+     * Обновление элемента в списке. ОБЯЗАТЕЛЬНО !!! Нужно обновлять абсолютно все поля, дефолтные
+     * значения обновляются с ошибкой (особенность работы Recycler-а)
+     * @param holder - шаблон єлемента ComponentHolder
+     * @param position - индекс элемента
+     */
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ComponentHolder, position: Int) {
         val component: Component = components[position]
@@ -66,7 +74,6 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
         holder.tvPrice.text = App.app.resources.getString(R.string.component_price, component.price)
 
         // Если изображение не было закешировано, будет скачано новое и сохранено. Пока изображения нету - устанавливается по умолчанию
-
         Picasso.get().load(component.imageUrl).into(holder.img, object : Callback {
             override fun onSuccess() { }
 
@@ -76,9 +83,14 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
         })
 
         val attributes: List<Component.Attribute> = component.getPreviewAttributes()
-        for (i in attributes.indices) {
-            holder.tvHeaders[i].text = attributes[i].name
-            holder.tvValues[i].text = attributes[i].value
+        for (i in holder.tvHeaders.indices) {
+            if (i < attributes.size) {
+                holder.tvHeaders[i].text = attributes[i].name
+                holder.tvValues[i].text = attributes[i].value
+            } else {
+                holder.tvHeaders[i].text = "-"
+                holder.tvValues[i].text = "-"
+            }
         }
 
         holder.itemView.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
@@ -90,7 +102,7 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
             onBtFavoriteClick(component.id)
         }
 
-        if (trackPrices.containsKey(component.id)) {
+        if (favoriteComponents.find { c -> c.id == component.id } != null) {
             holder.btFavorite.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_active_star_24, App.app.theme))
         } else {
             holder.btFavorite.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_inactive_star_24, App.app.theme))

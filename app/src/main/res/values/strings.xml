@@ -46,6 +46,7 @@
     <string name="price">цена</string>
 
     <string name="add_to_favorite">+ в избранное</string>
+    <string name="delete_from_favorite">удалить из избранного</string>
     <string name="add_to_build">+ в сборку</string>
     <string name="filters">Фильтры</string>
     <string name="accept">Применить</string>
@@ -109,4 +110,6 @@
     <string name="Google_account">Google аккаунт</string>
     <string name="login_success">Успешный вход</string>
     <string name="logout_success">Вы вышли из аккаунта</string>
+    <string name="favourite">Избранное</string>
+    <string name="search____">Поиск ...</string>
 </resources>

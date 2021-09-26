@@ -11,8 +11,10 @@ import com.derlados.computer_conf.models.LocalAccBuildModel
 import com.derlados.computer_conf.models.entities.Build
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.entities.Component
+import java.util.*
+import kotlin.collections.ArrayList
 
-class ComponentSearchPresenter(private val view: ComponentSearchView, private val resourceProvider: ResourceProvider) {
+class ComponentSearchPresenter(private val view: ComponentSearchView, private val resourceProvider: ResourceProvider): Observer {
     private var downloadJob: Job? = null
     private var currentComponentList: List<Component> = listOf()
     private var searchText: String = ""
@@ -20,18 +22,25 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     fun init() {
         view.setDefaultImageByCategory(resourceProvider.getDefaultImageByCategory(ComponentModel.chosenCategory))
 
-        if (ComponentModel.chosenCategory != ComponentCategory.FAVORITE) {
-            view.setComponents(currentComponentList, ComponentModel.trackPrices)
-            downloadComponents()
-        } else {
-            view.setComponents(ComponentModel.favoriteComponents, ComponentModel.trackPrices)
+        view.setComponents(currentComponentList, ComponentModel.favouriteComponents)
+        downloadComponents()
+
+        if (ComponentModel.chosenCategory == ComponentCategory.FAVOURITE) {
+            view.closeFilters()
         }
+
+        ComponentModel.addObserver(this)
     }
 
     fun finish() {
+        ComponentModel.deleteObserver(this)
         downloadJob?.cancel()
         ComponentModel.saveDataInCache()
-        ComponentModel.resetData()
+
+        if (ComponentModel.chosenCategory != ComponentCategory.FAVOURITE) {
+            ComponentModel.clearComponents()
+        }
+
         view.updateComponentList()
     }
 
@@ -73,7 +82,7 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
 
         currentComponentList = currentComponentList.filter { component -> component.name.contains(searchText) }
 
-        view.setComponents(currentComponentList, ComponentModel.trackPrices)
+        view.setComponents(currentComponentList, ComponentModel.favouriteComponents)
         view.updateComponentList()
     }
 
@@ -87,23 +96,15 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     /**
      * Переключение статуса "избранного" у комплектующего. Если категория комплектующих "Избранное",
      * то в случае удаления - удаляется также и блок во view, иначе - обновляется
-     * @param id - id комплектуюшего
+     * @param id - id комплектующего
      */
     fun toggleFavoriteStatus(id: Int) {
-        val indexInCurrentList = currentComponentList.indexOfFirst { component -> component.id == id }
-        val indexInFavoriteList: Int = ComponentModel.favoriteComponents.indexOfFirst { component -> component.id == id }
+        val indexInFavoriteList: Int = ComponentModel.favouriteComponents.indexOfFirst { component -> component.id == id }
 
         if (indexInFavoriteList != -1) {
-            ComponentModel.removeFromFavorite(id)
-
-            if (ComponentModel.chosenCategory == ComponentCategory.FAVORITE) {
-                view.removeSingleComponent(indexInCurrentList)
-            } else {
-                view.updateSingleComponent(indexInCurrentList)
-            }
+            ComponentModel.deleteFromFavorite(id)
         } else {
             ComponentModel.addToFavorite(id)
-            view.updateSingleComponent(indexInCurrentList)
         }
     }
 
@@ -159,9 +160,33 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
                  //TODO добавить класс ErrorHandler
              }
 
-             view.setComponents(currentComponentList, ComponentModel.trackPrices)
+             view.setComponents(currentComponentList, ComponentModel.favouriteComponents)
              view.updateComponentList()
              view.closeProgressBar()
          }
      }
+
+    /**
+     * Визуальное изменение статуса избранного
+     * @param o - обсервер
+     * @param arg - pair<Int, Int>, первый элемент в паре сообщение об изменении, второй id компонента
+     */
+    override fun update(o: Observable?, arg: Any?) {
+        arg?.let {
+            val message: Int = (arg as Pair<*, *>).first as Int
+
+            if (message == ComponentModel.CHANGED_FAVOURITE_STATUS) {
+                val id: Int = arg.second  as Int
+                val indexInCurrentList = currentComponentList.indexOfFirst { component -> component.id == id }
+                val indexInFavoriteList: Int = ComponentModel.favouriteComponents.indexOfFirst { component -> component.id == id }
+
+                if (indexInFavoriteList == -1 && ComponentModel.chosenCategory == ComponentCategory.FAVOURITE) {
+                    (currentComponentList as ArrayList<Component>).removeAt(indexInCurrentList)
+                    view.removeSingleComponent(indexInCurrentList)
+                } else {
+                    view.updateSingleComponent(indexInCurrentList)
+                }
+            }
+        }
+    }
 }

@@ -10,6 +10,6 @@ enum class ComponentCategory {
     POWER_SUPPLY,
     CASE,
     COOLER,
-    FAVORITE,
+    FAVOURITE,
     OTHERS
 }

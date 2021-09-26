@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/fragment_component_search_ll_search_field"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"
@@ -25,11 +26,12 @@
             android:layout_width="0dp"
             android:layout_weight="0.8"
             android:layout_height="match_parent"
-            android:hint="Search processors ..."
-            android:textColorHint="#81FFFFFF"
+            android:hint="@string/search____"
             android:imeOptions="actionDone"
             android:singleLine="true"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textColorHint="@color/hint_color"
+            android:backgroundTint="@color/hint_color"/>
 
         <ImageView
             android:id="@+id/fragment_component_search_goods_img_filters"

@@ -23,7 +23,7 @@ abstract class PageFragment : Fragment() {
         fun newInstance(numPage: Int): PageFragment {
             return when (PageMenu.values()[numPage]) {
                 PageMenu.BUILDS -> BuildsListFragment()
-                PageMenu.SEARCH -> SearchFragment()
+                PageMenu.SEARCH -> CatalogueFragment()
                 PageMenu.INFO -> BuildsOnlineListFragment()
             }
         }

@@ -7,8 +7,9 @@ interface ComponentSearchView {
     fun showNotFoundMessage()
     fun openProgressBar()
     fun closeProgressBar()
+    fun closeFilters()
 
-    fun setComponents(components: List<Component>, trackPrices: HashMap<Int, Int>)
+    fun setComponents(components: List<Component>, favoriteComponents: List<Component>)
     fun updateComponentList()
     fun updateSingleComponent(index: Int)
     fun removeSingleComponent(index: Int)

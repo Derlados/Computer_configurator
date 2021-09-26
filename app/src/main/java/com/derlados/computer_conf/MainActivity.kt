@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
             val inflater = menuInflater
             inflater.inflate(R.menu.app_menu, menu)
             presenter.menuCreated()
+
         }
         isMenuCreated = true
         return true
@@ -108,6 +109,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
             }
             R.id.app_menu_exit -> {
                 presenter.exitAccount()
+                popBackStack(BackStackTag.MAIN)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

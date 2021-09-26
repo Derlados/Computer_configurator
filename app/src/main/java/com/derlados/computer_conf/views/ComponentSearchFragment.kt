@@ -59,7 +59,6 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchText = searchString.text.toString()
                 presenter.searchComponentByText(searchText)
-                return@OnEditorActionListener true
             }
             return@OnEditorActionListener false
         })
@@ -74,8 +73,6 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
 
         return currentFragment
     }
-
-
 
     /**
      * Решение проблемы с анимацией, по скольку вызывается 2 popBackStack метода то и анимация играет дважды,
@@ -127,12 +124,16 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
         pbLoading.visibility = View.GONE
     }
 
+    override fun closeFilters() {
+        currentFragment.fragment_component_search_goods_img_filters.visibility = View.GONE
+    }
+
     /**
      * Иниициализация (отрисовка) комплектующих, создает адаптек для RecyclerView
      */
-    override fun setComponents(components: List<Component>, trackPrices: HashMap<Int, Int>) {
+    override fun setComponents(components: List<Component>, favoriteComponents: List<Component>,) {
         rvComponents.layoutManager = LinearLayoutManager(context)
-        rvComponents.adapter = ComponentRecyclerAdapter(components, trackPrices, defaultImageId, ::onClickItem, ::onFavoriteClick)
+        rvComponents.adapter = ComponentRecyclerAdapter(components, favoriteComponents, defaultImageId, ::onClickItem, ::onFavoriteClick)
     }
 
     /**

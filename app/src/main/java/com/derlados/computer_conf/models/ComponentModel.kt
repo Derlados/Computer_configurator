@@ -17,6 +17,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
+import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -24,7 +25,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-object ComponentModel {
+object ComponentModel: Observable() {
+    const val CHANGED_FAVOURITE_STATUS: Int = 1
+
     private const val RELEVANCE_CACHE_DAYS: Long = 1
     private const val TRACK_PRICES_FILENAME = "TRACK_PRICES"
 
@@ -36,10 +39,10 @@ object ComponentModel {
         private set
     private var isMustSaveComponents = false
 
-    var favoriteComponents: ArrayList<Component>
+    var favouriteComponents: ArrayList<Component>
     private set
-    var trackPrices: HashMap<Int, Int>
-    private set
+//    var trackPrices: HashMap<Int, Int>
+//    private set
 
     lateinit var chosenComponent: Component
     lateinit var chosenCategory: ComponentCategory
@@ -48,9 +51,8 @@ object ComponentModel {
 
     init {
         components = ArrayList()
-        trackPrices = HashMap()
-        favoriteComponents = ArrayList()
-
+//        trackPrices = HashMap()
+        favouriteComponents = ArrayList()
         userFilterChoice = UserFilterChoice(
                 HashMap(),
                 HashMap(),
@@ -84,7 +86,7 @@ object ComponentModel {
        return suspendCoroutine { continuation ->
            restoreDataFromCache()
            // Есди данные присутствуют и они актуальные или если нету интернет соединения - используются данные с кеша
-           if ((components.isNotEmpty() && isRelevanceCache())) {
+           if ((components.isNotEmpty() && isRelevanceCache()) || chosenCategory == ComponentCategory.FAVOURITE) {
                continuation.resume(components)
            } else {
                val call: Call<ArrayList<Component>> = api.getGoodsBlock(chosenCategory.toString())
@@ -144,7 +146,7 @@ object ComponentModel {
     /**
      * После того как модель использована, данные должны быть очищены и сброшены
      */
-    fun resetData() {
+    fun clearComponents() {
         components.clear()
         isMustSaveComponents = false
         userFilterChoice.clear()
@@ -163,16 +165,16 @@ object ComponentModel {
         if (filters.isNotEmpty() && !FileManager.isExist(FileManager.Entity.FILTERS, chosenCategory.toString()))
             FileManager.saveJsonData(FileManager.Entity.FILTERS, chosenCategory.toString(), Gson().toJson(filters))
 
-        FileManager.saveJsonData(FileManager.Entity.COMPONENT, ComponentCategory.FAVORITE.toString(), Gson().toJson(favoriteComponents))
-        FileManager.saveJsonData(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME, Gson().toJson(trackPrices))
+        FileManager.saveJsonData(FileManager.Entity.COMPONENT, ComponentCategory.FAVOURITE.toString(), Gson().toJson(favouriteComponents))
+//        FileManager.saveJsonData(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME, Gson().toJson(trackPrices))
     }
 
     /**
      * Чтение информации о комплектующих с устройства
      */
     private fun restoreDataFromCache() {
-        if (chosenCategory == ComponentCategory.FAVORITE) {
-            components = favoriteComponents
+        if (chosenCategory == ComponentCategory.FAVOURITE) {
+            components = favouriteComponents
             return
         }
 
@@ -196,21 +198,19 @@ object ComponentModel {
      * Должны присутствовать два файла - цены и комплектующие. В случае отсутствия одного из них - данные расцениваются как поврежденные
      */
     private fun restoreFavorite() {
-        if (!FileManager.isExist(FileManager.Entity.COMPONENT, ComponentCategory.FAVORITE.toString())
-                || !FileManager.isExist(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME)) {
-
-            FileManager.remove(FileManager.Entity.COMPONENT, ComponentCategory.FAVORITE.toString())
-            FileManager.remove(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME)
+        if (!FileManager.isExist(FileManager.Entity.COMPONENT, ComponentCategory.FAVOURITE.toString())) {
+            FileManager.remove(FileManager.Entity.COMPONENT, ComponentCategory.FAVOURITE.toString())
+//            FileManager.remove(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME)
             return
         }
 
-        var data: String = FileManager.readJson(FileManager.Entity.COMPONENT, ComponentCategory.FAVORITE.toString())
-        var type: Type = object : TypeToken<ArrayList<Component>>() {}.type
-        favoriteComponents = Gson().fromJson(data, type)
+        val data: String = FileManager.readJson(FileManager.Entity.COMPONENT, ComponentCategory.FAVOURITE.toString())
+        val type: Type = object : TypeToken<ArrayList<Component>>() {}.type
+        favouriteComponents = Gson().fromJson(data, type)
 
-        data= FileManager.readJson(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME)
-        type = object : TypeToken<HashMap<Int, Int>>() {}.type
-        trackPrices = Gson().fromJson(data, type)
+//        data= FileManager.readJson(FileManager.Entity.COMPONENT, TRACK_PRICES_FILENAME)
+//        type = object : TypeToken<HashMap<Int, Int>>() {}.type
+//        trackPrices = Gson().fromJson(data, type)
     }
 
     /**
@@ -232,8 +232,10 @@ object ComponentModel {
      * @param id - id комплектующего которое пользователь хочет добавить в избранное
      */
     fun addToFavorite(id: Int) {
-        components.find { component -> component.id == id }?.let { favoriteComponents.add(it) }
-        trackPrices[id] = 0
+        components.find { component -> component.id == id }?.let { favouriteComponents.add(it) }
+//        trackPrices[id] = 0
+        setChanged()
+        notifyObservers(Pair(CHANGED_FAVOURITE_STATUS, id))
     }
 
     /**
@@ -241,8 +243,10 @@ object ComponentModel {
      * Так же удаляется отслеживаемая цена
      * @param id - id комплектующего которое пользователь хочет удалить
      */
-    fun removeFromFavorite(id: Int) {
-        favoriteComponents.remove(favoriteComponents.find { component -> component.id == id })
-        trackPrices.remove(id)
+    fun deleteFromFavorite(id: Int) {
+        favouriteComponents.remove(favouriteComponents.find { component -> component.id == id })
+//        trackPrices.remove(id)
+        setChanged()
+        notifyObservers(Pair(CHANGED_FAVOURITE_STATUS, id))
     }
 }
