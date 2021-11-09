@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.views.pageFragment
+package com.derlados.computer_conf.views.pages.pager_fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,8 +12,8 @@ import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.models.ComponentModel
-import com.derlados.computer_conf.views.ComponentSearchFragment
-import com.derlados.computer_conf.views.OnFragmentInteractionListener
+import com.derlados.computer_conf.views.pages.ComponentSearchFragment
+import com.derlados.computer_conf.views.pages.OnFragmentInteractionListener
 import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 
 class CatalogueFragment : PageFragment(), View.OnTouchListener {

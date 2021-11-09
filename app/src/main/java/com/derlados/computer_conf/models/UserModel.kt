@@ -145,8 +145,29 @@ object UserModel: Observable() {
         }
     }
 
-    fun restorePassword() {
+    suspend fun restorePassword(username: String, secret: String, newPassword: String) {
+        return suspendCoroutine { continuation ->
+            val body: HashMap<String, String> = HashMap()
+            body["username"] = username
+            body["secret"] = secret
+            body["newPassword"] = newPassword
 
+            val call: Call<Unit> = api.restorePassword(body)
+            call.enqueue(object: Callback<Unit> {
+                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                    if (response.code() == 200) {
+                        continuation.resume(Unit)
+                    } else if (response.code() == 404) {
+                        continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INCORRECT_USERNAME_OR_SECRET_WORD.name))
+                    }
+                }
+
+                override fun onFailure(call: Call<Unit>, t: Throwable) {
+                    continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.NO_CONNECTION.name))
+                }
+
+            })
+        }
     }
 
     suspend fun updateData(username: String, img: File?) {

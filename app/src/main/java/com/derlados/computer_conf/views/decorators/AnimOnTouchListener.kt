@@ -12,13 +12,17 @@ class AnimOnTouchListener(private val listener: OnTouchListener) : OnTouchListen
 
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
         val transitionDrawable = view.background as TransitionDrawable
-        if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-            transitionDrawable.startTransition(150)
-        } else if (motionEvent.action == MotionEvent.ACTION_UP) {
-            transitionDrawable.reverseTransition(150)
-            listener.onTouch(view, motionEvent)
-        } else if (motionEvent.action == MotionEvent.ACTION_CANCEL) {
-            transitionDrawable.reverseTransition(150)
+        when (motionEvent.action) {
+            MotionEvent.ACTION_DOWN -> {
+                transitionDrawable.startTransition(150)
+            }
+            MotionEvent.ACTION_UP -> {
+                transitionDrawable.reverseTransition(150)
+                listener.onTouch(view, motionEvent)
+            }
+            MotionEvent.ACTION_CANCEL -> {
+                transitionDrawable.reverseTransition(150)
+            }
         }
         return true
     }

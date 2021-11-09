@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.views.pageFragment
+package com.derlados.computer_conf.views.pages.pager_fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -15,8 +15,8 @@ import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.models.entities.BuildData
 import com.derlados.computer_conf.presenters.BuildOnlineListPresenter
 import com.derlados.computer_conf.view_interfaces.BuildsOnlineListView
-import com.derlados.computer_conf.views.BuildOnlineViewFragment
-import com.derlados.computer_conf.views.OnFragmentInteractionListener
+import com.derlados.computer_conf.views.pages.BuildOnlineViewFragment
+import com.derlados.computer_conf.views.pages.OnFragmentInteractionListener
 import com.derlados.computer_conf.views.adapters.BuildOnlineRecyclerAdapter
 import kotlinx.android.synthetic.main.fragment_build_list.view.*
 

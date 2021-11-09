@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.views
+package com.derlados.computer_conf.views.pages.auth
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -19,8 +19,10 @@ import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.presenters.AuthPresenter
 import com.derlados.computer_conf.view_interfaces.AuthView
 import com.derlados.computer_conf.view_interfaces.MainView
+import com.derlados.computer_conf.views.pages.OnFragmentInteractionListener
 import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_login.view.*
 
 class LoginFragment: Fragment(), AuthView {
@@ -29,8 +31,8 @@ class LoginFragment: Fragment(), AuthView {
 
     private lateinit var currentFragment: View
 
-    private lateinit var etUsername: EditText
-    private lateinit var etPassword: EditText
+    private lateinit var etUsername: TextInputLayout
+    private lateinit var etPassword: TextInputLayout
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     private lateinit var presenter: AuthPresenter
@@ -55,6 +57,9 @@ class LoginFragment: Fragment(), AuthView {
             true
         })
         currentFragment.fragment_login_tv_to_reg.setOnClickListener { changeToReg() }
+        currentFragment.fragment_login_bt_forget_pass.setOnClickListener {
+            fragmentListener.nextFragment(this, ForgetPassFragment(), BackStackTag.FORGET_PASS)
+        }
 
         // Инициализация GoogleSignIn
         resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult(), ::signInGoogle)
@@ -76,8 +81,21 @@ class LoginFragment: Fragment(), AuthView {
         fragmentListener.popBackStack(BackStackTag.MAIN)
     }
 
+    override fun setInvalid(field: AuthView.Field, message: String) {
+        when (field) {
+            AuthView.Field.USERNAME -> {
+                etUsername.error = message
+                etUsername.requestFocus()
+            }
+            AuthView.Field.PASSWORD -> {
+                etPassword.error = message
+                etPassword.requestFocus()
+            }
+        }
+    }
+
     private fun login() {
-        presenter.tryLogin(etUsername.text.toString(), etPassword.text.toString())
+        presenter.tryLogin(etUsername.editText?.text.toString(), etPassword.editText?.text.toString())
     }
 
     /**

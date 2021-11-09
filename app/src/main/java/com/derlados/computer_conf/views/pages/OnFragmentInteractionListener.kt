@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.views
+package com.derlados.computer_conf.views.pages
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

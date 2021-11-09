@@ -11,8 +11,12 @@ import androidx.fragment.app.FragmentManager
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.presenters.MainAppPresenter
 import com.derlados.computer_conf.view_interfaces.MainView
-import com.derlados.computer_conf.views.*
+import com.derlados.computer_conf.views.pages.auth.LoginFragment
 import com.derlados.computer_conf.views.components.GoogleSign
+import com.derlados.computer_conf.views.pages.InfoFragment
+import com.derlados.computer_conf.views.pages.MainMenuFragment
+import com.derlados.computer_conf.views.pages.OnFragmentInteractionListener
+import com.derlados.computer_conf.views.pages.SettingsFragment
 import java.lang.Exception
 
 

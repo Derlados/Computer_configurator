@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.views.dialog_fragments
+package com.derlados.computer_conf.views.pages.dialog_fragments
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog

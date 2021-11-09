@@ -3,12 +3,13 @@ package com.derlados.computer_conf.presenters
 import android.accounts.NetworkErrorException
 import com.derlados.computer_conf.models.LocalAccBuildModel
 import com.derlados.computer_conf.models.UserModel
+import com.derlados.computer_conf.models.entities.User
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.view_interfaces.AuthView
 import kotlinx.coroutines.*
 
 class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) {
-    private val MIN_FIELD_LENGTH = 6
+    private val MIN_FIELD_LENGTH = 5
     private val validRegEx = Regex("([A-Z,a-z]|[А-Я,а-я]|[ІЇЄiїєЁё]|[0-9]|_)+") // Регулярка для проверки валидации
 
     private var networkJob: Job? = null
@@ -20,9 +21,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
     }
 
     fun tryLogin(username: String, password: String) {
-        if (!validRegEx.matches(username) || !validRegEx.matches(password)) {
-            view.showMessage(resourceProvider.getString(ResourceProvider.ResString.INVALID_AUTH_DATA))
-        } else {
+        if (checkValidField(username, AuthView.Field.USERNAME) && checkValidField(password, AuthView.Field.PASSWORD)) {
             networkJob = CoroutineScope(Dispatchers.Main).launch {
                 try {
                     UserModel.login(username, password)
@@ -38,20 +37,18 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
     }
 
     fun tryReg(username: String, password: String, confirmPass: String, secret: String) {
-        if (username.length < MIN_FIELD_LENGTH && password.length < MIN_FIELD_LENGTH) {
-            view.showMessage(resourceProvider.getString(ResourceProvider.ResString.INCORRECT_FIELDS_LENGTH))
-        } else if (!validRegEx.matches(username) || !validRegEx.matches(password) || !validRegEx.matches(confirmPass) || (secret.isNotEmpty() && !validRegEx.matches(secret))) {
-            view.showMessage(resourceProvider.getString(ResourceProvider.ResString.INVALID_AUTH_DATA))
-        } else if (password != confirmPass) {
-            view.showMessage(resourceProvider.getString(ResourceProvider.ResString.PASSWORD_DO_NOT_MATCH))
-        } else {
-            networkJob = CoroutineScope(Dispatchers.Main).launch {
-                try {
-                    UserModel.register(username, password, secret)
-                    loadUserData()
-                } catch (e: NetworkErrorException) {
-                    if (isActive) {
-                        errorHandle(e.message)
+        if (checkValidField(username, AuthView.Field.USERNAME) && checkValidField(password, AuthView.Field.PASSWORD) && checkValidField(secret, AuthView.Field.SECRET)) {
+            if (password != confirmPass) {
+                view.showMessage(resourceProvider.getString(ResourceProvider.ResString.PASSWORD_DO_NOT_MATCH))
+            } else {
+                networkJob = CoroutineScope(Dispatchers.Main).launch {
+                    try {
+                        UserModel.register(username, password, secret)
+                        loadUserData()
+                    } catch (e: NetworkErrorException) {
+                        if (isActive) {
+                            errorHandle(e.message)
+                        }
                     }
                 }
             }
@@ -69,6 +66,48 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
                 }
             }
         }
+    }
+
+    fun tryRestorePassword(username: String, secret: String, newPassword: String) {
+        if (checkValidField(username, AuthView.Field.USERNAME) && checkValidField(secret, AuthView.Field.SECRET) && checkValidField(newPassword, AuthView.Field.PASSWORD)) {
+            networkJob = CoroutineScope(Dispatchers.Main).launch {
+                try {
+                    UserModel.restorePassword(username, secret, newPassword)
+                    view.returnBack()
+                } catch (e: NetworkErrorException) {
+                    if (isActive) {
+                        errorHandle(e.message)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkValidField(field: String, fieldType: AuthView.Field): Boolean {
+        if (field.isEmpty()) {
+            view.setInvalid(fieldType, resourceProvider.getString(ResourceProvider.ResString.ENTER_VALUE))
+            return false
+        }
+
+        when(fieldType) {
+            AuthView.Field.USERNAME, AuthView.Field.PASSWORD, AuthView.Field.NEW_PASSWORD -> {
+                if (field.length < MIN_FIELD_LENGTH) {
+                    view.setInvalid(fieldType, resourceProvider.getString(ResourceProvider.ResString.INCORRECT_FIELDS_LENGTH))
+                    return false
+                } else if (!validRegEx.matches(field) ) {
+                    view.setInvalid(fieldType, resourceProvider.getString(ResourceProvider.ResString.INVALID_AUTH_DATA))
+                    return false
+                }
+            }
+            AuthView.Field.SECRET -> {
+                if (!validRegEx.matches(field) ) {
+                    view.setInvalid(fieldType, resourceProvider.getString(ResourceProvider.ResString.INVALID_AUTH_DATA))
+                    return false
+                }
+            }
+        }
+
+        return true
     }
 
     private fun errorHandle(message: String?) {

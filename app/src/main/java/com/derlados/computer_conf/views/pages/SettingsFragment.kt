@@ -1,6 +1,5 @@
-package com.derlados.computer_conf.views
+package com.derlados.computer_conf.views.pages
 
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -8,7 +7,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.InsetDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.text.method.KeyListener
 import android.view.LayoutInflater
 import android.view.View
@@ -27,11 +25,9 @@ import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.presenters.SettingsPresenter
 import com.derlados.computer_conf.view_interfaces.MainView
 import com.derlados.computer_conf.view_interfaces.SettingsView
-import com.derlados.computer_conf.views.components.GoogleSign
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.squareup.picasso.Picasso
 import com.yalantis.ucrop.UCrop
-import kotlinx.android.synthetic.main.fragment_build.view.*
 import kotlinx.android.synthetic.main.fragment_settings.view.*
 import java.io.File
 

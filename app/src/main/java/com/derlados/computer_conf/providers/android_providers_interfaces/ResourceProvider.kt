@@ -31,7 +31,9 @@ interface ResourceProvider {
         BUILD_WILL_BE_SAVED_ON_SERVER,
         CANNOT_ADD_MORE,
         LOGIN_SUCCESS,
-        LOGOUT_SUCCESS
+        LOGOUT_SUCCESS,
+        INCORRECT_USERNAME_OR_SECRET_WORD,
+        ENTER_VALUE
     }
     fun getDefaultImageByCategory(category: ComponentCategory): Int
     fun getCompatibilityErrors(error: Build.Companion.CompatibilityError): String

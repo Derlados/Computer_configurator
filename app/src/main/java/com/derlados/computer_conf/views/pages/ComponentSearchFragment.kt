@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.views
+package com.derlados.computer_conf.views.pages
 
 import android.content.Context
 import android.os.Bundle
@@ -19,10 +19,9 @@ import com.derlados.computer_conf.view_interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.presenters.ComponentSearchPresenter
 import com.derlados.computer_conf.views.adapters.ComponentRecyclerAdapter
-import com.derlados.computer_conf.views.dialog_fragments.FilterDialogFragment
+import com.derlados.computer_conf.views.pages.dialog_fragments.FilterDialogFragment
 import kotlinx.android.synthetic.main.fragment_component_search.view.*
 import java.util.*
-import kotlin.collections.HashMap
 
 class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, ComponentSearchView {
     private var defaultImageId: Int = -1

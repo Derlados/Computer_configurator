@@ -1,11 +1,10 @@
-package com.derlados.computer_conf.views.dialog_fragments
+package com.derlados.computer_conf.views.pages.dialog_fragments
 
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.derlados.computer_conf.R
-import com.derlados.computer_conf.views.BuildConstructorFragment
 
 class SaveDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

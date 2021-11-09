@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.views
+package com.derlados.computer_conf.views.pages
 
 import android.content.Context
 import android.os.Bundle
@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.derlados.computer_conf.R
-import com.derlados.computer_conf.views.pageFragment.MenuPageAdapter
-import com.derlados.computer_conf.views.pageFragment.PageFragment.PageMenu
+import com.derlados.computer_conf.views.pages.pager_fragment.MenuPageAdapter
+import com.derlados.computer_conf.views.pages.pager_fragment.PageFragment.PageMenu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_main_menu.view.*
 

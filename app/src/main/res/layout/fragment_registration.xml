@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -20,37 +21,57 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
         android:orientation="vertical">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fragment_registration_et_username"
-            style="@style/auth_field"
-            android:hint="@string/enter_username"
-            android:drawableStart="@drawable/ic_user_24"
-            android:inputType="text"/>
+            style="@style/auth_layout_field"
+            app:startIconDrawable="@drawable/ic_user_24">
 
-        <EditText
+            <EditText
+                style="@style/auth_field"
+                android:hint="@string/enter_username"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fragment_registration_et_password"
-            style="@style/auth_field"
-            android:hint="@string/enter_password"
-            android:drawableStart="@drawable/ic_key_24"
-            android:inputType="textPassword"/>
+            style="@style/auth_layout_field"
+            app:startIconDrawable="@drawable/ic_key_24">
 
-        <EditText
+            <EditText
+                style="@style/auth_field"
+                android:hint="@string/enter_password"
+                android:inputType="textPassword"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fragment_registration_et_confirm_password"
-            style="@style/auth_field"
-            android:hint="@string/confirm_password"
-            android:drawableStart="@drawable/ic_key_24"
-            android:inputType="textPassword"/>
+            style="@style/auth_layout_field"
+            app:startIconDrawable="@drawable/ic_key_24">
 
-        <EditText
+            <EditText
+                style="@style/auth_field"
+                android:hint="@string/confirm_password"
+                android:inputType="textPassword"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fragment_registration_et_secret"
-            style="@style/auth_field"
-            android:hint="@string/enter_secret_word"
-            android:drawableStart="@drawable/ic_top_secret_24"/>
+            style="@style/auth_layout_field"
+            app:startIconDrawable="@drawable/ic_top_secret_24">
+
+            <EditText
+                style="@style/auth_field"
+                android:hint="@string/enter_secret_word"
+                android:inputType="textPassword"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 
@@ -59,12 +80,12 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:weightSum="1"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="10dp">
 
         <android.widget.Button
             android:id="@+id/fragment_registration_bt_reg"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="0.7"
             android:text="@string/register"
             android:textColor="@color/white"

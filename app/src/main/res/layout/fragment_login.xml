@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -13,32 +14,47 @@
         android:layout_width="250dp"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_weight="0.7"
+        android:layout_weight="0.8"
         android:src="@drawable/icon_img" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fragment_login_et_username"
-            style="@style/auth_field"
-            android:drawableStart="@drawable/ic_user_24"
-            android:hint="@string/enter_username"
-            android:inputType="text" />
+            style="@style/auth_layout_field"
+            app:startIconDrawable="@drawable/ic_user_24">
 
-        <EditText
+            <EditText
+                style="@style/auth_field"
+                android:hint="@string/enter_username"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fragment_login_et_password"
-            style="@style/auth_field"
-            android:drawableStart="@drawable/ic_key_24"
-            android:hint="@string/enter_password"
-            android:inputType="textPassword" />
+            style="@style/auth_layout_field"
+            app:startIconDrawable="@drawable/ic_key_24">
 
+            <EditText
+                style="@style/auth_field"
+                android:hint="@string/enter_password"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/fragment_login_bt_forget_pass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forget_password"
+            android:textColor="@color/light_blue"/>
 
     </LinearLayout>
 
@@ -51,13 +67,13 @@
         <android.widget.Button
             android:id="@+id/fragment_login_bt_login"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="0.7"
             android:background="@drawable/transition_light_blue_border"
             android:text="@string/login"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -71,7 +87,7 @@
         <android.widget.Button
             android:id="@+id/fragment_login_google_sign_in"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="0.7"
             android:background="@drawable/button_border_white"
             android:drawableStart="@drawable/ic_google_24"
@@ -80,7 +96,7 @@
             android:text="@string/sign_in_with_google"
             android:textAllCaps="false"
             android:textColor="#4284f5"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 

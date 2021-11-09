@@ -1,4 +1,4 @@
-package com.derlados.computer_conf.views
+package com.derlados.computer_conf.views.pages.auth
 
 import android.content.Context
 import android.os.Bundle
@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
@@ -14,16 +13,18 @@ import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.presenters.AuthPresenter
 import com.derlados.computer_conf.view_interfaces.AuthView
+import com.derlados.computer_conf.views.pages.OnFragmentInteractionListener
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_registration.view.*
 
 class RegFragment: Fragment(), AuthView {
     private lateinit var fragmentListener: OnFragmentInteractionListener
     private lateinit var currentFragment: View
 
-    private lateinit var etUsername: EditText
-    private lateinit var etPassword: EditText
-    private lateinit var etConfirmPassword: EditText
-    private lateinit var etSecret: EditText
+    private lateinit var etUsername: TextInputLayout
+    private lateinit var etPassword: TextInputLayout
+    private lateinit var etConfirmPassword: TextInputLayout
+    private lateinit var etSecret: TextInputLayout
 
     private lateinit var presenter: AuthPresenter
 
@@ -60,8 +61,29 @@ class RegFragment: Fragment(), AuthView {
         fragmentListener.popBackStack(BackStackTag.MAIN)
     }
 
+    override fun setInvalid(field: AuthView.Field, message: String) {
+        when (field) {
+            AuthView.Field.USERNAME -> {
+                etUsername.error = message
+                etUsername.requestFocus()
+            }
+            AuthView.Field.PASSWORD -> {
+                etPassword.error = message
+                etPassword.requestFocus()
+            }
+            AuthView.Field.CONFIRM_PASSWORD -> {
+                etConfirmPassword.error = message
+                etConfirmPassword.requestFocus()
+            }
+            AuthView.Field.SECRET -> {
+                etSecret.error = message
+                etSecret.requestFocus()
+            }
+        }
+    }
+
     private fun register() {
-        presenter.tryReg(etUsername.text.toString(), etPassword.text.toString(), etConfirmPassword.text.toString(), etSecret.text.toString())
+        presenter.tryReg(etUsername.editText?.text.toString(), etPassword.editText?.text.toString(), etConfirmPassword.editText?.text.toString(), etSecret.editText?.text.toString())
     }
 
     private fun changeToLogin() {
