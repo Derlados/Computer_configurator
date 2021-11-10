@@ -42,7 +42,8 @@
             android:text="Оставить"
             android:textSize="16sp"
             android:textAllCaps="false"
-            android:layout_gravity="end"/>
+            android:layout_gravity="end"
+            android:background="@drawable/transition_second_blue"/>
 
     </LinearLayout>
 

@@ -130,6 +130,10 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView {
 
         val attributes: List<Component.Attribute> = component.getPreviewAttributes()
         for (i in attributes.indices) {
+            if (i == tvHeaders.size) {
+                break
+            }
+
             tvHeaders[i].text = attributes[i].name
             tvValues[i].text = attributes[i].value
         }

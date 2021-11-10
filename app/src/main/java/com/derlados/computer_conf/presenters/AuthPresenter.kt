@@ -60,6 +60,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
             try {
                 UserModel.googleSignIn(googleId, username,email, photoUrl)
                 loadUserData()
+                view.showMessage(resourceProvider.getString(ResourceProvider.ResString.LOGIN_SUCCESS))
             } catch (e: NetworkErrorException) {
                 if (isActive) {
                     errorHandle(e.message)

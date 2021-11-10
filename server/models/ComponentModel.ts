@@ -76,7 +76,7 @@ export default class ComponentModel {
                             JOIN comp_attr ON comp_attr.id_characteristic = attribute.id_characteristic 
                             JOIN attribute_value ON attribute_value.id_value = comp_attr.id_value 
                             JOIN component ON component.id_component = comp_attr.id_component
-                            WHERE component.id_category = ?
+                            WHERE filters.id_category = ?
                             ORDER BY CONVERT(attribute_value.value, SIGNED), attribute_value.value ASC`;
 
         return new Promise<Map<number, FilterAttribute>>((resolve, reject) => {

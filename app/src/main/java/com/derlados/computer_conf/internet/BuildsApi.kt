@@ -9,10 +9,10 @@ import retrofit2.http.*
 interface BuildsApi {
     companion object {
         const val BASE_URL_IGNORED = "http://localhost/"
-        const val BASE_URL_BUILDS: String = "http://192.168.1.3:3000/api/builds"
-        const val BASE_URL_USER_BUILDS: String = "http://192.168.1.3:3000/api/users/{idUser}/builds"
-//         const val BASE_URL_BUILDS: String = "https://ancient-sea-58127.herokuapp.com/api/builds"
-//         const val BASE_URL_USER_BUILDS: String = "https://ancient-sea-58127.herokuapp.com/api/users/{idUser}/builds"
+//        const val BASE_URL_BUILDS: String = "http://192.168.1.3:3000/api/builds"
+//        const val BASE_URL_USER_BUILDS: String = "http://192.168.1.3:3000/api/users/{idUser}/builds"
+        const val BASE_URL_BUILDS: String = "https://ancient-sea-58127.herokuapp.com/api/builds"
+        const val BASE_URL_USER_BUILDS: String = "https://ancient-sea-58127.herokuapp.com/api/users/{idUser}/builds"
     }
 
     @GET("${BASE_URL_BUILDS}/public")

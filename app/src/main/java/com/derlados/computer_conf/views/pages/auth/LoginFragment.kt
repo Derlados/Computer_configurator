@@ -111,15 +111,17 @@ class LoginFragment: Fragment(), AuthView {
      * Получение данных пользователя после успешного входа
      */
     private fun signInGoogle(result: ActivityResult) {
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        val account = mainView.googleSign.getAccount(task)
+        if (result.resultCode != 0 && result.data != null) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            val account = mainView.googleSign.getAccount(task)
 
-        val id = account.id
-        val username = account.displayName
-        val email = account.email
+            val id = account.id
+            val username = account.displayName
+            val email = account.email
 
-        if (id != null && username != null && email != null) {
-            presenter.tryGoogleSingIn(id, username, email, account.photoUrl?.toString())
+            if (id != null && username != null && email != null) {
+                presenter.tryGoogleSingIn(id, username, email, account.photoUrl?.toString())
+            }
         }
     }
 
