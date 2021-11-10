@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
@@ -16,6 +17,7 @@ import com.derlados.computer_conf.providers.android_providers_interfaces.Resourc
 import com.derlados.computer_conf.view_interfaces.AuthView
 import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.derlados.computer_conf.views.pages.OnFragmentInteractionListener
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_forget_pass.view.*
 
 class ForgetPassFragment: Fragment(), AuthView {
@@ -36,6 +38,9 @@ class ForgetPassFragment: Fragment(), AuthView {
             acceptChanges()
             true
         })
+        currentFragment.fragment_forget_pass_et_username.editText?.doOnTextChanged  { _, _, _, _ -> clearError(currentFragment.fragment_forget_pass_et_username) }
+        currentFragment.fragment_forget_pass_et_new_pass.editText?.doOnTextChanged  { _, _, _, _ -> clearError(currentFragment.fragment_forget_pass_et_new_pass) }
+        currentFragment.fragment_forget_pass_et_secret.editText?.doOnTextChanged  { _, _, _, _ -> clearError(currentFragment.fragment_forget_pass_et_secret) }
 
         return currentFragment
     }
@@ -63,6 +68,11 @@ class ForgetPassFragment: Fragment(), AuthView {
                 currentFragment.fragment_forget_pass_et_secret.requestFocus()
             }
         }
+    }
+
+    private fun clearError(textInputLayout: TextInputLayout) {
+        textInputLayout.isErrorEnabled = false
+        textInputLayout.error = null
     }
 
     private fun acceptChanges() {

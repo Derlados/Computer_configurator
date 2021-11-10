@@ -86,8 +86,6 @@ export default class UserController {
         const email = req.body.email;
         const photoUrl = req.body.photoUrl;
 
-        console.log(email, photoUrl, googleId, id);
-
         this.userModel.addGoogleAcc(id, googleId, email, photoUrl)
             .then((user: User) => {
                 const sendData = this.prepareSendData(user);
@@ -96,8 +94,15 @@ export default class UserController {
             .catch((err: UserError | any) => this.sendError(err, res))
     }
 
-    public removeAccout = (req: any, res: Response) => {
+    public restorePassword = (req: any, res: Response) => {
+        const username = req.body.username;
+        const secret = req.body.secret;
+        const newPassword = req.body.password;
+        console.log(username, secret, newPassword);
 
+        this.userModel.updatePassword(username, secret, newPassword)
+            .then(() => res.status(HttpCodes.OK).send())
+            .catch((err: UserError | any) => this.sendError(err, res))
     }
 
     public checkAuth = (req: any, res: Response, next) => {

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
@@ -41,6 +42,11 @@ class RegFragment: Fragment(), AuthView {
         etPassword = currentFragment.fragment_registration_et_password
         etConfirmPassword = currentFragment.fragment_registration_et_confirm_password
         etSecret = currentFragment.fragment_registration_et_secret
+
+        etUsername.editText?.doOnTextChanged { _, _, _, _ -> clearError(etUsername) }
+        etPassword.editText?.doOnTextChanged { _, _, _, _ -> clearError(etPassword) }
+        etConfirmPassword.editText?.doOnTextChanged { _, _, _, _ -> clearError(etConfirmPassword) }
+        etSecret.editText?.doOnTextChanged { _, _, _, _ -> clearError(etSecret) }
 
         currentFragment.fragment_registration_bt_reg.setOnClickListener { register() }
         currentFragment.fragment_registration_tv_to_login.setOnClickListener { changeToLogin() }
@@ -88,5 +94,10 @@ class RegFragment: Fragment(), AuthView {
 
     private fun changeToLogin() {
         fragmentListener.popBackStack(BackStackTag.AUTH)
+    }
+
+    private fun clearError(textInputLayout: TextInputLayout) {
+        textInputLayout.isErrorEnabled = false
+        textInputLayout.error = null
     }
 }

@@ -33,7 +33,8 @@ interface ResourceProvider {
         LOGIN_SUCCESS,
         LOGOUT_SUCCESS,
         INCORRECT_USERNAME_OR_SECRET_WORD,
-        ENTER_VALUE
+        ENTER_VALUE,
+        SUCCESS_CHANGE_PASSWORD
     }
     fun getDefaultImageByCategory(category: ComponentCategory): Int
     fun getCompatibilityErrors(error: Build.Companion.CompatibilityError): String

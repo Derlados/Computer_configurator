@@ -61,6 +61,7 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.LOGOUT_SUCCESS -> context.getString(R.string.logout_success)
             ResourceProvider.ResString.INCORRECT_USERNAME_OR_SECRET_WORD -> context.getString(R.string.incorrect_username_or_secret_word)
             ResourceProvider.ResString.ENTER_VALUE -> context.getString(R.string.enter_value_to_the_field)
+            ResourceProvider.ResString.SUCCESS_CHANGE_PASSWORD -> context.getString(R.string.success_change_password)
         }
     }
 

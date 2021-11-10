@@ -85,7 +85,7 @@
     <string name="no_connection">No connection with our server, try later</string>
     <string name="internal_server_error">Internal server error, try later</string>
     <string name="unexpected_error">Unexpected error</string>
-    <string name="incorrect_fields_length">Минимум 5 символов</string>
+    <string name="incorrect_fields_length">Минимум 6 символов</string>
     <string name="don_t_have_an_account">Еще нету аккаунта ? </string>
     <string name="components">Комплектующие</string>
     <string name="user_builds">Польз. сборки</string>
@@ -106,7 +106,7 @@
     <string name="username">Никнейм</string>
     <string name="settings">Найстройки</string>
     <string name="enter_current_password">Введите текущий пароль</string>
-    <string name="invalid_username">Имя пользователя должно быть не меньше 5 символов и содержать буквы, цифры или символ нижнего подчеркивания</string>
+    <string name="invalid_username">Имя пользователя должно быть не меньше 6 символов и содержать буквы, цифры или символ нижнего подчеркивания</string>
     <string name="Google_account">Google аккаунт</string>
     <string name="login_success">Успешный вход</string>
     <string name="logout_success">Вы вышли из аккаунта</string>
@@ -117,4 +117,5 @@
     <string name="send_new_pass">Отправить</string>
     <string name="incorrect_username_or_secret_word">Неверный никнейм или секретное слово. Проверьте введенные данные</string>
     <string name="enter_value_to_the_field">Заполните поле</string>
+    <string name="success_change_password">Пароль изменен</string>
 </resources>

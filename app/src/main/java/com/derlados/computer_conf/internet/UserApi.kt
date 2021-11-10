@@ -31,7 +31,7 @@ interface UserApi {
     @PUT("{id}/google-sign")
     fun addGoogleAcc(@Header("token") token: String, @Path("id") id: Int, @Body map: HashMap<String, String>): Call<User>
 
-    @PUT("/restore-pass")
+    @PUT("restore-pass")
     fun restorePassword(@Body map: HashMap<String, String>): Call<Unit>
 
     @DELETE("{id}/remove")

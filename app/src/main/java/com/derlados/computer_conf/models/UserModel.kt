@@ -3,6 +3,7 @@ package com.derlados.computer_conf.models
 import android.accounts.NetworkErrorException
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.util.Log
 import android.webkit.MimeTypeMap
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.internet.UserApi
@@ -150,7 +151,7 @@ object UserModel: Observable() {
             val body: HashMap<String, String> = HashMap()
             body["username"] = username
             body["secret"] = secret
-            body["newPassword"] = newPassword
+            body["password"] = Crypto.getHash(newPassword)
 
             val call: Call<Unit> = api.restorePassword(body)
             call.enqueue(object: Callback<Unit> {

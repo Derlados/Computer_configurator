@@ -10,4 +10,5 @@ userRouter.post('/login', userController.login);
 userRouter.post('/google-sign', userController.googleSignIn);
 userRouter.put('/:idUser([0-9]+)/google-sign', userController.checkAuth, userController.addGoogleAcc)
 userRouter.put('/:idUser([0-9]+)/update', userController.checkAuth, userController.update)
+userRouter.put('/restore-pass', userController.restorePassword)
 userRouter.delete('/:idUser([0-9]+)/delete', userController.checkAuth)

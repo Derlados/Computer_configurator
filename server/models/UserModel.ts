@@ -51,6 +51,7 @@ export default class UserModel {
             const sql = ` SELECT * FROM users 
                         WHERE (username=? AND password=?) OR googleId=?`
 
+
             const data: string[] = [
                 user.username,
                 user.password ?? null,
@@ -114,7 +115,6 @@ export default class UserModel {
         });
     }
 
-
     public async addGoogleAcc(idUser: number, googleId: string, email: string, photoUrl?: string): Promise<User> {
         return new Promise<User>((resolve, reject) => {
             const sql = `UPDATE users SET
@@ -151,8 +151,26 @@ export default class UserModel {
         })
     }
 
-    public async updatePassword() {
+    public async updatePassword(username: string, secret: string, newPassword: string) {
+        console.log(username, secret, newPassword);
+        return new Promise<void>((resolve, reject) => {
+            const sql = `   UPDATE users SET
+                                password=?
+                            WHERE username=? AND secret=?`;
+            const data: string[] = [newPassword, username, secret];
 
+            this.pool.execute(sql, data)
+                .then((result) => {
+                    if ((result[0] as ResultSetHeader).affectedRows == 0) {
+                        reject(UserError.USER_NOT_FOUND)
+                    }
+
+                    resolve();
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        })
     }
 
     private saveImage(idUser: number, img: any) {

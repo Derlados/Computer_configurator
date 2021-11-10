@@ -9,7 +9,7 @@ import com.derlados.computer_conf.view_interfaces.AuthView
 import kotlinx.coroutines.*
 
 class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) {
-    private val MIN_FIELD_LENGTH = 5
+    private val MIN_FIELD_LENGTH = 6
     private val validRegEx = Regex("([A-Z,a-z]|[А-Я,а-я]|[ІЇЄiїєЁё]|[0-9]|_)+") // Регулярка для проверки валидации
 
     private var networkJob: Job? = null
@@ -73,6 +73,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
             networkJob = CoroutineScope(Dispatchers.Main).launch {
                 try {
                     UserModel.restorePassword(username, secret, newPassword)
+                    view.showMessage(resourceProvider.getString(ResourceProvider.ResString.SUCCESS_CHANGE_PASSWORD))
                     view.returnBack()
                 } catch (e: NetworkErrorException) {
                     if (isActive) {
@@ -91,7 +92,8 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
 
         when(fieldType) {
             AuthView.Field.USERNAME, AuthView.Field.PASSWORD, AuthView.Field.NEW_PASSWORD -> {
-                if (field.length < MIN_FIELD_LENGTH) {
+                // Только пароли проверяются на минимальную длинну
+                if (fieldType != AuthView.Field.USERNAME && field.length < MIN_FIELD_LENGTH) {
                     view.setInvalid(fieldType, resourceProvider.getString(ResourceProvider.ResString.INCORRECT_FIELDS_LENGTH))
                     return false
                 } else if (!validRegEx.matches(field) ) {

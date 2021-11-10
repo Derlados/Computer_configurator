@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
 import com.derlados.computer_conf.R
@@ -51,6 +52,8 @@ class LoginFragment: Fragment(), AuthView {
 
         etUsername = currentFragment.fragment_login_et_username
         etPassword = currentFragment.fragment_login_et_password
+        etUsername.editText?.doOnTextChanged { _, _, _, _ -> clearError(etUsername) }
+        etPassword.editText?.doOnTextChanged{ _, _, _, _ -> clearError(etPassword) }
 
         currentFragment.fragment_login_bt_login.setOnTouchListener(AnimOnTouchListener { _, _ ->
             login()
@@ -86,12 +89,18 @@ class LoginFragment: Fragment(), AuthView {
             AuthView.Field.USERNAME -> {
                 etUsername.error = message
                 etUsername.requestFocus()
+
             }
             AuthView.Field.PASSWORD -> {
                 etPassword.error = message
                 etPassword.requestFocus()
             }
         }
+    }
+
+    private fun clearError(textInputLayout: TextInputLayout) {
+        textInputLayout.isErrorEnabled = false
+        textInputLayout.error = null
     }
 
     private fun login() {
