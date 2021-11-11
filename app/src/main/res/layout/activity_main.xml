@@ -12,6 +12,343 @@
     android:background="@color/background"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:weightSum="1"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/fragment_build_img"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="0.35"
+                        android:src="@drawable/ic_case_24"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.65"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/fragment_build_et_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:hint="@string/build_name"
+                            android:gravity="start|center"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="0dp"
+                            android:textSize="20sp"
+                            android:textColor="@color/light_blue"
+                            android:textColorHint="@color/hint_color"
+                            android:backgroundTint="@color/hint_color"
+                            android:imeOptions="actionDone"
+                            android:singleLine="true"/>
+
+                        <TextView
+                            android:id="@+id/fragment_build_tv_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:text="X XXX ГРН"
+                            android:textSize="20sp"
+                            android:gravity="start|center"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="0dp"
+                            android:textColor="@color/green"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/fragment_build_tv_status_or_user_head"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.45"
+                                android:gravity="start|center"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="0dp"
+                                android:text="@string/status"
+                                android:textColor="@color/light_blue"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/fragment_build_tv_status_or_user_value"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.55"
+                                android:text="@string/not_complete"
+                                android:gravity="center"
+                                android:textSize="15sp"
+
+                                android:textColor="@color/red"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/fragment_build_tv_compatibility"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/red"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/description"
+                    android:textSize="20sp"
+                    android:textColor="@color/light_blue"/>
+
+                <EditText
+                    android:id="@+id/fragment_build_et_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/build_desc"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/hint_color"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:backgroundTint="@color/hint_color"
+                    android:layout_marginBottom="15dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <android.widget.Button
+                        android:id="@+id/fragment_build_bt_head_cpu"
+                        style="@style/block_header"
+                        android:text="@string/cpu" />
+
+                    <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                        android:id="@+id/fragment_build_expll_cpu"
+                        style="@style/ExpandComponents">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                    <android.widget.Button
+                        android:id="@+id/fragment_build_bt_head_mb"
+                        style="@style/block_header"
+                        android:text="@string/motherboard"/>
+
+                    <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                        android:id="@+id/fragment_build_expll_mb"
+                        style="@style/ExpandComponents">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                    <android.widget.Button
+                        android:id="@+id/fragment_build_bt_head_gpu"
+                        style="@style/block_header"
+                        android:text="@string/gpu"/>
+
+                    <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                        android:id="@+id/fragment_build_expll_gpu"
+                        style="@style/ExpandComponents">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                    <android.widget.Button
+                        android:id="@+id/fragment_build_bt_head_ram"
+                        style="@style/block_header"
+                        android:text="@string/ram"/>
+
+                    <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                        android:id="@+id/fragment_build_expll_ram"
+                        style="@style/ExpandComponents">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                    <android.widget.Button
+                        android:id="@+id/fragment_build_bt_head_hdd"
+                        style="@style/block_header"
+                        android:text="@string/hdd"/>
+
+                    <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                        android:id="@+id/fragment_build_expll_hdd"
+                        style="@style/ExpandComponents">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                    <android.widget.Button
+                        android:id="@+id/fragment_build_bt_head_ssd"
+                        style="@style/block_header"
+                        android:text="@string/ssd"/>
+
+                    <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                        android:id="@+id/fragment_build_expll_ssd"
+                        style="@style/ExpandComponents">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                    <android.widget.Button
+                        android:id="@+id/fragment_build_bt_head_ps"
+                        style="@style/block_header"
+                        android:text="@string/power_supply"/>
+
+                    <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                        android:id="@+id/fragment_build_expll_power_supply"
+                        style="@style/ExpandComponents">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                    <android.widget.Button
+                        android:id="@+id/fragment_build_bt_head_case"
+                        style="@style/block_header"
+                        android:text="@string/pc_case"/>
+
+                    <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                        android:id="@+id/fragment_build_expll_case"
+                        style="@style/ExpandComponents">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/fragment_build_ll_comments_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/fragment_build_tv_comments_head"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:textColor="@color/light_blue"
+                        android:textSize="18sp"
+                        android:text="@string/loading_comments"
+                        android:gravity="center_vertical"/>
+
+                    <include
+                        android:id="@+id/fragment_build_inc_new_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        layout="@layout/inflate_comment_template" />
+
+                    <LinearLayout
+                        android:id="@+id/fragment_build_ll_comments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+
 </LinearLayout>
 
 

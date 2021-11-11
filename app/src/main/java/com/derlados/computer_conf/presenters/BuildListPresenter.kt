@@ -38,6 +38,7 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
     }
 
     fun finish() {
+        LocalAccBuildModel.currentUserBuilds.clear()
         coroutineScope.cancel()
     }
 

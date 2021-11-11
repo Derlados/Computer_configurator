@@ -9,7 +9,7 @@ import retrofit2.http.*
 interface UserApi {
     companion object {
 //        const val BASE_URL: String = "http://192.168.1.3:3000/api/users/"
-        const val BASE_URL: String = "https://ancient-sea-58127.herokuapp.com/api/users/"
+        const val BASE_URL: String = "https://ancient-sea-58128.herokuapp.com/api/users/"
     }
 
     @GET("{id}")

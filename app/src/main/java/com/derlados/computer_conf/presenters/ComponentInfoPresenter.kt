@@ -1,5 +1,6 @@
 package com.derlados.computer_conf.presenters
 
+import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.view_interfaces.ComponentInfoView
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.models.LocalAccBuildModel
@@ -14,23 +15,24 @@ class ComponentInfoPresenter(private val view: ComponentInfoView, private val re
     }
 
     private fun addToFavourite() {
-        ComponentModel.addToFavorite(ComponentModel.chosenComponent.id)
+        ComponentModel.addToFavorite(ComponentModel.chosenComponent)
         defineBtAction()
     }
 
     private fun deleteFromFavourite() {
-        ComponentModel.deleteFromFavorite(ComponentModel.chosenComponent.id)
+        ComponentModel.deleteFromFavorite(ComponentModel.chosenComponent)
         defineBtAction()
     }
 
     private fun addToBuild() {
         LocalAccBuildModel.editableBuild?.addToBuild(ComponentModel.chosenCategory, ComponentModel.chosenComponent)
         view.returnToBuild()
+        defineBtAction()
     }
 
     private fun defineBtAction() {
         when {
-            LocalAccBuildModel.editableBuild != null -> {
+            LocalAccBuildModel.editableBuild?.components?.get(ComponentModel.chosenCategory)?.size == 0 -> {
                 view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_BUILD), ::addToBuild)
             }
             ComponentModel.favouriteComponents.find { c -> c.id == ComponentModel.chosenComponent.id } == null -> {

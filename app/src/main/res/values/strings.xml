@@ -118,4 +118,5 @@
     <string name="incorrect_username_or_secret_word">Неверный никнейм или секретное слово. Проверьте введенные данные</string>
     <string name="enter_value_to_the_field">Заполните поле</string>
     <string name="success_change_password">Пароль изменен</string>
+    <string name="delete_from_build">Удалить из сборки</string>
 </resources>

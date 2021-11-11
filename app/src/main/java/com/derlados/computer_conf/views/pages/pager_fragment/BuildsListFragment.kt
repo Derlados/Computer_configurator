@@ -49,6 +49,12 @@ class BuildsListFragment : PageFragment(), BuildsListView {
         return currentFragment
     }
 
+    override fun onDestroy() {
+        rvBuildRecycler.adapter?.notifyItemRangeChanged(0, 0)
+        listPresenter.finish()
+        super.onDestroy()
+    }
+
     /**
      * Установка данных о сборке
      * @see BuildData

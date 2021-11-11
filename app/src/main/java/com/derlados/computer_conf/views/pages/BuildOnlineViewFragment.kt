@@ -196,6 +196,7 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
                 // Добавление дочерних комментариев
                 for (childComment in childComments) {
                     val childCommentView = createCommentView(childComment)
+                    childCommentView.inflate_comment_tv_answer.visibility = View.GONE
                     (childCommentView.layoutParams as ViewGroup.MarginLayoutParams).marginStart = dpToPx(CHILD_COMMENT_MARGIN)
                     llComments.addView(childCommentView)
                 }

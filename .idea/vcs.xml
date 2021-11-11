@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/heroku_server" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/server_heroku/ancient-sea-58128" vcs="Git" />
   </component>
 </project>

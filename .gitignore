@@ -2,7 +2,7 @@
 *.env
 .gradle
 /heroku_server
-
+/server_heroku
 /server/node_modules
 /server/dist
 /local.properties

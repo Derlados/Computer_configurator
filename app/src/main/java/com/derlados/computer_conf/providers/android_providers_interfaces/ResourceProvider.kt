@@ -13,6 +13,7 @@ interface ResourceProvider {
         ADD_TO_FAVOURITE,
         DELETE_FROM_FAVOURITE,
         ADD_TO_BUILD,
+        DELETE_FROM_BUILD,
         NOT_COMPATIBILITY,
         NOT_COMPLETE,
         COMPLETE,

@@ -126,7 +126,7 @@ class Build : Cloneable, BuildData {
      * @param buildComponents - список комплектующих в категории, которые необходимо проверить на совместимсоть
      * @return - ошибка (CompatibilityError) или подтверджение совместимости (CompatibilityError.OK)
      */
-    fun checkCompatibility(category: ComponentCategory, buildComponents: ArrayList<BuildData.BuildComponent>):  CompatibilityError {
+    private fun checkCompatibility(category: ComponentCategory, buildComponents: ArrayList<BuildData.BuildComponent>):  CompatibilityError {
         when (category) {
             ComponentCategory.CPU -> {
                 val motherboard = components[ComponentCategory.MOTHERBOARD]?.getOrNull(0)?.component
@@ -187,76 +187,55 @@ class Build : Cloneable, BuildData {
                     }
                 }
             }
-            ComponentCategory.HDD -> {
-                val motherboard = components[ComponentCategory.MOTHERBOARD]?.getOrNull(0)?.component
-                val hdd = buildComponents
+            ComponentCategory.SSD, ComponentCategory.HDD -> {
+                val motherboard = components[ComponentCategory.MOTHERBOARD]?.getOrNull(0)?.component  ?: return CompatibilityError.OK
                 val ssd = components[ComponentCategory.SSD]
+                val hdd = components[ComponentCategory.HDD]
 
-                if (motherboard != null) {
-                    val ports = motherboard.getAttrById(MB_PORTS)?.value
+                val ports = motherboard.getAttrById(MB_PORTS)?.value
+                ports?.let {
+                    var mbM2Count = 0
+                    var mbSataCount = 0
+                    var m2Count = 0
+                    var sataCount = 0
 
-                    ports?.let {
-                        var mbSataCount = 0
-                        var sataCount = 0
-
-                        val sataMatches =  Regex ("([0-9]+ x sata)").findAll(ports.toLowerCase(Locale.ROOT))
-                        sataMatches.forEach {
-                            val countMatch = Regex("([0-9]+)").find(it.groupValues[1])?.value
-                            countMatch?.let {
-                                mbSataCount += countMatch.toInt()
-                            }
-                        }
-
-                        hdd.forEach {
-                            sataCount += it.count
-                        }
-
-                        ssd?.forEach {
-                            val formFactor = it.component.getAttrById(SSD_FORM_FACTOR)?.value
-                            formFactor?.let {
-                                if (!formFactor.toLowerCase(Locale.ROOT).contains("m.2")) {
-                                    ++sataCount
-                                }
-                            }
-                        }
-
-                        if (sataCount > mbSataCount) {
-                            return CompatibilityError.WRONG_SATA_COUNT
+                    val m2Matches = Regex ("([0-9]+ x m.2)").findAll(ports.toLowerCase(Locale.ROOT))
+                    m2Matches.forEach {
+                        val countMatch = Regex("([0-9]+)").find(it.groupValues[1])?.value
+                        countMatch?.let {
+                            mbM2Count += countMatch.toInt()
                         }
                     }
-                }
-            }
-            ComponentCategory.SSD -> {
-                val motherboard = components[ComponentCategory.MOTHERBOARD]?.getOrNull(0)?.component
-                val ssd = buildComponents
 
-                if (motherboard != null) {
-                    val ports = motherboard.getAttrById(MB_PORTS)?.value
+                    val sataMatches =  Regex ("([0-9]+ x sata)").findAll(ports.toLowerCase(Locale.ROOT))
+                    sataMatches.forEach {
+                        val countMatch = Regex("([0-9]+)").find(it.groupValues[1])?.value
+                        countMatch?.let {
+                            mbSataCount += countMatch.toInt()
+                        }
+                    }
 
-                    ports?.let {
-                        var mbM2Count = 0
-                        var m2Count = 0
-
-                        val m2Matches = Regex ("([0-9]+ x m.2)").findAll(ports.toLowerCase(Locale.ROOT))
-                        m2Matches.forEach {
-                            val countMatch = Regex("([0-9]+)").find(it.groupValues[1])?.value
-                            countMatch?.let {
-                                mbM2Count += countMatch.toInt()
+                    ssd?.forEach {
+                        val formFactor = it.component.getAttrById(SSD_FORM_FACTOR)?.value
+                        formFactor?.let {
+                            if (formFactor.toLowerCase(Locale.ROOT).contains("m.2")) {
+                                ++m2Count
+                            }
+                            if (formFactor.toLowerCase(Locale.ROOT).contains("sata")) {
+                                ++sataCount
                             }
                         }
+                    }
+                    hdd?.forEach {
+                        sataCount += it.count
+                    }
 
-                        ssd.forEach {
-                            val formFactor = it.component.getAttrById(SSD_FORM_FACTOR)?.value
-                            formFactor?.let {
-                                if (formFactor.toLowerCase(Locale.ROOT).contains("m.2")) {
-                                    ++m2Count
-                                }
-                            }
-                        }
+                    if (m2Count > mbM2Count) {
+                        return CompatibilityError.WRONG_M2_COUNT
+                    }
 
-                        if (m2Count > mbM2Count) {
-                            return CompatibilityError.WRONG_M2_COUNT
-                        }
+                    if (sataCount > mbSataCount) {
+                        return CompatibilityError.WRONG_SATA_COUNT
                     }
                 }
             }
@@ -279,6 +258,80 @@ class Build : Cloneable, BuildData {
         componentArray.add(BuildData.BuildComponent(component, 1))
 
         return checkCompatibility(category, componentArray)
+    }
+
+    /**
+     * Проверка максимального лимита на количество комплектующего
+     * @param componentCategory - тип комплектующего
+     * @return - лимит количества комплектующих
+     */
+    private fun isMax(category: ComponentCategory): Boolean {
+        when(category) {
+            ComponentCategory.CPU, ComponentCategory.GPU, ComponentCategory.CASE, ComponentCategory.POWER_SUPPLY,
+                    ComponentCategory.MOTHERBOARD, ComponentCategory.RAM -> {
+                if (components[ComponentCategory.MOTHERBOARD]?.size != 0) {
+                    return true
+                }
+            }
+            ComponentCategory.SSD, ComponentCategory.HDD -> {
+                val motherboard = components[ComponentCategory.MOTHERBOARD]?.getOrNull(0)?.component ?: return true
+                val ssd = components[ComponentCategory.SSD]
+                val hdd = components[ComponentCategory.HDD]
+
+                val ports = motherboard.getAttrById(MB_PORTS)?.value
+                ports?.let {
+                    var mbSataCount = 0
+                    var mbM2Count = 0
+                    var m2Count = 0
+                    var sataCount = 0
+
+                    val sataMatches =  Regex ("([0-9]+ x sata)").findAll(ports.toLowerCase(Locale.ROOT))
+                    sataMatches.forEach {
+                        val countMatch = Regex("([0-9]+)").find(it.groupValues[1])?.value
+                        countMatch?.let {
+                            mbSataCount += countMatch.toInt()
+                        }
+                    }
+
+                    val m2Matches = Regex ("([0-9]+ x m.2)").findAll(ports.toLowerCase(Locale.ROOT))
+                    m2Matches.forEach {
+                        val countMatch = Regex("([0-9]+)").find(it.groupValues[1])?.value
+                        countMatch?.let {
+                            mbM2Count += countMatch.toInt()
+                        }
+                    }
+
+                    ssd?.forEach {
+                        val formFactor = it.component.getAttrById(SSD_FORM_FACTOR)?.value
+                        formFactor?.let {
+                            if (formFactor.toLowerCase(Locale.ROOT).contains("m.2")) {
+                                ++m2Count
+                            }
+                            if (formFactor.toLowerCase(Locale.ROOT).contains("sata")) {
+                                ++sataCount
+                            }
+                        }
+                    }
+                    hdd?.forEach {
+                        sataCount += it.count
+                    }
+
+                    if (m2Count == mbM2Count) {
+                        return true
+                    }
+
+                    if (sataCount > mbSataCount) {
+                        return true
+                    }
+                }
+
+            }
+            else -> {
+                return true
+            }
+        }
+
+        return false
     }
 
     private fun compareValue(value1: String, value2: String): Boolean {
@@ -407,37 +460,6 @@ class Build : Cloneable, BuildData {
         }
     }
 
-    /**
-     * Проверка максимального лимита на количество комплектующего
-     * @param componentCategory - тип комплектующего
-     * @return - лимит количества комплектующих
-     */
-    private fun maxLimitGood(componentCategory: ComponentCategory): Int {
-//        var limit = 1
-//        val motherboard = components[TypeComp.MOTHERBOARD] ?: return limit
-//
-//        if (typeComp === TypeComp.RAM) {
-//            val countRam: String = motherboard.getExDataByIdAttr(0).data // TODO (Нужны константы)
-//            val countRam: String? = motherboardData.data [].get()
-//
-//
-//        } else {
-//            return 2
-//
-//            // TODO(Нужна проверка портов)
-//            /*
-//            motherboardData = motherboard.getDataBlockByHeader("Внутренние разъемы и колодки");
-//            String[] ports = motherboardData.data.get(CompatParam.Motherboard.PORTS).split(" ");
-//            for (int i = 0; i < ports.length; ++i)
-//                if (ports[i].equals("Sata")) {
-//                    limit = Integer.parseInt(ports[i - 2]);
-//                    break;
-//                }
-//            */
-//        }
-//        return limit
-        return 0
-    }
 
     /**
      * Перегрузка клонирования, для конструктора необходима работа с копией.
