@@ -38,6 +38,7 @@ object ComponentModel: Observable() {
     var components: ArrayList<Component>
         private set
     private var isMustSaveComponents = false
+    var isFromBuild = false
 
     var favouriteComponents: ArrayList<Component>
     private set
@@ -238,10 +239,6 @@ object ComponentModel: Observable() {
         notifyObservers(Pair(CHANGED_FAVOURITE_STATUS, id))
     }
 
-    fun addToFavorite(component: Component) {
-        favouriteComponents.add(component)
-    }
-
     /**
      * Удаление из избранного id. Производится поиск среди избранных и найденное удаляется
      * Так же удаляется отслеживаемая цена
@@ -252,9 +249,5 @@ object ComponentModel: Observable() {
 //        trackPrices.remove(id)
         setChanged()
         notifyObservers(Pair(CHANGED_FAVOURITE_STATUS, id))
-    }
-
-    fun deleteFromFavorite(component: Component) {
-        favouriteComponents.remove(component)
     }
 }

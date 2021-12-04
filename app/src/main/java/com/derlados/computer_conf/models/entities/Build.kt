@@ -216,13 +216,13 @@ class Build : Cloneable, BuildData {
                     }
 
                     ssd?.forEach {
+                        val count = it.count
                         val formFactor = it.component.getAttrById(SSD_FORM_FACTOR)?.value
                         formFactor?.let {
                             if (formFactor.toLowerCase(Locale.ROOT).contains("m.2")) {
-                                ++m2Count
-                            }
-                            if (formFactor.toLowerCase(Locale.ROOT).contains("sata")) {
-                                ++sataCount
+                                m2Count += count
+                            } else {
+                                sataCount += count
                             }
                         }
                     }
@@ -262,19 +262,19 @@ class Build : Cloneable, BuildData {
 
     /**
      * Проверка максимального лимита на количество комплектующего
-     * @param componentCategory - тип комплектующего
+     * @param category - тип комплектующего
      * @return - лимит количества комплектующих
      */
-    private fun isMax(category: ComponentCategory): Boolean {
+    fun isMax(category: ComponentCategory): Boolean {
         when(category) {
             ComponentCategory.CPU, ComponentCategory.GPU, ComponentCategory.CASE, ComponentCategory.POWER_SUPPLY,
                     ComponentCategory.MOTHERBOARD, ComponentCategory.RAM -> {
-                if (components[ComponentCategory.MOTHERBOARD]?.size != 0) {
+                if (components[category]?.size != 0) {
                     return true
                 }
             }
             ComponentCategory.SSD, ComponentCategory.HDD -> {
-                val motherboard = components[ComponentCategory.MOTHERBOARD]?.getOrNull(0)?.component ?: return true
+                val motherboard = components[ComponentCategory.MOTHERBOARD]?.getOrNull(0)?.component ?: return false
                 val ssd = components[ComponentCategory.SSD]
                 val hdd = components[ComponentCategory.HDD]
 
@@ -302,25 +302,23 @@ class Build : Cloneable, BuildData {
                     }
 
                     ssd?.forEach {
+                        val count = it.count
                         val formFactor = it.component.getAttrById(SSD_FORM_FACTOR)?.value
                         formFactor?.let {
                             if (formFactor.toLowerCase(Locale.ROOT).contains("m.2")) {
-                                ++m2Count
-                            }
-                            if (formFactor.toLowerCase(Locale.ROOT).contains("sata")) {
-                                ++sataCount
+                                m2Count += count
+                            } else {
+                                sataCount += count
                             }
                         }
                     }
                     hdd?.forEach {
                         sataCount += it.count
                     }
-
-                    if (m2Count == mbM2Count) {
+                    
+                    if (m2Count == mbM2Count && sataCount == mbSataCount) {
                         return true
-                    }
-
-                    if (sataCount > mbSataCount) {
+                    } else if (sataCount == mbSataCount && category == ComponentCategory.HDD) {
                         return true
                     }
                 }
@@ -341,7 +339,7 @@ class Build : Cloneable, BuildData {
         return value1ToCompare.contains(value2ToCompare) || value2ToCompare.contains(value1ToCompare)
     }
 
-    fun calculatePower(): Int {
+    private fun calculatePower(): Int {
         // Если присутствует видеокарта и если в ней присутствует мин. мощность БП - можно не считать
         val gpu = components[ComponentCategory.GPU]?.getOrNull(0)?.component
         gpu?.getAttrById(GPU_MIN_TDP)?.toIntValue()?.let {
@@ -359,12 +357,12 @@ class Build : Cloneable, BuildData {
         }
 
         var ramCount = 0
-        ram?.forEach { ram ->
-            val ramPack: Int? = ram.component.getAttrById(RAM_IN_PACK)?.toIntValue()
+        ram?.forEach { ramItem ->
+            val ramPack: Int? = ramItem.component.getAttrById(RAM_IN_PACK)?.toIntValue()
             ramCount += if (ramPack != null) {
-                ram.count * ramPack
+                ramItem.count * ramPack
             } else {
-                ram.count
+                ramItem.count
             }
         }
         currentPower += ramCount * TDP_RAM

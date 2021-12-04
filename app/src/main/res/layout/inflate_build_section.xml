@@ -1,0 +1,33 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.widget.Button
+        android:id="@+id/inflate_build_section_bt"
+        style="@style/block_header"/>
+
+    <com.github.aakira.expandablelayout.ExpandableLinearLayout
+        android:id="@+id/inflate_build_section_ell_components"
+        style="@style/ExpandComponents">
+
+        <LinearLayout
+            android:id="@+id/inflate_build_section_ll_components_cont"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <android.widget.Button
+            android:id="@+id/inflate_build_section_bt_add_more"
+            android:visibility="gone"
+            style="@style/block_header_add_more"/>
+
+    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+
+
+</LinearLayout>

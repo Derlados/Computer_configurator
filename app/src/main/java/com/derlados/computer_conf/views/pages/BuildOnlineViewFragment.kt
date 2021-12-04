@@ -27,6 +27,7 @@ import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_build.view.*
+import kotlinx.android.synthetic.main.inflate_build_section.view.*
 import kotlinx.android.synthetic.main.inflate_comment.view.*
 import kotlinx.android.synthetic.main.inflate_comment_template.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
@@ -99,8 +100,9 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
      */
     override fun deleteEmptyLists() {
         for ((_, value) in componentContainers) {
-            val componentContainer = currentFragment.findViewById<ExpandableLinearLayout>(value.second)
-            val componentBt = currentFragment.findViewById<Button>(value.first)
+            val componentBt = value.inflate_build_section_bt
+            val componentContainer = value.inflate_build_section_ell_components
+
             val componentList = componentContainer.getChildAt(0) as LinearLayout
 
             if (componentList.childCount == 0) {

@@ -1,5 +1,10 @@
 package com.derlados.computer_conf.views.pages
 
+import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Looper
+import android.util.TypedValue
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -9,9 +14,11 @@ import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.models.entities.BuildData
 import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.view_interfaces.BaseBuildView
+import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_build.view.*
+import kotlinx.android.synthetic.main.inflate_build_section.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
 import java.util.ArrayList
 
@@ -26,16 +33,7 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView {
     protected lateinit var tvCompatibility: TextView
     protected lateinit var imgBuild: ImageView
 
-    protected var componentContainers: HashMap<ComponentCategory, Pair<Int, Int>> = hashMapOf(
-            ComponentCategory.CPU to Pair(R.id.fragment_build_bt_head_cpu, R.id.fragment_build_expll_cpu),
-            ComponentCategory.MOTHERBOARD to Pair(R.id.fragment_build_bt_head_mb, R.id.fragment_build_expll_mb),
-            ComponentCategory.GPU to Pair(R.id.fragment_build_bt_head_gpu, R.id.fragment_build_expll_gpu),
-            ComponentCategory.RAM to Pair(R.id.fragment_build_bt_head_ram, R.id.fragment_build_expll_ram),
-            ComponentCategory.HDD to Pair(R.id.fragment_build_bt_head_hdd, R.id.fragment_build_expll_hdd),
-            ComponentCategory.SSD to Pair(R.id.fragment_build_bt_head_ssd, R.id.fragment_build_expll_ssd),
-            ComponentCategory.POWER_SUPPLY to Pair(R.id.fragment_build_bt_head_ps, R.id.fragment_build_expll_power_supply),
-            ComponentCategory.CASE to Pair(R.id.fragment_build_bt_head_case, R.id.fragment_build_expll_case),
-    )
+    protected lateinit var componentContainers: HashMap<ComponentCategory, View>
     protected var componentsTvCount: HashMap<Int, TextView> = HashMap()
 
     protected open fun initFields() {
@@ -45,6 +43,27 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView {
         tvCompatibility = currentFragment.fragment_build_tv_compatibility
         tvStatus = currentFragment.fragment_build_tv_status_or_user_value
         etDesc = currentFragment.fragment_build_et_desc
+
+        componentContainers = hashMapOf(
+            ComponentCategory.CPU to currentFragment.fragment_build_ll_cpu_section,
+            ComponentCategory.MOTHERBOARD to currentFragment.fragment_build_ll_mb_section,
+            ComponentCategory.GPU to currentFragment.fragment_build_ll_gpu_section,
+            ComponentCategory.RAM to currentFragment.fragment_build_ll_ram_section,
+            ComponentCategory.HDD to currentFragment.fragment_build_ll_hdd_section,
+            ComponentCategory.SSD to currentFragment.fragment_build_ll_ssd_section,
+            ComponentCategory.POWER_SUPPLY to currentFragment.fragment_build_ll_ps_section,
+            ComponentCategory.CASE to currentFragment.fragment_build_ll_case_section,
+        )
+
+        // TODO databind в xml не сработал, потому приходится делать эту дичь вручную, необходимо выяснить
+        currentFragment.fragment_build_ll_cpu_section.inflate_build_section_bt.setText(R.string.cpu)
+        currentFragment.fragment_build_ll_mb_section.inflate_build_section_bt.setText(R.string.motherboard)
+        currentFragment.fragment_build_ll_gpu_section.inflate_build_section_bt.setText(R.string.gpu)
+        currentFragment.fragment_build_ll_ram_section.inflate_build_section_bt.setText(R.string.ram)
+        currentFragment.fragment_build_ll_hdd_section.inflate_build_section_bt.setText(R.string.hdd)
+        currentFragment.fragment_build_ll_ssd_section.inflate_build_section_bt.setText(R.string.ssd)
+        currentFragment.fragment_build_ll_ps_section.inflate_build_section_bt.setText(R.string.power_supply)
+        currentFragment.fragment_build_ll_case_section.inflate_build_section_bt.setText(R.string.pc_case)
     }
 
     /**
@@ -73,25 +92,44 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView {
      * @param buildComponent - комплектующее из сборки (расширенный объект с количеством)
      * @param init - флаг, необходимо ли переинициализировать ExpandableLinearLayout
      */
+    @SuppressLint("ClickableViewAccessibility")
     override fun addComponent(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildData.BuildComponent, init: Boolean) {
-        componentContainers[category]?.let { (btId, containerId) ->
-            val btHeader: Button = currentFragment.findViewById(btId)
-            val expandContainer: ExpandableLinearLayout = currentFragment.findViewById(containerId)
+        componentContainers[category]?.let { container ->
+            val btHeader = container.inflate_build_section_bt
+            val expandContainer = container.inflate_build_section_ell_components
+            val componentContainer = container.inflate_build_section_ll_components_cont
 
-            val parent = expandContainer.getChildAt(0) as LinearLayout
             val card = createComponentCard(category, isMultiple, buildComponent, expandContainer.getChildAt(0) as LinearLayout)
-            parent.addView(card)
+            componentContainer.addView(card, componentContainer.childCount - 1)
 
             if (init) {
-                expandContainer.initLayout()
-                expandContainer.expand()
+                updatedExpandLayout(expandContainer, true)
                 btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_up_36, 0)
             } else {
                 btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0)
             }
 
             // Вместо перехода к поиску комплектующего, кнопка раскрывает список с комплектуюшими
-            btHeader.setOnClickListener { toggleCompListVisibility(btHeader, expandContainer) }
+            btHeader.setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_UP) {
+                    toggleCompListVisibility(btHeader, expandContainer)
+                }
+
+                return@setOnTouchListener true
+            }
+        }
+    }
+
+    override fun changeVisibilityAddMoreBt(isVisible: Boolean, category: ComponentCategory) {
+        componentContainers[category]?.let {
+            it.inflate_build_section_bt_add_more.visibility = View.VISIBLE
+            if (isVisible) {
+                it.inflate_build_section_bt_add_more.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32f)
+                it.inflate_build_section_bt_add_more.text = "+"
+            } else {
+                it.inflate_build_section_bt_add_more.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+                it.inflate_build_section_bt_add_more.text = "Все порты заняты !"
+            }
         }
     }
 
@@ -161,5 +199,12 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView {
         }
 
         container.toggle()
+    }
+
+    protected open fun updatedExpandLayout(ell: ExpandableLinearLayout, isExpanded: Boolean) {
+        ell.initLayout()
+        if (isExpanded) {
+            ell.expand()
+        }
     }
 }

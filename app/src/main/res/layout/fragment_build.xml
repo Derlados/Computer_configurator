@@ -1,12 +1,12 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
     android:weightSum="1"
     android:orientation="vertical">
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -146,149 +146,37 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <android.widget.Button
-                    android:id="@+id/fragment_build_bt_head_cpu"
-                    style="@style/block_header"
-                    android:text="@string/cpu" />
+                <include
+                    android:id="@+id/fragment_build_ll_cpu_section"
+                    layout="@layout/inflate_build_section"/>
 
-                <com.github.aakira.expandablelayout.ExpandableLinearLayout
-                    android:id="@+id/fragment_build_expll_cpu"
-                    style="@style/ExpandComponents">
+                <include
+                    android:id="@+id/fragment_build_ll_mb_section"
+                    layout="@layout/inflate_build_section"/>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                <include
+                    android:id="@+id/fragment_build_ll_gpu_section"
+                    layout="@layout/inflate_build_section"/>
 
-                    </LinearLayout>
+                <include
+                    android:id="@+id/fragment_build_ll_ram_section"
+                    layout="@layout/inflate_build_section"/>
 
-                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+                <include
+                    android:id="@+id/fragment_build_ll_hdd_section"
+                    layout="@layout/inflate_build_section"/>
 
-                <android.widget.Button
-                    android:id="@+id/fragment_build_bt_head_mb"
-                    style="@style/block_header"
-                    android:text="@string/motherboard"/>
+                <include
+                    android:id="@+id/fragment_build_ll_ssd_section"
+                    layout="@layout/inflate_build_section"/>
 
-                <com.github.aakira.expandablelayout.ExpandableLinearLayout
-                    android:id="@+id/fragment_build_expll_mb"
-                    style="@style/ExpandComponents">
+                <include
+                    android:id="@+id/fragment_build_ll_ps_section"
+                    layout="@layout/inflate_build_section"/>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
-
-                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
-
-                <android.widget.Button
-                    android:id="@+id/fragment_build_bt_head_gpu"
-                    style="@style/block_header"
-                    android:text="@string/gpu"/>
-
-                <com.github.aakira.expandablelayout.ExpandableLinearLayout
-                    android:id="@+id/fragment_build_expll_gpu"
-                    style="@style/ExpandComponents">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
-
-                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
-
-                <android.widget.Button
-                    android:id="@+id/fragment_build_bt_head_ram"
-                    style="@style/block_header"
-                    android:text="@string/ram"/>
-
-                <com.github.aakira.expandablelayout.ExpandableLinearLayout
-                    android:id="@+id/fragment_build_expll_ram"
-                    style="@style/ExpandComponents">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
-
-                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
-
-                <android.widget.Button
-                    android:id="@+id/fragment_build_bt_head_hdd"
-                    style="@style/block_header"
-                    android:text="@string/hdd"/>
-
-                <com.github.aakira.expandablelayout.ExpandableLinearLayout
-                    android:id="@+id/fragment_build_expll_hdd"
-                    style="@style/ExpandComponents">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
-
-                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
-
-                <android.widget.Button
-                    android:id="@+id/fragment_build_bt_head_ssd"
-                    style="@style/block_header"
-                    android:text="@string/ssd"/>
-
-                <com.github.aakira.expandablelayout.ExpandableLinearLayout
-                    android:id="@+id/fragment_build_expll_ssd"
-                    style="@style/ExpandComponents">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
-
-                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
-
-                <android.widget.Button
-                    android:id="@+id/fragment_build_bt_head_ps"
-                    style="@style/block_header"
-                    android:text="@string/power_supply"/>
-
-                <com.github.aakira.expandablelayout.ExpandableLinearLayout
-                    android:id="@+id/fragment_build_expll_power_supply"
-                    style="@style/ExpandComponents">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
-
-                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
-
-                <android.widget.Button
-                    android:id="@+id/fragment_build_bt_head_case"
-                    style="@style/block_header"
-                    android:text="@string/pc_case"/>
-
-                <com.github.aakira.expandablelayout.ExpandableLinearLayout
-                    android:id="@+id/fragment_build_expll_case"
-                    style="@style/ExpandComponents">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
-
-                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+                <include
+                    android:id="@+id/fragment_build_ll_case_section"
+                    layout="@layout/inflate_build_section"/>
 
             </LinearLayout>
 

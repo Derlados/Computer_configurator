@@ -50,6 +50,11 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView {
         }))
     }
 
+    override fun disableMarkBt() {
+        val btMark = currentFragment.findViewById<Button>(R.id.fragment_component_data_bt_mark)
+        btMark.visibility = View.GONE
+    }
+
     override fun setComponentInfo(component: Component) {
         val container: LinearLayout = currentFragment.fragment_component_data_attributes
 

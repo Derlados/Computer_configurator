@@ -19,6 +19,7 @@ import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.presenters.BuildConstructorPresenter
 import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
+import kotlinx.android.synthetic.main.inflate_build_section.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
 
 open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActivity.OnBackPressedListener, BuildConstructorView {
@@ -41,16 +42,22 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
         return currentFragment
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun initFields() {
         super.initFields()
         etName.addTextChangedListener(this)
         etDesc.addTextChangedListener(this)
 
         for ((key, value ) in componentContainers) {
-            val btHeader: Button = currentFragment.findViewById(value.first)
-            btHeader.setOnClickListener{
-                pickComponent(key)
-            }
+            value.inflate_build_section_bt.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
+                presenter.selectCategoryToSearch(key)
+                return@OnTouchListener true
+            }))
+
+            value.inflate_build_section_bt_add_more.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
+                presenter.selectCategoryToSearch(key)
+                return@OnTouchListener true
+            }))
         }
     }
 
@@ -77,6 +84,27 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
     override fun showToast(message: String) {
         Toast.makeText(App.app.applicationContext, message, Toast.LENGTH_SHORT).show()
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun prohibitPickComponent(category: ComponentCategory) {
+        componentContainers[category]?.let {
+            it.inflate_build_section_bt_add_more.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
+                Toast.makeText(context, context?.getString(R.string.cannot_add_more), Toast.LENGTH_SHORT).show()
+                return@OnTouchListener true
+            }))
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun allowPickComponent(category: ComponentCategory) {
+        componentContainers[category]?.let {
+            it.inflate_build_section_bt_add_more.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
+                presenter.selectCategoryToSearch(category)
+                return@OnTouchListener true
+            }))
+        }
+    }
+
 
     /**
      * Установка статуса сборки.
@@ -110,8 +138,8 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
         // Кнопка удалить комплектующее
         val ibtDelete = card.inflate_component_item_bt_favorite
         ibtDelete.setOnClickListener {
-            removeComponent(category, component)
             parent.removeView(card) // Удаление комплектующего
+            removeComponent(category, component)
         }
         ibtDelete.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_trash, App.app.theme)) // Отрисовка значка
 
@@ -132,26 +160,34 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
 
     ///////////////////////////////// Обработчики кнопок ///////////////////////////////////////////
 
-    /**
-     * Обработчик кнопки "+" для выбора комплектующих в сборку
-     */
-    private fun pickComponent(category: ComponentCategory) {
-        presenter.selectCategoryToSearch(category)
+    override fun openComponentSearch() {
         frListener.nextFragment(this, ComponentSearchFragment(),  BackStackTag.COMPONENT_SEARCH)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun removeComponent(category: ComponentCategory, component: Component) {
         presenter.removeComponent(category, component)
 
-        componentContainers[category]?.let { (btId, containerId) ->
-            val btHeader: Button = currentFragment.findViewById(btId)
-            currentFragment.findViewById<ExpandableLinearLayout>(containerId).initLayout()
+        componentContainers[category]?.let { container ->
+            val btHeader = container.inflate_build_section_bt
+            val componentContainer = container.inflate_build_section_ll_components_cont
 
-            // Вместо перехода к поиску комплектующего, кнопка раскрывает список с комплектуюшими
-            btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_add_24, 0)
-            btHeader.setOnClickListener {
-                pickComponent(category)
+            if (componentContainer.childCount == 0) {
+                // Вместо перехода к поиску комплектующего, кнопка раскрывает список с комплектуюшими
+                btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_add_24, 0)
+                btHeader.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
+                    presenter.selectCategoryToSearch(category)
+                    return@OnTouchListener true
+                }))
+                container.inflate_build_section_ell_components.initLayout()
+            } else {
+                val isExpanded = container.inflate_build_section_ell_components.isExpanded
+                container.inflate_build_section_ell_components.initLayout()
+                if (isExpanded) {
+                    container.inflate_build_section_ell_components.expand()
+                }
             }
+
         }
     }
 

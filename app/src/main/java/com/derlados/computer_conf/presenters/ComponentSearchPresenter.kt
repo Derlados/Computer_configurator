@@ -66,6 +66,10 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
                 currentComponentList = currentComponentList.filter {
                     component ->  it.checkCompatibility(ComponentModel.chosenCategory, component) == Build.Companion.CompatibilityError.OK
                 }
+                // Отсеивание тех комплектующих, которые повторяются
+                it.components[ComponentModel.chosenCategory]?.let { buildComponents ->
+                    currentComponentList = currentComponentList.filter { component -> buildComponents.find { bc -> bc.component.id == component.id} == null}
+                }
             }
         }
 

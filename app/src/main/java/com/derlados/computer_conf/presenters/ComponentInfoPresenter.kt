@@ -15,12 +15,12 @@ class ComponentInfoPresenter(private val view: ComponentInfoView, private val re
     }
 
     private fun addToFavourite() {
-        ComponentModel.addToFavorite(ComponentModel.chosenComponent)
+        ComponentModel.addToFavorite(ComponentModel.chosenComponent.id)
         defineBtAction()
     }
 
     private fun deleteFromFavourite() {
-        ComponentModel.deleteFromFavorite(ComponentModel.chosenComponent)
+        ComponentModel.deleteFromFavorite(ComponentModel.chosenComponent.id)
         defineBtAction()
     }
 
@@ -31,15 +31,20 @@ class ComponentInfoPresenter(private val view: ComponentInfoView, private val re
     }
 
     private fun defineBtAction() {
-        when {
-            LocalAccBuildModel.editableBuild?.components?.get(ComponentModel.chosenCategory)?.size == 0 -> {
-                view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_BUILD), ::addToBuild)
-            }
-            ComponentModel.favouriteComponents.find { c -> c.id == ComponentModel.chosenComponent.id } == null -> {
+        val editableBuild = LocalAccBuildModel.editableBuild
+        val buildComponents = editableBuild?.components?.get(ComponentModel.chosenCategory)
+
+        if (editableBuild == null) {
+            if (ComponentModel.favouriteComponents.find { c -> c.id == ComponentModel.chosenComponent.id } == null) {
                 view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_FAVOURITE), ::addToFavourite)
-            }
-            else -> {
+            } else {
                 view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.DELETE_FROM_FAVOURITE), ::deleteFromFavourite)
+            }
+        } else {
+            if ( buildComponents?.find { bc -> bc.component.id == ComponentModel.chosenComponent.id } == null ) {
+                view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_BUILD), ::addToBuild)
+            } else {
+                view.disableMarkBt()
             }
         }
     }

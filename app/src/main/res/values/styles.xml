@@ -27,9 +27,22 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:background">@color/element_3</item>
+        <item name="android:background">@drawable/transition_element_3</item>
         <item name="android:layout_marginTop">2dp</item>
         <item name="android:drawableEnd">@drawable/ic_add_24</item>
+    </style>
+    <style name="block_header_add_more">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:text">Все порты заняты !</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/transition_bt_add_more</item>
+        <item name="android:layout_marginTop">2dp</item>
     </style>
     <style name="ButtonCategory">
         <item name="android:layout_width">0dp</item>
