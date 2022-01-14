@@ -20,10 +20,6 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
                 }
             }
 
-            // Открывает и закрывает кнопки добавить для накопителей, если нужно
-
-
-            // Обновление динамичных полей
             updateBuild()
         }
     }

@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
+import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.models.entities.BuildData
@@ -22,7 +23,7 @@ import kotlinx.android.synthetic.main.inflate_build_section.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
 import java.util.ArrayList
 
-abstract class BuildViewFragment: Fragment(), BaseBuildView {
+abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBackPressedListener {
     protected lateinit var currentFragment: View
 
     // Поля для модифицакции после возврата с меню выбора комплектующего
@@ -35,6 +36,11 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView {
 
     protected lateinit var componentContainers: HashMap<ComponentCategory, View>
     protected var componentsTvCount: HashMap<Int, TextView> = HashMap()
+
+    override fun onBackPressed(): Boolean {
+        activity?.title = arguments?.getString("title")
+        return true
+    }
 
     protected open fun initFields() {
         etName = currentFragment.fragment_build_et_name
@@ -70,6 +76,7 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView {
      * Установка заголовочных данных (название сборки и её описание)
      */
     override fun setHeaderData(name: String, desc: String) {
+        activity?.title = name
         etName.setText(name)
         etDesc.setText(desc)
     }

@@ -19,6 +19,7 @@ import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.presenters.BuildConstructorPresenter
 import com.derlados.computer_conf.views.decorators.AnimOnTouchListener
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
+import kotlinx.android.synthetic.main.fragment_build.*
 import kotlinx.android.synthetic.main.inflate_build_section.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
 
@@ -70,7 +71,13 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
 
         if (!hidden) {
             presenter.checkUserChoice()
+            activity?.title = getString(R.string.configurator)
         }
+    }
+
+    override fun setHeaderData(name: String, desc: String) {
+        super.setHeaderData(name, desc)
+        activity?.title = getString(R.string.configurator)
     }
 
     /**
@@ -78,6 +85,7 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
      */
     override fun onBackPressed(): Boolean {
         presenter.finish()
+        super.onBackPressed()
         return true
     }
 
@@ -104,7 +112,6 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
             }))
         }
     }
-
 
     /**
      * Установка статуса сборки.

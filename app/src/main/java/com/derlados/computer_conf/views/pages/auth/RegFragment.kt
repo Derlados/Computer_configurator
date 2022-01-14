@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
+import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.presenters.AuthPresenter
@@ -18,7 +19,7 @@ import com.derlados.computer_conf.views.pages.OnFragmentInteractionListener
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_registration.view.*
 
-class RegFragment: Fragment(), AuthView {
+class RegFragment: Fragment(), AuthView, MainActivity.OnBackPressedListener {
     private lateinit var fragmentListener: OnFragmentInteractionListener
     private lateinit var currentFragment: View
 
@@ -35,6 +36,7 @@ class RegFragment: Fragment(), AuthView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        activity?.title = getString(R.string.authorization)
         currentFragment = inflater.inflate(R.layout.fragment_registration, container, false)
         presenter = AuthPresenter(this, App.app.resourceProvider)
 
@@ -52,6 +54,11 @@ class RegFragment: Fragment(), AuthView {
         currentFragment.fragment_registration_tv_to_login.setOnClickListener { changeToLogin() }
 
         return currentFragment
+    }
+
+    override fun onBackPressed(): Boolean {
+        activity?.title = arguments?.getString("title")
+        return true
     }
 
     override fun onDestroy() {

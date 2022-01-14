@@ -9,4 +9,5 @@ interface BuildsOnlineListView {
     fun showError(message: String)
     fun disableRefreshAnim()
     fun initRefreshing()
+    fun copyToClipboard(uri: String)
 }

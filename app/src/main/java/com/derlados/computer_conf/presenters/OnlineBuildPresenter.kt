@@ -2,37 +2,40 @@ package com.derlados.computer_conf.presenters
 
 import android.accounts.NetworkErrorException
 import com.derlados.computer_conf.consts.ComponentCategory
+import com.derlados.computer_conf.consts.Domain
 import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.models.OnlineBuildModel
 import com.derlados.computer_conf.models.UserModel
-import com.derlados.computer_conf.models.entities.Comment
-import com.derlados.computer_conf.models.entities.User
+import com.derlados.computer_conf.models.entities.Build
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.view_interfaces.BuildOnlineView
 import kotlinx.coroutines.*
 
 class OnlineBuildPresenter(private val view: BuildOnlineView, private val resourceProvider: ResourceProvider) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private lateinit var currentBuild: Build
 
     /**
      * Инициализация сборки пользователя
      */
     fun init() {
-        val build = OnlineBuildModel.selectedBuild
+        OnlineBuildModel.publicBuilds.find { b -> b.serverId == OnlineBuildModel.selectedBuildId }?.let {
+            currentBuild = it
+        }
 
         // Заголовочные данные сборки
-        view.setHeaderData(build.name, build.description)
-        view.setPrice(build.price)
-        view.setUsername(build.username)
-        build.image?.let { image ->
+        view.setHeaderData(currentBuild.name, currentBuild.description)
+        view.setPrice(currentBuild.price)
+        view.setUsername(currentBuild.username)
+        currentBuild.image?.let { image ->
             view.setImage(image)
         }
 
         // Комлпектующие
-        for ((category, buildComponents) in build.components) {
+        for ((category, buildComponents) in currentBuild.components) {
             for (i in 0 until buildComponents.size) {
-                view.addComponent(category, build.isMultipleCategory(category), buildComponents[i], false)
+                view.addComponent(category, currentBuild.isMultipleCategory(category), buildComponents[i], false)
             }
         }
         view.deleteEmptyLists()
@@ -51,12 +54,14 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
 
     fun finish() {
         coroutineScope.cancel()
+        OnlineBuildModel.deselectBuild()
     }
+
 
     private fun downloadComments() {
         coroutineScope.launch {
             try {
-                val comments = OnlineBuildModel.getComments(OnlineBuildModel.selectedBuild.serverId)
+                val comments = OnlineBuildModel.getComments(currentBuild.serverId)
                 val sortedComments = comments.sortedByDescending { comment -> comment.creationDate }
 
                 if (isActive) {
@@ -75,7 +80,7 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
             val user = UserModel.currentUser
             user?.let {
                 try {
-                    val newComment = OnlineBuildModel.addNewComment(it.token, OnlineBuildModel.selectedBuild.serverId, it.id, text, idParent)
+                    val newComment = OnlineBuildModel.addNewComment(it.token, currentBuild.serverId, it.id, text, idParent)
                     if (isActive) {
                         view.appendComment(newComment, indexToAdd, idParent != null)
                     }

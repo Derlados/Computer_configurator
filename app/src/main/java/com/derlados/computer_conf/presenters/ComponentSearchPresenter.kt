@@ -2,6 +2,7 @@ package com.derlados.computer_conf.presenters
 
 import kotlinx.coroutines.*
 import android.accounts.NetworkErrorException
+import androidx.core.view.KeyEventDispatcher
 import com.derlados.computer_conf.view_interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.ComponentModel
 import com.derlados.computer_conf.consts.ComponentCategory
@@ -20,6 +21,7 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     private var searchText: String = ""
 
     fun init() {
+        view.setTitleByCategory(ComponentModel.chosenCategory)
         view.setDefaultImageByCategory(resourceProvider.getDefaultImageByCategory(ComponentModel.chosenCategory))
 
         view.setComponents(currentComponentList, ComponentModel.favouriteComponents)

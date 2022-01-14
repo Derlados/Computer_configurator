@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class BuildOnlineRecyclerAdapter<T : BuildData>(override val builds: ArrayList<T>, val onServerBuildChoose: (id: Int) -> Unit):
+class BuildOnlineRecyclerAdapter<T : BuildData>(override val builds: ArrayList<T>, val onServerBuildChoose: (id: Int) -> Unit, val onShare: (id: Int) -> Unit):
         BuildRecyclerAdapter<T>(builds, fun(_: String) = Unit, fun(_: String) = Unit, fun(_: String) = Unit) {
 
     @SuppressLint("ClickableViewAccessibility")
@@ -23,7 +23,8 @@ class BuildOnlineRecyclerAdapter<T : BuildData>(override val builds: ArrayList<T
         holder.tvPrice.text = App.app.getString(R.string.component_price, build.price)
         holder.tvUserOrStatusHeader.setText(R.string.creator)
         holder.tvUserOrStatusValue.text = build.username
-        holder.llActionBtns.visibility = View.GONE
+        holder.btPublish.visibility = View.GONE
+        holder.btDelete.visibility = View.GONE
         holder.tvPublishDate.visibility = View.VISIBLE
 
         val formatter = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
@@ -49,6 +50,10 @@ class BuildOnlineRecyclerAdapter<T : BuildData>(override val builds: ArrayList<T
             onServerBuildChoose(build.serverId)
             return@OnTouchListener true
         }))
+
+        holder.btShare.setOnClickListener {
+            onShare(build.serverId)
+        }
 
         holder.initExpandLayout()
     }

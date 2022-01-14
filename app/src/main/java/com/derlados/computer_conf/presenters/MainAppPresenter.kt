@@ -1,12 +1,16 @@
 package com.derlados.computer_conf.presenters
 
 import com.derlados.computer_conf.models.LocalAccBuildModel
+import com.derlados.computer_conf.models.OnlineBuildModel
 import com.derlados.computer_conf.models.UserModel
 import com.derlados.computer_conf.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_conf.view_interfaces.MainView
 import java.util.*
 
 class MainAppPresenter(private val view: MainView, private val resourceProvider: ResourceProvider): Observer {
+    val URI_PATTERN = Regex("(http:\\/\\/www.computer-conf.com\\/build\\/[0-9]+)")
+    val ID_BUILD_PATTERN = Regex("([0-9]+)$")
+
     fun init() {
         UserModel.addObserver(this)
         UserModel.tryRestoreUser()
@@ -21,6 +25,14 @@ class MainAppPresenter(private val view: MainView, private val resourceProvider:
         LocalAccBuildModel.removeServerBuilds()
         view.googleSign.signOut()
         view.showMessage(resourceProvider.getString(ResourceProvider.ResString.LOGOUT_SUCCESS))
+    }
+
+    fun openByUri(uri: String) {
+        val id: Int? = ID_BUILD_PATTERN.find(uri)?.value?.toInt()
+        if (URI_PATTERN.matches(uri) && id != null) {
+            OnlineBuildModel.selectedBuildId = id
+            view.openProgressLoading()
+        }
     }
 
     override fun update(o: Observable?, arg: Any?) {

@@ -119,4 +119,8 @@
     <string name="enter_value_to_the_field">Заполните поле</string>
     <string name="success_change_password">Пароль изменен</string>
     <string name="delete_from_build">Удалить из сборки</string>
+    <string name="build_not_found">Сборка не найдена</string>
+    <string name="link_copied">Ссылка скопирована</string>
+    <string name="configurator">Конфигуратор</string>
+    <string name="you_must_be_authorized">Вы должны быть авторизированы</string>
 </resources>

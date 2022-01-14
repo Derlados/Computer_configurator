@@ -1,8 +1,11 @@
 package com.derlados.computer_conf.view_interfaces
 
+import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.models.entities.Component
 
 interface ComponentSearchView {
+    fun setTitleByCategory(category: ComponentCategory)
+
     fun showError(message: String)
     fun showNotFoundMessage()
     fun openProgressBar()

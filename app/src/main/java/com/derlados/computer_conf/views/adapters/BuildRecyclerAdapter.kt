@@ -46,6 +46,7 @@ open class  BuildRecyclerAdapter <T : BuildData> (protected open val builds: Arr
         val llActionBtns: LinearLayout = itemView.inflate_build_item_ll_action_btns
         val btPublish: ImageView = itemView.inflate_build_item_ibt_publish
         val btDelete: ImageButton = itemView.inflate_build_item_ibt_delete
+        val btShare: ImageButton = itemView.inflate_build_item_ibt_share
         val tvPublishDate: TextView = itemView.inflate_build_item_tv_date
         val btComponentList: ImageButton = itemView.inflate_build_item_ibt_hide
         val llComponentList: ExpandableLinearLayout = itemView.inflate_build_item_component_list
@@ -88,6 +89,7 @@ open class  BuildRecyclerAdapter <T : BuildData> (protected open val builds: Arr
     override fun onBindViewHolder(holder: BuildHolder, position: Int) {
         val build: BuildData = builds[position]
 
+        holder.btShare.visibility = View.GONE
         holder.tvName.text = build.name
         holder.tvPrice.text = App.app.getString(R.string.component_price, build.price)
 
@@ -103,7 +105,6 @@ open class  BuildRecyclerAdapter <T : BuildData> (protected open val builds: Arr
             holder.tvUserOrStatusValue.text = App.app.resourceProvider.getString(ResourceProvider.ResString.COMPLETE)
             holder.tvUserOrStatusValue.setTextColor(App.app.resourceProvider.getColor(ResourceProvider.ResColor.GREEN))
         }
-
 
         // Список комплектующих присутствующих в сборках
         build.image?.let {

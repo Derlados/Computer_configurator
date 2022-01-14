@@ -52,7 +52,9 @@ class SettingsFragment: Fragment(), SettingsView, MainActivity.OnBackPressedList
         mainView = context as MainView
     }
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        activity?.title = getString(R.string.settings)
         currentFragment = inflater.inflate(R.layout.fragment_settings, container, false)
 
         // Сохранение keyListener и drawable  для их возобнавления
@@ -231,6 +233,7 @@ class SettingsFragment: Fragment(), SettingsView, MainActivity.OnBackPressedList
 
     override fun onBackPressed(): Boolean {
         fragmentListener.popBackStack(BackStackTag.MAIN)
+        activity?.title = arguments?.getString("title")
         return false
     }
 }

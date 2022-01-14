@@ -1,8 +1,10 @@
 package com.derlados.computer_conf
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,10 +15,8 @@ import com.derlados.computer_conf.presenters.MainAppPresenter
 import com.derlados.computer_conf.view_interfaces.MainView
 import com.derlados.computer_conf.views.pages.auth.LoginFragment
 import com.derlados.computer_conf.views.components.GoogleSign
-import com.derlados.computer_conf.views.pages.InfoFragment
-import com.derlados.computer_conf.views.pages.MainMenuFragment
-import com.derlados.computer_conf.views.pages.OnFragmentInteractionListener
-import com.derlados.computer_conf.views.pages.SettingsFragment
+import com.derlados.computer_conf.views.pages.*
+import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Exception
 
 
@@ -45,6 +45,10 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_ll_container, mainMenuFragment)
                 .commit()
+
+        intent?.data?.let {
+            presenter.openByUri(it.toString())
+        }
     }
 
     private fun initServices() {
@@ -86,6 +90,14 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
 
     override fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun openProgressLoading() {
+        activity_main_ll_loading.visibility = View.VISIBLE
+    }
+
+    override fun closeProgressLoading() {
+        activity_main_ll_loading.visibility = View.GONE
     }
 
     override fun changeAuthItemMenu(isAuth: Boolean) {
@@ -130,6 +142,10 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
     }
 
     override fun nextFragment(fragmentSource: Fragment, fragmentReceiver: Fragment, backStackTag: BackStackTag) {
+        val bundle = Bundle()
+        bundle.putString("title", this.title.toString())
+        fragmentReceiver.arguments = bundle
+
         if (getCurrentTag() == backStackTag.name) {
             return
         }

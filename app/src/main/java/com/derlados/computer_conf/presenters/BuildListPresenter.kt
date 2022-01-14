@@ -78,7 +78,7 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
         val build = LocalAccBuildModel.getBuildById(id)
 
         if (build.isPublic) {
-            OnlineBuildModel.selectBuild(build.serverId)
+            OnlineBuildModel.selectedBuildId = build.serverId
             view.openBuildOnlineView()
         } else {
             LocalAccBuildModel.selectBuild(id)
@@ -106,7 +106,8 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
 
         coroutineScope.launch {
             val user = UserModel.currentUser
-            user?.let {
+
+            if (user != null) {
                 try {
                     LocalAccBuildModel.saveBuildOnServer(user.token, user.id, id, true)
                     if (isActive) {
@@ -117,6 +118,8 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
                         errorHandle(e.message)
                     }
                 }
+            } else {
+                view.showError(resourceProvider.getString(ResourceProvider.ResString.YOU_MUST_BE_AUTHORIZED))
             }
         }
     }

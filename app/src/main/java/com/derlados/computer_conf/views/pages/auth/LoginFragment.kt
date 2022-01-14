@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
+import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.presenters.AuthPresenter
@@ -26,7 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_login.view.*
 
-class LoginFragment: Fragment(), AuthView {
+class LoginFragment: Fragment(), AuthView, MainActivity.OnBackPressedListener {
     private lateinit var fragmentListener: OnFragmentInteractionListener
     private lateinit var mainView: MainView
 
@@ -47,6 +48,7 @@ class LoginFragment: Fragment(), AuthView {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        activity?.title = getString(R.string.authorization)
         currentFragment = inflater.inflate(R.layout.fragment_login, container, false)
         presenter = AuthPresenter(this, App.app.resourceProvider)
 
@@ -69,6 +71,11 @@ class LoginFragment: Fragment(), AuthView {
         currentFragment.fragment_login_google_sign_in.setOnClickListener { mainView.googleSign.openGoogleSignIn(resultLauncher) }
 
         return currentFragment
+    }
+
+    override fun onBackPressed(): Boolean {
+        activity?.title = arguments?.getString("title")
+        return true
     }
 
     override fun onDestroy() {

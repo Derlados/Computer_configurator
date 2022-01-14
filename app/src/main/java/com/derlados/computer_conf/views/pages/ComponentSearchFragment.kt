@@ -2,6 +2,7 @@ package com.derlados.computer_conf.views.pages
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.derlados.computer_conf.App
 import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
+import com.derlados.computer_conf.consts.ComponentCategory
 import com.derlados.computer_conf.view_interfaces.ComponentSearchView
 import com.derlados.computer_conf.models.entities.Component
 import com.derlados.computer_conf.presenters.ComponentSearchPresenter
@@ -24,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_component_search.view.*
 import java.util.*
 
 class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, ComponentSearchView {
+
     private var defaultImageId: Int = -1
 
     private var keepVisible = true
@@ -78,6 +81,7 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
      * из-за чего появлялось мерцание
      */
     override fun onBackPressed(): Boolean {
+        activity?.title = arguments?.getString("title")
         view?.visibility = View.VISIBLE
         keepVisible = true
         return true
@@ -103,6 +107,21 @@ class ComponentSearchFragment : Fragment(), MainActivity.OnBackPressedListener, 
 
     override fun setDefaultImageByCategory(id: Int) {
         defaultImageId = id
+    }
+
+    override fun setTitleByCategory(category: ComponentCategory) {
+        when(category) {
+            ComponentCategory.CPU -> activity?.title = getString(R.string.CPUs)
+            ComponentCategory.MOTHERBOARD -> activity?.title = getString(R.string.motherboards)
+            ComponentCategory.HDD -> activity?.title = getString(R.string.HDDs)
+            ComponentCategory.RAM -> activity?.title = getString(R.string.RAMs)
+            ComponentCategory.SSD -> activity?.title = getString(R.string.SSDs)
+            ComponentCategory.POWER_SUPPLY -> activity?.title = getString(R.string.power_supplies)
+            ComponentCategory.GPU -> activity?.title = getString(R.string.GPUs)
+            ComponentCategory.CASE -> activity?.title = getString(R.string.pc_cases)
+            ComponentCategory.FAVOURITE -> activity?.title = getString(R.string.favourite)
+            else -> {}
+        }
     }
 
     override fun showError(message: String) {

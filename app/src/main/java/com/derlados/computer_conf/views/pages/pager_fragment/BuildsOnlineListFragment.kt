@@ -1,11 +1,16 @@
 package com.derlados.computer_conf.views.pages.pager_fragment
 
+import android.R.attr.label
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -15,10 +20,12 @@ import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.models.entities.BuildData
 import com.derlados.computer_conf.presenters.BuildOnlineListPresenter
 import com.derlados.computer_conf.view_interfaces.BuildsOnlineListView
+import com.derlados.computer_conf.view_interfaces.MainView
+import com.derlados.computer_conf.views.adapters.BuildOnlineRecyclerAdapter
 import com.derlados.computer_conf.views.pages.BuildOnlineViewFragment
 import com.derlados.computer_conf.views.pages.OnFragmentInteractionListener
-import com.derlados.computer_conf.views.adapters.BuildOnlineRecyclerAdapter
 import kotlinx.android.synthetic.main.fragment_build_list.view.*
+
 
 class BuildsOnlineListFragment : PageFragment(), BuildsOnlineListView {
     private lateinit var frListener: OnFragmentInteractionListener
@@ -40,7 +47,7 @@ class BuildsOnlineListFragment : PageFragment(), BuildsOnlineListView {
         srlRefresh.isEnabled = false
 
         rvBuildRecycler = currentFragment.fragment_build_list_rv
-        presenter = BuildOnlineListPresenter(this, App.app.resourceProvider)
+        presenter = BuildOnlineListPresenter(requireActivity() as MainView,this, App.app.resourceProvider)
         presenter.init()
 
         return currentFragment
@@ -51,17 +58,28 @@ class BuildsOnlineListFragment : PageFragment(), BuildsOnlineListView {
         srlRefresh.setOnRefreshListener { presenter.refresh() }
     }
 
+    override fun copyToClipboard(uri: String) {
+        val clipboard: ClipboardManager = requireActivity().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("simple text", uri)
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(context, R.string.link_copied, Toast.LENGTH_SHORT).show()
+    }
+
     override fun disableRefreshAnim() {
         currentFragment.fragment_build_list_srl_refresh.isRefreshing = false
     }
 
     override fun <T : BuildData> setBuildsData(buildsData: ArrayList<T>) {
         rvBuildRecycler.layoutManager = LinearLayoutManager(context)
-        rvBuildRecycler.adapter = BuildOnlineRecyclerAdapter(buildsData, ::selectBuild)
+        rvBuildRecycler.adapter = BuildOnlineRecyclerAdapter(buildsData, ::selectBuild, ::onShareBuild)
     }
 
     private fun selectBuild(id: Int) {
         presenter.selectBuild(id)
+    }
+
+    private fun onShareBuild(id: Int) {
+        presenter.share(id)
     }
 
     override fun openBuildOnlineView() {

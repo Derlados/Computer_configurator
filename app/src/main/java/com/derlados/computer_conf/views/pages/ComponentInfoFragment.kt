@@ -10,6 +10,7 @@ import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.derlados.computer_conf.App
+import com.derlados.computer_conf.MainActivity
 import com.derlados.computer_conf.R
 import com.derlados.computer_conf.consts.BackStackTag
 import com.derlados.computer_conf.view_interfaces.ComponentInfoView
@@ -20,7 +21,8 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_component_data.view.*
 import kotlinx.android.synthetic.main.inflate_attribute_string.view.*
 
-class ComponentInfoFragment : Fragment(), ComponentInfoView {
+class ComponentInfoFragment : Fragment(), ComponentInfoView, MainActivity.OnBackPressedListener {
+
     private lateinit var attributeList: LinearLayout // Контейнер в который помещается все характеристики товара
     private lateinit var fragmentListener: OnFragmentInteractionListener
     private lateinit var currentFragment: View
@@ -40,6 +42,11 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView {
         return currentFragment
     }
 
+    override fun onBackPressed(): Boolean {
+        activity?.title = arguments?.getString("title")
+        return true
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun initMarkBt(text: String, onClickAction: () -> Unit ) {
         val btMark = currentFragment.findViewById<Button>(R.id.fragment_component_data_bt_mark)
@@ -56,6 +63,7 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView {
     }
 
     override fun setComponentInfo(component: Component) {
+        activity?.title = component.name
         val container: LinearLayout = currentFragment.fragment_component_data_attributes
 
         currentFragment.fragment_component_data_name.text = component.name
@@ -83,4 +91,6 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView {
                 ResourcesCompat.getDrawable(App.app.resources, defaultId, App.app.theme)
         )
     }
+
+
 }

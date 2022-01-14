@@ -63,6 +63,8 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.ENTER_VALUE -> context.getString(R.string.enter_value_to_the_field)
             ResourceProvider.ResString.SUCCESS_CHANGE_PASSWORD -> context.getString(R.string.success_change_password)
             ResourceProvider.ResString.DELETE_FROM_BUILD -> context.getString(R.string.delete_from_build)
+            ResourceProvider.ResString.BUILD_NOT_FOUND -> context.getString(R.string.build_not_found)
+            ResourceProvider.ResString.YOU_MUST_BE_AUTHORIZED -> context.getString(R.string.you_must_be_authorized)
         }
     }
 

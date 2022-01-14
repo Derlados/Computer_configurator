@@ -19,7 +19,7 @@ object OnlineBuildModel {
     private val retrofit: Retrofit
     private val api: BuildsApi
     var publicBuilds = ArrayList<Build>()
-    lateinit var selectedBuild: Build // Выбранная сборка, должна являться клоном из списка
+    var selectedBuildId: Int = -1 // Выбранная сборка, должна являться клоном из списка
 
     init {
         retrofit = Retrofit.Builder()
@@ -69,6 +69,7 @@ object OnlineBuildModel {
 
                     if (comments != null && response.code() == 200) {
                         continuation.resume(comments)
+
                     } else {
                         continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
                     }
@@ -115,14 +116,8 @@ object OnlineBuildModel {
         }
     }
 
-    fun selectBuild(serverId: Int) {
-        val build = publicBuilds.find { build -> build.serverId == serverId }
-
-        if (build != null) {
-            selectedBuild = build
-        } else {
-            throw Error("Chosen build not found")
-        }
+    fun deselectBuild() {
+        selectedBuildId = -1
     }
 
     fun addBuild(build: Build) {

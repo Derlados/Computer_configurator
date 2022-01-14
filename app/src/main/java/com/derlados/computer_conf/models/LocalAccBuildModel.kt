@@ -94,6 +94,7 @@ object LocalAccBuildModel: Observable() {
             call.enqueue(object : Callback<Int> {
                 override fun onResponse(call: Call<Int>, response: Response<Int>) {
                     val serverId = response.body()
+                    Log.d("Debug", response.body().toString())
                     if (serverId != null && response.code() == 200) {
                         buildToSave.serverId = serverId
                         buildToSave.isPublic = isPublic

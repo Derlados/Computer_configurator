@@ -8,4 +8,6 @@ interface MainView {
 
     fun changeAuthItemMenu(isAuth: Boolean)
     fun showMessage(message: String)
+    fun openProgressLoading()
+    fun closeProgressLoading()
 }
