@@ -12,6 +12,9 @@
         <item name="android:itemBackground">#25338E</item>
         <item name="android:textColor">@color/white</item>
     </style>
+    <style name="AppTheme.Launcher" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splashscreen</item>
+    </style>
     <style name="build_desc_text_name">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
