@@ -25,10 +25,10 @@ export default class ComponentModel {
      * @returns - массив комплектующих 
      */
     public async getComponents(category: string): Promise<Array<Component>> {
-        const sql: string = `SELECT id_component AS id, name, price, img AS imageUrl FROM component 
+        const sql: string = `SELECT id_component AS id, name, price, img AS imageUrl, is_actual as isActual FROM component 
                             WHERE id_category = ?`;
 
-        const data: string[] = [Component.CategoriesId.get(category).toString()];
+        const data: string[] = [Component.categoriesId.get(category).toString()];
         const components: Map<number, Component> = new Map<number, Component>()
 
         return new Promise<Array<Component>>((resolve, reject) => {
@@ -37,6 +37,7 @@ export default class ComponentModel {
                 .then(result => {
                     (result as RowDataPacket[])[0].forEach(row => {
                         const comp: Component = Object.assign(new Component(), row);
+                        comp.isActual = row.isActual == 1;
                         components.set(comp.id, comp);
                     });
 
@@ -80,7 +81,7 @@ export default class ComponentModel {
                             ORDER BY CONVERT(attribute_value.value, SIGNED), attribute_value.value ASC`;
 
         return new Promise<Map<number, FilterAttribute>>((resolve, reject) => {
-            this.pool.execute(sql, [Component.CategoriesId.get(category).toString()])
+            this.pool.execute(sql, [Component.categoriesId.get(category).toString()])
                 .then(result => {
                     const filters: Map<number, FilterAttribute> = new Map<number, FilterAttribute>();
 

@@ -36,6 +36,7 @@ export default class UserController {
                 res.status(HttpCodes.OK).send(JSON.stringify(sendData))
             })
             .catch((err: UserError | any) => {
+                console.log(err);
                 this.sendError(err, res);
             })
     }
@@ -98,7 +99,6 @@ export default class UserController {
         const username = req.body.username;
         const secret = req.body.secret;
         const newPassword = req.body.password;
-        console.log(username, secret, newPassword);
 
         this.userModel.updatePassword(username, secret, newPassword)
             .then(() => res.status(HttpCodes.OK).send())

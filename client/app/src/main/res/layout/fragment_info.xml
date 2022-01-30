@@ -1,0 +1,49 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="0.9">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Релиз 1.0:"
+            android:textColor="@color/turquoise"
+            android:paddingStart="15dp"
+            android:paddingEnd="0dp"
+            android:textStyle="bold"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:text="\t\tСоздано приложение 'Конфигуратор ПК'.
+В данном приложении любой пользователь может собрать компьютер своей мечты :D.\n
+\t\tОсновной функционал приложение на данный момент - это его конфигуратор.
+В нем вы можете собрать комплектующие, посмотреть суммарную стоимость, а так же
+конфигуратор сможет вам подсказать грубые ошибки в совместимости, если таковы будут.
+Пользователья может сохранять бесконечное количество сборок на своем устройстве и добавлять к ним описание.
+\n\t\tПользователи могут делится своими сборками, выставляя их для всеобщего обозрения, или просматривать сборки других пользователей
+\n\t\tТак же, если пользователь не хочет собирать всю сборку, а просто найти то,
+что его интересует - он может воспользоваться обычным поиском в меню поиска
+"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold|italic"
+            android:textColor="@color/white"
+            android:text="Вся информация о комплектующих была взята с нтернет-мегазина: brain.com.ua. В дальнейшем планирую расширить список"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+</ScrollView>

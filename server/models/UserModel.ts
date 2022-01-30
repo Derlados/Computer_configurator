@@ -47,6 +47,7 @@ export default class UserModel {
     }
 
     public async login(user: User): Promise<User> {
+
         return new Promise<User>((resolve, reject) => {
             const sql = ` SELECT * FROM users 
                         WHERE (username=? AND password=?) OR googleId=?`

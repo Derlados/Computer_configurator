@@ -1,6 +1,6 @@
 export class Component {
     // Оптимизация, чтобы не искать Id. Реализация на сервере дает возможность корректировать id без клиента
-    public static readonly CategoriesId: Map<string, number> = new Map<string, number>([
+    public static readonly categoriesId: Map<string, number> = new Map<string, number>([
         ["CPU", 1],
         ["GPU", 2],
         ["MOTHERBOARD", 3],
@@ -13,7 +13,7 @@ export class Component {
     ]);
 
     public static getCategoryById(id) {
-        for (const [category, idCategory] of Component.CategoriesId) {
+        for (const [category, idCategory] of Component.categoriesId) {
             if (idCategory == id) {
                 return category;
             }
@@ -25,6 +25,7 @@ export class Component {
     price: number;
     imageUrl: string;
     attributes: Object;
+    isActual: boolean;
 
     constructor() {
         this.attributes = {};
