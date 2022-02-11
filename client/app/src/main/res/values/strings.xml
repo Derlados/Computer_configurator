@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Конфигуратор ПК</string>
-    <string name="shop">Магазин</string>
     <string name="builds">Ваши сборки</string>
     <string name="info">Информация</string>
     <string name="motherboards">Материнские платы</string>
@@ -124,4 +123,6 @@
     <string name="link_copied">Ссылка скопирована</string>
     <string name="configurator">Конфигуратор</string>
     <string name="you_must_be_authorized">Вы должны быть авторизированы</string>
+    <string name="shop">Магазин</string>
+    <string name="online_shop">Онлайн-магазин</string>
 </resources>

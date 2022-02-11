@@ -13,16 +13,22 @@ import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.MainActivity
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.BackStackTag
-import com.derlados.computer_configurator.view_interfaces.ComponentInfoView
 import com.derlados.computer_configurator.models.entities.Component
 import com.derlados.computer_configurator.presenters.ComponentInfoPresenter
+import com.derlados.computer_configurator.view_interfaces.ComponentInfoView
+import com.derlados.computer_configurator.views.components.AdMob
 import com.derlados.computer_configurator.views.decorators.AnimOnTouchListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_component_data.*
 import kotlinx.android.synthetic.main.fragment_component_data.view.*
 import kotlinx.android.synthetic.main.inflate_attribute_string.view.*
 
-class ComponentInfoFragment : Fragment(), ComponentInfoView, MainActivity.OnBackPressedListener {
 
+class ComponentInfoFragment : Fragment(), ComponentInfoView, MainActivity.OnBackPressedListener {
     private lateinit var attributeList: LinearLayout // Контейнер в который помещается все характеристики товара
     private lateinit var fragmentListener: OnFragmentInteractionListener
     private lateinit var currentFragment: View
@@ -33,11 +39,23 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView, MainActivity.OnBack
         fragmentListener = context as OnFragmentInteractionListener
     }
 
+    private var mAdView: AdView? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         currentFragment = inflater.inflate(R.layout.fragment_component_data, container, false)
         attributeList = currentFragment.findViewById(R.id.fragment_component_data_attributes)
         presenter = ComponentInfoPresenter(this, App.app.resourceProvider)
         presenter.init()
+
+        MobileAds.initialize(requireContext()) {}
+
+        mAdView = currentFragment.adView
+        ++AdMob.adCount
+        if (AdMob.adCount % 2 == 0) {
+            mAdView?.loadAd(AdMob.adRequest)
+        } else {
+            mAdView?.visibility =View.GONE
+        }
+
 
         return currentFragment
     }
@@ -48,7 +66,7 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView, MainActivity.OnBack
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun initMarkBt(text: String, onClickAction: () -> Unit ) {
+    override fun initMarkBt(text: String, onClickAction: () -> Unit) {
         val btMark = currentFragment.findViewById<Button>(R.id.fragment_component_data_bt_mark)
         btMark.text = text
         btMark.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
@@ -67,7 +85,10 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView, MainActivity.OnBack
         val container: LinearLayout = currentFragment.fragment_component_data_attributes
 
         currentFragment.fragment_component_data_name.text = component.name
-        currentFragment.fragment_component_data_price.text = App.app.resources.getString(R.string.component_price, component.price)
+        currentFragment.fragment_component_data_price.text = App.app.resources.getString(
+            R.string.component_price,
+            component.price
+        )
         if (component.image != null) {
             currentFragment.fragment_component_data_img.setImageBitmap(component.image)
         } else {
@@ -75,7 +96,11 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView, MainActivity.OnBack
         }
 
         for ((_, attribute) in component.attributes.toSortedMap()) {
-            val dataString: LinearLayout = layoutInflater.inflate(R.layout.inflate_attribute_string, container, false) as LinearLayout
+            val dataString: LinearLayout = layoutInflater.inflate(
+                R.layout.inflate_attribute_string,
+                container,
+                false
+            ) as LinearLayout
             dataString.inflate_attribute_string_name.text = attribute.name
             dataString.inflate_attribute_string_value.text = attribute.value
             container.addView(dataString)
@@ -88,7 +113,7 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView, MainActivity.OnBack
 
     override fun setDefaultImage(defaultId: Int) {
         currentFragment.fragment_component_data_img.setImageDrawable(
-                ResourcesCompat.getDrawable(App.app.resources, defaultId, App.app.theme)
+            ResourcesCompat.getDrawable(App.app.resources, defaultId, App.app.theme)
         )
     }
 

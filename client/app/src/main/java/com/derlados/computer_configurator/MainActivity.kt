@@ -18,6 +18,7 @@ import com.derlados.computer_configurator.views.pages.MainMenuFragment
 import com.derlados.computer_configurator.views.pages.OnFragmentInteractionListener
 import com.derlados.computer_configurator.views.pages.SettingsFragment
 import com.derlados.computer_configurator.views.pages.auth.LoginFragment
+import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_main.*
 
 

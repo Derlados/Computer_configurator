@@ -23,7 +23,7 @@ class MainMenuFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
     val titles: HashMap<Int, String> = hashMapOf(
             PageMenu.BUILDS.ordinal to "Ваши сборки",
             PageMenu.SEARCH.ordinal to "Категории комплектуюших",
-            PageMenu.INFO.ordinal to "Информация"
+            PageMenu.INFO.ordinal to "Сборки пользователей"
     )
 
     override fun onAttach(context: Context) {

@@ -4,6 +4,8 @@ import { Pool, ResultSetHeader } from "mysql2/promise";
 import { imageRoot } from "../app";
 import { DataBase } from "../controllers/database";
 import User from "../types/User";
+import bcrypt from 'bcrypt';
+
 
 export default class UserModel {
     private readonly IMAGE_URL_ROOT = '/images/users/'
@@ -49,13 +51,10 @@ export default class UserModel {
     public async login(user: User): Promise<User> {
 
         return new Promise<User>((resolve, reject) => {
-            const sql = ` SELECT * FROM users 
-                        WHERE (username=? AND password=?) OR googleId=?`
-
+            const sql = ` SELECT * FROM users WHERE username=? OR googleId=?`
 
             const data: string[] = [
                 user.username,
-                user.password ?? null,
                 user.googleId ?? null,
             ];
 
@@ -65,13 +64,20 @@ export default class UserModel {
 
                     if (row.length == 0) {
                         reject(UserError.USER_NOT_FOUND)
-                    } else {
-                        user.id = row[0].id;
-                        user.email = row[0].email;
-                        user.photoUrl = row[0].photoUrl;
-
-                        resolve(user)
                     }
+
+                    if (!user.googleId && row.length != 0) {
+                        const validPassword = bcrypt.compareSync(user.password, row[0].password)
+                        if (!validPassword) {
+                            reject(UserError.USER_NOT_FOUND)
+                        }
+                    }
+
+                    user.id = row[0].id;
+                    user.email = row[0].email;
+                    user.photoUrl = row[0].photoUrl;
+
+                    resolve(user)
                 })
                 .catch(() => {
                     reject(UserError.DATABASE_ERROR)

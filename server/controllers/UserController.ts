@@ -3,8 +3,7 @@ import { HttpCodes } from "../constants/HttpCodes";
 import * as crypto from "crypto";
 import User from "../types/User";
 import UserModel, { UserError } from "../models/UserModel";
-import { imageRoot } from "../app";
-
+import bcrypt from 'bcrypt';
 
 export default class UserController {
     private userModel: UserModel;
@@ -15,6 +14,7 @@ export default class UserController {
 
     public register = (req: any, res: Response) => {
         const user = this.parseUserData(req);
+        user.password = bcrypt.hashSync(user.password, 5);
 
         this.userModel.register(user)
             .then((user: User) => {
