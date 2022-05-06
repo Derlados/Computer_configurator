@@ -2,9 +2,9 @@
 *.env
 .gradle
 release/
+node_modules/
 /heroku_server
 /server/server_heroku
-/server/node_modules
 /server/dist
 /client/local.properties
 /client/.idea/caches
