@@ -1,6 +1,6 @@
 
-import { Component } from "src/components/models/component.model";
 import { Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Component } from "../../components/models/component.model";
 import { Build } from "./build.model";
 
 @Entity('build_components')

@@ -1,5 +1,6 @@
-import { Filter } from "src/categories/models/filter.model";
+
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Filter } from "../../categories/models/filter.model";
 import { ComponentAttribute } from "./component-attribute.model";
 
 @Entity('attribute')

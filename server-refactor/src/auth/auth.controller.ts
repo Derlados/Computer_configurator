@@ -1,9 +1,9 @@
 import { BadRequestException, Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { GoogleSignInDto } from 'src/users/dto/google-sign-in-dto';
-import { LoginUserDto } from 'src/users/dto/login-user.dto';
-import { RestorePassDto } from 'src/users/dto/restore-pass.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { GoogleSignInDto } from '../users/dto/google-sign-in-dto';
+import { LoginUserDto } from '../users/dto/login-user.dto';
+import { RestorePassDto } from '../users/dto/restore-pass.dto';
 
 import { AuthService } from './auth.service';
 

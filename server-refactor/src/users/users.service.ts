@@ -1,10 +1,11 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm/dist/common/typeorm.decorators';
-import { Like, Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { GoogleSignInDto } from './dto/google-sign-in-dto';
-import { updateUserDto } from './dto/update-user.dto';
-import { User } from './models/user.model';
+import { Injectable, ConflictException, InternalServerErrorException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, Like } from "typeorm";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { GoogleSignInDto } from "./dto/google-sign-in-dto";
+import { updateUserDto } from "./dto/update-user.dto";
+import { User } from "./models/user.model";
+
 
 @Injectable()
 export class UsersService {

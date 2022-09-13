@@ -1,5 +1,6 @@
-import { Attribute } from "src/components/models/attribute.model";
+
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
+import { Attribute } from "../../components/models/attribute.model";
 import { Category } from "./category.model";
 
 @Entity('filters')

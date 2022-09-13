@@ -1,16 +1,13 @@
 import { ConflictException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
-import { ConfigService } from '@nestjs/config';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import { User } from 'src/users/models/user.model';
-import { GoogleSignInDto } from 'src/users/dto/google-sign-in-dto';
-import { LoginUserDto } from 'src/users/dto/login-user.dto';
-import { debugPort } from 'process';
-import { AccountDataDto } from 'src/users/dto/accoun-data.dto';
-import { RestorePassDto } from 'src/users/dto/restore-pass.dto';
+import { AccountDataDto } from '../users/dto/accoun-data.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { GoogleSignInDto } from '../users/dto/google-sign-in-dto';
+import { LoginUserDto } from '../users/dto/login-user.dto';
+import { RestorePassDto } from '../users/dto/restore-pass.dto';
+import { User } from '../users/models/user.model';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {

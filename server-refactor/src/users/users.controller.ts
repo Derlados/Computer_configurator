@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { GoogleSignInDto } from './dto/google-sign-in-dto';
 import { updateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';

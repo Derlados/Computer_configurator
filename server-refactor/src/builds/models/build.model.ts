@@ -1,5 +1,6 @@
-import { Comment } from "src/comments/models/comment.model";
+
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Comment } from "../../comments/models/comment.model";
 import { BuildComponent } from "./build-component.model";
 
 @Entity('build')

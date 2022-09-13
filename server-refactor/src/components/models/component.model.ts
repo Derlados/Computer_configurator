@@ -1,6 +1,7 @@
-import { BuildComponent } from "src/builds/models/build-component.model";
-import { Category } from "src/categories/models/category.model";
-import { Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinTable, OneToMany } from "typeorm";
+import { BuildComponent } from "../../builds/models/build-component.model";
+import { Category } from "../../categories/models/category.model";
 import { ComponentAttribute } from "./component-attribute.model";
 
 @Entity('component')

@@ -1,7 +1,6 @@
-import { Build } from "src/builds/models/build.model";
-import { Component } from "src/components/models/component.model";
-import { User } from "src/users/models/user.model";
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Build } from "../../builds/models/build.model";
+import { User } from "../../users/models/user.model";
 
 @Entity('build_comments')
 export class Comment {

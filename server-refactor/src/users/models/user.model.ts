@@ -1,6 +1,6 @@
 import { Exclude } from "class-transformer";
-import { Comment } from "src/comments/models/comment.model";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Comment } from "../../comments/models/comment.model";
 
 @Entity('users')
 export class User {
