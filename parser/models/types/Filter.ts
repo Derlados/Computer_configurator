@@ -1,4 +1,4 @@
-export interface Filter {
+export interface IFilter {
     id_component?: number;
     name?: string;
     price?: number;

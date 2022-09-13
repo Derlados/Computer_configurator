@@ -1,11 +1,11 @@
 import { OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 import Database from "../database/Database";
-import { Filter } from "./Filter";
-import { IProduct } from "./IProduct";
+import { IFilter } from "./types/Filter";
+import { IProduct } from "./types/IProduct";
 
 class ProductModel {
 
-    async getProducts(filter?: Filter): Promise<IProduct[]> {
+    async getProducts(filter?: IFilter): Promise<IProduct[]> {
         let sql = "SELECT * FROM component";
 
         if (!filter) {

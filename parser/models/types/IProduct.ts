@@ -1,5 +1,3 @@
-import { StringLiteralLike } from "typescript";
-
 export interface IProduct {
     idComponent: number;
     name: string;

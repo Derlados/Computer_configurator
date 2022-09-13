@@ -1,6 +1,3 @@
-import axios from 'axios';
-import parse from 'node-html-parser';
-import ProductModel from './models/ProductModel';
 import BrainParser from './parsers/BrainParser';
 
 
