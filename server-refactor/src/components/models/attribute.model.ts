@@ -3,15 +3,15 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Filter } from "../../categories/models/filter.model";
 import { ComponentAttribute } from "./component-attribute.model";
 
-@Entity('attribute')
+@Entity('attributes')
 export class Attribute {
-    @PrimaryGeneratedColumn("increment", { name: "id_characteristic" })
+    @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ name: "characteristic", type: "varchar", length: 100, nullable: false })
-    attribute: string;
+    @Column({ type: "varchar", length: 100, nullable: true })
+    name: string;
 
-    @Column({ name: "is_preview", type: "boolean", nullable: false })
+    @Column({ name: "is_preview", type: "boolean", nullable: true })
     isPreview: boolean;
 
     @Column({ name: "preview_text", type: "varchar", length: 30, nullable: true })

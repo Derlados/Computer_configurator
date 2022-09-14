@@ -7,31 +7,31 @@ export class Comment {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ name: "id_build", type: "int", nullable: false })
+    @Column({ name: "build_id", type: "int", nullable: true })
     buildId: number;
 
-    @Column({ name: "id_user", type: "int", nullable: false })
+    @Column({ name: "user_id", type: "int", nullable: true })
     userId: number;
 
-    @Column({ name: "text", type: "text", nullable: false })
+    @Column({ name: "text", type: "text", nullable: true })
     text: string;
 
-    @Column({ name: "creation_date", type: "datetime", default: () => "CURRENT_TIMESTAMP()" })
+    @Column({ name: "created_at", type: "datetime", default: () => "CURRENT_TIMESTAMP()" })
     creationDate: Date;
 
-    @Column({ name: "id_parent", type: "int", nullable: true })
+    @Column({ name: "parent_id", type: "int", nullable: true })
     parentId: number;
 
     @ManyToOne(() => Build, build => build.comments, { onDelete: "CASCADE", onUpdate: "CASCADE" })
-    @JoinColumn({ name: "id_build" })
+    @JoinColumn({ name: "build_id" })
     build: Build;
 
     @ManyToOne(() => User, user => user.comments, { onDelete: "CASCADE", onUpdate: "CASCADE" })
-    @JoinColumn({ name: "id_user" })
+    @JoinColumn({ name: "user_id" })
     user: User;
 
     @ManyToOne(() => Comment, comment => comment.children, { onDelete: "CASCADE", onUpdate: "CASCADE" })
-    @JoinColumn({ name: "id_parent" })
+    @JoinColumn({ name: "parent_id" })
     parent: Comment;
 
     @OneToMany(() => Comment, comment => comment.parent)

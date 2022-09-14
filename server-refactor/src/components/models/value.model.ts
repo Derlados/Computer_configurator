@@ -1,12 +1,12 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ComponentAttribute } from "./component-attribute.model";
 
-@Entity('attribute_value')
+@Entity('values')
 export class Value {
-    @PrimaryGeneratedColumn('increment', { name: "id_value" })
+    @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ type: "varchar", length: 255, nullable: true, unique: true })
+    @Column({ type: "varchar", length: 200 })
     value: string;
 
     @OneToMany(() => ComponentAttribute, componentAttribute => componentAttribute.value)

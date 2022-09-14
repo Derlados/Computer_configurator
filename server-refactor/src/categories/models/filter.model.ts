@@ -5,23 +5,23 @@ import { Category } from "./category.model";
 
 @Entity('filters')
 export class Filter {
-    @PrimaryColumn({ name: "id_category", type: "int", nullable: false })
+    @PrimaryColumn({ name: "category_id", type: "int", nullable: false })
     categoryId: number;
 
-    @PrimaryColumn({ name: "id_characteristic", type: "int", nullable: false })
+    @PrimaryColumn({ name: "attribute_id", type: "int", nullable: false })
     attributeId: number;
 
-    @Column({ name: "isRange", type: "boolean", nullable: false })
+    @Column({ name: "is_range", type: "boolean", nullable: true })
     isRange: number;
 
     @Column({ type: "int", nullable: true })
     step: number;
 
     @ManyToOne(() => Category, category => category.filters, { onDelete: "CASCADE", onUpdate: "CASCADE" })
-    @JoinColumn({ name: "id_category" })
+    @JoinColumn({ name: "category_id" })
     category: Category;
 
     @ManyToOne(() => Attribute, attribute => attribute.filters, { onDelete: "CASCADE", onUpdate: "CASCADE" })
-    @JoinColumn({ name: "id_characteristic" })
+    @JoinColumn({ name: "attribute_id" })
     attribute: Attribute;
 }

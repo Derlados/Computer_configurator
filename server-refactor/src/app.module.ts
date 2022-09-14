@@ -1,8 +1,5 @@
 import { Module } from "@nestjs/common";
-import { UsersService } from './users/users.service';
-import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
-import { BuildsService } from './builds/builds.service';
 import { BuildsModule } from './builds/builds.module';
 import { ComponentsModule } from './components/components.module';
 import { CommentsModule } from './comments/comments.module';

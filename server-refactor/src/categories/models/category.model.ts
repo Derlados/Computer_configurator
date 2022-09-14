@@ -3,16 +3,16 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Component } from "../../components/models/component.model";
 import { Filter } from "./filter.model";
 
-@Entity('category')
+@Entity('categories')
 export class Category {
-    @PrimaryGeneratedColumn('increment', { name: 'id_category' })
+    @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ type: "varchar", length: 50, nullable: false })
+    @Column({ type: "varchar", length: 50, nullable: true })
     category: string;
 
-    @Column({ name: 'url_category', type: "varchar", length: 50, nullable: false })
-    urlCategory: string;
+    @Column({ name: 'url', type: "varchar", length: 50, nullable: true })
+    url: string;
 
     @OneToMany(() => Component, component => component.category)
     components: Component[]
