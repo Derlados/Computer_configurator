@@ -14,7 +14,7 @@ export class Filter {
     @Column({ name: "is_range", type: "boolean", nullable: true })
     isRange: number;
 
-    @Column({ type: "int", nullable: true })
+    @Column({ type: "float", nullable: true })
     step: number;
 
     @ManyToOne(() => Category, category => category.filters, { onDelete: "CASCADE", onUpdate: "CASCADE" })

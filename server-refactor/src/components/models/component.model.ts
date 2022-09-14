@@ -1,5 +1,5 @@
 
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinTable, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinTable, OneToMany, JoinColumn } from "typeorm";
 import { BuildComponent } from "../../builds/models/build-component.model";
 import { Category } from "../../categories/models/category.model";
 import { ComponentAttribute } from "./component-attribute.model";
@@ -9,7 +9,7 @@ export class Component {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ name: "category_id", type: "int", nullable: true })
+    @Column({ name: "category_id", type: "int", nullable: false })
     categoryId: number;
 
     @Column({ type: "varchar", length: 255, nullable: true })
@@ -34,7 +34,7 @@ export class Component {
     isActual: boolean;
 
     @ManyToOne(() => Category, category => category.components, { onDelete: "CASCADE", onUpdate: "CASCADE" })
-    @JoinTable({ name: "category_id" })
+    @JoinColumn({ name: "category_id" })
     category: Category;
 
     @OneToMany(() => ComponentAttribute, componentAttribute => componentAttribute.component)
