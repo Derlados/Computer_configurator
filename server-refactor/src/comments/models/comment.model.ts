@@ -7,20 +7,20 @@ export class Comment {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ name: "build_id", type: "int", nullable: true })
+    @Column({ name: "build_id", type: "int", nullable: false })
     buildId: number;
 
-    @Column({ name: "user_id", type: "int", nullable: true })
+    @Column({ name: "user_id", type: "int", nullable: false })
     userId: number;
 
-    @Column({ name: "text", type: "text", nullable: true })
+    @Column({ name: "text", type: "text", nullable: false })
     text: string;
 
     @Column({ name: "created_at", type: "datetime", default: () => "CURRENT_TIMESTAMP()" })
     creationDate: Date;
 
     @Column({ name: "parent_id", type: "int", nullable: true })
-    parentId: number;
+    parentId?: number;
 
     @ManyToOne(() => Build, build => build.comments, { onDelete: "CASCADE", onUpdate: "CASCADE" })
     @JoinColumn({ name: "build_id" })

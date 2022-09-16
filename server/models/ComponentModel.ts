@@ -118,6 +118,4 @@ export default class ComponentModel {
             }
         });
     }
-
-
 }

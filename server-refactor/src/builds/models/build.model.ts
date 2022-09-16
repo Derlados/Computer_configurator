@@ -9,17 +9,17 @@ export class Build {
     @PrimaryGeneratedColumn("increment")
     id: number;
 
-    @Column({ name: "user_id", type: "int", nullable: true })
+    @Column({ name: "user_id", type: "int", nullable: false })
     userId: number;
 
-    @Column({ type: "varchar", length: 100, nullable: true })
+    @Column({ type: "varchar", length: 100, nullable: false })
     name: string;
 
-    @Column({ type: "text", nullable: true })
+    @Column({ type: "text", nullable: false })
     description: string;
 
     @Column({ name: "is_public", type: "boolean", default: false })
-    isPublic: string;
+    isPublic: boolean;
 
     @Column({ name: "publish_date", type: "datetime", default: () => "CURRENT_TIMESTAMP()" })
     publishDate: Date;

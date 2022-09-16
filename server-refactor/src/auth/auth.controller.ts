@@ -33,9 +33,4 @@ export class AuthController {
     async googleSingIn(@Body() dto: GoogleSignInDto) {
         return this.authService.googleSignIn(dto);
     }
-
-    @Put('/restore-pass')
-    async restorePass(@Body() dto: RestorePassDto) {
-        return this.authService.restorePass(dto);
-    }
 }

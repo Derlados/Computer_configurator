@@ -8,15 +8,7 @@ export class ComponentsController {
     constructor(private componentsService: ComponentsService) { }
 
     @Get('/category=:category')
-    getComponents(@Param('category') category: Category) {
-        // this.componentsService.getAllByCategory(category);
-    }
-
-    @Get('/category=:category/filters')
-    getFilters(@Param('category') category: Category) {
+    getComponents(@Param('category') category: string) {
 
     }
 }
-
-// componentRouter.get('/category=:category', componentController.getComponents);
-// componentRouter.get('/category=:category/filters', componentController.getFilters);

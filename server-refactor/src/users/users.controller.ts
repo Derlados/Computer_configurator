@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { GoogleSignInDto } from './dto/google-sign-in-dto';
-import { updateUserDto } from './dto/update-user.dto';
+import { RestorePassDto } from './dto/restore-pass.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -10,17 +11,39 @@ export class UsersController {
 
     constructor(private usersService: UsersService) { }
 
-    @Put(['/:id/google-sign', '/google-sign'])
-    @UseGuards(JwtAuthGuard)
-    addGoogleAcc(@Body() dto: GoogleSignInDto, @Req() req) {
-        return this.usersService.addGoogleAcc(req.user.id, dto);
+    @Get(':id([0-9]+)')
+    getPublicUserInfo(@Param('id') id: number) {
+
     }
 
-    //TODO Сейчас через этот роут проходит даже обновление изображения
-    @Put(['/:id/update', '/update'])
+    @Get(':id([0-9]+)/private')
+    @UseGuards(JwtAuthGuard)
+    getPrivateUserInfo(@Param('id') id: number) {
+
+    }
+
+    @Put('id([0-9]+)/google-sign')
+    @UseGuards(JwtAuthGuard)
+    addGoogleAcc(@Body() dto: GoogleSignInDto, @Req() req) {
+
+    }
+
+    @Put(':id([0-9]+)/update')
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(FileInterceptor('img'))
-    update(@Body() dto: updateUserDto, @Req() req, @UploadedFile('img') img?: Express.Multer.File) {
-        return this.usersService.updateData(req.user.id, dto);
+    update(@Param('id') id: number, @Body() dto: UpdateUserDto, @UploadedFile('img') img?: Express.Multer.File) {
+
+    }
+
+    @Put('restore-pass')
+    @UseGuards(JwtAuthGuard)
+    restorePassword(@Body() dto: RestorePassDto) {
+
+    }
+
+    @Delete(':id')
+    @UseGuards(JwtAuthGuard)
+    deleteUser(@Param('id') id: number) {
+
     }
 }

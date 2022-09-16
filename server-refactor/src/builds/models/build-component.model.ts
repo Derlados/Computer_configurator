@@ -1,4 +1,5 @@
 
+import { Exclude } from "class-transformer";
 import { Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Component } from "../../components/models/component.model";
 import { Build } from "./build.model";
@@ -7,9 +8,11 @@ import { Build } from "./build.model";
 export class BuildComponent {
 
     @PrimaryColumn({ name: "build_id", type: "int", nullable: false })
+    @Exclude()
     buildId: number;
 
     @PrimaryColumn({ name: "component_id", type: "int", nullable: false })
+    @Exclude()
     componentId: number;
 
     @PrimaryColumn({ type: "int", default: 1 })

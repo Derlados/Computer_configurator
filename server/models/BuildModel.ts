@@ -1,11 +1,9 @@
-import moment from 'moment';
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { DataBase } from "../controllers/database";
 import { Build } from "./Build";
 import { Component } from "../types/Component";
 import { Pair } from "../types/Pair";
 import { Comment } from '../types/Comment';
-import { Console } from 'console';
 
 export default class BuildModel {
     private pool: Pool; // Пул базы данных
