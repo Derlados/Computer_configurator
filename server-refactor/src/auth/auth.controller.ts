@@ -3,7 +3,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { GoogleSignInDto } from '../users/dto/google-sign-in-dto';
 import { LoginUserDto } from '../users/dto/login-user.dto';
-import { RestorePassDto } from '../users/dto/restore-pass.dto';
+import { UpdatePasswordDto } from '../users/dto/update-password.dto';
 
 import { AuthService } from './auth.service';
 

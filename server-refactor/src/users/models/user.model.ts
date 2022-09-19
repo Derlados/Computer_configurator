@@ -16,23 +16,23 @@ export class User {
 
     @Column({ type: "varchar", length: 255, nullable: true, default: null })
     @Exclude()
-    password: string;
+    password?: string;
 
     @Column({ type: "varchar", length: 255, nullable: true, default: null })
     @Exclude()
-    secret: string;
+    secret?: string;
 
-    @Column({ unique: true, default: null, type: "varchar", length: 255, nullable: true })
+    @Column({ unique: true, type: "varchar", length: 255, nullable: true, default: null })
     @Expose({ groups: [AccessGroups.USER_OWNER] })
-    email: string;
+    email?: string;
 
-    @Column({ unique: true, default: null, type: "varchar", length: 255, nullable: true })
+    @Column({ unique: true, type: "varchar", length: 255, nullable: true, default: null })
     @Expose({ groups: [AccessGroups.USER_OWNER] })
-    googleId: string;
+    googleId?: string;
 
     @Column({ default: null, type: "varchar", length: 255, nullable: true })
     @Expose({ groups: [AccessGroups.USER_OWNER, AccessGroups.ALL_USERS] })
-    photo: string;
+    photo?: string;
 
     @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP()" })
     @Exclude()

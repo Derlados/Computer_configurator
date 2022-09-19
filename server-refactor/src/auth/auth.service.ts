@@ -1,11 +1,10 @@
 import { ConflictException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { AccountDataDto } from '../users/dto/accoun-data.dto';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { GoogleSignInDto } from '../users/dto/google-sign-in-dto';
 import { LoginUserDto } from '../users/dto/login-user.dto';
-import { RestorePassDto } from '../users/dto/restore-pass.dto';
+import { UpdatePasswordDto } from '../users/dto/update-password.dto';
 import { User } from '../users/models/user.model';
 import { UsersService } from '../users/users.service';
 
@@ -44,7 +43,7 @@ export class AuthService {
     }
 
     async login(dto: LoginUserDto) {
-        const user = await this.usersService.findUserByUsername(dto.username);
+        const user = await this.usersService.findByUserame(dto.username);
         if (!user) {
             throw new NotFoundException("User not found");
         }
@@ -57,30 +56,14 @@ export class AuthService {
         return this.getAccountData(user, this.generateToken(user));
     }
 
-    async restorePass(dto: RestorePassDto) {
-        const user = await this.usersService.findUserByUsername(dto.username);
-        if (!user) {
-            throw new NotFoundException("User not found");
-        }
-
-        const isAvailableSecret = bcrypt.compareSync(dto.secret, user.secret);
-        if (!isAvailableSecret) {
-            throw new ForbiddenException();
-        }
-
-        const hashPassword = bcrypt.hashSync(dto.newPassword, AuthService.HASH_SALT);
-        return await this.usersService.updatePassword(user.id, hashPassword);
-    }
-
     private getAccountData(user: User, token: string) {
-        const dto: AccountDataDto = {
+        return {
             id: user.id,
             username: user.username,
             email: user.email,
             photo: user.photo,
             token: token
-        }
-        return dto;
+        };
     }
 
     private generateToken(user: User) {
