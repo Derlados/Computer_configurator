@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Attribute } from "./attribute.model";
 import { Component } from "./component.model";
@@ -6,12 +7,15 @@ import { Value } from "./value.model";
 @Entity('component_attributes')
 export class ComponentAttribute {
     @PrimaryColumn({ name: "attribute_id", type: "int", nullable: false })
+    @Exclude()
     attributeId: number;
 
     @PrimaryColumn({ name: "component_id", type: "int", nullable: false })
+    @Exclude()
     compoentId: number;
 
     @Column({ name: "value_id", type: "int", nullable: true })
+    @Exclude()
     valueId: number;
 
     @ManyToOne(() => Attribute, attribute => attribute.componentAttributes, { onUpdate: "CASCADE", onDelete: "CASCADE" })

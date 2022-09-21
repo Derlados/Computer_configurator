@@ -1,4 +1,5 @@
 
+import { Exclude } from "class-transformer";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinTable, OneToMany, JoinColumn } from "typeorm";
 import { BuildComponent } from "../../builds/models/build-component.model";
 import { Category } from "../../categories/models/category.model";
@@ -35,6 +36,7 @@ export class Component {
 
     @ManyToOne(() => Category, category => category.components, { onDelete: "CASCADE", onUpdate: "CASCADE" })
     @JoinColumn({ name: "category_id" })
+    @Exclude()
     category: Category;
 
     @OneToMany(() => ComponentAttribute, componentAttribute => componentAttribute.component)

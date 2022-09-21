@@ -1,7 +1,9 @@
 
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Exclude } from "class-transformer";
+import { AfterLoad, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Filter } from "../../categories/models/filter.model";
 import { ComponentAttribute } from "./component-attribute.model";
+import { Value } from "./value.model";
 
 @Entity('attributes')
 export class Attribute {
@@ -18,8 +20,21 @@ export class Attribute {
     prevText: string;
 
     @OneToMany(() => ComponentAttribute, componentAttribute => componentAttribute.attribute)
+    @Exclude()
     componentAttributes: ComponentAttribute[];
 
     @OneToMany(() => Filter, filter => filter.attribute)
+    @Exclude()
     filters: Filter[];
+
+    allValues: Value[];
+
+    @AfterLoad()
+    getAllValues() {
+        const uniqueValues = new Map<number, Value>();
+        if (this.componentAttributes) {
+            this.componentAttributes.forEach(ca => uniqueValues.set(ca.value.id, ca.value));
+            this.allValues = Array.from(uniqueValues.values());
+        }
+    }
 }

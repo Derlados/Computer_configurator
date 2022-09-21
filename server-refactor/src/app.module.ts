@@ -16,6 +16,7 @@ import { Filter } from "./categories/models/filter.model";
 import { Build } from "./builds/models/build.model";
 import { BuildComponent } from "./builds/models/build-component.model";
 import { Comment } from "./comments/models/comment.model";
+import { CategoriesModule } from "./categories/categories.module";
 
 @Module({
     controllers: [],
@@ -41,6 +42,7 @@ import { Comment } from "./comments/models/comment.model";
         AuthModule,
         UsersModule,
         BuildsModule,
+        CategoriesModule,
         ComponentsModule,
         CommentsModule
     ]
