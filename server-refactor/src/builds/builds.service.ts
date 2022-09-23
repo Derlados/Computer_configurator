@@ -23,7 +23,7 @@ export class BuildsService {
     }
 
     async getBuildByid(buildId: number) {
-        return await this.buildsRepository.find({ where: { id: buildId }, relations: ["user", "components", "components.component"] });
+        return await this.buildsRepository.findOne({ where: { id: buildId }, relations: ["user", "components", "components.component"] });
     }
 
     async getBuildComments(buildId: number) {

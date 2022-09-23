@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, Get, Param, UseInterceptors } from '@nestjs/common';
 import { ComponentsService } from './components.service';
 
 @Controller('components')
