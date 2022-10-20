@@ -10,19 +10,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.derlados.computer_configurator.consts.BackStackTag
-import com.derlados.computer_configurator.presenters.MainAppPresenter
-import com.derlados.computer_configurator.view_interfaces.MainView
-import com.derlados.computer_configurator.views.components.GoogleSign
-import com.derlados.computer_configurator.views.pages.InfoFragment
-import com.derlados.computer_configurator.views.pages.MainMenuFragment
-import com.derlados.computer_configurator.views.pages.OnFragmentInteractionListener
-import com.derlados.computer_configurator.views.pages.SettingsFragment
-import com.derlados.computer_configurator.views.pages.auth.LoginFragment
-import com.google.android.gms.ads.AdRequest
+import com.derlados.computer_configurator.ui.OnFragmentInteractionListener
+import com.derlados.computer_configurator.ui.pages.main.MainAppPresenter
+import com.derlados.computer_configurator.ui.pages.main.MainView
+import com.derlados.computer_configurator.ui.components.GoogleSign
+import com.derlados.computer_configurator.ui.pages.info.InfoFragment
+import com.derlados.computer_configurator.ui.pages.main.MainMenuFragment
+import com.derlados.computer_configurator.ui.pages.settings.SettingsFragment
+import com.derlados.computer_configurator.ui.pages.auth.LoginFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMenu.OnMenuItemClickListener, MainView {
+class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMenu.OnMenuItemClickListener,
+    MainView {
     var fragmentManager = supportFragmentManager
     private lateinit var mainMenuFragment: MainMenuFragment;
     private lateinit var presenter: MainAppPresenter

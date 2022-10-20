@@ -3,10 +3,10 @@ package com.derlados.computer_configurator.models
 import android.accounts.NetworkErrorException
 import com.derlados.computer_configurator.consts.ComponentCategory
 import com.derlados.computer_configurator.consts.SortType
-import com.derlados.computer_configurator.data_classes.FilterAttribute
-import com.derlados.computer_configurator.data_classes.UserFilterChoice
-import com.derlados.computer_configurator.data_classes.clear
-import com.derlados.computer_configurator.internet.ComponentApi
+import com.derlados.computer_configurator.types.FilterAttribute
+import com.derlados.computer_configurator.types.UserFilterChoice
+import com.derlados.computer_configurator.types.clear
+import com.derlados.computer_configurator.services.components.ComponentApi
 import com.derlados.computer_configurator.managers.FileManager
 import com.derlados.computer_configurator.models.entities.Component
 import com.google.gson.Gson
@@ -94,6 +94,7 @@ object ComponentModel: Observable() {
                call.enqueue(object : Callback<ArrayList<Component>> {
                    override fun onResponse(call: Call<ArrayList<Component>>, response: Response<ArrayList<Component>>) {
                        val newComponents: ArrayList<Component>? = response.body()
+
                        if (response.code() == 200 && newComponents != null) {
                            components.addAll(newComponents)
                            isMustSaveComponents = true

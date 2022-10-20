@@ -2,8 +2,8 @@ package com.derlados.computer_configurator.models
 
 import android.accounts.NetworkErrorException
 import android.util.Log
-import com.derlados.computer_configurator.data_classes.RequestBuildData
-import com.derlados.computer_configurator.internet.BuildsApi
+import com.derlados.computer_configurator.types.RequestBuildData
+import com.derlados.computer_configurator.services.builds.BuildsApi
 import com.derlados.computer_configurator.managers.FileManager
 import com.derlados.computer_configurator.models.entities.Build
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider

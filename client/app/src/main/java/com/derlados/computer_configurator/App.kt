@@ -5,8 +5,7 @@ import com.derlados.computer_configurator.providers.android_providers_interfaces
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.providers.AndroidNetworkProvider
 import com.derlados.computer_configurator.providers.AndroidResourceProvider
-import com.derlados.computer_configurator.views.components.AdMob
-import com.google.android.gms.ads.AdRequest
+import com.derlados.computer_configurator.ui.components.AdMob
 
 class App : Application() {
     lateinit var resourceProvider: ResourceProvider

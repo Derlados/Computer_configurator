@@ -1,10 +1,11 @@
 package com.derlados.computer_configurator.models
 
 import android.accounts.NetworkErrorException
-import com.derlados.computer_configurator.internet.BuildsApi
+import com.derlados.computer_configurator.services.builds.BuildsApi
 import com.derlados.computer_configurator.models.entities.Build
 import com.derlados.computer_configurator.models.entities.Comment
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
+import com.derlados.computer_configurator.services.builds.BuildsService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,6 +16,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 object OnlineBuildModel {
+
     private val retrofit: Retrofit
     private val api: BuildsApi
     var publicBuilds = ArrayList<Build>()
@@ -32,25 +34,12 @@ object OnlineBuildModel {
     /**
      * Получение всех опубликованных сборок сборок
      * */
-    suspend fun getPublicBuilds() {
-        return suspendCoroutine { continuation ->
-            val call = api.getPublicBuilds()
-            call.enqueue(object : Callback<ArrayList<Build>> {
-                override fun onResponse(call: Call<ArrayList<Build>>, response: Response<ArrayList<Build>>) {
-                    val builds = response.body()
-                    if (builds != null && response.code() == 200) {
-                        publicBuilds = builds
-                        continuation.resume(Unit)
-                    } else {
-                        continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
-                    }
-                }
-
-                override fun onFailure(call: Call<ArrayList<Build>>, t: Throwable) {
-                    continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
-                }
-            })
+    suspend fun getPublicBuilds(): ArrayList<Build> {
+        if (publicBuilds.isEmpty()) {
+            publicBuilds = BuildsService.getPublicBuilds()
         }
+
+        return publicBuilds
     }
 
     /**

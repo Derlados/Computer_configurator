@@ -5,7 +5,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.webkit.MimeTypeMap
 import com.derlados.computer_configurator.App
-import com.derlados.computer_configurator.internet.UserApi
+import com.derlados.computer_configurator.services.users.UserApi
 import com.derlados.computer_configurator.managers.Crypto
 import com.derlados.computer_configurator.models.entities.User
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
