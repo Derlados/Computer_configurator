@@ -2,7 +2,7 @@ package com.derlados.computer_configurator.ui.pages.build.build_constructor
 
 import com.derlados.computer_configurator.consts.ComponentCategory
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
-import com.derlados.computer_configurator.models.LocalAccBuildModel
+import com.derlados.computer_configurator.models.LocalBuildsStore
 import com.derlados.computer_configurator.models.entities.Component
 import com.derlados.computer_configurator.models.ComponentModel
 import com.derlados.computer_configurator.models.entities.Build
@@ -10,7 +10,7 @@ import com.derlados.computer_configurator.models.entities.Build
 class BuildConstructorPresenter(private val view: BuildConstructorView, private val resourceProvider: ResourceProvider) {
 
     fun init() {
-        LocalAccBuildModel.editableBuild?.let { build ->
+        LocalBuildsStore.editableBuild?.let { build ->
             // Восстановление сохраненных данных
             view.setHeaderData(build.name, build.description)
             for ((category, buildComponents) in build.components) {
@@ -24,16 +24,16 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     }
 
     fun finish() {
-        LocalAccBuildModel.saveEditableBuild()
-        LocalAccBuildModel.deselectBuild()
+        LocalBuildsStore.saveEditableBuild()
+        LocalBuildsStore.deselectBuild()
     }
 
     fun setName(name: String) {
-        LocalAccBuildModel.editableBuild?.name = name
+        LocalBuildsStore.editableBuild?.name = name
     }
 
     fun setDescription(desc: String) {
-        LocalAccBuildModel.editableBuild?.description = desc
+        LocalBuildsStore.editableBuild?.description = desc
     }
 
     /**
@@ -41,7 +41,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
      * необходимо обновить отображение
      */
     fun checkUserChoice() {
-        LocalAccBuildModel.editableBuild?.let { build ->
+        LocalBuildsStore.editableBuild?.let { build ->
             build.lastAdded?.let { (category, buildComponent) ->
                 val isMultiple = build.isMultipleCategory(category)
                 if (build.isMax(category)) {
@@ -49,14 +49,14 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
                 }
                 view.addComponent(category, isMultiple, buildComponent, true)
 
-                LocalAccBuildModel.editableBuild?.clearLastAdded()
+                LocalBuildsStore.editableBuild?.clearLastAdded()
                 updateBuild()
             }
         }
     }
 
     fun removeComponent(category: ComponentCategory, component: Component) {
-        LocalAccBuildModel.editableBuild?.removeComponent(category, component.id)
+        LocalBuildsStore.editableBuild?.removeComponent(category, component.id)
         view.allowPickComponent(category)
 
         updateBuild()
@@ -69,7 +69,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
      * @param component - само комплектующее
      */
     fun increaseComponent(category: ComponentCategory, component: Component) {
-        LocalAccBuildModel.editableBuild?.let {
+        LocalBuildsStore.editableBuild?.let {
             it.increaseComponents(category, component.id)
 
             if (it.checkCompatibility(category, component) == Build.Companion.CompatibilityError.OK) {
@@ -90,7 +90,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     }
 
     fun reduceComponent(category: ComponentCategory, component: Component) {
-        LocalAccBuildModel.editableBuild?.let {
+        LocalBuildsStore.editableBuild?.let {
             it.reduceComponents(category, component.id)
             it.getBuildComponent(category, component.id)?.count?.let {
                 view.setCountComponents(component.id, it)
@@ -102,7 +102,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     }
 
     fun selectCategoryToSearch(category: ComponentCategory) {
-        LocalAccBuildModel.editableBuild?.let {
+        LocalBuildsStore.editableBuild?.let {
             if (!it.isMax(category)) {
                 ComponentModel.chooseCategory(category)
                 view.openComponentSearch()
@@ -121,7 +121,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
      * Обновление динамичных информационных полей в конструкторе
      */
     private fun updateBuild() {
-        LocalAccBuildModel.editableBuild?.let { build ->
+        LocalBuildsStore.editableBuild?.let { build ->
             view.setPrice(build.price)
             build.image?.let { image ->
                 view.setImage(image)

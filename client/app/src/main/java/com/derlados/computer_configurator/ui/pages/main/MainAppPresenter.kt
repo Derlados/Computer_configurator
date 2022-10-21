@@ -1,7 +1,7 @@
 package com.derlados.computer_configurator.ui.pages.main
 
-import com.derlados.computer_configurator.models.LocalAccBuildModel
-import com.derlados.computer_configurator.models.OnlineBuildModel
+import com.derlados.computer_configurator.models.LocalBuildsStore
+import com.derlados.computer_configurator.models.PublicBuildsStore
 import com.derlados.computer_configurator.models.UserModel
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import java.util.*
@@ -21,7 +21,7 @@ class MainAppPresenter(private val view: MainView, private val resourceProvider:
 
     fun exitAccount() {
         UserModel.logout()
-        LocalAccBuildModel.removeServerBuilds()
+        LocalBuildsStore.removeServerBuilds()
         view.googleSign.signOut()
         view.showMessage(resourceProvider.getString(ResourceProvider.ResString.LOGOUT_SUCCESS))
     }
@@ -29,7 +29,7 @@ class MainAppPresenter(private val view: MainView, private val resourceProvider:
     fun openByUri(uri: String) {
         val id: Int? = ID_BUILD_PATTERN.find(uri)?.value?.toInt()
         if (URI_PATTERN.matches(uri) && id != null) {
-            OnlineBuildModel.selectedBuildId = id
+            PublicBuildsStore.selectedBuildId = id
             view.openProgressLoading()
         }
     }

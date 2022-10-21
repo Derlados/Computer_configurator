@@ -127,17 +127,17 @@ open class  BuildRecyclerAdapter <T : BuildData> (protected open val builds: Arr
             holder.btPublish.setOnClickListener(null)
         } else {
             holder.btPublish.setImageDrawable(ResourcesCompat.getDrawable(App.app.resources, R.drawable.ic_internet_off_24, App.app.theme))
-            holder.btPublish.setOnClickListener { publishBuild(build.id) }
+            holder.btPublish.setOnClickListener { publishBuild(build.localId) }
         }
 
         // Настройка обработчиков нажаатий
         holder.itemView.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
-            onItemClick(build.id)
+            onItemClick(build.localId)
             return@OnTouchListener true
         }))
 
         holder.btDelete.setOnClickListener {
-            removeItem(build.id)
+            removeItem(build.localId)
         }
 
         holder.initExpandLayout()

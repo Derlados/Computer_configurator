@@ -6,7 +6,7 @@ import com.derlados.computer_configurator.models.ComponentModel
 import com.derlados.computer_configurator.consts.ComponentCategory
 import com.derlados.computer_configurator.consts.SortType
 import com.derlados.computer_configurator.types.UserFilterChoice
-import com.derlados.computer_configurator.models.LocalAccBuildModel
+import com.derlados.computer_configurator.models.LocalBuildsStore
 import com.derlados.computer_configurator.models.entities.Build
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.models.entities.Component
@@ -61,7 +61,7 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     fun filterComponents() {
         currentComponentList = ComponentModel.components
 
-        LocalAccBuildModel.editableBuild?.let {
+        LocalBuildsStore.editableBuild?.let {
             if (ComponentModel.isCheckCompatibility) {
                 currentComponentList = currentComponentList.filter {
                     component ->  it.checkCompatibility(ComponentModel.chosenCategory, component) == Build.Companion.CompatibilityError.OK

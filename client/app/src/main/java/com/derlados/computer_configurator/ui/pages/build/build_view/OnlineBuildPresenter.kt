@@ -4,7 +4,7 @@ import android.accounts.NetworkErrorException
 import com.derlados.computer_configurator.consts.ComponentCategory
 import com.derlados.computer_configurator.models.entities.Component
 import com.derlados.computer_configurator.models.ComponentModel
-import com.derlados.computer_configurator.models.OnlineBuildModel
+import com.derlados.computer_configurator.models.PublicBuildsStore
 import com.derlados.computer_configurator.models.UserModel
 import com.derlados.computer_configurator.models.entities.Build
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
@@ -18,7 +18,7 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
      * Инициализация сборки пользователя
      */
     fun init() {
-        OnlineBuildModel.publicBuilds.find { b -> b.serverId == OnlineBuildModel.selectedBuildId }?.let {
+        PublicBuildsStore.publicBuilds.find { b -> b.id == PublicBuildsStore.selectedBuildId }?.let {
             currentBuild = it
         }
 
@@ -52,14 +52,14 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
 
     fun finish() {
         coroutineScope.cancel()
-        OnlineBuildModel.deselectBuild()
+        PublicBuildsStore.deselectBuild()
     }
 
 
     private fun downloadComments() {
         coroutineScope.launch {
             try {
-                val comments = OnlineBuildModel.getComments(currentBuild.serverId)
+                val comments = PublicBuildsStore.getComments(currentBuild.id)
                 val sortedComments = comments.sortedByDescending { comment -> comment.creationDate }
 
                 if (isActive) {
@@ -78,7 +78,7 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
             val user = UserModel.currentUser
             user?.let {
                 try {
-                    val newComment = OnlineBuildModel.addNewComment(it.token, currentBuild.serverId, it.id, text, idParent)
+                    val newComment = PublicBuildsStore.addNewComment(it.token, currentBuild.id, it.id, text, idParent)
                     if (isActive) {
                         view.appendComment(newComment, indexToAdd, idParent != null)
                     }

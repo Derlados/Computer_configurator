@@ -1,9 +1,8 @@
 package com.derlados.computer_configurator.services.builds
 
-import com.derlados.computer_configurator.types.RequestBuildData
+import com.derlados.computer_configurator.types.CreateBuildDto
 import com.derlados.computer_configurator.models.entities.Build
 import com.derlados.computer_configurator.models.entities.Comment
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -13,42 +12,38 @@ interface BuildsApi {
 //        const val BASE_URL_BUILDS: String = "http://192.168.1.3:3000/api/builds"
 //        const val BASE_URL_USER_BUILDS: String = "http://192.168.1.3:3000/api/users/{idUser}/builds"
         const val BASE_URL_BUILDS: String = "https://ancient-sea-58128.herokuapp.com/api/builds"
-        const val BASE_URL_USER_BUILDS: String = "https://ancient-sea-58128.herokuapp.com/api/users/{idUser}/builds"
     }
 
     @GET("$BASE_URL_BUILDS/public")
     suspend fun getPublicBuilds(): Response<ArrayList<Build>>
 
-    @GET("$BASE_URL_BUILDS/{idBuild}/comments")
-    fun getComments(@Path("idBuild") idBuild: Int): Call<ArrayList<Comment>>
+    @GET("$BASE_URL_BUILDS/{buildId}/comments")
+    suspend fun getComments(@Path("buildId") buildId: Int): Response<ArrayList<Comment>>
 
-    @GET(BASE_URL_USER_BUILDS)
-    fun getUserBuild(@Header("token") token: String, @Path("idUser") idUser: Int): Call<ArrayList<Build>>
+    @GET("$BASE_URL_BUILDS/personal")
+    suspend fun restoreBuilds(@Header("token") token: String): Response<ArrayList<Build>>
 
-    @POST("$BASE_URL_USER_BUILDS/new")
-    fun saveBuild(@Header("token") token: String, @Path("idUser") idUser: Int, @Body build: RequestBuildData): Call<Int>
-
-    @FormUrlEncoded
-    @POST("$BASE_URL_USER_BUILDS/{idBuild}/comments")
-    fun addComment(@Header("token") token: String, @Path("idUser") idUser: Int,
-                   @Path("idBuild") idBuild: Int, @Field("text") text: String): Call<Comment>
+    @POST(BASE_URL_BUILDS)
+    suspend fun saveBuild(@Header("token") token: String, @Body dto: CreateBuildDto): Response<Build>
 
     @FormUrlEncoded
-    @POST("$BASE_URL_USER_BUILDS/{idBuild}/comments/{idComment}/answer")
-    fun answerComment(@Header("token") token: String, @Path("idUser") idUser: Int,
-                      @Path("idBuild") idBuild: Int, @Path("idComment") idComment:Int,
-                      @Field("text") text: String): Call<Comment>
-
-    @PUT("$BASE_URL_USER_BUILDS/{idBuild}")
-    fun updateBuild(@Header("token") token: String, @Path("idUser") idUser: Int,
-                    @Path("idBuild") idBuild: Int, @Body build: RequestBuildData): Call<Unit>
+    @POST("$BASE_URL_BUILDS/{buildId}/comments")
+    suspend fun addComment(@Header("token") token: String, @Path("buildId") buildId: Int,
+                           @Field("text") text: String): Response<Comment>
 
     @FormUrlEncoded
-    @PUT("$BASE_URL_USER_BUILDS/{idBuild}/status")
-    fun updatePublicStatus(@Header("token") token: String, @Path("idUser") idUser: Int,
-                           @Path("idBuild") idBuild: Int, @Field("isPublic") isPublic: Boolean): Call<Boolean>
+    @POST("$BASE_URL_BUILDS/{buildId}/comments/{parentId}/answer")
+    suspend fun answerComment(@Header("token") token: String, @Path("buildId") buildId: Int,
+                              @Field("text") text: String, @Path("parentId") parentId:Int): Response<Comment>
 
-    @DELETE("$BASE_URL_USER_BUILDS/{idBuild}")
-    fun deleteBuild(@Header("token") token: String, @Path("idUser") idUser: Int,
-                    @Path("idBuild") idBuild: Int): Call<Unit>
+    @PUT("$BASE_URL_BUILDS/{buildId}")
+    suspend fun updateBuild(@Header("token") token: String, @Path("buildId") buildId: Int, @Body build: CreateBuildDto): Response<Unit>
+
+    @FormUrlEncoded
+    @PUT("$BASE_URL_BUILDS/{buildId}/status")
+    suspend fun updatePublicStatus(@Header("token") token: String, @Path("buildId") buildId: Int,
+                                   @Field("isPublic") isPublic: Boolean): Response<Boolean>
+
+    @DELETE("$BASE_URL_BUILDS/{buildId}")
+    suspend fun deleteBuild(@Header("token") token: String, @Path("buildId") buildId: Int): Response<Unit>
 }

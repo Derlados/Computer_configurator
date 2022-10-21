@@ -4,7 +4,7 @@ import android.accounts.NetworkErrorException
 import android.os.Handler
 import android.os.Looper
 import com.derlados.computer_configurator.consts.Domain
-import com.derlados.computer_configurator.models.OnlineBuildModel
+import com.derlados.computer_configurator.models.PublicBuildsStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.ui.pages.main.MainView
 import kotlinx.coroutines.*
@@ -23,12 +23,12 @@ class BuildOnlineListPresenter(private val mainView: MainView, private val view:
     }
 
     fun selectBuild(serverId: Int) {
-        OnlineBuildModel.selectedBuildId = serverId
+        PublicBuildsStore.selectedBuildId = serverId
         view.openBuildOnlineView()
     }
 
     fun share(serverId: Int) {
-        val build = OnlineBuildModel.publicBuilds.find { b -> b.serverId == serverId }
+        val build = PublicBuildsStore.publicBuilds.find { b -> b.id == serverId }
         build?.let {
             val uri = "${Domain.APP_DOMAIN}build/${serverId} - ${build.name}"
             view.copyToClipboard(uri)
@@ -38,9 +38,9 @@ class BuildOnlineListPresenter(private val mainView: MainView, private val view:
     private fun downloadBuilds() {
         downloadJob = CoroutineScope(Dispatchers.Main).launch {
             try {
-                OnlineBuildModel.getPublicBuilds()
+                PublicBuildsStore.getPublicBuilds()
                 if (isActive) {
-                    val sortedList = OnlineBuildModel.publicBuilds.sortedByDescending { build -> build.publishDate  }
+                    val sortedList = PublicBuildsStore.publicBuilds.sortedByDescending { build -> build.publishDate  }
                     view.setBuildsData(ArrayList(sortedList))
                     view.disableRefreshAnim()
 
@@ -60,11 +60,11 @@ class BuildOnlineListPresenter(private val mainView: MainView, private val view:
     }
 
     private fun checkUriChoice() {
-        if (OnlineBuildModel.selectedBuildId != -1) {
-            val build = OnlineBuildModel.publicBuilds.find { b -> b.serverId == OnlineBuildModel.selectedBuildId }
+        if (PublicBuildsStore.selectedBuildId != -1) {
+            val build = PublicBuildsStore.publicBuilds.find { b -> b.id == PublicBuildsStore.selectedBuildId }
 
             if (build != null) {
-                selectBuild(OnlineBuildModel.selectedBuildId)
+                selectBuild(PublicBuildsStore.selectedBuildId)
 
                 Handler(Looper.getMainLooper()).postDelayed({
                     mainView.closeProgressLoading()

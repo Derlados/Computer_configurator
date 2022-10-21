@@ -7,8 +7,8 @@ import kotlin.collections.ArrayList
 interface BuildData {
     data class BuildComponent(var component: Component, var count: Int)
 
-    val serverId: Int
-    val id: String
+    val id: Int
+    val localId: String
     val name: String
     val description: String
     val price: Int

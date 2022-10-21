@@ -47,12 +47,12 @@ class BuildOnlineRecyclerAdapter<T : BuildData>(override val builds: ArrayList<T
 
         // Настройка обработчиков нажаатий
         holder.itemView.setOnTouchListener(AnimOnTouchListener(View.OnTouchListener { _, _ ->
-            onServerBuildChoose(build.serverId)
+            onServerBuildChoose(build.id)
             return@OnTouchListener true
         }))
 
         holder.btShare.setOnClickListener {
-            onShare(build.serverId)
+            onShare(build.id)
         }
 
         holder.initExpandLayout()

@@ -50,8 +50,8 @@ class Build : Cloneable, BuildData {
         }
     }
 
-    override var serverId: Int = -1
-    override var id: String = ""
+    override var id: Int = -1
+    override var localId: String = ""
         get() {
             if (field == "")  {
                 field = UUID.randomUUID().toString().replace("-", "")
@@ -465,7 +465,7 @@ class Build : Cloneable, BuildData {
      */
     public override fun clone(): Build {
         val build = super.clone() as Build
-        build.id = id
+        build.localId = localId
 
         // Глубокое копирование мапы
         build.components = HashMap()

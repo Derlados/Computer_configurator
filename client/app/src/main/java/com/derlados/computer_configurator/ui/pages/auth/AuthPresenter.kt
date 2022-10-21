@@ -1,7 +1,7 @@
 package com.derlados.computer_configurator.ui.pages.auth
 
 import android.accounts.NetworkErrorException
-import com.derlados.computer_configurator.models.LocalAccBuildModel
+import com.derlados.computer_configurator.models.LocalBuildsStore
 import com.derlados.computer_configurator.models.UserModel
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import kotlinx.coroutines.*
@@ -123,7 +123,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
         val user = UserModel.currentUser
         if (user != null) {
             restoreDataJob = CoroutineScope(Dispatchers.Main).launch {
-                LocalAccBuildModel.restoreBuildsFromServer(user.token, user.id)
+                LocalBuildsStore.restoreBuildsFromServer(user.token, user.id)
 
                 //TODO load favorite
                 if (isActive) {

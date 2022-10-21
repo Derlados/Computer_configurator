@@ -1,7 +1,7 @@
 package com.derlados.computer_configurator.ui.pages.component_info
 
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
-import com.derlados.computer_configurator.models.LocalAccBuildModel
+import com.derlados.computer_configurator.models.LocalBuildsStore
 import com.derlados.computer_configurator.models.ComponentModel
 
 class ComponentInfoPresenter(private val view: ComponentInfoView, private val resourceProvider: ResourceProvider) {
@@ -23,13 +23,13 @@ class ComponentInfoPresenter(private val view: ComponentInfoView, private val re
     }
 
     private fun addToBuild() {
-        LocalAccBuildModel.editableBuild?.addToBuild(ComponentModel.chosenCategory, ComponentModel.chosenComponent)
+        LocalBuildsStore.editableBuild?.addToBuild(ComponentModel.chosenCategory, ComponentModel.chosenComponent)
         view.returnToBuild()
         defineBtAction()
     }
 
     private fun defineBtAction() {
-        val editableBuild = LocalAccBuildModel.editableBuild
+        val editableBuild = LocalBuildsStore.editableBuild
         val buildComponents = editableBuild?.components?.get(ComponentModel.chosenCategory)
 
         if (editableBuild == null) {
