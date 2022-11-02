@@ -35,7 +35,6 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     fun finish() {
         ComponentModel.deleteObserver(this)
         downloadJob?.cancel()
-        ComponentModel.saveDataInCache()
 
         if (ComponentModel.chosenCategory != ComponentCategory.FAVOURITE) {
             ComponentModel.clearComponents()
