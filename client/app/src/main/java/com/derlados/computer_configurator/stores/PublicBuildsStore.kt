@@ -1,7 +1,7 @@
-package com.derlados.computer_configurator.models
+package com.derlados.computer_configurator.stores
 
-import com.derlados.computer_configurator.models.entities.Build
-import com.derlados.computer_configurator.models.entities.Comment
+import com.derlados.computer_configurator.stores.entities.Build
+import com.derlados.computer_configurator.stores.entities.Comment
 import com.derlados.computer_configurator.services.builds.BuildsService
 
 object PublicBuildsStore {

@@ -11,7 +11,7 @@ import android.widget.Button
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.BackStackTag
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.models.ComponentModel
+import com.derlados.computer_configurator.stores.ComponentStore
 import com.derlados.computer_configurator.ui.pages.component_list.ComponentSearchFragment
 import com.derlados.computer_configurator.ui.OnFragmentInteractionListener
 import com.derlados.computer_configurator.ui.decorators.AnimOnTouchListener
@@ -55,7 +55,7 @@ class CatalogueFragment : PageFragment(), View.OnTouchListener {
     override fun onTouch(view: View?, event: MotionEvent?): Boolean {
         btCategories[view?.id]?.let {
             //TODO Вызов модели из View, однако это единственная функция этого экрана
-            ComponentModel.chooseCategory(it)
+            ComponentStore.chooseCategory(it)
             frListener.nextFragment(this, ComponentSearchFragment(), BackStackTag.COMPONENT_SEARCH)
         }
         return true

@@ -1,31 +1,22 @@
 package com.derlados.computer_configurator.services.builds
 
 import android.accounts.NetworkErrorException
-import android.util.Log
-import com.derlados.computer_configurator.managers.FileManager
-import com.derlados.computer_configurator.models.LocalBuildsStore
-import com.derlados.computer_configurator.models.entities.Build
-import com.derlados.computer_configurator.models.entities.Comment
+import com.derlados.computer_configurator.stores.entities.Build
+import com.derlados.computer_configurator.stores.entities.Comment
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.services.Service
-import com.derlados.computer_configurator.services.users.UserApi
+import com.derlados.computer_configurator.services.users.UsersApi
 import com.derlados.computer_configurator.types.CreateBuildDto
-import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 object BuildsService: Service() {
     private val api: BuildsApi
 
     init {
         api = Retrofit.Builder()
-            .baseUrl(UserApi.BASE_URL)
+            .baseUrl(UsersApi.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(BuildsApi::class.java)
@@ -41,7 +32,7 @@ object BuildsService: Service() {
         if (res.isSuccessful && builds != null) {
             return builds
         } else {
-            throw NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name)
+            throw this.errorHandle(res.code())
         }
     }
 
@@ -58,7 +49,7 @@ object BuildsService: Service() {
         if (res.isSuccessful && comments != null) {
             return comments
         } else {
-            throw NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name)
+            throw this.errorHandle(res.code())
         }
     }
 
@@ -76,7 +67,7 @@ object BuildsService: Service() {
         if (res.isSuccessful && newComment != null) {
             return newComment
         } else {
-            throw NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name)
+            throw this.errorHandle(res.code())
         }
     }
 
@@ -95,7 +86,7 @@ object BuildsService: Service() {
         if (res.isSuccessful && newComment != null) {
             return newComment
         } else {
-            throw NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name)
+            throw this.errorHandle(res.code())
         }
     }
 
@@ -111,7 +102,7 @@ object BuildsService: Service() {
         if (res.isSuccessful && builds != null) {
             return builds
         } else {
-            throw NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name)
+            throw this.errorHandle(res.code())
         }
     }
 
@@ -129,7 +120,7 @@ object BuildsService: Service() {
         if (res.isSuccessful && savedBuild != null) {
             return savedBuild
         } else {
-            throw NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name)
+            throw this.errorHandle(res.code())
         }
     }
 
@@ -142,7 +133,7 @@ object BuildsService: Service() {
         val res = api.deleteBuild(token, buildId)
 
         if (!res.isSuccessful) {
-            throw NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name)
+            throw this.errorHandle(res.code())
         }
     }
 }

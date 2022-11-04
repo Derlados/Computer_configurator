@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.models.entities.BuildData
+import com.derlados.computer_configurator.stores.entities.BuildData
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.ui.decorators.AnimOnTouchListener
 import com.github.aakira.expandablelayout.ExpandableLinearLayout

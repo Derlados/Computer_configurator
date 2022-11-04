@@ -2,10 +2,10 @@ package com.derlados.computer_configurator.services.components
 
 import android.accounts.NetworkErrorException
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.models.entities.Component
+import com.derlados.computer_configurator.stores.entities.Component
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.services.Service
-import com.derlados.computer_configurator.services.users.UserApi
+import com.derlados.computer_configurator.services.users.UsersApi
 import com.derlados.computer_configurator.types.FilterAttribute
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -15,7 +15,7 @@ object ComponentsService: Service() {
 
     init {
         api = Retrofit.Builder()
-            .baseUrl(UserApi.BASE_URL)
+            .baseUrl(UsersApi.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ComponentsApi::class.java)
@@ -31,7 +31,7 @@ object ComponentsService: Service() {
         if (res.isSuccessful && components != null) {
             return components
         } else {
-            throw NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name)
+            throw this.errorHandle(res.code())
         }
     }
 
@@ -42,7 +42,7 @@ object ComponentsService: Service() {
         if (res.isSuccessful && filters != null) {
             return filters
         } else {
-            throw NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name)
+            throw this.errorHandle(res.code())
         }
     }
 }

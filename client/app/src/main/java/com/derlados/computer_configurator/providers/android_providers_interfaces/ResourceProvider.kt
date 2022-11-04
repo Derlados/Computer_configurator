@@ -1,7 +1,7 @@
 package com.derlados.computer_configurator.providers.android_providers_interfaces
 
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.models.entities.Build
+import com.derlados.computer_configurator.stores.entities.Build
 
 interface ResourceProvider {
     enum class ResColor {

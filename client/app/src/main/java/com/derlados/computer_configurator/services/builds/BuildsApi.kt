@@ -1,8 +1,8 @@
 package com.derlados.computer_configurator.services.builds
 
 import com.derlados.computer_configurator.types.CreateBuildDto
-import com.derlados.computer_configurator.models.entities.Build
-import com.derlados.computer_configurator.models.entities.Comment
+import com.derlados.computer_configurator.stores.entities.Build
+import com.derlados.computer_configurator.stores.entities.Comment
 import retrofit2.Response
 import retrofit2.http.*
 

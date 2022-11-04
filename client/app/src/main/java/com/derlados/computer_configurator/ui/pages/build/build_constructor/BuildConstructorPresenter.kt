@@ -2,10 +2,10 @@ package com.derlados.computer_configurator.ui.pages.build.build_constructor
 
 import com.derlados.computer_configurator.consts.ComponentCategory
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
-import com.derlados.computer_configurator.models.LocalBuildsStore
-import com.derlados.computer_configurator.models.entities.Component
-import com.derlados.computer_configurator.models.ComponentModel
-import com.derlados.computer_configurator.models.entities.Build
+import com.derlados.computer_configurator.stores.LocalBuildsStore
+import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.stores.ComponentStore
+import com.derlados.computer_configurator.stores.entities.Build
 
 class BuildConstructorPresenter(private val view: BuildConstructorView, private val resourceProvider: ResourceProvider) {
 
@@ -104,7 +104,7 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     fun selectCategoryToSearch(category: ComponentCategory) {
         LocalBuildsStore.editableBuild?.let {
             if (!it.isMax(category)) {
-                ComponentModel.chooseCategory(category)
+                ComponentStore.chooseCategory(category)
                 view.openComponentSearch()
             } else {
                 view.showToast(resourceProvider.getString(ResourceProvider.ResString.CANNOT_ADD_MORE))
@@ -113,8 +113,8 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     }
 
     fun selectComponentToVIew(category: ComponentCategory, component: Component) {
-        ComponentModel.chosenCategory = category
-        ComponentModel.chosenComponent = component
+        ComponentStore.chosenCategory = category
+        ComponentStore.chosenComponent = component
     }
 
     /**

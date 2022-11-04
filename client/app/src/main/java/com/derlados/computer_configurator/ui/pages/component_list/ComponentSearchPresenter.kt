@@ -2,14 +2,14 @@ package com.derlados.computer_configurator.ui.pages.component_list
 
 import kotlinx.coroutines.*
 import android.accounts.NetworkErrorException
-import com.derlados.computer_configurator.models.ComponentModel
+import com.derlados.computer_configurator.stores.ComponentStore
 import com.derlados.computer_configurator.consts.ComponentCategory
 import com.derlados.computer_configurator.consts.SortType
 import com.derlados.computer_configurator.types.UserFilterChoice
-import com.derlados.computer_configurator.models.LocalBuildsStore
-import com.derlados.computer_configurator.models.entities.Build
+import com.derlados.computer_configurator.stores.LocalBuildsStore
+import com.derlados.computer_configurator.stores.entities.Build
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
-import com.derlados.computer_configurator.models.entities.Component
+import com.derlados.computer_configurator.stores.entities.Component
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -19,25 +19,25 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     private var searchText: String = ""
 
     fun init() {
-        view.setTitleByCategory(ComponentModel.chosenCategory)
-        view.setDefaultImageByCategory(resourceProvider.getDefaultImageByCategory(ComponentModel.chosenCategory))
+        view.setTitleByCategory(ComponentStore.chosenCategory)
+        view.setDefaultImageByCategory(resourceProvider.getDefaultImageByCategory(ComponentStore.chosenCategory))
 
-        view.setComponents(currentComponentList, ComponentModel.favouriteComponents)
+        view.setComponents(currentComponentList, ComponentStore.favouriteComponents)
         downloadComponents()
 
-        if (ComponentModel.chosenCategory == ComponentCategory.FAVOURITE) {
+        if (ComponentStore.chosenCategory == ComponentCategory.FAVOURITE) {
             view.closeFilters()
         }
 
-        ComponentModel.addObserver(this)
+        ComponentStore.addObserver(this)
     }
 
     fun finish() {
-        ComponentModel.deleteObserver(this)
+        ComponentStore.deleteObserver(this)
         downloadJob?.cancel()
 
-        if (ComponentModel.chosenCategory != ComponentCategory.FAVOURITE) {
-            ComponentModel.clearComponents()
+        if (ComponentStore.chosenCategory != ComponentCategory.FAVOURITE) {
+            ComponentStore.clearComponents()
         }
 
         view.updateComponentList()
@@ -58,21 +58,21 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
      * и по тексту который введен в поисковой строке
      */
     fun filterComponents() {
-        currentComponentList = ComponentModel.components
+        currentComponentList = ComponentStore.components
 
         LocalBuildsStore.editableBuild?.let {
-            if (ComponentModel.isCheckCompatibility) {
+            if (ComponentStore.isCheckCompatibility) {
                 currentComponentList = currentComponentList.filter {
-                    component ->  it.checkCompatibility(ComponentModel.chosenCategory, component) == Build.Companion.CompatibilityError.OK
+                    component ->  it.checkCompatibility(ComponentStore.chosenCategory, component) == Build.Companion.CompatibilityError.OK
                 }
                 // Отсеивание тех комплектующих, которые повторяются
-                it.components[ComponentModel.chosenCategory]?.let { buildComponents ->
+                it.components[ComponentStore.chosenCategory]?.let { buildComponents ->
                     currentComponentList = currentComponentList.filter { component -> buildComponents.find { bc -> bc.component.id == component.id} == null}
                 }
             }
         }
 
-        val userChoice = ComponentModel.userFilterChoice
+        val userChoice = ComponentStore.userFilterChoice
         // Фильтрация по атрибутам
         currentComponentList = currentComponentList.filter { component -> isFilterValid(component, userChoice) }
 
@@ -85,7 +85,7 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
 
         currentComponentList = currentComponentList.filter { component -> component.name.contains(searchText) }
 
-        view.setComponents(currentComponentList, ComponentModel.favouriteComponents)
+        view.setComponents(currentComponentList, ComponentStore.favouriteComponents)
         view.updateComponentList()
     }
 
@@ -93,7 +93,7 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
      * Сохранение выбранного комплектующего для дальнейшего отображения
      */
     fun saveChosenComponent(component: Component) {
-        ComponentModel.chosenComponent = component
+        ComponentStore.chosenComponent = component
     }
 
     /**
@@ -102,12 +102,12 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
      * @param id - id комплектующего
      */
     fun toggleFavoriteStatus(id: Int) {
-        val indexInFavoriteList: Int = ComponentModel.favouriteComponents.indexOfFirst { component -> component.id == id }
+        val indexInFavoriteList: Int = ComponentStore.favouriteComponents.indexOfFirst { component -> component.id == id }
 
         if (indexInFavoriteList != -1) {
-            ComponentModel.deleteFromFavorite(id)
+            ComponentStore.deleteFromFavorite(id)
         } else {
-            ComponentModel.addToFavorite(id)
+            ComponentStore.addToFavorite(id)
         }
     }
 
@@ -152,18 +152,18 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
          downloadJob = CoroutineScope(Dispatchers.Main).launch {
              try {
                  if (isActive) {
-                     currentComponentList = ComponentModel.getComponents()
+                     currentComponentList = ComponentStore.getComponents()
                      filterComponents() // Применение фильтрации, если есть например проверка совместимости сборки
                  }
              } catch (e: NetworkErrorException) {
                  if (isActive) {
-                     currentComponentList = ComponentModel.getLocalComponents()
+                     currentComponentList = ComponentStore.getLocalComponents()
                      view.showError(e.toString())
                  }
                  //TODO добавить класс ErrorHandler
              }
 
-             view.setComponents(currentComponentList, ComponentModel.favouriteComponents)
+             view.setComponents(currentComponentList, ComponentStore.favouriteComponents)
              view.updateComponentList()
              view.closeProgressBar()
          }
@@ -178,12 +178,12 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
         arg?.let {
             val message: Int = (arg as Pair<*, *>).first as Int
 
-            if (message == ComponentModel.CHANGED_FAVOURITE_STATUS) {
+            if (message == ComponentStore.CHANGED_FAVOURITE_STATUS) {
                 val id: Int = arg.second  as Int
                 val indexInCurrentList = currentComponentList.indexOfFirst { component -> component.id == id }
-                val indexInFavoriteList: Int = ComponentModel.favouriteComponents.indexOfFirst { component -> component.id == id }
+                val indexInFavoriteList: Int = ComponentStore.favouriteComponents.indexOfFirst { component -> component.id == id }
 
-                if (indexInFavoriteList == -1 && ComponentModel.chosenCategory == ComponentCategory.FAVOURITE) {
+                if (indexInFavoriteList == -1 && ComponentStore.chosenCategory == ComponentCategory.FAVOURITE) {
                     (currentComponentList as ArrayList<Component>).removeAt(indexInCurrentList)
                     view.removeSingleComponent(indexInCurrentList)
                 } else {

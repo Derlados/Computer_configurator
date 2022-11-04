@@ -2,8 +2,7 @@ package com.derlados.computer_configurator.services.components
 
 
 import com.derlados.computer_configurator.types.FilterAttribute
-import com.derlados.computer_configurator.models.entities.Component
-import retrofit2.Call
+import com.derlados.computer_configurator.stores.entities.Component
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

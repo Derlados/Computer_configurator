@@ -27,21 +27,21 @@ export class UsersController {
         return this.usersService.findUserById(req.user.id);
     }
 
-    @Put('google-sign')
-    @UseGuards(JwtAuthGuard)
-    @UseInterceptors(ClassSerializerInterceptor)
-    addGoogleAcc(@Req() req, @Body() dto: GoogleSignInDto) {
-        return this.usersService.addGoogleAccout(req.user.id, dto);
-    }
-
-    @Put('update')
+    @Put('personal')
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(FileInterceptor('img'), ClassSerializerInterceptor)
     update(@Req() req, @Body() dto: UpdateUserDto, @UploadedFile('img') img?: Express.Multer.File) {
         return this.usersService.updateUser(req.user.id, dto);
     }
 
-    @Put('password')
+    @Put('personal/google-sign')
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(ClassSerializerInterceptor)
+    addGoogleAcc(@Req() req, @Body() dto: GoogleSignInDto) {
+        return this.usersService.addGoogleAccout(req.user.id, dto);
+    }
+
+    @Put('personal/restore')
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     restorePassword(@Req() req, @Body() dto: UpdatePasswordDto) {

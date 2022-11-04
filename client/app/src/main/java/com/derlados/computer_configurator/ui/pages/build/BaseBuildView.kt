@@ -1,7 +1,7 @@
 package com.derlados.computer_configurator.ui.pages.build
 
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.models.entities.BuildData
+import com.derlados.computer_configurator.stores.entities.BuildData
 
 interface BaseBuildView {
     fun setHeaderData(name: String, desc: String)

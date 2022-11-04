@@ -2,11 +2,11 @@ package com.derlados.computer_configurator.ui.pages.build.build_view
 
 import android.accounts.NetworkErrorException
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.models.entities.Component
-import com.derlados.computer_configurator.models.ComponentModel
-import com.derlados.computer_configurator.models.PublicBuildsStore
-import com.derlados.computer_configurator.models.UserModel
-import com.derlados.computer_configurator.models.entities.Build
+import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.stores.ComponentStore
+import com.derlados.computer_configurator.stores.PublicBuildsStore
+import com.derlados.computer_configurator.stores.UserStore
+import com.derlados.computer_configurator.stores.entities.Build
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import kotlinx.coroutines.*
 
@@ -18,7 +18,7 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
      * Инициализация сборки пользователя
      */
     fun init() {
-        PublicBuildsStore.publicBuilds.find { b -> b.id == PublicBuildsStore.selectedBuildId }?.let {
+        PublicBuildsStore.publicBuilds.find { b -> b.id == PublicBuildsStore.selectedBuild?.id }?.let {
             currentBuild = it
         }
 
@@ -39,10 +39,10 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
         view.deleteEmptyLists()
 
         // Комментарии к сборке, если пользователь не авторизован - удаляется всё что касается добавления комментариев
-        if (UserModel.currentUser == null) {
+        if (UserStore.currentUser == null) {
             view.disableCommentsAddMode()
         } else {
-            UserModel.currentUser?.photoUrl?.let {
+            UserStore.currentUser?.photoUrl?.let {
                 view.setUserPhoto(it)
             }
         }
@@ -73,14 +73,14 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
         }
     }
 
-    fun addComment(indexToAdd: Int, text: String, idParent: Int? = null) {
+    fun addComment(indexToAdd: Int, text: String, parentId: Int? = null) {
         coroutineScope.launch {
-            val user = UserModel.currentUser
+            val user = UserStore.currentUser
             user?.let {
                 try {
-                    val newComment = PublicBuildsStore.addNewComment(it.token, currentBuild.id, it.id, text, idParent)
+                    val newComment = PublicBuildsStore.addNewComment(it.token, currentBuild.id, text, parentId)
                     if (isActive) {
-                        view.appendComment(newComment, indexToAdd, idParent != null)
+                        view.appendComment(newComment, indexToAdd, parentId != null)
                     }
                 } catch (e: NetworkErrorException) {
                     if (isActive) {
@@ -92,8 +92,8 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
     }
 
     fun selectComponentToVIew(category: ComponentCategory, component: Component) {
-        ComponentModel.chosenCategory = category
-        ComponentModel.chosenComponent = component
+        ComponentStore.chosenCategory = category
+        ComponentStore.chosenComponent = component
     }
 
     private fun errorHandle(message: String?) {

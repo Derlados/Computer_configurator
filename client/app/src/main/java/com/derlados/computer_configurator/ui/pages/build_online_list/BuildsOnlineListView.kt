@@ -1,6 +1,6 @@
 package com.derlados.computer_configurator.ui.pages.build_online_list
 
-import com.derlados.computer_configurator.models.entities.BuildData
+import com.derlados.computer_configurator.stores.entities.BuildData
 
 interface BuildsOnlineListView {
     fun <T : BuildData> setBuildsData(buildsData: ArrayList<T>)

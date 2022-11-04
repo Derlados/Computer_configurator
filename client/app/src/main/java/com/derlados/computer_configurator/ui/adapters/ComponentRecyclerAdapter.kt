@@ -9,7 +9,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
-import com.derlados.computer_configurator.models.entities.Component
+import com.derlados.computer_configurator.stores.entities.Component
 import com.derlados.computer_configurator.ui.decorators.AnimOnTouchListener
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso

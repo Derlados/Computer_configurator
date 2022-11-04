@@ -2,12 +2,12 @@ package com.derlados.computer_configurator.ui.pages.filters
 
 import android.accounts.NetworkErrorException
 import com.derlados.computer_configurator.consts.SortType
-import com.derlados.computer_configurator.models.ComponentModel
+import com.derlados.computer_configurator.stores.ComponentStore
 import kotlinx.coroutines.*
 
 class FiltersPresenter(val view: FiltersDialogView) {
     private var maxPrice = 0
-    private val userChoice = ComponentModel.userFilterChoice
+    private val userChoice = ComponentStore.userFilterChoice
 
     private var downloadJob: Job? = null
 
@@ -64,7 +64,7 @@ class FiltersPresenter(val view: FiltersDialogView) {
     }
 
     fun toggleCompatibilityFilter(isChecked: Boolean) {
-        ComponentModel.isCheckCompatibility = isChecked
+        ComponentStore.isCheckCompatibility = isChecked
     }
 
     fun resetFilters() {
@@ -78,8 +78,8 @@ class FiltersPresenter(val view: FiltersDialogView) {
     private fun downloadFilters() {
         downloadJob = CoroutineScope(Dispatchers.Main).launch {
             try {
-                val filters = ComponentModel.getFilters()
-                maxPrice = ComponentModel.components.maxByOrNull { it.price }?.price ?: 0
+                val filters = ComponentStore.getFilters()
+                maxPrice = ComponentStore.components.maxByOrNull { it.price }?.price ?: 0
                 userChoice.chosenRangePrice = Pair(0, maxPrice)
 
                 view.initFilters(filters, maxPrice)

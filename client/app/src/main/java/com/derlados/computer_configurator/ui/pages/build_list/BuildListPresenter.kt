@@ -1,9 +1,9 @@
 package com.derlados.computer_configurator.ui.pages.build_list
 
 import android.accounts.NetworkErrorException
-import com.derlados.computer_configurator.models.LocalBuildsStore
-import com.derlados.computer_configurator.models.PublicBuildsStore
-import com.derlados.computer_configurator.models.UserModel
+import com.derlados.computer_configurator.stores.LocalBuildsStore
+import com.derlados.computer_configurator.stores.PublicBuildsStore
+import com.derlados.computer_configurator.stores.UserStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import kotlinx.coroutines.*
 import java.util.*
@@ -22,7 +22,7 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
 
         view.setBuildsData(LocalBuildsStore.localBuilds)
 
-        val user = UserModel.currentUser
+        val user = UserStore.currentUser
         if (user != null) {
             coroutineScope.launch {
                 try {
@@ -46,7 +46,7 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
 
         if (build.id != -1) {
             coroutineScope.launch {
-                val user = UserModel.currentUser
+                val user = UserStore.currentUser
                 user?.let {
                     try {
                         LocalBuildsStore.deleteBuildFromServer(it.token, it.id, build.id)
@@ -104,7 +104,7 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
         }
 
         coroutineScope.launch {
-            val user = UserModel.currentUser
+            val user = UserStore.currentUser
 
             if (user != null) {
                 try {

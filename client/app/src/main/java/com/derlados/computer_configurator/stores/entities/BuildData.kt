@@ -1,4 +1,4 @@
-package com.derlados.computer_configurator.models.entities
+package com.derlados.computer_configurator.stores.entities
 
 import com.derlados.computer_configurator.consts.ComponentCategory
 import java.util.*

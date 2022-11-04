@@ -1,7 +1,7 @@
 package com.derlados.computer_configurator.ui.pages.settings
 
 import android.accounts.NetworkErrorException
-import com.derlados.computer_configurator.models.UserModel
+import com.derlados.computer_configurator.stores.UserStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import kotlinx.coroutines.*
 import java.io.File
@@ -13,7 +13,7 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
     private val validRegEx = Regex("([A-Z,a-z]|[А-Я,а-я]|[ІЇЄiїєЁё]|[0-9]|_)+") // Регулярка для проверки валидации
 
     fun init() {
-        UserModel.currentUser?.let {
+        UserStore.currentUser?.let {
             view.updateUserData(it.username, it.photoUrl, it.email)
         }
     }
@@ -33,7 +33,7 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
      */
     fun uploadImage(file: File) {
         view.showImgLoadProgress()
-        UserModel.currentUser?.let { user ->
+        UserStore.currentUser?.let { user ->
             updateUser(user.username, file)
         }
     }
@@ -44,8 +44,8 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
     fun addGoogleAcc(googleId: String, email: String, photoUrl: String?) {
         coroutineScope.launch {
             try {
-                UserModel.addGoogleAcc(googleId, email, photoUrl)
-                UserModel.currentUser?.let {
+                UserStore.addGoogleAcc(googleId, email, photoUrl)
+                UserStore.currentUser?.let {
                     ensureActive()
                     view.updateUserData(it.username, it.photoUrl, it.email)
                 }
@@ -60,7 +60,7 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
     private fun updateUser(username: String, img: File? = null) {
         coroutineScope.launch {
             try {
-                UserModel.updateData(username, img)
+                UserStore.updateData(username, img)
             } catch (e: NetworkErrorException) {
                 ensureActive()
                 errorHandle(e.message)

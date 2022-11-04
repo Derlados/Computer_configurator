@@ -1,45 +1,45 @@
 package com.derlados.computer_configurator.ui.pages.component_info
 
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
-import com.derlados.computer_configurator.models.LocalBuildsStore
-import com.derlados.computer_configurator.models.ComponentModel
+import com.derlados.computer_configurator.stores.LocalBuildsStore
+import com.derlados.computer_configurator.stores.ComponentStore
 
 class ComponentInfoPresenter(private val view: ComponentInfoView, private val resourceProvider: ResourceProvider) {
 
     fun init() {
-        view.setDefaultImage(resourceProvider.getDefaultImageByCategory(ComponentModel.chosenCategory))
-        view.setComponentInfo(ComponentModel.chosenComponent)
+        view.setDefaultImage(resourceProvider.getDefaultImageByCategory(ComponentStore.chosenCategory))
+        view.setComponentInfo(ComponentStore.chosenComponent)
         defineBtAction()
     }
 
     private fun addToFavourite() {
-        ComponentModel.addToFavorite(ComponentModel.chosenComponent.id)
+        ComponentStore.addToFavorite(ComponentStore.chosenComponent.id)
         defineBtAction()
     }
 
     private fun deleteFromFavourite() {
-        ComponentModel.deleteFromFavorite(ComponentModel.chosenComponent.id)
+        ComponentStore.deleteFromFavorite(ComponentStore.chosenComponent.id)
         defineBtAction()
     }
 
     private fun addToBuild() {
-        LocalBuildsStore.editableBuild?.addToBuild(ComponentModel.chosenCategory, ComponentModel.chosenComponent)
+        LocalBuildsStore.editableBuild?.addToBuild(ComponentStore.chosenCategory, ComponentStore.chosenComponent)
         view.returnToBuild()
         defineBtAction()
     }
 
     private fun defineBtAction() {
         val editableBuild = LocalBuildsStore.editableBuild
-        val buildComponents = editableBuild?.components?.get(ComponentModel.chosenCategory)
+        val buildComponents = editableBuild?.components?.get(ComponentStore.chosenCategory)
 
         if (editableBuild == null) {
-            if (ComponentModel.favouriteComponents.find { c -> c.id == ComponentModel.chosenComponent.id } == null) {
+            if (ComponentStore.favouriteComponents.find { c -> c.id == ComponentStore.chosenComponent.id } == null) {
                 view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_FAVOURITE), ::addToFavourite)
             } else {
                 view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.DELETE_FROM_FAVOURITE), ::deleteFromFavourite)
             }
         } else {
-            if ( buildComponents?.find { bc -> bc.component.id == ComponentModel.chosenComponent.id } == null ) {
+            if ( buildComponents?.find { bc -> bc.component.id == ComponentStore.chosenComponent.id } == null ) {
                 view.initMarkBt(resourceProvider.getString(ResourceProvider.ResString.ADD_TO_BUILD), ::addToBuild)
             } else {
                 view.disableMarkBt()

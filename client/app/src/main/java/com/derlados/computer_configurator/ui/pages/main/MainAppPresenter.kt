@@ -1,8 +1,8 @@
 package com.derlados.computer_configurator.ui.pages.main
 
-import com.derlados.computer_configurator.models.LocalBuildsStore
-import com.derlados.computer_configurator.models.PublicBuildsStore
-import com.derlados.computer_configurator.models.UserModel
+import com.derlados.computer_configurator.stores.LocalBuildsStore
+import com.derlados.computer_configurator.stores.PublicBuildsStore
+import com.derlados.computer_configurator.stores.UserStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import java.util.*
 
@@ -11,16 +11,16 @@ class MainAppPresenter(private val view: MainView, private val resourceProvider:
     val ID_BUILD_PATTERN = Regex("([0-9]+)$")
 
     fun init() {
-        UserModel.addObserver(this)
-        UserModel.tryRestoreUser()
+        UserStore.addObserver(this)
+        UserStore.tryRestoreUser()
     }
 
     fun menuCreated() {
-        view.changeAuthItemMenu(UserModel.currentUser != null)
+        view.changeAuthItemMenu(UserStore.currentUser != null)
     }
 
     fun exitAccount() {
-        UserModel.logout()
+        UserStore.logout()
         LocalBuildsStore.removeServerBuilds()
         view.googleSign.signOut()
         view.showMessage(resourceProvider.getString(ResourceProvider.ResString.LOGOUT_SUCCESS))
@@ -36,7 +36,7 @@ class MainAppPresenter(private val view: MainView, private val resourceProvider:
 
     override fun update(o: Observable?, arg: Any?) {
         if (view.isMenuCreated) {
-            view.changeAuthItemMenu(UserModel.currentUser != null)
+            view.changeAuthItemMenu(UserStore.currentUser != null)
         }
     }
 }

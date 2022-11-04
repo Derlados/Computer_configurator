@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.BackStackTag
-import com.derlados.computer_configurator.models.entities.BuildData
+import com.derlados.computer_configurator.stores.entities.BuildData
 import com.derlados.computer_configurator.ui.pages.build.build_constructor.BuildConstructorFragment
 import com.derlados.computer_configurator.ui.pages.build.build_view.BuildOnlineViewFragment
 import com.derlados.computer_configurator.ui.OnFragmentInteractionListener

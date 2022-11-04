@@ -1,8 +1,8 @@
 package com.derlados.computer_configurator.ui.pages.auth
 
 import android.accounts.NetworkErrorException
-import com.derlados.computer_configurator.models.LocalBuildsStore
-import com.derlados.computer_configurator.models.UserModel
+import com.derlados.computer_configurator.stores.LocalBuildsStore
+import com.derlados.computer_configurator.stores.UserStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import kotlinx.coroutines.*
 
@@ -22,7 +22,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
         if (checkValidField(username, AuthView.Field.USERNAME) && checkValidField(password, AuthView.Field.PASSWORD)) {
             networkJob = CoroutineScope(Dispatchers.Main).launch {
                 try {
-                    UserModel.login(username, password)
+                    UserStore.login(username, password)
                     loadUserData()
                     ensureActive()
                     view.showMessage(resourceProvider.getString(ResourceProvider.ResString.LOGIN_SUCCESS))
@@ -41,7 +41,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
             } else {
                 networkJob = CoroutineScope(Dispatchers.Main).launch {
                     try {
-                        UserModel.register(username, password, secret)
+                        UserStore.register(username, password, secret)
                         loadUserData()
                     } catch (e: NetworkErrorException) {
                         if (isActive) {
@@ -56,7 +56,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
     fun tryGoogleSingIn(googleId: String, username: String, email: String, photoUrl: String?) {
         networkJob = CoroutineScope(Dispatchers.Main).launch {
             try {
-                UserModel.googleSignIn(googleId, username,email, photoUrl)
+                UserStore.googleSignIn(googleId, username,email, photoUrl)
                 loadUserData()
                 view.showMessage(resourceProvider.getString(ResourceProvider.ResString.LOGIN_SUCCESS))
             } catch (e: NetworkErrorException) {
@@ -71,7 +71,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
         if (checkValidField(username, AuthView.Field.USERNAME) && checkValidField(secret, AuthView.Field.SECRET) && checkValidField(newPassword, AuthView.Field.PASSWORD)) {
             networkJob = CoroutineScope(Dispatchers.Main).launch {
                 try {
-                    UserModel.restorePassword(username, secret, newPassword)
+                    UserStore.restorePassword(username, secret, newPassword)
                     view.showMessage(resourceProvider.getString(ResourceProvider.ResString.SUCCESS_CHANGE_PASSWORD))
                     view.returnBack()
                 } catch (e: NetworkErrorException) {
@@ -120,7 +120,7 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
     }
 
     private fun loadUserData() {
-        val user = UserModel.currentUser
+        val user = UserStore.currentUser
         if (user != null) {
             restoreDataJob = CoroutineScope(Dispatchers.Main).launch {
                 LocalBuildsStore.restoreBuildsFromServer(user.token, user.id)

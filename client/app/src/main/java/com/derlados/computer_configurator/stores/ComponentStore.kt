@@ -1,4 +1,4 @@
-package com.derlados.computer_configurator.models
+package com.derlados.computer_configurator.stores
 
 import com.derlados.computer_configurator.consts.ComponentCategory
 import com.derlados.computer_configurator.consts.SortType
@@ -6,7 +6,7 @@ import com.derlados.computer_configurator.types.FilterAttribute
 import com.derlados.computer_configurator.types.UserFilterChoice
 import com.derlados.computer_configurator.types.clear
 import com.derlados.computer_configurator.managers.FileManager
-import com.derlados.computer_configurator.models.entities.Component
+import com.derlados.computer_configurator.stores.entities.Component
 import com.derlados.computer_configurator.services.components.ComponentsService
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-object ComponentModel: Observable() {
+object ComponentStore: Observable() {
     const val CHANGED_FAVOURITE_STATUS: Int = 1
     private const val RELEVANCE_CACHE_DAYS: Long = 1
 

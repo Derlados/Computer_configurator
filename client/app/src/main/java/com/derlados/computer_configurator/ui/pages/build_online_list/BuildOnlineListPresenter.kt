@@ -4,7 +4,7 @@ import android.accounts.NetworkErrorException
 import android.os.Handler
 import android.os.Looper
 import com.derlados.computer_configurator.consts.Domain
-import com.derlados.computer_configurator.models.PublicBuildsStore
+import com.derlados.computer_configurator.stores.PublicBuildsStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.ui.pages.main.MainView
 import kotlinx.coroutines.*

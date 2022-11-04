@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.view.View
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
-import com.derlados.computer_configurator.models.entities.BuildData
+import com.derlados.computer_configurator.stores.entities.BuildData
 import com.derlados.computer_configurator.ui.decorators.AnimOnTouchListener
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat

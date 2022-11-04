@@ -1,25 +1,16 @@
-package com.derlados.computer_configurator.models
+package com.derlados.computer_configurator.stores
 
-import android.accounts.NetworkErrorException
-import android.util.Log
 import com.derlados.computer_configurator.types.CreateBuildDto
 import com.derlados.computer_configurator.services.builds.BuildsApi
 import com.derlados.computer_configurator.managers.FileManager
-import com.derlados.computer_configurator.models.entities.Build
-import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
+import com.derlados.computer_configurator.stores.entities.Build
 import com.derlados.computer_configurator.services.builds.BuildsService
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 
 object LocalBuildsStore: Observable() {
