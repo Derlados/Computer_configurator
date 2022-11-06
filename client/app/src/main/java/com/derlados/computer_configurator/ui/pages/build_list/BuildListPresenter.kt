@@ -22,11 +22,10 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
 
         view.setBuildsData(LocalBuildsStore.localBuilds)
 
-        val user = UserStore.currentUser
-        if (user != null) {
+        UserStore.token?.let {
             coroutineScope.launch {
                 try {
-                    LocalBuildsStore.restoreBuildsFromServer(user.token)
+                    LocalBuildsStore.restoreBuildsFromServer(it)
                 } catch (e: NetworkErrorException) {
                     if (isActive) {
                         errorHandle(e.message)
@@ -42,17 +41,16 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
     }
 
     fun removeBuild(id: String) {
-        val build = LocalBuildsStore.getBuildById(id)
+        val build = LocalBuildsStore.getBuildByLocalId(id)
 
         if (build.id != -1) {
             coroutineScope.launch {
-                val user = UserStore.currentUser
-                user?.let {
+                UserStore.token?.let {
                     try {
-                        LocalBuildsStore.deleteBuildFromServer(it.token, it.id, build.id)
+                        LocalBuildsStore.deleteBuildFromServer(it, build.id)
 
                         if (isActive) {
-                            view.removeItemBuildList(LocalBuildsStore.indexBuildById(id))
+                            view.removeItemBuildList(LocalBuildsStore.indexBuildByLocalId(id))
                         }
 
                         LocalBuildsStore.deleteBuild(build.localId)
@@ -64,7 +62,7 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
                 }
             }
         } else {
-            view.removeItemBuildList(LocalBuildsStore.indexBuildById(id))
+            view.removeItemBuildList(LocalBuildsStore.indexBuildByLocalId(id))
             LocalBuildsStore.deleteBuild(id)
         }
     }
@@ -74,7 +72,7 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
      * просмотра, иначе в режиме конструктора
      */
     fun selectBuild(id: String) {
-        val build = LocalBuildsStore.getBuildById(id)
+        val build = LocalBuildsStore.getBuildByLocalId(id)
 
         if (build.isPublic) {
             PublicBuildsStore.selectedBuildId = build.id
@@ -95,8 +93,8 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
      * Сохранение сборок из окна со списком сборок. По сколько там только кнопка публикации,
      * то сохранение сборки идет с автоматической публикацией
      */
-    fun saveBuildOnServer(id: String) {
-        val selectedBuild = LocalBuildsStore.getBuildById(id)
+    fun saveBuildOnServer(localId: String) {
+        val selectedBuild = LocalBuildsStore.getBuildByLocalId(localId)
 
         if (!selectedBuild.isCompatibility || !selectedBuild.isComplete) {
             view.showWarnDialog(resourceProvider.getString(ResourceProvider.ResString.BUILD_MUST_BE_COMPLETED))
@@ -104,13 +102,13 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
         }
 
         coroutineScope.launch {
-            val user = UserStore.currentUser
+            val token = UserStore.token
 
-            if (user != null) {
+            if (token != null) {
                 try {
-                    LocalBuildsStore.saveBuildOnServer(user.token, user.id, id, true)
+                    LocalBuildsStore.saveBuildOnServer(token, selectedBuild)
                     if (isActive) {
-                        view.updateItemBuildList(LocalBuildsStore.indexOfBuildById(id))
+                        view.updateItemBuildList(LocalBuildsStore.indexBuildByLocalId(localId))
                     }
                 } catch (e: NetworkErrorException) {
                     if (isActive) {

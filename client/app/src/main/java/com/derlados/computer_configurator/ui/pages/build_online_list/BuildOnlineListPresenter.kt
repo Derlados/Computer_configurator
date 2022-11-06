@@ -22,8 +22,8 @@ class BuildOnlineListPresenter(private val mainView: MainView, private val view:
         downloadBuilds()
     }
 
-    fun selectBuild(serverId: Int) {
-        PublicBuildsStore.selectedBuildId = serverId
+    fun selectBuild(id: Int) {
+        PublicBuildsStore.selectBuildById(id);
         view.openBuildOnlineView()
     }
 

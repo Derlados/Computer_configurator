@@ -17,7 +17,7 @@ class CreateBuildDto(build: Build) {
     init {
         this.name = build.name
         this.desc = build.description
-        this.isPublic = build.isPublic
+        this.isPublic = true
 
         this.components = ArrayList()
         for ((_, buildComponents) in build.components) {

@@ -147,6 +147,4 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
             }
         }
     }
-
-
 }

@@ -6,14 +6,14 @@ import com.derlados.computer_configurator.services.builds.BuildsService
 
 object PublicBuildsStore {
     var publicBuilds = ArrayList<Build>()
-    var selectedBuild: Build? = null
+    var selectedBuildId: Int = -1
 
-    fun selectBuild(build: Build) {
-        selectedBuild = build
+    fun selectBuildById(id: Int) {
+        selectedBuildId = id
     }
 
     fun deselectBuild() {
-        selectedBuild = null
+        selectedBuildId = -1
     }
 
     fun addBuild(build: Build) {
@@ -33,14 +33,23 @@ object PublicBuildsStore {
         return publicBuilds
     }
 
+    suspend fun getBuildById(id: Int): Build {
+        val foundBuild = publicBuilds.find { it.id == id }
+        if (foundBuild != null) {
+            return foundBuild
+        }
+
+        return BuildsService.getBuildById(id)
+    }
+
     /**
      * Получение комментариев сборки по id сборки. Комментарии не сохраняются в модели,
      * так как с ними нету прямого взаимодействия
-     * @param idBuild - id сборки
+     * @param buildId - id сборки
      * @return - массив комментариев
      */
-    suspend fun getComments(idBuild: Int): ArrayList<Comment> {
-        return BuildsService.getComments(idBuild)
+    suspend fun getComments(buildId: Int): ArrayList<Comment> {
+        return BuildsService.getComments(buildId)
     }
 
     /**

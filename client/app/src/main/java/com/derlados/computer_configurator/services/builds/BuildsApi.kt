@@ -14,14 +14,17 @@ interface BuildsApi {
         const val BASE_URL_BUILDS: String = "https://ancient-sea-58128.herokuapp.com/api/builds"
     }
 
-    @GET("$BASE_URL_BUILDS/public")
+    @GET(BASE_URL_BUILDS)
     suspend fun getPublicBuilds(): Response<ArrayList<Build>>
+
+    @GET("$BASE_URL_BUILDS/{id}")
+    suspend fun getBuildById(@Path("id") id: Int): Response<Build>
 
     @GET("$BASE_URL_BUILDS/{buildId}/comments")
     suspend fun getComments(@Path("buildId") buildId: Int): Response<ArrayList<Comment>>
 
     @GET("$BASE_URL_BUILDS/personal")
-    suspend fun restoreBuilds(@Header("token") token: String): Response<ArrayList<Build>>
+    suspend fun getPersonalBuilds(@Header("token") token: String): Response<ArrayList<Build>>
 
     @POST(BASE_URL_BUILDS)
     suspend fun saveBuild(@Header("token") token: String, @Body dto: CreateBuildDto): Response<Build>

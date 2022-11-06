@@ -83,7 +83,7 @@ object UserStore: Observable() {
         currentUser = UsersService.addGoogleAcc(token, googleId, user.username, email, photoUrl)
         saveUser()
     }
-    
+
     private suspend fun getPersonalData() {
         token?.let {
             currentUser = UsersService.getPersonal(it)

@@ -81,56 +81,6 @@ object LocalBuildsStore: Observable() {
         BuildsService.deleteBuildFromServer(token, buildId)
     }
 
-//    /** CURRENTLY UNUSED */
-//    fun updateBuildOnServer(token: String, idUser: Int) {
-//        val buildToUpdate = localBuilds[0] ?: return
-//
-//        val call = api.updateBuild(token, idUser, 38, CreateBuildDto(buildToUpdate, buildToUpdate.isPublic))
-//        call.enqueue(object : Callback<Unit> {
-//            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-//                if (response.code() == 200) {
-//                    Log.d("UPDATE_BUILD", "UPDATED")
-//                } else {
-//                    TODO("Not yet implemented")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<Unit>, t: Throwable) {
-//                TODO("Not yet implemented")
-//            }
-//
-//        })
-//    }
-//
-//    /** CURRENTLY UNUSED */
-//    /**
-//     * Изменение статуса публикации сборки
-//     * @param token - токен пользователя
-//     * @param idUser - id пользователя
-//     * @param idServerBuild - серверное id сборки
-//     * @param status - новый статус, true - публикуется, false - снимается с публикации
-//     * */
-//    suspend fun changePublicStatus(token: String, idUser: Int, idServerBuild: Int, status: Boolean) {
-//        return suspendCoroutine { continuation ->
-//            val call = api.updatePublicStatus(token, idUser, idServerBuild, status)
-//            call.enqueue(object : Callback<Boolean> {
-//                override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
-//                    val updatedStatus = response.body()
-//
-//                    if (updatedStatus != null && response.code() == 200) {
-//                        localBuilds.find { build -> build.id == idServerBuild }?.isPublic = updatedStatus
-//                        continuation.resume(Unit)
-//                    } else {
-//                        continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<Boolean>, t: Throwable) {
-//                    continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.NO_CONNECTION.name))
-//                }
-//            })
-//        }
-//    }
     ///////////////////////////////////LOCAL//////////////////////////////////
 
     fun createNewBuild() {
@@ -139,13 +89,13 @@ object LocalBuildsStore: Observable() {
         editableBuild = newBuild.clone()
     }
 
-    fun selectBuild(id: String) {
-        editableBuild = (localBuilds.find { build -> build.localId == id })?.clone()
+    fun selectBuild(localId: String) {
+        editableBuild = (localBuilds.find { build -> build.localId == localId })?.clone()
     }
 
-    fun deleteBuild(id: String) {
-        FileManager.remove(FileManager.Entity.BUILD, id)
-        localBuilds.remove(localBuilds.find { build -> build.localId == id })
+    fun deleteBuild(localId: String) {
+        FileManager.remove(FileManager.Entity.BUILD, localId)
+        localBuilds.remove(localBuilds.find { build -> build.localId == localId })
     }
 
     /**
@@ -194,16 +144,12 @@ object LocalBuildsStore: Observable() {
         editableBuild = null
     }
 
-    fun indexOfBuildById(id: String): Int {
-        return localBuilds.indexOfFirst { it.localId == id }
+    fun indexBuildByLocalId(localId: String): Int {
+        return localBuilds.indexOfFirst { it.localId == localId}
     }
 
-    fun indexBuildById(id: String): Int {
-        return localBuilds.indexOfFirst { it.localId == id}
-    }
-
-    fun getBuildById(id: String): Build {
-        val build = localBuilds.find { build -> build.localId == id }
+    fun getBuildByLocalId(localId: String): Build {
+        val build = localBuilds.find { build -> build.localId == localId }
         if (build != null) {
             return build
         } else {

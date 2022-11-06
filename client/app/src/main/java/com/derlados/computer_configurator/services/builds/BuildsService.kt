@@ -1,9 +1,7 @@
 package com.derlados.computer_configurator.services.builds
 
-import android.accounts.NetworkErrorException
 import com.derlados.computer_configurator.stores.entities.Build
 import com.derlados.computer_configurator.stores.entities.Comment
-import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.services.Service
 import com.derlados.computer_configurator.services.users.UsersApi
 import com.derlados.computer_configurator.types.CreateBuildDto
@@ -35,6 +33,18 @@ object BuildsService: Service() {
             throw this.errorHandle(res.code())
         }
     }
+
+    suspend fun getBuildById(id: Int): Build {
+        val res = api.getBuildById(id)
+        val build = res.body()
+
+        if (res.isSuccessful && build != null) {
+            return build
+        } else {
+            throw this.errorHandle(res.code())
+        }
+    }
+
 
     /**
      * Получение комментариев сборки по id сборки. Комментарии не сохраняются в модели,
@@ -96,7 +106,7 @@ object BuildsService: Service() {
      * @param idUser - id пользователя
      * */
     suspend fun restoreBuildsFromServer(token: String): ArrayList<Build> {
-        val res = api.restoreBuilds(token)
+        val res = api.getPersonalBuilds(token)
         val builds = res.body()
 
         if (res.isSuccessful && builds != null) {

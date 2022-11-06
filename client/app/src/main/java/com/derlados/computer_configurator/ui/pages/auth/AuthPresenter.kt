@@ -4,6 +4,7 @@ import android.accounts.NetworkErrorException
 import com.derlados.computer_configurator.stores.LocalBuildsStore
 import com.derlados.computer_configurator.stores.UserStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
+import com.derlados.computer_configurator.stores.entities.User
 import kotlinx.coroutines.*
 
 class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) {
@@ -120,12 +121,11 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
     }
 
     private fun loadUserData() {
-        val user = UserStore.currentUser
-        if (user != null) {
+        UserStore.token?.let {
             restoreDataJob = CoroutineScope(Dispatchers.Main).launch {
-                LocalBuildsStore.restoreBuildsFromServer(user.token, user.id)
+                LocalBuildsStore.restoreBuildsFromServer(it)
 
-                //TODO load favorite
+                //TODO load favorite from server
                 if (isActive) {
                     view.returnBack()
                 }

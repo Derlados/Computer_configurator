@@ -15,39 +15,20 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
     private lateinit var currentBuild: Build
 
     /**
-     * Инициализация сборки пользователя
+     * Инициализация экрана сборки пользователя, загрузка данных сборки, её комментариев.
+     * Отключение для неавторизованного пользователя возможность оставлять комментарии
      */
     fun init() {
-        PublicBuildsStore.publicBuilds.find { b -> b.id == PublicBuildsStore.selectedBuild?.id }?.let {
-            currentBuild = it
-        }
+        downloadBuild(PublicBuildsStore.selectedBuildId)
+        downloadComments(PublicBuildsStore.selectedBuildId)
 
-        // Заголовочные данные сборки
-        view.setHeaderData(currentBuild.name, currentBuild.description)
-        view.setPrice(currentBuild.price)
-        view.setUsername(currentBuild.username)
-        currentBuild.image?.let { image ->
-            view.setImage(image)
-        }
-
-        // Комлпектующие
-        for ((category, buildComponents) in currentBuild.components) {
-            for (i in 0 until buildComponents.size) {
-                view.addComponent(category, currentBuild.isMultipleCategory(category), buildComponents[i], false)
-            }
-        }
-        view.deleteEmptyLists()
-
-        // Комментарии к сборке, если пользователь не авторизован - удаляется всё что касается добавления комментариев
-        if (UserStore.currentUser == null) {
+        if (UserStore.token == null) {
             view.disableCommentsAddMode()
         } else {
             UserStore.currentUser?.photoUrl?.let {
                 view.setUserPhoto(it)
             }
         }
-
-        downloadComments()
     }
 
     fun finish() {
@@ -55,30 +36,11 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
         PublicBuildsStore.deselectBuild()
     }
 
-
-    private fun downloadComments() {
-        coroutineScope.launch {
-            try {
-                val comments = PublicBuildsStore.getComments(currentBuild.id)
-                val sortedComments = comments.sortedByDescending { comment -> comment.creationDate }
-
-                if (isActive) {
-                    view.setComments(ArrayList(sortedComments))
-                }
-            } catch (e: NetworkErrorException) {
-                if (isActive) {
-                    errorHandle(e.message)
-                }
-            }
-        }
-    }
-
     fun addComment(indexToAdd: Int, text: String, parentId: Int? = null) {
         coroutineScope.launch {
-            val user = UserStore.currentUser
-            user?.let {
+            UserStore.token?.let {
                 try {
-                    val newComment = PublicBuildsStore.addNewComment(it.token, currentBuild.id, text, parentId)
+                    val newComment = PublicBuildsStore.addNewComment(it, currentBuild.id, text, parentId)
                     if (isActive) {
                         view.appendComment(newComment, indexToAdd, parentId != null)
                     }
@@ -94,6 +56,51 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
     fun selectComponentToVIew(category: ComponentCategory, component: Component) {
         ComponentStore.chosenCategory = category
         ComponentStore.chosenComponent = component
+    }
+
+    private fun downloadBuild(id: Int) {
+        coroutineScope.launch {
+            currentBuild = PublicBuildsStore.getBuildById(id)
+
+            // Заголовочные данные сборки
+            view.setHeaderData(currentBuild.name, currentBuild.description)
+            view.setPrice(currentBuild.price)
+            view.setUsername(currentBuild.username)
+            currentBuild.image?.let { image ->
+                view.setImage(image)
+            }
+
+            // Комлпектующие
+            for ((category, buildComponents) in currentBuild.components) {
+                for (i in 0 until buildComponents.size) {
+                    view.addComponent(
+                        category,
+                        currentBuild.isMultipleCategory(category),
+                        buildComponents[i],
+                        false
+                    )
+                }
+            }
+
+            view.deleteEmptyLists()
+        }
+    }
+
+    private fun downloadComments(buildId: Int) {
+        coroutineScope.launch {
+            try {
+                val comments = PublicBuildsStore.getComments(buildId)
+                val sortedComments = comments.sortedByDescending { comment -> comment.creationDate }
+
+                if (isActive) {
+                    view.setComments(ArrayList(sortedComments))
+                }
+            } catch (e: NetworkErrorException) {
+                if (isActive) {
+                    errorHandle(e.message)
+                }
+            }
+        }
     }
 
     private fun errorHandle(message: String?) {
