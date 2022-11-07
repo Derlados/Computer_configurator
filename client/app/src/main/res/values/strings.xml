@@ -124,5 +124,6 @@
     <string name="configurator">Конфигуратор</string>
     <string name="you_must_be_authorized">Вы должны быть авторизированы</string>
     <string name="shop">Магазин</string>
+    <string name="component_link">Ссылка</string>
     <string name="online_shop">Онлайн-магазин</string>
 </resources>

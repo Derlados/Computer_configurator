@@ -11,7 +11,7 @@ import { UpdatePublishStatusDto } from './dto/update-publish-status.dto';
 export class BuildsController {
     constructor(private buildsService: BuildsService, private commentsService: CommentsService) { }
 
-    @Get('public')
+    @Get('')
     @SerializeOptions({ groups: [AccessGroups.ALL_USERS] })
     @UseInterceptors(ClassSerializerInterceptor)
     getPublicBuilds() {

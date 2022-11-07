@@ -14,7 +14,7 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
 
     fun init() {
         UserStore.currentUser?.let {
-            view.updateUserData(it.username, it.photoUrl, it.email)
+            view.updateUserData(it.username, it.photo, it.email)
         }
     }
 
@@ -47,7 +47,7 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
                 UserStore.addGoogleAcc(googleId, email, photoUrl)
                 UserStore.currentUser?.let {
                     ensureActive()
-                    view.updateUserData(it.username, it.photoUrl, it.email)
+                    view.updateUserData(it.username, it.photo, it.email)
                 }
             } catch (e: NetworkErrorException) {
                 ensureActive()

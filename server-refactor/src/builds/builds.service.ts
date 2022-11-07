@@ -19,12 +19,25 @@ export class BuildsService {
     }
 
     async getPublicBuilds() {
-        return await this.buildsRepository.find({ relations: ["user", "components", "components.component"] });
+        return await this.buildsRepository.find({ relations: ["user", "buildComponents", "buildComponents.component", "buildComponents.component.category"] });
     }
 
     async getBuildByid(buildId: number) {
-        return await this.buildsRepository.findOne({ where: { id: buildId }, relations: ["user", "components", "components.component"] });
+        return await this.buildsRepository.findOne({
+            where: { id: buildId },
+            relations: [
+                "user",
+                "buildComponents",
+                "buildComponents.component",
+                "buildComponents.component.componentAttributes",
+                "buildComponents.component.componentAttributes.attribute",
+                "buildComponents.component.componentAttributes.value",
+                "buildComponents.component.category"
+            ]
+        });
     }
+
+
 
     async getBuildComments(buildId: number) {
         return await this.commentsRepository.find({ where: { buildId: buildId }, relations: ["user"] });

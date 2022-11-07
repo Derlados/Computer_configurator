@@ -3,7 +3,7 @@ package com.derlados.computer_configurator.stores
 import com.derlados.computer_configurator.types.CreateBuildDto
 import com.derlados.computer_configurator.services.builds.BuildsApi
 import com.derlados.computer_configurator.managers.FileManager
-import com.derlados.computer_configurator.stores.entities.Build
+import com.derlados.computer_configurator.stores.entities.build.Build
 import com.derlados.computer_configurator.services.builds.BuildsService
 import com.google.gson.Gson
 import retrofit2.Retrofit

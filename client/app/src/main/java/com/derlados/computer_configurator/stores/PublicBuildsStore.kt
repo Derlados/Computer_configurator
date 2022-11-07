@@ -1,6 +1,6 @@
 package com.derlados.computer_configurator.stores
 
-import com.derlados.computer_configurator.stores.entities.Build
+import com.derlados.computer_configurator.stores.entities.build.Build
 import com.derlados.computer_configurator.stores.entities.Comment
 import com.derlados.computer_configurator.services.builds.BuildsService
 

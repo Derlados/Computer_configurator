@@ -124,6 +124,38 @@
                 android:text="@string/online_shop"/>
 
             <TextView
+                android:id="@+id/fragment_component_data_shop"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textStart"
+                android:paddingStart="15dp"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:text="https://brain.com.ua/"
+                android:autoLink="web"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textStart"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:text="@string/component_link"/>
+
+            <TextView
+                android:id="@+id/fragment_component_data_link"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

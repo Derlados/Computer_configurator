@@ -18,7 +18,7 @@ import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.BackStackTag
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.stores.entities.BuildData
+import com.derlados.computer_configurator.stores.entities.build.Build
 import com.derlados.computer_configurator.stores.entities.Comment
 import com.derlados.computer_configurator.stores.entities.Component
 import com.derlados.computer_configurator.ui.pages.build.BuildViewFragment
@@ -142,7 +142,7 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
      * @param parent - отсовский лаяут, куда будет прекреплена "карточка"
      */
     @SuppressLint("ClickableViewAccessibility")
-    override fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildData.BuildComponent, parent: LinearLayout): View {
+    override fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: Build.BuildComponent, parent: LinearLayout): View {
         val card = super.createComponentCard(category, isMultiple, buildComponent, parent)
         val component = buildComponent.component
 

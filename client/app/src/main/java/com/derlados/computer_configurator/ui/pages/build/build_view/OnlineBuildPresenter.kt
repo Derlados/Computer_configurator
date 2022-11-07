@@ -6,7 +6,7 @@ import com.derlados.computer_configurator.stores.entities.Component
 import com.derlados.computer_configurator.stores.ComponentStore
 import com.derlados.computer_configurator.stores.PublicBuildsStore
 import com.derlados.computer_configurator.stores.UserStore
-import com.derlados.computer_configurator.stores.entities.Build
+import com.derlados.computer_configurator.stores.entities.build.Build
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import kotlinx.coroutines.*
 
@@ -25,7 +25,7 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
         if (UserStore.token == null) {
             view.disableCommentsAddMode()
         } else {
-            UserStore.currentUser?.photoUrl?.let {
+            UserStore.currentUser?.photo?.let {
                 view.setUserPhoto(it)
             }
         }

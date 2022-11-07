@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.BackStackTag
-import com.derlados.computer_configurator.stores.entities.BuildData
+import com.derlados.computer_configurator.stores.entities.build.Build
 import com.derlados.computer_configurator.ui.pages.build.build_constructor.BuildConstructorFragment
 import com.derlados.computer_configurator.ui.pages.build.build_view.BuildOnlineViewFragment
 import com.derlados.computer_configurator.ui.OnFragmentInteractionListener
@@ -56,11 +56,11 @@ class BuildsListFragment : PageFragment(), BuildsListView {
 
     /**
      * Установка данных о сборке
-     * @see BuildData
+     * @see Build
      * @param buildsData - список сборок. Отправляется массив Builds, однако доступ предоставляется
      * в соответствии с интерфейсом BuildData, все элементы должны его наследовать
      */
-    override fun <T : BuildData> setBuildsData(buildsData: ArrayList<T>) {
+    override fun <T : Build> setBuildsData(buildsData: ArrayList<T>) {
         rvBuildRecycler.layoutManager = LinearLayoutManager(context)
         rvBuildRecycler.adapter = BuildRecyclerAdapter(buildsData, ::selectBuild, ::showDeleteDialog, ::showDialogAcceptPublish)
     }

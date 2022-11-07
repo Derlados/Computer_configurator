@@ -79,7 +79,7 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
 
 
         // Если изображение не было закешировано, будет скачано новое и сохранено. Пока изображения нету - устанавливается по умолчанию
-        Picasso.get().load(component.imageUrl).into(holder.img, object : Callback {
+        Picasso.get().load(component.img).into(holder.img, object : Callback {
             override fun onSuccess() { }
 
             override fun onError(e: Exception?) {

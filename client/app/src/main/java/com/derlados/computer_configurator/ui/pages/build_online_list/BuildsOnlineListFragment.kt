@@ -15,7 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.BackStackTag
-import com.derlados.computer_configurator.stores.entities.BuildData
+import com.derlados.computer_configurator.stores.entities.build.Build
 import com.derlados.computer_configurator.ui.pages.main.MainView
 import com.derlados.computer_configurator.ui.adapters.BuildOnlineRecyclerAdapter
 import com.derlados.computer_configurator.ui.pages.build.build_view.BuildOnlineViewFragment
@@ -66,7 +66,7 @@ class BuildsOnlineListFragment : PageFragment(), BuildsOnlineListView {
         currentFragment.fragment_build_list_srl_refresh.isRefreshing = false
     }
 
-    override fun <T : BuildData> setBuildsData(buildsData: ArrayList<T>) {
+    override fun <T : Build> setBuildsData(buildsData: ArrayList<T>) {
         rvBuildRecycler.layoutManager = LinearLayoutManager(context)
         rvBuildRecycler.adapter = BuildOnlineRecyclerAdapter(buildsData, ::selectBuild, ::onShareBuild)
     }

@@ -10,7 +10,7 @@ import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.MainActivity
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.stores.entities.BuildData
+import com.derlados.computer_configurator.stores.entities.build.Build
 import com.derlados.computer_configurator.stores.entities.Component
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import com.squareup.picasso.Picasso
@@ -96,7 +96,7 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBack
      * @param init - флаг, необходимо ли переинициализировать ExpandableLinearLayout
      */
     @SuppressLint("ClickableViewAccessibility")
-    override fun addComponent(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildData.BuildComponent, init: Boolean) {
+    override fun addComponent(category: ComponentCategory, isMultiple: Boolean, buildComponent: Build.BuildComponent, init: Boolean) {
         componentContainers[category]?.let { container ->
             val btHeader = container.inflate_build_section_bt
             val expandContainer = container.inflate_build_section_ell_components
@@ -143,7 +143,7 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBack
      * @param buildComponent - комплектующее из сборки (расширенный объект с количеством)
      * @param parent - отсовский лаяут, куда будет прекреплена "карточка"
      */
-    protected open fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildData.BuildComponent, parent: LinearLayout): View {
+    protected open fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: Build.BuildComponent, parent: LinearLayout): View {
         val card = layoutInflater.inflate(R.layout.inflate_component_item, parent, false) as LinearLayout
 
         val component = buildComponent.component

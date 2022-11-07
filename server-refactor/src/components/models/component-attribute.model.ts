@@ -22,7 +22,7 @@ export class ComponentAttribute {
     @JoinColumn({ name: "attribute_id" })
     attribute: Attribute;
 
-    @ManyToOne(() => Component, compoent => compoent.attributes, { onUpdate: "CASCADE", onDelete: "CASCADE" })
+    @ManyToOne(() => Component, compoent => compoent.componentAttributes, { onUpdate: "CASCADE", onDelete: "CASCADE" })
     @JoinColumn({ name: "component_id" })
     component: Component;
 

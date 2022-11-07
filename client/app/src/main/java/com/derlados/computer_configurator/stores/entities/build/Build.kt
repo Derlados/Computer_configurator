@@ -1,10 +1,12 @@
-package com.derlados.computer_configurator.stores.entities
+package com.derlados.computer_configurator.stores.entities.build
 
 import com.derlados.computer_configurator.consts.ComponentCategory
+import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.stores.entities.User
 import java.util.*
 import kotlin.collections.ArrayList
 
-class Build : Cloneable, BuildData {
+class Build : Cloneable, IEditableBuild {
     /**
      * ID атрибутов которые необходимы для проверки совместимости сборки
      */
@@ -59,11 +61,17 @@ class Build : Cloneable, BuildData {
             return field
         }
     override var name: String = ""
-    override var description: String = "" // Описание в сборке
-    override var price: Int = 0 // Цена сборки
+    override var description: String = ""
+    override var isPublic: Boolean = false
+    override var publishDate: Date = Date()
+    override var price: Int = 0
+    // В качестве изображение берется изображение корпуса, если он есть в сборке
+    override var image: String? = null
+        get() = components[ComponentCategory.CASE]?.getOrNull(0)?.component?.img
+    override var user: User = User(-1, "local")
 
     // Комплетующие, разбиты по категориям, где каждый элемент пара (<комлпектующее>, <количество>)
-    override var components: HashMap<ComponentCategory, ArrayList<BuildData.BuildComponent>> = hashMapOf(
+    override var components: HashMap<ComponentCategory, ArrayList<BuildComponent>> = hashMapOf(
         ComponentCategory.CPU to ArrayList(),
         ComponentCategory.MOTHERBOARD to ArrayList(),
         ComponentCategory.GPU to ArrayList(),
@@ -74,16 +82,14 @@ class Build : Cloneable, BuildData {
         ComponentCategory.CASE to ArrayList(),
     )
     override var usedPower: Int = 0
-    // В качестве изображение берется изображение корпуса, если он есть в сборке
-    override var image: String? = null
-        get() = components[ComponentCategory.CASE]?.getOrNull(0)?.component?.imageUrl
-
     override var isCompatibility: Boolean = true
     override val isComplete: Boolean
         get() {
-            val gpuCore: Component.Attribute? = components[ComponentCategory.CPU]?.getOrNull(0)?.component?.getAttrById(CPU_GPU_CORE)
+            val gpuCore: Component.Attribute? = components[ComponentCategory.CPU]?.getOrNull(0)?.component?.getAttrById(
+                CPU_GPU_CORE
+            )
             var isExistGpuCore = false
-            if (gpuCore != null && gpuCore.idValue != CPU_GPU_CORE_EXIST_VALUE) {
+            if (gpuCore != null && gpuCore.valueId != CPU_GPU_CORE_EXIST_VALUE) {
                 isExistGpuCore = true
             }
 
@@ -93,12 +99,7 @@ class Build : Cloneable, BuildData {
                     && (components[ComponentCategory.HDD]?.isNotEmpty() == true || components[ComponentCategory.SSD]?.isNotEmpty() == true)
         }
 
-    override var idUser: Int = -1
-    override var username: String = ""
-    override var isPublic: Boolean = false // Статус публикации (публичности)
-    override var publishDate: Date = Date()
-
-    var lastAdded: Pair<ComponentCategory, BuildData.BuildComponent>? = null
+    var lastAdded: Pair<ComponentCategory, BuildComponent>? = null
 
     /**
      * Проверка можно ли добавлять несколько комплектующих той же категории
@@ -126,7 +127,7 @@ class Build : Cloneable, BuildData {
      * @param buildComponents - список комплектующих в категории, которые необходимо проверить на совместимсоть
      * @return - ошибка (CompatibilityError) или подтверджение совместимости (CompatibilityError.OK)
      */
-    private fun checkCompatibility(category: ComponentCategory, buildComponents: ArrayList<BuildData.BuildComponent>): CompatibilityError {
+    private fun checkCompatibility(category: ComponentCategory, buildComponents: ArrayList<BuildComponent>): CompatibilityError {
         when (category) {
             ComponentCategory.CPU -> {
                 val motherboard = components[ComponentCategory.MOTHERBOARD]?.getOrNull(0)?.component
@@ -255,7 +256,7 @@ class Build : Cloneable, BuildData {
 
     fun checkCompatibility(category: ComponentCategory, component: Component): CompatibilityError {
         val componentArray = ArrayList(components[category])
-        componentArray.add(BuildData.BuildComponent(component, 1))
+        componentArray.add(BuildComponent(component, 1))
 
         return checkCompatibility(category, componentArray)
     }
@@ -397,7 +398,7 @@ class Build : Cloneable, BuildData {
      * @param component - комплектующее
      * */
     fun addToBuild(category: ComponentCategory, component: Component) {
-        val newBuildComponent = BuildData.BuildComponent(component, 1)
+        val newBuildComponent = BuildComponent(component, 1)
 
         if (components[category] == null) {
             components[category] = ArrayList()
@@ -413,7 +414,7 @@ class Build : Cloneable, BuildData {
         lastAdded = null
     }
 
-    fun getBuildComponent(category: ComponentCategory, idComponent: Int): BuildData.BuildComponent? {
+    fun getBuildComponent(category: ComponentCategory, idComponent: Int): BuildComponent? {
         return components[category]?.find { it.component.id == idComponent }
     }
 
@@ -458,7 +459,6 @@ class Build : Cloneable, BuildData {
         }
     }
 
-
     /**
      * Перегрузка клонирования, для конструктора необходима работа с копией.
      * Глубокое копирование мапов не требуется, класс Component используется исключительно для чтения
@@ -470,9 +470,9 @@ class Build : Cloneable, BuildData {
         // Глубокое копирование мапы
         build.components = HashMap()
         for ((key, arrayComponents) in components) {
-            val cloneArray = ArrayList<BuildData.BuildComponent>()
+            val cloneArray = ArrayList<BuildComponent>()
             arrayComponents.forEach {
-                cloneArray.add(BuildData.BuildComponent(it.component, it.count))
+                cloneArray.add(BuildComponent(it.component, it.count))
             }
             build.components[key] = cloneArray
         }

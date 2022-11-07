@@ -86,10 +86,11 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView, MainActivity.OnBack
             R.string.component_price,
             component.price
         )
+
         if (component.image != null) {
             currentFragment.fragment_component_data_img.setImageBitmap(component.image)
         } else {
-            Picasso.get().load(component.imageUrl).into(currentFragment.fragment_component_data_img)
+            Picasso.get().load(component.img).into(currentFragment.fragment_component_data_img)
         }
 
         for ((_, attribute) in component.attributes.toSortedMap()) {
@@ -102,6 +103,9 @@ class ComponentInfoFragment : Fragment(), ComponentInfoView, MainActivity.OnBack
             dataString.inflate_attribute_string_value.text = attribute.value
             container.addView(dataString)
         }
+
+        currentFragment.fragment_component_data_shop.text = component.shop
+        currentFragment.fragment_component_data_link.text = component.url
     }
 
     override fun returnToBuild() {

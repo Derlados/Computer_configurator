@@ -7,7 +7,7 @@ import { Comment } from "../../comments/models/comment.model";
 @Entity('users')
 export class User {
     @PrimaryGeneratedColumn('increment')
-    @Expose({ groups: [AccessGroups.USER_OWNER] })
+    @Expose({ groups: [AccessGroups.ALL_USERS] })
     id: number;
 
     @Column({ type: "varchar", length: 50, nullable: true })
@@ -27,7 +27,7 @@ export class User {
     email?: string;
 
     @Column({ unique: true, type: "varchar", length: 255, nullable: true, default: null })
-    @Expose({ groups: [AccessGroups.USER_OWNER] })
+    @Exclude()
     googleId?: string;
 
     @Column({ default: null, type: "varchar", length: 255, nullable: true })

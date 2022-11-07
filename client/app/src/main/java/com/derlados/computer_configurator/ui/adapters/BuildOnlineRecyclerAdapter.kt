@@ -4,19 +4,19 @@ import android.annotation.SuppressLint
 import android.view.View
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
-import com.derlados.computer_configurator.stores.entities.BuildData
+import com.derlados.computer_configurator.stores.entities.build.Build
 import com.derlados.computer_configurator.ui.decorators.AnimOnTouchListener
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class BuildOnlineRecyclerAdapter<T : BuildData>(override val builds: ArrayList<T>, val onServerBuildChoose: (id: Int) -> Unit, val onShare: (id: Int) -> Unit):
+class BuildOnlineRecyclerAdapter<T : Build>(override val builds: ArrayList<T>, val onServerBuildChoose: (id: Int) -> Unit, val onShare: (id: Int) -> Unit):
         BuildRecyclerAdapter<T>(builds, fun(_: String) = Unit, fun(_: String) = Unit, fun(_: String) = Unit) {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: BuildHolder, position: Int) {
-        val build: BuildData = builds[position]
+        val build: Build = builds[position]
 
         // Установка всех заголовочных данных
         holder.tvName.text = build.name

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.stores.entities.BuildData
+import com.derlados.computer_configurator.stores.entities.build.Build
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.ui.decorators.AnimOnTouchListener
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
@@ -21,8 +21,8 @@ import kotlinx.android.synthetic.main.inflate_build_item.view.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-open class  BuildRecyclerAdapter <T : BuildData> (protected open val builds: ArrayList<T>, protected open val onItemClick: (id: String) -> Unit,
-                                                  protected open val removeItem: (id: String) -> Unit, protected open val publishBuild: (id: String) -> Unit):
+open class  BuildRecyclerAdapter <T : Build> (protected open val builds: ArrayList<T>, protected open val onItemClick: (id: String) -> Unit,
+                                              protected open val removeItem: (id: String) -> Unit, protected open val publishBuild: (id: String) -> Unit):
         RecyclerView.Adapter<BuildRecyclerAdapter.BuildHolder>() {
 
     class BuildHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -87,7 +87,7 @@ open class  BuildRecyclerAdapter <T : BuildData> (protected open val builds: Arr
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: BuildHolder, position: Int) {
-        val build: BuildData = builds[position]
+        val build: Build = builds[position]
 
         holder.btShare.visibility = View.GONE
         holder.tvName.text = build.name

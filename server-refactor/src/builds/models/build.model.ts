@@ -1,6 +1,8 @@
 
+import { Exclude } from "class-transformer";
+import { Categories } from "src/constants/Categories";
 import { User } from "src/users/models/user.model";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AfterLoad, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Comment } from "../../comments/models/comment.model";
 import { BuildComponent } from "./build-component.model";
 
@@ -10,6 +12,7 @@ export class Build {
     id: number;
 
     @Column({ name: "user_id", type: "int", nullable: false })
+    @Exclude()
     userId: number;
 
     @Column({ type: "varchar", length: 100, nullable: false })
@@ -24,6 +27,12 @@ export class Build {
     @Column({ name: "publish_date", type: "datetime", default: () => "CURRENT_TIMESTAMP()" })
     publishDate: Date;
 
+    price: number;
+
+    image?: string;
+
+    components: Map<string, BuildComponent[]>
+
     @ManyToOne(() => User, user => user.builds)
     @JoinColumn({ name: "user_id" })
     user: User;
@@ -32,5 +41,35 @@ export class Build {
     comments: Comment[];
 
     @OneToMany(() => BuildComponent, buildComponent => buildComponent.build)
-    components: BuildComponent[];
+    @Exclude()
+    buildComponents: BuildComponent[];
+
+    @AfterLoad()
+    getPrice() {
+        this.price = 0;
+        this.buildComponents.forEach(c => {
+            this.price += c.component.price * c.count
+        })
+    }
+
+    @AfterLoad()
+    getImage() {
+        this.image = this.buildComponents.find(c => c.component.categoryId == Categories.CASE)?.component.img
+    }
+
+    @AfterLoad()
+    getComponents() {
+        this.components = new Map()
+        if (this.buildComponents) {
+            this.buildComponents.forEach(bc => {
+                const categoryUrl = bc.component.category.url;
+
+                if (!this.components.has(categoryUrl)) {
+                    this.components.set(categoryUrl, [])
+                }
+
+                this.components.get(categoryUrl).push(bc)
+            })
+        }
+    }
 }

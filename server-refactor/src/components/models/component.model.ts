@@ -1,6 +1,7 @@
 
 import { Exclude } from "class-transformer";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinTable, OneToMany, JoinColumn } from "typeorm";
+import { IAttribute } from "src/types/IAttribute";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinTable, OneToMany, JoinColumn, AfterLoad } from "typeorm";
 import { BuildComponent } from "../../builds/models/build-component.model";
 import { Category } from "../../categories/models/category.model";
 import { ComponentAttribute } from "./component-attribute.model";
@@ -29,10 +30,13 @@ export class Component {
     shop: string;
 
     @Column({ name: "updated_at", type: "datetime", default: () => "CURRENT_TIMESTAMP()" })
+    @Exclude()
     updatedAt: Date;
 
     @Column({ name: "is_actual", type: "boolean", default: false })
     isActual: boolean;
+
+    attributes: Map<number, IAttribute>;
 
     @ManyToOne(() => Category, category => category.components, { onDelete: "CASCADE", onUpdate: "CASCADE" })
     @JoinColumn({ name: "category_id" })
@@ -40,8 +44,22 @@ export class Component {
     category: Category;
 
     @OneToMany(() => ComponentAttribute, componentAttribute => componentAttribute.component)
-    attributes: ComponentAttribute[];
+    @Exclude()
+    componentAttributes: ComponentAttribute[];
 
     @OneToMany(() => BuildComponent, buildComponent => buildComponent.component)
     buildComponents: BuildComponent[];
+
+    @AfterLoad()
+    getAttributes() {
+        this.attributes = new Map();
+        if (this.componentAttributes) {
+            this.componentAttributes.forEach((a) => {
+                const { id, name, isPreview, prevText } = a.attribute;
+                const { id: valueId, value } = a.value;
+
+                this.attributes.set(a.attribute.id, { id, name, isPreview, prevText, valueId, value })
+            })
+        }
+    }
 }

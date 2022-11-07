@@ -18,7 +18,7 @@ export class BuildComponent {
     @PrimaryColumn({ type: "int", default: 1 })
     count: number;
 
-    @ManyToOne(() => Build, build => build.components, { onDelete: "CASCADE", onUpdate: "CASCADE" })
+    @ManyToOne(() => Build, build => build.buildComponents, { onDelete: "CASCADE", onUpdate: "CASCADE" })
     @JoinColumn({ name: "build_id" })
     build: Build;
 

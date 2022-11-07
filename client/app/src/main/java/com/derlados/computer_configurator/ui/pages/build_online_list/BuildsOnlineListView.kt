@@ -1,9 +1,9 @@
 package com.derlados.computer_configurator.ui.pages.build_online_list
 
-import com.derlados.computer_configurator.stores.entities.BuildData
+import com.derlados.computer_configurator.stores.entities.build.Build
 
 interface BuildsOnlineListView {
-    fun <T : BuildData> setBuildsData(buildsData: ArrayList<T>)
+    fun <T : Build> setBuildsData(buildsData: ArrayList<T>)
     fun openBuildOnlineView()
     fun updateRangeBuildList(size: Int)
     fun showError(message: String)

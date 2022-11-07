@@ -4,10 +4,11 @@ import android.graphics.Bitmap
 import com.derlados.computer_configurator.managers.FileManager
 import java.io.FileNotFoundException
 
-class Component(val id: Int, val name: String, val price : Int, val imageUrl : String, val isActual: Boolean, val attributes: HashMap<Int, Attribute>) {
+class Component(val id: Int, val name: String, val price : Int, val img : String, val url: String,
+                val shop: String, val isActual: Boolean, val attributes: HashMap<Int, Attribute>) {
 
     // Для хранения арактеристик о комплектующем
-    inner class Attribute(val id: Int, val name: String, val idValue: Int, val value: String, val isPreview: Boolean) {
+    inner class Attribute(val id: Int, val name: String, val valueId: Int, val value: String, val isPreview: Boolean, val prevText: String) {
         /**
          * Взятие числового значение из атрибута. К примеру объем памяти, количество портов и т.д.
          */
@@ -18,7 +19,7 @@ class Component(val id: Int, val name: String, val price : Int, val imageUrl : S
 
     val imageName : String
         get() {
-            return Regex("([^/]+)\$").find(imageUrl)!!.value
+            return Regex("([^/]+)\$").find(img)!!.value
         }
 
     // Данные изображения сохраняются и загружаются на устройство так как невозможно гарантировать стабильность работы с Bitmap который хранится прямо в объекте

@@ -5,7 +5,7 @@ import com.derlados.computer_configurator.providers.android_providers_interfaces
 import com.derlados.computer_configurator.stores.LocalBuildsStore
 import com.derlados.computer_configurator.stores.entities.Component
 import com.derlados.computer_configurator.stores.ComponentStore
-import com.derlados.computer_configurator.stores.entities.Build
+import com.derlados.computer_configurator.stores.entities.build.Build
 
 class BuildConstructorPresenter(private val view: BuildConstructorView, private val resourceProvider: ResourceProvider) {
 

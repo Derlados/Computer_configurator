@@ -124,7 +124,7 @@ object UserStore: Observable() {
             editor.putInt(APP_PREFERENCES_ID, it.id)
             editor.putString(APP_PREFERENCES_USERNAME, it.username)
             editor.putString(APP_PREFERENCES_EMAIL, it.email)
-            editor.putString(APP_PREFERENCES_PHOTO_URL, it.photoUrl)
+            editor.putString(APP_PREFERENCES_PHOTO_URL, it.photo)
             editor.putString(APP_PREFERENCES_TOKEN, token)
             editor.apply()
         }

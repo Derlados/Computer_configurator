@@ -10,7 +10,7 @@ export class ComponentsService {
     async getComponentsByCategoryUrl(categoryUrl: string) {
         return this.componentRepository.find({
             where: { category: { url: categoryUrl } },
-            relations: ["category", "attributes", "attributes.attribute", "attributes.value"]
+            relations: ["category", "componentAttributes", "componentAttributes.attribute", "componentAttributes.value"]
         })
     }
 }
