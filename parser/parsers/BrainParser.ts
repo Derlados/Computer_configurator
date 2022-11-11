@@ -25,23 +25,20 @@ class BrainParser extends Parser {
         ])
     }
 
-    override async parseGoods(category: Category, page: number): Promise<void> {
-
-    }
-
     override async parseFullInfo(infoUrl: string): Promise<void> {
 
     }
 
-    override async heavyUpdateGoods(): Promise<void> {
+    override async heavyUpdateProducts(): Promise<void> {
 
     }
 
-    override async updateGoods(): Promise<void> {
+    override async parseProducts(): Promise<void> {
         for (const [id, category] of this.categories.entries()) {
             const maxPages = await this.getMaxPages(`${this.BASE_URL}/${category}`)
 
             for (let i = 1; i <= maxPages || i <= 50; ++i) {
+                const url = `${this.BASE_URL}/${category}/page=${i}/`;
                 const res = await axios.get(`${this.BASE_URL}/${category}/page=${i}/`, {
                     withCredentials: false,
                     headers: {
@@ -65,7 +62,7 @@ class BrainParser extends Parser {
                         ProductModel.updateProduct(product.idComponent, price, isActual, img);
                         console.log("updated: " + productUrl);
                     } else {
-                        console.log("not exist: " + productUrl);
+                        this.parseAttributes
                     }
                 }
 
@@ -88,6 +85,11 @@ class BrainParser extends Parser {
         } else {
             throw new Error("not found max pages");
         }
+    }
+
+
+    private async parseAttributes(url: string) {
+
     }
 }
 

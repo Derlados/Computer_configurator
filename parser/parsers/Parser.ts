@@ -8,13 +8,11 @@ export abstract class Parser {
         this.BASE_URL = baseUrl;
     }
 
-    abstract parseGoods(category: Category, page: number): Promise<void>;
+    abstract parseProducts(category: Category, page: number): Promise<void>;
 
     abstract parseFullInfo(infoUrl: string): Promise<void>;
 
-    abstract updateGoods(): Promise<void>;
-
-    abstract heavyUpdateGoods(): Promise<void>;
+    abstract heavyUpdateProducts(): Promise<void>;
 
     protected abstract getMaxPages(url: string): Promise<number>;
 

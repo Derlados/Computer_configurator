@@ -18,4 +18,4 @@ import BrainParser from './parsers/BrainParser';
 //     console.log(data);
 // });
 
-BrainParser.updateGoods();
+BrainParser.updateProducts();

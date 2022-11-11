@@ -7,7 +7,7 @@ class RozetkaParser extends Parser {
         super('');
     }
 
-    override parseGoods(category: Category, page: number): Promise<void> {
+    override parseProducts(category: Category, page: number): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
@@ -15,11 +15,11 @@ class RozetkaParser extends Parser {
         throw new Error("Method not implemented.");
     }
 
-    override updateGoods(): Promise<void> {
+    override updateProducts(): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
-    override async heavyUpdateGoods(): Promise<void> {
+    override async heavyUpdateProducts(): Promise<void> {
     }
 
 
