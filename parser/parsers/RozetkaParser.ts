@@ -1,27 +1,19 @@
 import { Category } from "../constants/category";
+import { IProduct } from "../types/IProduct";
 import { Parser } from "./Parser";
 
 class RozetkaParser extends Parser {
-
     constructor() {
         super('');
     }
 
-    override parseProducts(category: Category, page: number): Promise<void> {
+    start(): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
-    override parseFullInfo(infoUrl: string): Promise<void> {
+    parseProducts(pageUrl: string): Promise<IProduct[]> {
         throw new Error("Method not implemented.");
     }
-
-    override updateProducts(): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-
-    override async heavyUpdateProducts(): Promise<void> {
-    }
-
 
     protected getMaxPages(url: string): Promise<number> {
         throw new Error("Method not implemented.");

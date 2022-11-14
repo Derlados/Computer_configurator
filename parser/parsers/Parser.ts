@@ -1,5 +1,6 @@
 import { resolve } from "path";
 import { Category } from "../constants/category";
+import { IProduct } from "../types/IProduct";
 
 export abstract class Parser {
     public readonly BASE_URL: string;
@@ -8,11 +9,9 @@ export abstract class Parser {
         this.BASE_URL = baseUrl;
     }
 
-    abstract parseProducts(category: Category, page: number): Promise<void>;
+    abstract start(): Promise<void>;
 
-    abstract parseFullInfo(infoUrl: string): Promise<void>;
-
-    abstract heavyUpdateProducts(): Promise<void>;
+    abstract parseProducts(pageUrl: string): Promise<IProduct[]>;
 
     protected abstract getMaxPages(url: string): Promise<number>;
 

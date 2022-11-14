@@ -17,6 +17,8 @@ import { Build } from "./builds/models/build.model";
 import { BuildComponent } from "./builds/models/build-component.model";
 import { Comment } from "./comments/models/comment.model";
 import { CategoriesModule } from "./categories/categories.module";
+import { RolesModule } from "./roles/roles.module";
+import { Role } from "./roles/models/role.model";
 
 @Module({
     controllers: [],
@@ -33,7 +35,7 @@ import { CategoriesModule } from "./categories/categories.module";
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DATABASE,
-            entities: [User, Category, Component, Attribute, ComponentAttribute, Value, Filter, Build, BuildComponent, Comment],
+            entities: [User, Category, Component, Attribute, ComponentAttribute, Value, Filter, Build, BuildComponent, Comment, Role],
             migrations: ["dist/migrations/*{.ts,.js}"],
             migrationsRun: false,
             synchronize: true,
@@ -44,7 +46,8 @@ import { CategoriesModule } from "./categories/categories.module";
         BuildsModule,
         CategoriesModule,
         ComponentsModule,
-        CommentsModule
+        CommentsModule,
+        RolesModule
     ]
 })
 export class AppModule { }

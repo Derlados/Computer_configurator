@@ -10,10 +10,10 @@ export class Attribute {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: "varchar", length: 100, nullable: true })
+    @Column({ type: "varchar", length: 100, nullable: true, unique: true })
     name: string;
 
-    @Column({ name: "is_preview", type: "boolean", nullable: true })
+    @Column({ name: "is_preview", type: "boolean", nullable: true, default: false })
     isPreview: boolean;
 
     @Column({ name: "preview_text", type: "varchar", length: 30, nullable: true })

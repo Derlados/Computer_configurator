@@ -1,8 +1,9 @@
 import axios from "axios";
 import parse from "node-html-parser";
-import { Category } from "../constants/category";
-import ProductModel from "../models/ProductModel";
+import { IAttribute } from "../types/IAttribute";
+import componentsService from "../services/components/components.service";
 import { Parser } from "./Parser";
+import { IProduct } from "../types/IProduct";
 
 
 class BrainParser extends Parser {
@@ -25,51 +26,75 @@ class BrainParser extends Parser {
         ])
     }
 
-    override async parseFullInfo(infoUrl: string): Promise<void> {
-
-    }
-
-    override async heavyUpdateProducts(): Promise<void> {
-
-    }
-
-    override async parseProducts(): Promise<void> {
-        for (const [id, category] of this.categories.entries()) {
+    override async start() {
+        for (const [categoryId, category] of this.categories.entries()) {
             const maxPages = await this.getMaxPages(`${this.BASE_URL}/${category}`)
+            const DBProducts = await componentsService.getComponents(category);
 
             for (let i = 1; i <= maxPages || i <= 50; ++i) {
-                const url = `${this.BASE_URL}/${category}/page=${i}/`;
-                const res = await axios.get(`${this.BASE_URL}/${category}/page=${i}/`, {
-                    withCredentials: false,
-                    headers: {
-                        Cookie: "Lang=ru;"
-                    }
-                });
-                const html = parse(res.data)
-                const components = html.querySelectorAll('div[class="br-pp br-pp-ex goods-block__item br-pcg br-series"]');
+                const parsedProducts = await this.parseProducts(`${this.BASE_URL}/${category}/page=${i}/`);
 
-                for (const component of components) {
-                    const url = component.querySelector('a[itemprop="url"]')?.getAttribute('href');
-                    const productUrl = `${this.BASE_URL}${url}`.replace('/ukr', '');
-
-                    const price = component.querySelector('span[itemprop="price"]')?.innerText;
-                    const img = component.querySelector('img[itemprop="image"]')?.getAttribute('data-observe-src');
-                    const outOfStock = component.querySelector('div[class="br-pp-net"]');
-                    const isActual = outOfStock == null;
-
-                    const product = (await ProductModel.getProducts({ url_full: productUrl }))[0];
-                    if (product && price) {
-                        ProductModel.updateProduct(product.idComponent, price, isActual, img);
-                        console.log("updated: " + productUrl);
+                for (const parsedProduct of parsedProducts) {
+                    const foundProduct = DBProducts.find(p => p.url == parsedProduct.url);
+                    if (foundProduct) {
+                        const { id, attributes, ...productInfo } = foundProduct;
+                        await componentsService.updateComponent(id, {
+                            ...productInfo,
+                            categoryId
+                        })
                     } else {
-                        this.parseAttributes
+                        const { id, ...productInfo } = parsedProduct;
+                        const attributes = await this.parseAttributes(parsedProduct.url);
+
+                        await componentsService.createComponent({
+                            ...productInfo,
+                            categoryId,
+                            attributes
+                        })
                     }
                 }
 
                 await this.timeout(this.TIMEOUT);
             }
         }
+    }
 
+    override async parseProducts(pageUrl: string): Promise<IProduct[]> {
+        const parsedProducts: IProduct[] = [];
+
+        const res = await axios.get(pageUrl, {
+            withCredentials: false,
+            headers: {
+                Cookie: "Lang=ru;"
+            }
+        });
+        const html = parse(res.data)
+        const HTMLComponents = html.querySelectorAll('div[class="br-pp br-pp-ex goods-block__item br-pcg br-series"]');
+
+        for (const HTMLComponent of HTMLComponents) {
+            const url = HTMLComponent.querySelector('a[itemprop="url"]')?.getAttribute('href');
+            const productUrl = `${this.BASE_URL}${url}`.replace('/ukr', '');
+
+            const name = HTMLComponent.querySelector('a[itemprop="url"]')?.innerText ?? '';
+            const price = Number(HTMLComponent.querySelector('span[itemprop="price"]')?.innerText);
+            const img = HTMLComponent.querySelector('img[itemprop="image"]')?.getAttribute('data-observe-src');
+            const outOfStock = HTMLComponent.querySelector('div[class="br-pp-net"]');
+            const isActual = outOfStock == null;
+
+            parsedProducts.push({
+                id: -1,
+                categoryId: -1,
+                name,
+                price,
+                url: productUrl,
+                img: img ?? "",
+                shop: 'brain.com',
+                isActual: isActual,
+                attributes: []
+            })
+        }
+
+        return parsedProducts;
     }
 
     protected async getMaxPages(url: string): Promise<number> {
@@ -87,9 +112,33 @@ class BrainParser extends Parser {
         }
     }
 
+    private async parseAttributes(url: string): Promise<IAttribute[]> {
+        const attributes: IAttribute[] = [];
 
-    private async parseAttributes(url: string) {
+        const res = await axios.get(url, {
+            withCredentials: false,
+            headers: {
+                Cookie: "Lang=ru;"
+            }
+        });
+        const html = parse(res.data)
 
+        const HTMLCharsBlocks = html.querySelectorAll('div[class="br-pr-chr-item"]');
+        HTMLCharsBlocks.pop();
+
+        for (const HTMLCharBlock of HTMLCharsBlocks) {
+            const HTMLChars = HTMLCharBlock.querySelectorAll('div');
+            HTMLChars.splice(0, 1);
+
+            for (const HTMLChar of HTMLChars) {
+                const name = HTMLChar.querySelectorAll('span')[0].innerText;
+                const value = HTMLChar.querySelector('a')?.innerText ?? HTMLChar.querySelectorAll('span')[1].innerText;
+
+                attributes.push({ name, value })
+            }
+        }
+
+        return attributes;
     }
 }
 

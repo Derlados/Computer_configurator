@@ -1,5 +1,6 @@
 import BrainParser from './parsers/BrainParser';
 
+BrainParser.start();
 
 // async function parseSite() {
 //     const res = await axios.get('https://hard.rozetka.com.ua/videocards/c80087/')
@@ -17,5 +18,3 @@ import BrainParser from './parsers/BrainParser';
 // ProductModel.getProducts({ shop: 'brain.com' }).then(data => {
 //     console.log(data);
 // });
-
-BrainParser.updateProducts();
