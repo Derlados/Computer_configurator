@@ -23,7 +23,7 @@ export class AuthService {
 
         try {
             const user = await this.usersService.createUser(dto);
-            return this.getAccountData(user, this.generateToken(user));
+            return this.generateToken(user)
         } catch (err) {
             if (err.code == 'ER_DUP_ENTRY') {
                 throw new ConflictException("User with this username, already exist");
@@ -38,7 +38,7 @@ export class AuthService {
         if (!user) {
             return this.register(dto);
         } else {
-            return this.getAccountData(user, this.generateToken(user));
+            return this.generateToken(user)
         }
     }
 
@@ -53,21 +53,11 @@ export class AuthService {
             throw new NotFoundException("User not found");
         }
 
-        return this.getAccountData(user, this.generateToken(user));
-    }
-
-    private getAccountData(user: User, token: string) {
-        return {
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            photo: user.photo,
-            token: token
-        };
+        return this.generateToken(user)
     }
 
     private generateToken(user: User) {
-        const payload = { id: user.id, username: user.username, roles: user.roles.map(role => role.name) };
+        const payload = { id: user.id, username: user.username, roles: user.roles?.map(role => role.name) ?? ["user"] };
         return this.jwtService.sign(payload);
     }
 }

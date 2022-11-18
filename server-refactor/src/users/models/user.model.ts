@@ -2,7 +2,7 @@ import { Exclude, Expose } from "class-transformer";
 import { Build } from "src/builds/models/build.model";
 import { AccessGroups } from "src/constants/AccessGroups";
 import { Role } from "src/roles/models/role.model";
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Comment } from "../../comments/models/comment.model";
 
 @Entity('users')
@@ -47,7 +47,8 @@ export class User {
     @Exclude()
     comments: Comment[];
 
-    @OneToMany(() => Role, roles => roles.users)
+    @ManyToMany(() => Role, roles => roles.users)
+    @JoinTable()
     @Exclude()
     roles: Role[];
 }

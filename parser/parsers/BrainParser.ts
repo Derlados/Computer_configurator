@@ -29,7 +29,7 @@ class BrainParser extends Parser {
     override async start() {
         for (const [categoryId, category] of this.categories.entries()) {
             const maxPages = await this.getMaxPages(`${this.BASE_URL}/${category}`)
-            const DBProducts = await componentsService.getComponents(category);
+            const DBProducts = await componentsService.getComponents(categoryId);
 
             for (let i = 1; i <= maxPages || i <= 50; ++i) {
                 const parsedProducts = await this.parseProducts(`${this.BASE_URL}/${category}/page=${i}/`);
@@ -37,22 +37,28 @@ class BrainParser extends Parser {
                 for (const parsedProduct of parsedProducts) {
                     const foundProduct = DBProducts.find(p => p.url == parsedProduct.url);
                     if (foundProduct) {
-                        const { id, attributes, ...productInfo } = foundProduct;
-                        await componentsService.updateComponent(id, {
-                            ...productInfo,
-                            categoryId
-                        })
+                        // const { id, attributes, ...productInfo } = foundProduct;
+                        // const components = await componentsService.updateComponent(id, {
+                        //     ...productInfo,
+                        //     categoryId
+                        // })
+
+                        // console.log(components)
                     } else {
                         const { id, ...productInfo } = parsedProduct;
                         const attributes = await this.parseAttributes(parsedProduct.url);
 
-                        await componentsService.createComponent({
+                        const component = await componentsService.createComponent({
                             ...productInfo,
                             categoryId,
                             attributes
                         })
+
+                        console.log(component)
                     }
                 }
+
+
 
                 await this.timeout(this.TIMEOUT);
             }
@@ -75,7 +81,10 @@ class BrainParser extends Parser {
             const url = HTMLComponent.querySelector('a[itemprop="url"]')?.getAttribute('href');
             const productUrl = `${this.BASE_URL}${url}`.replace('/ukr', '');
 
-            const name = HTMLComponent.querySelector('a[itemprop="url"]')?.innerText ?? '';
+            const name = HTMLComponent.querySelector('div[class="description-wrapper"]')?.querySelector('a[itemprop="url"]')
+                ?.innerText.replace(/\n/g, '') ?? '';
+
+
             const price = Number(HTMLComponent.querySelector('span[itemprop="price"]')?.innerText);
             const img = HTMLComponent.querySelector('img[itemprop="image"]')?.getAttribute('data-observe-src');
             const outOfStock = HTMLComponent.querySelector('div[class="br-pp-net"]');
@@ -131,8 +140,8 @@ class BrainParser extends Parser {
             HTMLChars.splice(0, 1);
 
             for (const HTMLChar of HTMLChars) {
-                const name = HTMLChar.querySelectorAll('span')[0].innerText;
-                const value = HTMLChar.querySelector('a')?.innerText ?? HTMLChar.querySelectorAll('span')[1].innerText;
+                const name = HTMLChar.querySelectorAll('span')[0].innerText.replace(/\n/g, '');
+                const value = HTMLChar.querySelector('a')?.innerText ?? HTMLChar.querySelectorAll('span')[1].innerText.replace(/\n/g, '');
 
                 attributes.push({ name, value })
             }

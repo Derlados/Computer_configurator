@@ -13,7 +13,19 @@ export class UsersService {
     constructor(@InjectRepository(User) private usersRepository: Repository<User>) { }
 
     async findUserById(id: number) {
-        return this.usersRepository.find({ id: id });
+        return this.usersRepository.find({ where: { id: id }, relations: ["roles"] });
+    }
+
+    async findUserByGoogleId(googleId: string) {
+        return this.usersRepository.findOne({ where: { googleId: googleId }, relations: ["roles"] });
+    }
+
+    async findByUserame(username: string) {
+        return this.usersRepository.findOne({ where: { username: username }, relations: ["roles"] });
+    }
+
+    async findAllByUsername(username: string) {
+        return this.usersRepository.find({ where: { username: Like(`%${username}%`) }, relations: ["roles"] });
     }
 
     async createUser(dto: CreateUserDto | GoogleSignInDto) {
@@ -62,15 +74,4 @@ export class UsersService {
 
     }
 
-    async findUserByGoogleId(googleId: string) {
-        return this.usersRepository.findOne({ googleId: googleId });
-    }
-
-    async findByUserame(username: string) {
-        return this.usersRepository.findOne({ username: username });
-    }
-
-    async findAllByUsername(username: string) {
-        return this.usersRepository.find({ username: Like(`%${username}%`) });
-    }
 }

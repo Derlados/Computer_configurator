@@ -14,7 +14,7 @@ export class CreateBuildDto {
     isPublic: boolean;
 
     @IsArray()
-    @ValidateNested()
+    @ValidateNested({ each: true })
     @Type(() => CreateBuildComponentDto)
     components: CreateBuildComponentDto[];
 }

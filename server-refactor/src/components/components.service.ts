@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
@@ -19,6 +19,20 @@ export class ComponentsService {
 
     }
 
+    async getComponentsById(id: number) {
+        return this.componentRepository.findOne({
+            where: { id: id },
+            relations: ["category", "componentAttributes", "componentAttributes.attribute", "componentAttributes.value"]
+        })
+    }
+
+    async getComponentsByCategoryId(categoryId: number) {
+        return this.componentRepository.find({
+            where: { categoryId: categoryId },
+            relations: ["category", "componentAttributes", "componentAttributes.attribute", "componentAttributes.value"]
+        })
+    }
+
     async getComponentsByCategoryUrl(categoryUrl: string) {
         return this.componentRepository.find({
             where: { category: { url: categoryUrl } },
@@ -32,6 +46,8 @@ export class ComponentsService {
         const result = await this.componentRepository.insert({ ...component });
         const insertId = result.raw.insertId;
         await this.addAttributes(insertId, attributes);
+
+        return this.getComponentsById(insertId);
     }
 
     /**
@@ -47,11 +63,18 @@ export class ComponentsService {
         const inserts: QueryDeepPartialEntity<ComponentAttribute>[] = []
 
         for (const attribute of attributes) {
-            const attributeProm = this.attributeRepository.save({ name: attribute.name });
-            const valueProm = this.valueRepository.save({ value: attribute.value });
+            const [existAttribute, existValue] = [
+                await this.attributeRepository.findOne({ name: attribute.name }),
+                await this.valueRepository.findOne({ value: attribute.value })
+            ];
 
-            const [savedAttribute, savedValue] = [await attributeProm, await valueProm];
-            inserts.push({ compoentId: componentId, attributeId: savedAttribute.id, valueId: savedValue.id })
+            const [attributeId, valueId] = [
+                existAttribute ? existAttribute.id : (await this.attributeRepository.insert({ name: attribute.name })).raw.insertId,
+                existValue ? existValue.id : (await this.valueRepository.insert({ value: attribute.value })).raw.insertId
+            ];
+
+
+            inserts.push({ compoentId: componentId, attributeId: attributeId, valueId: valueId })
         }
 
         await this.componentAttributeRepository.insert(inserts)

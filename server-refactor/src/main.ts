@@ -3,8 +3,9 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
+const PORT = process.env.PORT || 5000;
+
 async function start() {
-    const PORT = process.env.PORT || 5000;
     const app = await NestFactory.create(AppModule)
     app.enableCors();
     app.setGlobalPrefix('api')
