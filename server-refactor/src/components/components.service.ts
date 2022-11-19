@@ -57,6 +57,7 @@ export class ComponentsService {
      */
     async updateComponent(id: number, dto: ComponentDto) {
         await this.componentRepository.update({ id: id }, { ...dto });
+        return this.getComponentsById(id);
     }
 
     private async addAttributes(componentId: number, attributes: CreateAttributeDto[]) {

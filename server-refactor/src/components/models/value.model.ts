@@ -6,7 +6,7 @@ export class Value {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ type: "varchar", length: 200, unique: true })
+    @Column({ type: "varchar", length: 255, unique: true, nullable: false })
     value: string;
 
     @OneToMany(() => ComponentAttribute, componentAttribute => componentAttribute.value)

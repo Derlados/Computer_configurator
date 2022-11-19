@@ -1,7 +1,7 @@
 export interface ComponentDto {
     categoryId: number;
     name: string;
-    price: number;
+    price: string;
     img: string;
     url: string;
     shop: string;

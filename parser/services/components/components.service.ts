@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { axiosInstance, headers } from "..";
 import { IProduct } from "../../types/IProduct";
 import { ComponentDto } from "./dto/component.dto";
@@ -13,18 +13,14 @@ class ComponentService {
     }
 
     async createComponent(dto: CreateComponentDto) {
-        try {
-            console.log(dto);
-            const { data } = await axiosInstance.post<IProduct[]>(`${ComponentService.API_URL}`, dto, { headers: headers() });
-            return data;
-        } catch (e) {
-            // console.log(e);
-        }
+        const { data } = await axiosInstance.post<IProduct>(`${ComponentService.API_URL}`, dto, { headers: headers() });
+        return data;
     }
 
     async updateComponent(id: number, dto: ComponentDto) {
-        const { data } = await axiosInstance.put<IProduct[]>(`${ComponentService.API_URL}/${id}`, dto, { headers: headers() })
+        const { data } = await axiosInstance.put<IProduct>(`${ComponentService.API_URL}/${id}`, dto, { headers: headers() })
         return data;
+
     }
 }
 

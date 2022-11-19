@@ -35,33 +35,29 @@ class BrainParser extends Parser {
                 const parsedProducts = await this.parseProducts(`${this.BASE_URL}/${category}/page=${i}/`);
 
                 for (const parsedProduct of parsedProducts) {
+                    const { id, ...productInfo } = parsedProduct;
+
                     const foundProduct = DBProducts.find(p => p.url == parsedProduct.url);
                     if (foundProduct) {
-                        // const { id, attributes, ...productInfo } = foundProduct;
-                        // const components = await componentsService.updateComponent(id, {
-                        //     ...productInfo,
-                        //     categoryId
-                        // })
-
-                        // console.log(components)
+                        await componentsService.updateComponent(foundProduct.id, {
+                            ...parsedProduct,
+                            categoryId
+                        })
                     } else {
-                        const { id, ...productInfo } = parsedProduct;
                         const attributes = await this.parseAttributes(parsedProduct.url);
 
-                        const component = await componentsService.createComponent({
+                        await componentsService.createComponent({
                             ...productInfo,
                             categoryId,
                             attributes
                         })
-
-                        console.log(component)
                     }
                 }
 
-
-
                 await this.timeout(this.TIMEOUT);
             }
+
+            console.log("parsed: " + category);
         }
     }
 
@@ -85,7 +81,7 @@ class BrainParser extends Parser {
                 ?.innerText.replace(/\n/g, '') ?? '';
 
 
-            const price = Number(HTMLComponent.querySelector('span[itemprop="price"]')?.innerText);
+            const price = HTMLComponent.querySelector('span[itemprop="price"]')?.innerText ?? '-1';
             const img = HTMLComponent.querySelector('img[itemprop="image"]')?.getAttribute('data-observe-src');
             const outOfStock = HTMLComponent.querySelector('div[class="br-pp-net"]');
             const isActual = outOfStock == null;
@@ -143,7 +139,10 @@ class BrainParser extends Parser {
                 const name = HTMLChar.querySelectorAll('span')[0].innerText.replace(/\n/g, '');
                 const value = HTMLChar.querySelector('a')?.innerText ?? HTMLChar.querySelectorAll('span')[1].innerText.replace(/\n/g, '');
 
-                attributes.push({ name, value })
+                // Ограничение по длинне
+                if (name && value && name.length <= 150 && value.length <= 255) {
+                    attributes.push({ name, value })
+                }
             }
         }
 

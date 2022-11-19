@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsDecimal, IsNumber, IsString } from "class-validator";
 
 export class ComponentDto {
     @IsNumber()
@@ -7,7 +7,7 @@ export class ComponentDto {
     @IsString()
     name: string;
 
-    @IsNumber()
+    @IsDecimal()
     price: number;
 
     @IsString()

@@ -19,14 +19,8 @@ class ComponentService {
     }
     createComponent(dto) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                console.log(dto);
-                const { data } = yield __1.axiosInstance.post(`${ComponentService.API_URL}`, dto, { headers: (0, __1.headers)() });
-                return data;
-            }
-            catch (e) {
-                // console.log(e);
-            }
+            const { data } = yield __1.axiosInstance.post(`${ComponentService.API_URL}`, dto, { headers: (0, __1.headers)() });
+            return data;
         });
     }
     updateComponent(id, dto) {

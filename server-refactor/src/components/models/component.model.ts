@@ -29,7 +29,7 @@ export class Component {
     @Column({ type: "varchar", length: 255, nullable: true })
     shop: string;
 
-    @Column({ name: "updated_at", type: "datetime", default: () => "CURRENT_TIMESTAMP()" })
+    @Column({ name: "updated_at", type: "datetime", default: () => "CURRENT_TIMESTAMP()", onUpdate: "NOW()" })
     @Exclude()
     updatedAt: Date;
 

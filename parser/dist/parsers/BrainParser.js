@@ -51,30 +51,25 @@ class BrainParser extends Parser_1.Parser {
                 for (let i = 1; i <= maxPages || i <= 50; ++i) {
                     const parsedProducts = yield this.parseProducts(`${this.BASE_URL}/${category}/page=${i}/`);
                     for (const parsedProduct of parsedProducts) {
+                        const { id } = parsedProduct, productInfo = __rest(parsedProduct, ["id"]);
                         const foundProduct = DBProducts.find(p => p.url == parsedProduct.url);
                         if (foundProduct) {
-                            // const { id, attributes, ...productInfo } = foundProduct;
-                            // const components = await componentsService.updateComponent(id, {
-                            //     ...productInfo,
-                            //     categoryId
-                            // })
-                            // console.log(components)
+                            yield components_service_1.default.updateComponent(foundProduct.id, Object.assign(Object.assign({}, parsedProduct), { categoryId }));
                         }
                         else {
-                            const { id } = parsedProduct, productInfo = __rest(parsedProduct, ["id"]);
                             const attributes = yield this.parseAttributes(parsedProduct.url);
-                            const component = yield components_service_1.default.createComponent(Object.assign(Object.assign({}, productInfo), { categoryId,
+                            yield components_service_1.default.createComponent(Object.assign(Object.assign({}, productInfo), { categoryId,
                                 attributes }));
-                            console.log(component);
                         }
                     }
                     yield this.timeout(this.TIMEOUT);
                 }
+                console.log("parsed: " + category);
             }
         });
     }
     parseProducts(pageUrl) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g;
         return __awaiter(this, void 0, void 0, function* () {
             const parsedProducts = [];
             const res = yield axios_1.default.get(pageUrl, {
@@ -89,8 +84,8 @@ class BrainParser extends Parser_1.Parser {
                 const url = (_a = HTMLComponent.querySelector('a[itemprop="url"]')) === null || _a === void 0 ? void 0 : _a.getAttribute('href');
                 const productUrl = `${this.BASE_URL}${url}`.replace('/ukr', '');
                 const name = (_d = (_c = (_b = HTMLComponent.querySelector('div[class="description-wrapper"]')) === null || _b === void 0 ? void 0 : _b.querySelector('a[itemprop="url"]')) === null || _c === void 0 ? void 0 : _c.innerText.replace(/\n/g, '')) !== null && _d !== void 0 ? _d : '';
-                const price = Number((_e = HTMLComponent.querySelector('span[itemprop="price"]')) === null || _e === void 0 ? void 0 : _e.innerText);
-                const img = (_f = HTMLComponent.querySelector('img[itemprop="image"]')) === null || _f === void 0 ? void 0 : _f.getAttribute('data-observe-src');
+                const price = (_f = (_e = HTMLComponent.querySelector('span[itemprop="price"]')) === null || _e === void 0 ? void 0 : _e.innerText) !== null && _f !== void 0 ? _f : '-1';
+                const img = (_g = HTMLComponent.querySelector('img[itemprop="image"]')) === null || _g === void 0 ? void 0 : _g.getAttribute('data-observe-src');
                 const outOfStock = HTMLComponent.querySelector('div[class="br-pp-net"]');
                 const isActual = outOfStock == null;
                 parsedProducts.push({
@@ -143,7 +138,10 @@ class BrainParser extends Parser_1.Parser {
                 for (const HTMLChar of HTMLChars) {
                     const name = HTMLChar.querySelectorAll('span')[0].innerText.replace(/\n/g, '');
                     const value = (_b = (_a = HTMLChar.querySelector('a')) === null || _a === void 0 ? void 0 : _a.innerText) !== null && _b !== void 0 ? _b : HTMLChar.querySelectorAll('span')[1].innerText.replace(/\n/g, '');
-                    attributes.push({ name, value });
+                    // Ограничение по длинне
+                    if (name && value && name.length <= 150 && value.length <= 255) {
+                        attributes.push({ name, value });
+                    }
                 }
             }
             return attributes;
