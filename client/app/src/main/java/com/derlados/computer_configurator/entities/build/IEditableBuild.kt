@@ -1,4 +1,4 @@
-package com.derlados.computer_configurator.stores.entities.build
+package com.derlados.computer_configurator.entities.build
 
 import com.derlados.computer_configurator.consts.ComponentCategory
 

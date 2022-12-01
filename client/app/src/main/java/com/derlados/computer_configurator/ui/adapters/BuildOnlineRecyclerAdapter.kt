@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.view.View
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
-import com.derlados.computer_configurator.stores.entities.build.Build
+import com.derlados.computer_configurator.entities.build.Build
 import com.derlados.computer_configurator.ui.decorators.AnimOnTouchListener
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
@@ -22,7 +22,8 @@ class BuildOnlineRecyclerAdapter<T : Build>(override val builds: ArrayList<T>, v
         holder.tvName.text = build.name
         holder.tvPrice.text = App.app.getString(R.string.component_price, build.price)
         holder.tvUserOrStatusHeader.setText(R.string.creator)
-        holder.tvUserOrStatusValue.text = build.username
+        holder.tvUserOrStatusValue.text = build.user.username
+        holder.btShare.visibility = View.VISIBLE
         holder.btPublish.visibility = View.GONE
         holder.btDelete.visibility = View.GONE
         holder.tvPublishDate.visibility = View.VISIBLE

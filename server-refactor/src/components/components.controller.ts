@@ -37,7 +37,7 @@ export class ComponentsController {
     @Roles(RoleValues.ADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @UseInterceptors(ClassSerializerInterceptor)
-    updateComponent(@Param('id') id: number, @Body() dto: ComponentDto) {
+    updateComponent(@Param('id') id: number, @Body() dto: CreateComponentDto) {
         return this.componentsService.updateComponent(id, dto);
     }
 }

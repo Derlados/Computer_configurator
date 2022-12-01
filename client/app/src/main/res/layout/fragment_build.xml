@@ -59,6 +59,18 @@
                         android:imeOptions="actionDone"
                         android:singleLine="true"/>
 
+                    <EditText
+                        android:id="@+id/fragment_build_et_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:backgroundTint="@color/hint_color"
+                        android:hint="@string/build_desc"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/hint_color" />
+
                     <TextView
                         android:id="@+id/fragment_build_tv_price"
                         android:layout_width="match_parent"
@@ -127,18 +139,6 @@
                 android:text="@string/description"
                 android:textSize="20sp"
                 android:textColor="@color/light_blue"/>
-
-            <EditText
-                android:id="@+id/fragment_build_et_desc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/build_desc"
-                android:textColor="@color/white"
-                android:textColorHint="@color/hint_color"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:backgroundTint="@color/hint_color"
-                android:layout_marginBottom="15dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

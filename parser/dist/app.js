@@ -29,4 +29,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const BrainParser_1 = __importDefault(require("./parsers/BrainParser"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-BrainParser_1.default.start();
+BrainParser_1.default.heavyUpdate();

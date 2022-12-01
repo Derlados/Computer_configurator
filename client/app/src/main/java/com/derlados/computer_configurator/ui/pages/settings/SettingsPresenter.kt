@@ -5,6 +5,7 @@ import com.derlados.computer_configurator.stores.UserStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import kotlinx.coroutines.*
 import java.io.File
+import java.net.SocketTimeoutException
 
 class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourceProvider) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -53,6 +54,10 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
                 ensureActive()
                 errorHandle(e.message)
                 view.signOutGoogle()
+            }catch (e: SocketTimeoutException) {
+                if (isActive) {
+                    view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
+                }
             }
         }
     }
@@ -64,6 +69,10 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
             } catch (e: NetworkErrorException) {
                 ensureActive()
                 errorHandle(e.message)
+            } catch (e: SocketTimeoutException) {
+                if (isActive) {
+                    view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
+                }
             }
 
             ensureActive()

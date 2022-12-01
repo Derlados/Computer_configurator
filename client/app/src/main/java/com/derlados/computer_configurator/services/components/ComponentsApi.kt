@@ -1,8 +1,9 @@
 package com.derlados.computer_configurator.services.components
 
 
+import com.derlados.computer_configurator.consts.Domain
 import com.derlados.computer_configurator.types.FilterAttribute
-import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.entities.Component
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -11,8 +12,8 @@ import kotlin.collections.HashMap
 
 interface ComponentsApi {
     companion object {
-     // const val BASE_URL: String = "http://192.168.1.3:3000/api/components/"
-        const val BASE_URL: String = "https://ancient-sea-58128.herokuapp.com/api/components/"
+      const val BASE_URL: String = "${Domain.TEST_APP_DOMAIN}/api/components/"
+//        const val BASE_URL: String = "${Domain.APP_DOMAIN}/api/components/"
     }
 
     @GET("category={category}")

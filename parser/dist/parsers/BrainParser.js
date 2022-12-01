@@ -30,14 +30,14 @@ const Parser_1 = require("./Parser");
 class BrainParser extends Parser_1.Parser {
     constructor() {
         super('https://brain.com.ua');
-        this.TIMEOUT = 5000;
+        this.TIMEOUT = 3000;
         this.categories = new Map([
             [1, 'category/Processory-c1097-128'],
             [2, 'category/Vydeokarty-c1403'],
             [3, 'category/Systemnye_materynskye_platy-c1264-226'],
             [4, 'category/SSD_dysky-c1484'],
-            [5, 'category/Vynchestery_HDD-c1361-260'],
-            [6, 'category/Moduly_pamyaty-c1334'],
+            [5, 'https://brain.com.ua/category/Zhestkie_diski_HDD-c2817/filter=a2817-206'],
+            [6, 'category/Operativnaya_pamyat-c3130/filter=a3130-209'],
             [7, 'category/Bloky_pytanyya-c1442-221'],
             [8, 'category/Korpusa-c1441-271'],
             [9, 'category/Kulery_k_processoram_termopasta-c1108'],
@@ -48,8 +48,13 @@ class BrainParser extends Parser_1.Parser {
             for (const [categoryId, category] of this.categories.entries()) {
                 const maxPages = yield this.getMaxPages(`${this.BASE_URL}/${category}`);
                 const DBProducts = yield components_service_1.default.getComponents(categoryId);
+                if (categoryId != 5 && categoryId != 6) {
+                    continue;
+                }
                 for (let i = 1; i <= maxPages || i <= 50; ++i) {
-                    const parsedProducts = yield this.parseProducts(`${this.BASE_URL}/${category}/page=${i}/`);
+                    const parsedProducts = categoryId == 5 || categoryId == 6
+                        ? yield this.parseProducts(`${this.BASE_URL}/${category};page=${i}/`)
+                        : yield this.parseProducts(`${this.BASE_URL}/${category}/page=${i}/`);
                     for (const parsedProduct of parsedProducts) {
                         const { id } = parsedProduct, productInfo = __rest(parsedProduct, ["id"]);
                         const foundProduct = DBProducts.find(p => p.url == parsedProduct.url);
@@ -65,6 +70,29 @@ class BrainParser extends Parser_1.Parser {
                     yield this.timeout(this.TIMEOUT);
                 }
                 console.log("parsed: " + category);
+            }
+        });
+    }
+    heavyUpdate() {
+        return __awaiter(this, void 0, void 0, function* () {
+            for (const [categoryId, category] of this.categories.entries()) {
+                const DBProducts = yield components_service_1.default.getComponents(categoryId);
+                if (categoryId < 6) {
+                    continue;
+                }
+                for (const product of DBProducts) {
+                    const { id } = product, productInfo = __rest(product, ["id"]);
+                    try {
+                        console.log(`${product.id} - ${product.url}`);
+                        const attributes = yield this.parseAttributes(product.url);
+                        yield components_service_1.default.updateComponent(id, Object.assign(Object.assign({}, productInfo), { attributes,
+                            categoryId }));
+                    }
+                    catch (e) {
+                        //ignored
+                    }
+                    yield this.timeout(this.TIMEOUT);
+                }
             }
         });
     }

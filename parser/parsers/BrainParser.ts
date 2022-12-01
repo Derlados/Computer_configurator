@@ -7,7 +7,7 @@ import { IProduct } from "../types/IProduct";
 
 
 class BrainParser extends Parser {
-    private readonly TIMEOUT = 5000;
+    private readonly TIMEOUT = 3000;
     private readonly categories: Map<number, string>;
 
     constructor() {
@@ -17,8 +17,8 @@ class BrainParser extends Parser {
             [2, 'category/Vydeokarty-c1403'],
             [3, 'category/Systemnye_materynskye_platy-c1264-226'],
             [4, 'category/SSD_dysky-c1484'],
-            [5, 'category/Vynchestery_HDD-c1361-260'],
-            [6, 'category/Moduly_pamyaty-c1334'],
+            [5, 'https://brain.com.ua/category/Zhestkie_diski_HDD-c2817/filter=a2817-206'],
+            [6, 'category/Operativnaya_pamyat-c3130/filter=a3130-209'],
             [7, 'category/Bloky_pytanyya-c1442-221'],
             [8, 'category/Korpusa-c1441-271'],
             [9, 'category/Kulery_k_processoram_termopasta-c1108'],
@@ -32,7 +32,10 @@ class BrainParser extends Parser {
             const DBProducts = await componentsService.getComponents(categoryId);
 
             for (let i = 1; i <= maxPages || i <= 50; ++i) {
-                const parsedProducts = await this.parseProducts(`${this.BASE_URL}/${category}/page=${i}/`);
+
+                const parsedProducts = categoryId == 5 || categoryId == 6
+                    ? await this.parseProducts(`${this.BASE_URL}/${category};page=${i}/`)
+                    : await this.parseProducts(`${this.BASE_URL}/${category}/page=${i}/`);
 
                 for (const parsedProduct of parsedProducts) {
                     const { id, ...productInfo } = parsedProduct;
@@ -58,6 +61,34 @@ class BrainParser extends Parser {
             }
 
             console.log("parsed: " + category);
+        }
+    }
+
+    async heavyUpdate() {
+        for (const [categoryId, category] of this.categories.entries()) {
+            const DBProducts = await componentsService.getComponents(categoryId);
+
+            if (categoryId < 6) {
+                continue;
+            }
+
+            for (const product of DBProducts) {
+                const { id, ...productInfo } = product;
+
+                try {
+                    console.log(`${product.id} - ${product.url}`);
+                    const attributes = await this.parseAttributes(product.url);
+                    await componentsService.updateComponent(id, {
+                        ...productInfo,
+                        attributes,
+                        categoryId
+                    })
+                } catch (e) {
+                    //ignored
+                }
+
+                await this.timeout(this.TIMEOUT);
+            }
         }
     }
 

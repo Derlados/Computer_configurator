@@ -17,7 +17,7 @@ class ComponentService {
         return data;
     }
 
-    async updateComponent(id: number, dto: ComponentDto) {
+    async updateComponent(id: number, dto: CreateComponentDto) {
         const { data } = await axiosInstance.put<IProduct>(`${ComponentService.API_URL}/${id}`, dto, { headers: headers() })
         return data;
 

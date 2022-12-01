@@ -3,7 +3,7 @@ package com.derlados.computer_configurator.providers
 import android.content.Context
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.stores.entities.build.Build
+import com.derlados.computer_configurator.entities.build.Build
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 
 class AndroidResourceProvider(private val context: Context): ResourceProvider {

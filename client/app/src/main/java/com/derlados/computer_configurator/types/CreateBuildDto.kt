@@ -1,6 +1,6 @@
 package com.derlados.computer_configurator.types
 
-import com.derlados.computer_configurator.stores.entities.build.Build
+import com.derlados.computer_configurator.entities.build.Build
 
 /**
  * Данные о сборке для передачи в запросе, так как большинство данные является лищними

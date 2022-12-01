@@ -1,7 +1,7 @@
-package com.derlados.computer_configurator.stores.entities.build
+package com.derlados.computer_configurator.entities.build
 
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.stores.entities.User
+import com.derlados.computer_configurator.entities.User
 import java.util.*
 import kotlin.collections.ArrayList
 

@@ -2,13 +2,14 @@ package com.derlados.computer_configurator.ui.pages.build.build_view
 
 import android.accounts.NetworkErrorException
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.entities.Component
 import com.derlados.computer_configurator.stores.ComponentStore
 import com.derlados.computer_configurator.stores.PublicBuildsStore
 import com.derlados.computer_configurator.stores.UserStore
-import com.derlados.computer_configurator.stores.entities.build.Build
+import com.derlados.computer_configurator.entities.build.Build
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import kotlinx.coroutines.*
+import java.net.SocketTimeoutException
 
 class OnlineBuildPresenter(private val view: BuildOnlineView, private val resourceProvider: ResourceProvider) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -41,13 +42,11 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
             UserStore.token?.let {
                 try {
                     val newComment = PublicBuildsStore.addNewComment(it, currentBuild.id, text, parentId)
-                    if (isActive) {
-                        view.appendComment(newComment, indexToAdd, parentId != null)
-                    }
+                    ensureActive()
+                    view.appendComment(newComment, indexToAdd, parentId != null)
                 } catch (e: NetworkErrorException) {
-                    if (isActive) {
-                        errorHandle(e.message)
-                    }
+                    ensureActive()
+                    errorHandle(e.message)
                 }
             }
         }
@@ -60,29 +59,38 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
 
     private fun downloadBuild(id: Int) {
         coroutineScope.launch {
-            currentBuild = PublicBuildsStore.getBuildById(id)
+            try {
+                currentBuild = PublicBuildsStore.getBuildById(id)
 
-            // Заголовочные данные сборки
-            view.setHeaderData(currentBuild.name, currentBuild.description)
-            view.setPrice(currentBuild.price)
-            view.setUsername(currentBuild.username)
-            currentBuild.image?.let { image ->
-                view.setImage(image)
-            }
-
-            // Комлпектующие
-            for ((category, buildComponents) in currentBuild.components) {
-                for (i in 0 until buildComponents.size) {
-                    view.addComponent(
-                        category,
-                        currentBuild.isMultipleCategory(category),
-                        buildComponents[i],
-                        false
-                    )
+                ensureActive()
+                // Заголовочные данные сборки
+                view.setHeaderData(currentBuild.name, currentBuild.description)
+                view.setPrice(currentBuild.price)
+                view.setUsername(currentBuild.user.username)
+                currentBuild.image?.let { image ->
+                    view.setImage(image)
                 }
-            }
 
-            view.deleteEmptyLists()
+                // Комлпектующие
+                for ((category, buildComponents) in currentBuild.components) {
+                     for (i in 0 until buildComponents.size) {
+                        view.addComponent(
+                            category,
+                            currentBuild.isMultipleCategory(category),
+                            buildComponents[i],
+                            true
+                        )
+                    }
+                }
+
+                view.deleteEmptyLists()
+            } catch (e: NetworkErrorException) {
+                ensureActive()
+                errorHandle(e.message)
+            } catch (e: SocketTimeoutException) {
+                ensureActive()
+                view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
+            }
         }
     }
 
@@ -92,13 +100,14 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
                 val comments = PublicBuildsStore.getComments(buildId)
                 val sortedComments = comments.sortedByDescending { comment -> comment.creationDate }
 
-                if (isActive) {
-                    view.setComments(ArrayList(sortedComments))
-                }
+                ensureActive()
+                view.setComments(ArrayList(sortedComments))
             } catch (e: NetworkErrorException) {
-                if (isActive) {
-                    errorHandle(e.message)
-                }
+                ensureActive()
+                errorHandle(e.message)
+            } catch (e: SocketTimeoutException) {
+                ensureActive()
+                view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
             }
         }
     }

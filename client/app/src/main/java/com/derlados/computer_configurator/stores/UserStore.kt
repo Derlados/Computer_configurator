@@ -3,7 +3,7 @@ package com.derlados.computer_configurator.stores
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.derlados.computer_configurator.App
-import com.derlados.computer_configurator.stores.entities.User
+import com.derlados.computer_configurator.entities.User
 import com.derlados.computer_configurator.services.users.UsersService
 import java.io.File
 import java.util.*
@@ -26,28 +26,14 @@ object UserStore: Observable() {
             MODE_PRIVATE
     )
 
-
-
     suspend fun register(username: String, password: String, secret: String) {
         token = UsersService.register(username, password, secret)
         getPersonalData()
-
-//        else if (response.code() == 409 && response.message() == "username") {
-//            continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.USERNAME_EXISTS.name))
-//        } else if (response.code() == 409 && response.message() == "email") {
-//            continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.GOOGLE_ACC_ALREADY_USED.name))
-//        } else {
-//            continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
-//        }
     }
 
     suspend fun login(username: String, password: String) {
         token = UsersService.login(username, password)
         getPersonalData()
-
-//        else if (response.code() == 404) {
-//            continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INCORRECT_LOGIN_OR_PASSWORD.name))
-//        }
     }
 
     suspend fun googleSignIn(googleId: String, username: String, email: String, photoUrl: String?) {
@@ -64,12 +50,6 @@ object UserStore: Observable() {
 
         currentUser = UsersService.update(token, username, img)
         getPersonalData()
-
-//        else if (response.code() == 409 && response.message() == "username") {
-//            continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.USERNAME_EXISTS.name))
-//        } else {
-//            continuation.resumeWithException(NetworkErrorException(ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name))
-//        }
     }
 
     suspend fun addGoogleAcc(googleId: String, email: String, photoUrl: String?) {
@@ -88,7 +68,6 @@ object UserStore: Observable() {
         token?.let {
             currentUser = UsersService.getPersonal(it)
             saveUser()
-
         }
     }
 
@@ -115,8 +94,6 @@ object UserStore: Observable() {
         setChanged()
         notifyObservers()
     }
-
-
 
     private fun saveUser() {
         currentUser?.let {

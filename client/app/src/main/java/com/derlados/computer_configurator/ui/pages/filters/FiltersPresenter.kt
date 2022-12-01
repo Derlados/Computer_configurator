@@ -2,10 +2,12 @@ package com.derlados.computer_configurator.ui.pages.filters
 
 import android.accounts.NetworkErrorException
 import com.derlados.computer_configurator.consts.SortType
+import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.stores.ComponentStore
 import kotlinx.coroutines.*
+import java.net.SocketTimeoutException
 
-class FiltersPresenter(val view: FiltersDialogView) {
+class FiltersPresenter(val view: FiltersDialogView, val resourceProvider: ResourceProvider) {
     private var maxPrice = 0
     private val userChoice = ComponentStore.userFilterChoice
 
@@ -84,10 +86,13 @@ class FiltersPresenter(val view: FiltersDialogView) {
 
                 view.initFilters(filters, maxPrice)
             } catch (e: NetworkErrorException) {
-                if (isActive) {
-                    view.showError(e.toString())
-                }
+                ensureActive()
+                view.showError(e.toString())
+
                 //TODO добавить класс ErrorHandler
+            } catch (e: SocketTimeoutException) {
+                ensureActive()
+                view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
             }
 
             view.closeProgressBar()

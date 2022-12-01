@@ -1,6 +1,6 @@
 package com.derlados.computer_configurator.ui.pages.build.build_view
 
-import com.derlados.computer_configurator.stores.entities.Comment
+import com.derlados.computer_configurator.entities.Comment
 import com.derlados.computer_configurator.ui.pages.build.BaseBuildView
 
 interface BuildOnlineView : BaseBuildView {

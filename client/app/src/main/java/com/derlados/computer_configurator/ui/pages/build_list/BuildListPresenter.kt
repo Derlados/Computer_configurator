@@ -6,6 +6,7 @@ import com.derlados.computer_configurator.stores.PublicBuildsStore
 import com.derlados.computer_configurator.stores.UserStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import kotlinx.coroutines.*
+import java.net.SocketTimeoutException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -27,9 +28,11 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
                 try {
                     LocalBuildsStore.restoreBuildsFromServer(it)
                 } catch (e: NetworkErrorException) {
-                    if (isActive) {
-                        errorHandle(e.message)
-                    }
+                    ensureActive()
+                    errorHandle(e.message)
+                } catch (e: SocketTimeoutException) {
+                    ensureActive()
+                    view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
                 }
             }
         }
@@ -55,9 +58,11 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
 
                         LocalBuildsStore.deleteBuild(build.localId)
                     } catch (e: NetworkErrorException) {
-                        if (isActive) {
-                            errorHandle(e.message)
-                        }
+                        ensureActive()
+                        errorHandle(e.message)
+                    } catch (e: SocketTimeoutException) {
+                        ensureActive()
+                        view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
                     }
                 }
             }
@@ -111,9 +116,11 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
                         view.updateItemBuildList(LocalBuildsStore.indexBuildByLocalId(localId))
                     }
                 } catch (e: NetworkErrorException) {
-                    if (isActive) {
-                        errorHandle(e.message)
-                    }
+                    ensureActive()
+                    errorHandle(e.message)
+                } catch (e: SocketTimeoutException) {
+                    ensureActive()
+                    view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
                 }
             } else {
                 view.showError(resourceProvider.getString(ResourceProvider.ResString.YOU_MUST_BE_AUTHORIZED))
@@ -129,6 +136,7 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun update(o: Observable?, arg: Any?) {
         val indexChanged = arg as Int
         if (indexChanged == LocalBuildsStore.ALL_CHANGED) {

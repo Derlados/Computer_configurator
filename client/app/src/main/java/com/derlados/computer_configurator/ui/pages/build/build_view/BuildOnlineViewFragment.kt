@@ -18,9 +18,9 @@ import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.BackStackTag
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.stores.entities.build.Build
-import com.derlados.computer_configurator.stores.entities.Comment
-import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.entities.Comment
+import com.derlados.computer_configurator.entities.Component
+import com.derlados.computer_configurator.entities.build.BuildComponent
 import com.derlados.computer_configurator.ui.pages.build.BuildViewFragment
 import com.derlados.computer_configurator.ui.decorators.AnimOnTouchListener
 import com.derlados.computer_configurator.ui.pages.component_info.ComponentInfoFragment
@@ -142,7 +142,7 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
      * @param parent - отсовский лаяут, куда будет прекреплена "карточка"
      */
     @SuppressLint("ClickableViewAccessibility")
-    override fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: Build.BuildComponent, parent: LinearLayout): View {
+    override fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildComponent, parent: LinearLayout): View {
         val card = super.createComponentCard(category, isMultiple, buildComponent, parent)
         val component = buildComponent.component
 
@@ -152,7 +152,6 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
             openComponentInfo(category, component)
             return@OnTouchListener true
         }))
-
 
         // Открытие блока на изменение количества комплектующего (для ОЗУ, накопителей и т.д.)
         if (isMultiple) {
@@ -190,9 +189,9 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
         currentFragment.fragment_build_tv_comments_head.text = App.app.getString(R.string.comments, comments.size)
 
         for (comment in comments) {
-            if (comment.idParent == - 1) {
+            if (comment.parentId == null) {
                 val commentView = createCommentView(comment)
-                val childComments = comments.filter { c -> c.idParent == comment.id  }
+                val childComments = comments.filter { c -> c.parentId == comment.id  }
                 llComments.addView(commentView)
 
                 // Добавление дочерних комментариев
@@ -273,10 +272,10 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
      */
     private fun createCommentView(comment: Comment): View {
         val commentView = layoutInflater.inflate(R.layout.inflate_comment, llComments, false)
-        comment.img?.let {
-            Picasso.get().load(comment.img).into(commentView.inflate_comment_img)
+        comment.user.photo?.let {
+            Picasso.get().load(it).into(commentView.inflate_comment_img)
         }
-        commentView.inflate_comment_tv_username.text = comment.username
+        commentView.inflate_comment_tv_username.text = comment.user.username
         commentView.inflate_comment_tv_text.text = comment.text
 
         val formatter = SimpleDateFormat("dd.MM.yy в HH:mm", Locale.getDefault())

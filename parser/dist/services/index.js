@@ -3,11 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.headersJSON = exports.headers = exports.axiosInstance = exports.axiosNVInstance = void 0;
+exports.headersJSON = exports.headers = exports.axiosInstance = void 0;
 const axios_1 = __importDefault(require("axios"));
-exports.axiosNVInstance = axios_1.default.create({
-    baseURL: 'https://api.novaposhta.ua/v2.0/json/'
-});
 exports.axiosInstance = axios_1.default.create({
     baseURL: 'http://localhost:5000/api'
     // baseURL: 'https://vs-shop.herokuapp.com/api'

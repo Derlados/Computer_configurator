@@ -82,7 +82,7 @@
     <string name="username_exists">Пользователь с таким именем уже существует</string>
     <string name="google_acc_already_used">Данный аккаунт Гугл уже используется</string>
     <string name="incorrect_login_or_password">Неправильный логин или пароль</string>
-    <string name="no_connection">No connection with our server, try later</string>
+    <string name="no_connection">No connection to our server, try later</string>
     <string name="internal_server_error">Internal server error, try later</string>
     <string name="unexpected_error">Unexpected error</string>
     <string name="incorrect_fields_length">Минимум 6 символов</string>

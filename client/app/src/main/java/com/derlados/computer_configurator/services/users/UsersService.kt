@@ -3,7 +3,7 @@ package com.derlados.computer_configurator.services.users
 import android.webkit.MimeTypeMap
 import com.derlados.computer_configurator.services.Service
 import com.derlados.computer_configurator.services.users.dto.*
-import com.derlados.computer_configurator.stores.entities.User
+import com.derlados.computer_configurator.entities.User
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

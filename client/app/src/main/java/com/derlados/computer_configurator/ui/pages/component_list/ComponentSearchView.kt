@@ -1,7 +1,7 @@
 package com.derlados.computer_configurator.ui.pages.component_list
 
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.entities.Component
 
 interface ComponentSearchView {
     fun setTitleByCategory(category: ComponentCategory)

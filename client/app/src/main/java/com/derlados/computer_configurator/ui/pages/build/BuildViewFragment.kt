@@ -10,8 +10,8 @@ import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.MainActivity
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.stores.entities.build.Build
-import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.entities.Component
+import com.derlados.computer_configurator.entities.build.BuildComponent
 import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_build.view.*
@@ -93,10 +93,10 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBack
      * @param category - категория комплектующего
      * @param isMultiple - флаг, если установлено в true, к блоку будет добавлен интерфейс для изменения количества комплектующего
      * @param buildComponent - комплектующее из сборки (расширенный объект с количеством)
-     * @param init - флаг, необходимо ли переинициализировать ExpandableLinearLayout
+     * @param initExpand - флаг, необходимо ли переинициализировать ExpandableLinearLayout. Нужен если добавление в него асинхроннео
      */
     @SuppressLint("ClickableViewAccessibility")
-    override fun addComponent(category: ComponentCategory, isMultiple: Boolean, buildComponent: Build.BuildComponent, init: Boolean) {
+    override fun addComponent(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildComponent, initExpand: Boolean) {
         componentContainers[category]?.let { container ->
             val btHeader = container.inflate_build_section_bt
             val expandContainer = container.inflate_build_section_ell_components
@@ -105,7 +105,7 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBack
             val card = createComponentCard(category, isMultiple, buildComponent, expandContainer.getChildAt(0) as LinearLayout)
             componentContainer.addView(card, componentContainer.childCount - 1)
 
-            if (init) {
+            if (initExpand) {
                 updatedExpandLayout(expandContainer, true)
                 btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_up_36, 0)
             } else {
@@ -143,7 +143,7 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBack
      * @param buildComponent - комплектующее из сборки (расширенный объект с количеством)
      * @param parent - отсовский лаяут, куда будет прекреплена "карточка"
      */
-    protected open fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: Build.BuildComponent, parent: LinearLayout): View {
+    protected open fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildComponent, parent: LinearLayout): View {
         val card = layoutInflater.inflate(R.layout.inflate_component_item, parent, false) as LinearLayout
 
         val component = buildComponent.component
@@ -151,7 +151,7 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBack
 
         card.component_item_tv_name.text = component.name
         card.component_item_tv_price.text = App.app.resources.getString(R.string.component_price, component.price)
-        Picasso.get().load(component.imageUrl).into(card.component_item_img)
+        Picasso.get().load(component.img).into(card.component_item_img)
 
         // Создание короткого описания комплектующего
         val tvHeaders: ArrayList<TextView> = ArrayList()
@@ -175,7 +175,7 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBack
                 break
             }
 
-            tvHeaders[i].text = attributes[i].name
+            tvHeaders[i].text = attributes[i].prevText
             tvValues[i].text = attributes[i].value
         }
 
@@ -185,7 +185,6 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBack
             card.inflate_component_item_tv_count.text = count.toString()
             componentsTvCount[component.id] = card.inflate_component_item_tv_count
         }
-
 
         return card
     }
@@ -204,6 +203,7 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBack
         container.toggle()
     }
 
+    //TODO пока что любой проинициализированный экспанд необходим открытым
     protected open fun updatedExpandLayout(ell: ExpandableLinearLayout, isExpanded: Boolean) {
         ell.initLayout()
         if (isExpanded) {

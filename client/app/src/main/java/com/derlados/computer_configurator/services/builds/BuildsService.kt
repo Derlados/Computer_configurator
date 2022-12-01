@@ -1,10 +1,13 @@
 package com.derlados.computer_configurator.services.builds
 
-import com.derlados.computer_configurator.stores.entities.build.Build
-import com.derlados.computer_configurator.stores.entities.Comment
+import android.accounts.NetworkErrorException
+import android.util.Log
+import com.derlados.computer_configurator.entities.build.Build
+import com.derlados.computer_configurator.entities.Comment
 import com.derlados.computer_configurator.services.Service
 import com.derlados.computer_configurator.services.users.UsersApi
 import com.derlados.computer_configurator.types.CreateBuildDto
+import kotlinx.coroutines.channels.consumesAll
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,7 +17,7 @@ object BuildsService: Service() {
 
     init {
         api = Retrofit.Builder()
-            .baseUrl(UsersApi.BASE_URL)
+            .baseUrl(BuildsApi.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(BuildsApi::class.java)
@@ -44,7 +47,6 @@ object BuildsService: Service() {
             throw this.errorHandle(res.code())
         }
     }
-
 
     /**
      * Получение комментариев сборки по id сборки. Комментарии не сохраняются в модели,

@@ -1,8 +1,5 @@
 import axios from "axios";
 
-export const axiosNVInstance = axios.create({
-    baseURL: 'https://api.novaposhta.ua/v2.0/json/'
-})
 
 export const axiosInstance = axios.create({
     baseURL: 'http://localhost:5000/api'

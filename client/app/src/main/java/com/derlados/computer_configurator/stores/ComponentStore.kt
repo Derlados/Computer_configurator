@@ -6,11 +6,12 @@ import com.derlados.computer_configurator.types.FilterAttribute
 import com.derlados.computer_configurator.types.UserFilterChoice
 import com.derlados.computer_configurator.types.clear
 import com.derlados.computer_configurator.managers.FileManager
-import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.entities.Component
 import com.derlados.computer_configurator.services.components.ComponentsService
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
+import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -151,7 +152,7 @@ object ComponentStore: Observable() {
         val lastSaveTime = FileManager.lastModDate(FileManager.Entity.COMPONENT, chosenCategory.toString()).time
         val expiryTime = lastSaveTime + TimeUnit.DAYS.toMillis(RELEVANCE_CACHE_DAYS)
 
-        return lastSaveTime < expiryTime
+        return System.currentTimeMillis() < expiryTime
     }
 
     //////////////////////////////////////////// ФУНКЦИИ ДЛЯ РАБОТЫ С ИЗБРАННЫМИ КОМПЛЕКТУЮЩИМИ /////////////////////////////////////

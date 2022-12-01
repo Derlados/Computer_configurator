@@ -13,7 +13,7 @@ import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.MainActivity
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.BackStackTag
-import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.entities.Component
 import com.derlados.computer_configurator.ui.components.AdMob
 import com.derlados.computer_configurator.ui.decorators.AnimOnTouchListener
 import com.derlados.computer_configurator.ui.OnFragmentInteractionListener

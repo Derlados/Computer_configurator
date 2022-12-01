@@ -53,6 +53,7 @@ export class Component {
     @AfterLoad()
     getAttributes() {
         this.attributes = new Map();
+
         if (this.componentAttributes) {
             this.componentAttributes.forEach((a) => {
                 const { id, name, isPreview, prevText } = a.attribute;

@@ -4,8 +4,9 @@ import android.accounts.NetworkErrorException
 import com.derlados.computer_configurator.stores.LocalBuildsStore
 import com.derlados.computer_configurator.stores.UserStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
-import com.derlados.computer_configurator.stores.entities.User
+import com.derlados.computer_configurator.entities.User
 import kotlinx.coroutines.*
+import java.net.SocketTimeoutException
 
 class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) {
     private val MIN_FIELD_LENGTH = 6
@@ -30,6 +31,9 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
                 } catch (e: NetworkErrorException) {
                     ensureActive()
                     errorHandle(e.message)
+                } catch (e: SocketTimeoutException) {
+                    ensureActive()
+                    view.showMessage(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
                 }
             }
         }
@@ -45,9 +49,11 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
                         UserStore.register(username, password, secret)
                         loadUserData()
                     } catch (e: NetworkErrorException) {
-                        if (isActive) {
-                            errorHandle(e.message)
-                        }
+                        ensureActive()
+                        errorHandle(e.message)
+                    } catch (e: SocketTimeoutException) {
+                        ensureActive()
+                        view.showMessage(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
                     }
                 }
             }
@@ -61,9 +67,11 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
                 loadUserData()
                 view.showMessage(resourceProvider.getString(ResourceProvider.ResString.LOGIN_SUCCESS))
             } catch (e: NetworkErrorException) {
-                if (isActive) {
-                    errorHandle(e.message)
-                }
+                ensureActive()
+                errorHandle(e.message)
+            } catch (e: SocketTimeoutException) {
+                ensureActive()
+                view.showMessage(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
             }
         }
     }
@@ -76,9 +84,11 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
                     view.showMessage(resourceProvider.getString(ResourceProvider.ResString.SUCCESS_CHANGE_PASSWORD))
                     view.returnBack()
                 } catch (e: NetworkErrorException) {
-                    if (isActive) {
-                        errorHandle(e.message)
-                    }
+                    ensureActive()
+                    errorHandle(e.message)
+                } catch (e: SocketTimeoutException) {
+                    ensureActive()
+                    view.showMessage(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
                 }
             }
         }
@@ -123,11 +133,18 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
     private fun loadUserData() {
         UserStore.token?.let {
             restoreDataJob = CoroutineScope(Dispatchers.Main).launch {
-                LocalBuildsStore.restoreBuildsFromServer(it)
+                try {
+                    LocalBuildsStore.restoreBuildsFromServer(it)
 
-                //TODO load favorite from server
-                if (isActive) {
+                    //TODO load favorite from server
+                    ensureActive()
                     view.returnBack()
+                }  catch (e: NetworkErrorException) {
+                    ensureActive()
+                    errorHandle(e.message)
+                } catch (e: SocketTimeoutException) {
+                    ensureActive()
+                    view.showMessage(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
                 }
             }
         }

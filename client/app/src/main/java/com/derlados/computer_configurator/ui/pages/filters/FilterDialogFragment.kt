@@ -51,7 +51,7 @@ class FilterDialogFragment(private val resultListener: () -> Unit) : DialogFragm
 
     @SuppressLint("InflateParams", "ClickableViewAccessibility")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        presenter = FiltersPresenter(this)
+        presenter = FiltersPresenter(this, App.app.resourceProvider)
 
         val builder = AlertDialog.Builder(requireActivity())
         thisView = layoutInflater.inflate(R.layout.dialog_fragment_filters, null)

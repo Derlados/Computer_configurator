@@ -9,7 +9,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
-import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.entities.Component
 import com.derlados.computer_configurator.ui.decorators.AnimOnTouchListener
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -90,7 +90,7 @@ class ComponentRecyclerAdapter(private  val components: List<Component>, private
         val attributes: List<Component.Attribute> = component.getPreviewAttributes()
         for (i in holder.tvHeaders.indices) {
             if (i < attributes.size) {
-                holder.tvHeaders[i].text = attributes[i].name
+                holder.tvHeaders[i].text = attributes[i].prevText
                 holder.tvValues[i].text = attributes[i].value
             } else {
                 holder.tvHeaders[i].text = "-"

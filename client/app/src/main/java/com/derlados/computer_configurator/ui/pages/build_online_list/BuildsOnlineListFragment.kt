@@ -15,7 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.BackStackTag
-import com.derlados.computer_configurator.stores.entities.build.Build
+import com.derlados.computer_configurator.entities.build.Build
 import com.derlados.computer_configurator.ui.pages.main.MainView
 import com.derlados.computer_configurator.ui.adapters.BuildOnlineRecyclerAdapter
 import com.derlados.computer_configurator.ui.pages.build.build_view.BuildOnlineViewFragment

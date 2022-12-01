@@ -8,6 +8,7 @@ import com.derlados.computer_configurator.stores.PublicBuildsStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.ui.pages.main.MainView
 import kotlinx.coroutines.*
+import java.net.SocketTimeoutException
 import kotlin.collections.ArrayList
 
 class BuildOnlineListPresenter(private val mainView: MainView, private val view: BuildsOnlineListView, private val resourceProvider: ResourceProvider) {
@@ -39,22 +40,24 @@ class BuildOnlineListPresenter(private val mainView: MainView, private val view:
         downloadJob = CoroutineScope(Dispatchers.Main).launch {
             try {
                 PublicBuildsStore.getPublicBuilds()
-                if (isActive) {
-                    val sortedList = PublicBuildsStore.publicBuilds.sortedByDescending { build -> build.publishDate  }
-                    view.setBuildsData(ArrayList(sortedList))
-                    view.disableRefreshAnim()
 
-                    if (!isInit) {
-                        view.initRefreshing()
-                        isInit = true
-                    }
+                ensureActive()
+                val sortedList = PublicBuildsStore.publicBuilds.sortedByDescending { build -> build.publishDate  }
+                view.setBuildsData(ArrayList(sortedList))
+                view.disableRefreshAnim()
 
-                    checkUriChoice()
+                if (!isInit) {
+                    view.initRefreshing()
+                    isInit = true
                 }
+
+                checkUriChoice()
             } catch (e: NetworkErrorException) {
-                if (isActive) {
-                    errorHandle(e.message)
-                }
+                ensureActive()
+                errorHandle(e.message)
+            } catch (e: SocketTimeoutException) {
+                ensureActive()
+                view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
             }
         }
     }

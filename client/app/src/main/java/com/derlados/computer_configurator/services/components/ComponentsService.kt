@@ -2,7 +2,7 @@ package com.derlados.computer_configurator.services.components
 
 import android.accounts.NetworkErrorException
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.entities.Component
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.services.Service
 import com.derlados.computer_configurator.services.users.UsersApi
@@ -15,7 +15,7 @@ object ComponentsService: Service() {
 
     init {
         api = Retrofit.Builder()
-            .baseUrl(UsersApi.BASE_URL)
+            .baseUrl(ComponentsApi.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ComponentsApi::class.java)

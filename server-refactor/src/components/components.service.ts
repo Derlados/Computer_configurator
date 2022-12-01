@@ -55,8 +55,11 @@ export class ComponentsService {
      * @param id - component id
      * @param dto - dto without attributes
      */
-    async updateComponent(id: number, dto: ComponentDto) {
-        await this.componentRepository.update({ id: id }, { ...dto });
+    async updateComponent(id: number, dto: CreateComponentDto) {
+        const { attributes, ...component } = dto;
+
+        await this.componentRepository.update({ id: id }, { ...component });
+        await this.addAttributes(id, attributes);
         return this.getComponentsById(id);
     }
 
@@ -74,9 +77,12 @@ export class ComponentsService {
                 existValue ? existValue.id : (await this.valueRepository.insert({ value: attribute.value })).raw.insertId
             ];
 
-
-            inserts.push({ compoentId: componentId, attributeId: attributeId, valueId: valueId })
+            const existComponentAttribute = await this.componentAttributeRepository.findOne({ compoentId: componentId, attributeId: attributeId });
+            if (!existComponentAttribute) {
+                inserts.push({ compoentId: componentId, attributeId: attributeId, valueId: valueId })
+            }
         }
+
 
         await this.componentAttributeRepository.insert(inserts)
     }

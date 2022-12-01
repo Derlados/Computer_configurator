@@ -15,10 +15,11 @@ export class CategoriesService {
         return this.categoryRepository.find();
     }
 
+    //TODO
     async getFilters(categoryId: number) {
         return this.filtersRepository.find({
             where: { categoryId: categoryId },
-            relations: ["attribute", "attribute.componentAttributes", "attribute.componentAttributes.value"]
+            relations: ["attribute", "attribute.componentAttributes", "attribute.componentAttributes.value", "attribute.componentAttributes.component"]
         });
     }
 }

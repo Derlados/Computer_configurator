@@ -1,8 +1,12 @@
 package com.derlados.computer_configurator.stores
 
-import com.derlados.computer_configurator.stores.entities.build.Build
-import com.derlados.computer_configurator.stores.entities.Comment
+import android.accounts.NetworkErrorException
+import android.util.Log
+import com.derlados.computer_configurator.entities.build.Build
+import com.derlados.computer_configurator.entities.Comment
+import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.services.builds.BuildsService
+import java.net.SocketTimeoutException
 
 object PublicBuildsStore {
     var publicBuilds = ArrayList<Build>()
@@ -34,11 +38,6 @@ object PublicBuildsStore {
     }
 
     suspend fun getBuildById(id: Int): Build {
-        val foundBuild = publicBuilds.find { it.id == id }
-        if (foundBuild != null) {
-            return foundBuild
-        }
-
         return BuildsService.getBuildById(id)
     }
 

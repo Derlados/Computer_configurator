@@ -7,9 +7,10 @@ import com.derlados.computer_configurator.consts.ComponentCategory
 import com.derlados.computer_configurator.consts.SortType
 import com.derlados.computer_configurator.types.UserFilterChoice
 import com.derlados.computer_configurator.stores.LocalBuildsStore
-import com.derlados.computer_configurator.stores.entities.build.Build
+import com.derlados.computer_configurator.entities.build.Build
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
-import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.entities.Component
+import java.net.SocketTimeoutException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -151,16 +152,17 @@ class ComponentSearchPresenter(private val view: ComponentSearchView, private va
     private fun downloadComponents() {
          downloadJob = CoroutineScope(Dispatchers.Main).launch {
              try {
-                 if (isActive) {
-                     currentComponentList = ComponentStore.getComponents()
-                     filterComponents() // Применение фильтрации, если есть например проверка совместимости сборки
-                 }
+                 ensureActive()
+                 currentComponentList = ComponentStore.getComponents()
+                 filterComponents() // Применение фильтрации, если есть например проверка совместимости сборки
              } catch (e: NetworkErrorException) {
-                 if (isActive) {
-                     currentComponentList = ComponentStore.getLocalComponents()
-                     view.showError(e.toString())
-                 }
+                 ensureActive()
+                 currentComponentList = ComponentStore.getLocalComponents()
+                 view.showError(e.toString())
                  //TODO добавить класс ErrorHandler
+             } catch (e: SocketTimeoutException) {
+                 ensureActive()
+                 view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
              }
 
              view.setComponents(currentComponentList, ComponentStore.favouriteComponents)

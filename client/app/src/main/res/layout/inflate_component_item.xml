@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.28"
-                android:gravity="center|end"
+                android:gravity="center"
                 android:text="X ГРН\nнет в продаже"
                 android:textAlignment="center"
                 android:textColor="@color/green"

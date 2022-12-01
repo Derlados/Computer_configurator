@@ -1,8 +1,8 @@
-package com.derlados.computer_configurator.stores.entities.build
+package com.derlados.computer_configurator.entities.build
 
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.stores.entities.Component
-import com.derlados.computer_configurator.stores.entities.User
+import com.derlados.computer_configurator.entities.Component
+import com.derlados.computer_configurator.entities.User
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -14,30 +14,30 @@ class Build : Cloneable, IEditableBuild {
         const val TDP_PORT = 10
         const val TDP_RAM = 4
 
-        const val CPU_SOCKET = 2
-        const val CPU_GPU_CORE = 7 // Для проверки полноты
-        const val CPU_GPU_CORE_EXIST_VALUE = 75
-        const val CPU_TDP = 11
+        const val CPU_SOCKET_ATTR_ID = 272
+        const val CPU_GPU_CORE_ATTR_ID = 285 // Для проверки полноты
+        const val CPU_GPU_CORE_NOT_EXIST_VALUE_ID = 75
+        const val CPU_TDP_ATTR_ID = 277
 
-        const val GPU_PS_CONNECTORS = 32
-        const val GPU_MIN_TDP = 33
+        const val GPU_PS_CONNECTORS_ATTR_ID = -1
+        const val GPU_MIN_TDP_ATTR_ID = 321
 
-        const val MB_SOCKET = 41
-        const val MB_RAM_TYPE = 47
-        const val MB_RAM_COUNT = 49
-        const val MB_RAM_SIZE = 50
-        const val MB_PORTS = 60
-        const val MB_FROM_FACTOR = 68
+        const val MB_SOCKET_ATTR_ID = 328
+        const val MB_RAM_TYPE_ATTR_ID = 282
+        const val MB_RAM_COUNT_ATTR_ID = 332
+        const val MB_RAM_SIZE_ATTR_ID = 292
+        const val MB_PORTS_ATTR_ID = 341
+        const val MB_FROM_FACTOR_ATTR_ID = 303
 
-        const val SSD_FORM_FACTOR = 68 // Нужен только для опеределения какие слоты будет занимать SSD
+        const val SSD_FORM_FACTOR_ATTR_ID = 303 // Нужен только для опеределения какие слоты будет занимать SSD
 
-        const val RAM_TYPE = 24
-        const val RAM_SIZE = 83
-        const val RAM_IN_PACK = 101
+        const val RAM_TYPE_ATTR_ID = 308
+        const val RAM_SIZE_ATTR_ID = 358
+        const val RAM_IN_PACK_ATTR_ID = 456
 
-        const val PS_POWER = 113
+        const val PS_POWER_ATTR_ID = 380
 
-        const val CASE_SUPPORT_FORM_FACTORS = 137
+        const val CASE_SUPPORT_FORM_FACTORS_ATTR_ID = 408
 
         enum class CompatibilityError {
             WRONG_CPU_SOCKET,
@@ -86,10 +86,10 @@ class Build : Cloneable, IEditableBuild {
     override val isComplete: Boolean
         get() {
             val gpuCore: Component.Attribute? = components[ComponentCategory.CPU]?.getOrNull(0)?.component?.getAttrById(
-                CPU_GPU_CORE
+                CPU_GPU_CORE_ATTR_ID
             )
             var isExistGpuCore = false
-            if (gpuCore != null && gpuCore.valueId != CPU_GPU_CORE_EXIST_VALUE) {
+            if (gpuCore != null && gpuCore.valueId != CPU_GPU_CORE_NOT_EXIST_VALUE_ID) {
                 isExistGpuCore = true
             }
 
@@ -134,8 +134,8 @@ class Build : Cloneable, IEditableBuild {
                 val cpu = buildComponents.getOrNull(0)?.component
 
                 if (motherboard != null && cpu != null) {
-                    val cpuSocket: String? = cpu.getAttrById(CPU_SOCKET)?.value
-                    val mbSocket: String? = motherboard.getAttrById(MB_SOCKET)?.value
+                    val cpuSocket: String? = cpu.getAttrById(CPU_SOCKET_ATTR_ID)?.value
+                    val mbSocket: String? = motherboard.getAttrById(MB_SOCKET_ATTR_ID)?.value
 
                     if (cpuSocket == null || mbSocket == null || !compareValue(cpuSocket, mbSocket)) {
                         return CompatibilityError.WRONG_CPU_SOCKET
@@ -147,12 +147,12 @@ class Build : Cloneable, IEditableBuild {
                 val ram = buildComponents.getOrNull(0)?.component
 
                 if (motherboard != null && ram != null) {
-                    val ramType: String? = ram.getAttrById(RAM_TYPE)?.value
-                    val ramSize: Int? =  ram.getAttrById(RAM_SIZE)?.toIntValue()
+                    val ramType: String? = ram.getAttrById(RAM_TYPE_ATTR_ID)?.value
+                    val ramSize: Int? =  ram.getAttrById(RAM_SIZE_ATTR_ID)?.toIntValue()
 
                     var ramCount = 0
                     buildComponents.forEach { buildComponent ->
-                        val ramPack: Int? = buildComponent.component.getAttrById(RAM_IN_PACK)?.toIntValue()
+                        val ramPack: Int? = buildComponent.component.getAttrById(RAM_IN_PACK_ATTR_ID)?.toIntValue()
                         ramCount += if (ramPack != null) {
                             buildComponent.count * ramPack
                         } else {
@@ -160,9 +160,9 @@ class Build : Cloneable, IEditableBuild {
                         }
                     }
 
-                    val ramTypeMB: String? = motherboard.getAttrById(MB_RAM_TYPE)?.value
-                    val ramSizeMB: Int? = motherboard.getAttrById(MB_RAM_SIZE)?.toIntValue()
-                    val ramCountMB: Int? = motherboard.getAttrById(MB_RAM_COUNT)?.toIntValue()
+                    val ramTypeMB: String? = motherboard.getAttrById(MB_RAM_TYPE_ATTR_ID)?.value
+                    val ramSizeMB: Int? = motherboard.getAttrById(MB_RAM_SIZE_ATTR_ID)?.toIntValue()
+                    val ramCountMB: Int? = motherboard.getAttrById(MB_RAM_COUNT_ATTR_ID)?.toIntValue()
 
                     if (ramType == null || ramTypeMB == null || !compareValue(ramType, ramTypeMB)) {
                         return CompatibilityError.WRONG_RAM_TYPE
@@ -180,8 +180,8 @@ class Build : Cloneable, IEditableBuild {
                 val case = buildComponents.getOrNull(0)?.component
 
                 if (motherboard != null && case != null) {
-                    val caseFormFactor = case.getAttrById(CASE_SUPPORT_FORM_FACTORS)?.value
-                    val mbFormFactor = motherboard.getAttrById(MB_FROM_FACTOR)?.value
+                    val caseFormFactor = case.getAttrById(CASE_SUPPORT_FORM_FACTORS_ATTR_ID)?.value
+                    val mbFormFactor = motherboard.getAttrById(MB_FROM_FACTOR_ATTR_ID)?.value
 
                     if (caseFormFactor == null || mbFormFactor == null || !compareValue(caseFormFactor, mbFormFactor)) {
                         return CompatibilityError.WRONG_CASE_FORM_FACTOR
@@ -193,7 +193,7 @@ class Build : Cloneable, IEditableBuild {
                 val ssd = components[ComponentCategory.SSD]
                 val hdd = components[ComponentCategory.HDD]
 
-                val ports = motherboard.getAttrById(MB_PORTS)?.value
+                val ports = motherboard.getAttrById(MB_PORTS_ATTR_ID)?.value
                 ports?.let {
                     var mbM2Count = 0
                     var mbSataCount = 0
@@ -218,7 +218,7 @@ class Build : Cloneable, IEditableBuild {
 
                     ssd?.forEach {
                         val count = it.count
-                        val formFactor = it.component.getAttrById(SSD_FORM_FACTOR)?.value
+                        val formFactor = it.component.getAttrById(SSD_FORM_FACTOR_ATTR_ID)?.value
                         formFactor?.let {
                             if (formFactor.toLowerCase(Locale.ROOT).contains("m.2")) {
                                 m2Count += count
@@ -242,7 +242,7 @@ class Build : Cloneable, IEditableBuild {
             }
             ComponentCategory.POWER_SUPPLY -> {
                 val ps = buildComponents.getOrNull(0)?.component
-                ps?.getAttrById(PS_POWER)?.toIntValue()?.let {
+                ps?.getAttrById(PS_POWER_ATTR_ID)?.toIntValue()?.let {
                     if (it < usedPower) {
                         return CompatibilityError.NOT_ENOUGH_PS_POWER
                     }
@@ -279,7 +279,7 @@ class Build : Cloneable, IEditableBuild {
                 val ssd = components[ComponentCategory.SSD]
                 val hdd = components[ComponentCategory.HDD]
 
-                val ports = motherboard.getAttrById(MB_PORTS)?.value
+                val ports = motherboard.getAttrById(MB_PORTS_ATTR_ID)?.value
                 ports?.let {
                     var mbSataCount = 0
                     var mbM2Count = 0
@@ -304,7 +304,7 @@ class Build : Cloneable, IEditableBuild {
 
                     ssd?.forEach {
                         val count = it.count
-                        val formFactor = it.component.getAttrById(SSD_FORM_FACTOR)?.value
+                        val formFactor = it.component.getAttrById(SSD_FORM_FACTOR_ATTR_ID)?.value
                         formFactor?.let {
                             if (formFactor.toLowerCase(Locale.ROOT).contains("m.2")) {
                                 m2Count += count
@@ -343,7 +343,7 @@ class Build : Cloneable, IEditableBuild {
     private fun calculatePower(): Int {
         // Если присутствует видеокарта и если в ней присутствует мин. мощность БП - можно не считать
         val gpu = components[ComponentCategory.GPU]?.getOrNull(0)?.component
-        gpu?.getAttrById(GPU_MIN_TDP)?.toIntValue()?.let {
+        gpu?.getAttrById(GPU_MIN_TDP_ATTR_ID)?.toIntValue()?.let {
             return it
         }
 
@@ -353,13 +353,13 @@ class Build : Cloneable, IEditableBuild {
         val cpu = components[ComponentCategory.CPU]?.getOrNull(0)?.component
         val ram = components[ComponentCategory.RAM]
 
-        cpu?.getAttrById(CPU_TDP)?.toIntValue()?.let {
+        cpu?.getAttrById(CPU_TDP_ATTR_ID)?.toIntValue()?.let {
             currentPower += it
         }
 
         var ramCount = 0
         ram?.forEach { ramItem ->
-            val ramPack: Int? = ramItem.component.getAttrById(RAM_IN_PACK)?.toIntValue()
+            val ramPack: Int? = ramItem.component.getAttrById(RAM_IN_PACK_ATTR_ID)?.toIntValue()
             ramCount += if (ramPack != null) {
                 ramItem.count * ramPack
             } else {
@@ -368,7 +368,7 @@ class Build : Cloneable, IEditableBuild {
         }
         currentPower += ramCount * TDP_RAM
 
-        val ports = motherboard?.getAttrById(MB_PORTS)?.value
+        val ports = motherboard?.getAttrById(MB_PORTS_ATTR_ID)?.value
         if (ports != null) {
             var mbSataCount = 0
             var mbM2Count = 0

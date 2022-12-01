@@ -13,8 +13,9 @@ import com.derlados.computer_configurator.MainActivity
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.BackStackTag
 import com.derlados.computer_configurator.consts.ComponentCategory
-import com.derlados.computer_configurator.stores.entities.build.Build
-import com.derlados.computer_configurator.stores.entities.Component
+import com.derlados.computer_configurator.entities.build.Build
+import com.derlados.computer_configurator.entities.Component
+import com.derlados.computer_configurator.entities.build.BuildComponent
 import com.derlados.computer_configurator.ui.pages.build.BuildViewFragment
 import com.derlados.computer_configurator.ui.decorators.AnimOnTouchListener
 import com.derlados.computer_configurator.ui.pages.component_info.ComponentInfoFragment
@@ -140,7 +141,7 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
      * @param parent - отсовский лаяут, куда будет прекреплена "карточка"
      */
     @SuppressLint("ClickableViewAccessibility")
-    override fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: Build.BuildComponent, parent: LinearLayout): View {
+    override fun createComponentCard(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildComponent, parent: LinearLayout): View {
         val card = super.createComponentCard(category, isMultiple, buildComponent, parent)
         val component = buildComponent.component
 
