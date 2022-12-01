@@ -12,9 +12,9 @@ export class CategoriesController {
         return this.categoriesService.getAll();
     }
 
-    @Get(':id([0-9]+)/filters')
+    @Get(':category/filters')
     @UseInterceptors(ClassSerializerInterceptor)
-    getFilters(@Param('id') id: number) {
-        return this.categoriesService.getFilters(id);
+    getFilters(@Param('category') categoryUrl: string) {
+        return this.categoriesService.getFilters(categoryUrl);
     }
 }

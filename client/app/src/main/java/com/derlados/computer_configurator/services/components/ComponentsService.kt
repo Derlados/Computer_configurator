@@ -1,12 +1,8 @@
 package com.derlados.computer_configurator.services.components
 
-import android.accounts.NetworkErrorException
 import com.derlados.computer_configurator.consts.ComponentCategory
 import com.derlados.computer_configurator.entities.Component
-import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.services.Service
-import com.derlados.computer_configurator.services.users.UsersApi
-import com.derlados.computer_configurator.types.FilterAttribute
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -35,14 +31,5 @@ object ComponentsService: Service() {
         }
     }
 
-    suspend fun getFilters(category: ComponentCategory): HashMap<Int, FilterAttribute> {
-        val res = api.getFilters(category.name)
-        val filters = res.body()
 
-        if (res.isSuccessful && filters != null) {
-            return filters
-        } else {
-            throw this.errorHandle(res.code())
-        }
-    }
 }

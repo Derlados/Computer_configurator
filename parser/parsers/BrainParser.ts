@@ -68,12 +68,16 @@ class BrainParser extends Parser {
         for (const [categoryId, category] of this.categories.entries()) {
             const DBProducts = await componentsService.getComponents(categoryId);
 
-            if (categoryId < 6) {
+            if (categoryId < 7) {
                 continue;
             }
 
             for (const product of DBProducts) {
                 const { id, ...productInfo } = product;
+
+                if (categoryId == 7 && id < 3079) {
+                    continue;
+                }
 
                 try {
                     console.log(`${product.id} - ${product.url}`);
@@ -109,8 +113,7 @@ class BrainParser extends Parser {
             const productUrl = `${this.BASE_URL}${url}`.replace('/ukr', '');
 
             const name = HTMLComponent.querySelector('div[class="description-wrapper"]')?.querySelector('a[itemprop="url"]')
-                ?.innerText.replace(/\n/g, '') ?? '';
-
+                ?.innerText.replace(/\n/g, '').replace(/&quot;/, ' ') ?? '';
 
             const price = HTMLComponent.querySelector('span[itemprop="price"]')?.innerText ?? '-1';
             const img = HTMLComponent.querySelector('img[itemprop="image"]')?.getAttribute('data-observe-src');
@@ -167,8 +170,8 @@ class BrainParser extends Parser {
             HTMLChars.splice(0, 1);
 
             for (const HTMLChar of HTMLChars) {
-                const name = HTMLChar.querySelectorAll('span')[0].innerText.replace(/\n/g, '');
-                const value = HTMLChar.querySelector('a')?.innerText ?? HTMLChar.querySelectorAll('span')[1].innerText.replace(/\n/g, '');
+                const name = HTMLChar.querySelectorAll('span')[0].innerText.replace(/\n/g, '').replace(/^\s+/, '').replace(/&nbsp;/, ' ').replace(/&quot;/, ' ');
+                const value = HTMLChar.querySelector('a')?.innerText ?? HTMLChar.querySelectorAll('span')[1].innerText.replace(/\n/g, '').replace(/^\s+/, '').replace(/&nbsp;/, ' ').replace(/&quot;/, ' ');
 
                 // Ограничение по длинне
                 if (name && value && name.length <= 150 && value.length <= 255) {

@@ -7,6 +7,7 @@ import com.derlados.computer_configurator.types.UserFilterChoice
 import com.derlados.computer_configurator.types.clear
 import com.derlados.computer_configurator.managers.FileManager
 import com.derlados.computer_configurator.entities.Component
+import com.derlados.computer_configurator.services.category.CategoriesService
 import com.derlados.computer_configurator.services.components.ComponentsService
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -81,7 +82,7 @@ object ComponentStore: Observable() {
     suspend fun getFilters(): HashMap<Int, FilterAttribute> {
         restoreFiltersFromCache()
         if (filters.isEmpty()) {
-            filters = ComponentsService.getFilters(chosenCategory)
+            filters = CategoriesService.getFilters(chosenCategory)
             saveFilterInCache()
         }
 

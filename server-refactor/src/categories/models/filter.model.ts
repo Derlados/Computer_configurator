@@ -12,7 +12,7 @@ export class Filter {
     attributeId: number;
 
     @Column({ name: "is_range", type: "boolean", nullable: true })
-    isRange: number;
+    isRange: boolean;
 
     @Column({ type: "float", nullable: true })
     step: number;

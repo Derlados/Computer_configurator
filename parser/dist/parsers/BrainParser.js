@@ -48,9 +48,6 @@ class BrainParser extends Parser_1.Parser {
             for (const [categoryId, category] of this.categories.entries()) {
                 const maxPages = yield this.getMaxPages(`${this.BASE_URL}/${category}`);
                 const DBProducts = yield components_service_1.default.getComponents(categoryId);
-                if (categoryId != 5 && categoryId != 6) {
-                    continue;
-                }
                 for (let i = 1; i <= maxPages || i <= 50; ++i) {
                     const parsedProducts = categoryId == 5 || categoryId == 6
                         ? yield this.parseProducts(`${this.BASE_URL}/${category};page=${i}/`)
@@ -77,11 +74,14 @@ class BrainParser extends Parser_1.Parser {
         return __awaiter(this, void 0, void 0, function* () {
             for (const [categoryId, category] of this.categories.entries()) {
                 const DBProducts = yield components_service_1.default.getComponents(categoryId);
-                if (categoryId < 6) {
+                if (categoryId < 7) {
                     continue;
                 }
                 for (const product of DBProducts) {
                     const { id } = product, productInfo = __rest(product, ["id"]);
+                    if (categoryId == 7 && id < 3079) {
+                        continue;
+                    }
                     try {
                         console.log(`${product.id} - ${product.url}`);
                         const attributes = yield this.parseAttributes(product.url);
@@ -111,7 +111,7 @@ class BrainParser extends Parser_1.Parser {
             for (const HTMLComponent of HTMLComponents) {
                 const url = (_a = HTMLComponent.querySelector('a[itemprop="url"]')) === null || _a === void 0 ? void 0 : _a.getAttribute('href');
                 const productUrl = `${this.BASE_URL}${url}`.replace('/ukr', '');
-                const name = (_d = (_c = (_b = HTMLComponent.querySelector('div[class="description-wrapper"]')) === null || _b === void 0 ? void 0 : _b.querySelector('a[itemprop="url"]')) === null || _c === void 0 ? void 0 : _c.innerText.replace(/\n/g, '')) !== null && _d !== void 0 ? _d : '';
+                const name = (_d = (_c = (_b = HTMLComponent.querySelector('div[class="description-wrapper"]')) === null || _b === void 0 ? void 0 : _b.querySelector('a[itemprop="url"]')) === null || _c === void 0 ? void 0 : _c.innerText.replace(/\n/g, '').replace(/&quot;/, ' ')) !== null && _d !== void 0 ? _d : '';
                 const price = (_f = (_e = HTMLComponent.querySelector('span[itemprop="price"]')) === null || _e === void 0 ? void 0 : _e.innerText) !== null && _f !== void 0 ? _f : '-1';
                 const img = (_g = HTMLComponent.querySelector('img[itemprop="image"]')) === null || _g === void 0 ? void 0 : _g.getAttribute('data-observe-src');
                 const outOfStock = HTMLComponent.querySelector('div[class="br-pp-net"]');
@@ -164,8 +164,8 @@ class BrainParser extends Parser_1.Parser {
                 const HTMLChars = HTMLCharBlock.querySelectorAll('div');
                 HTMLChars.splice(0, 1);
                 for (const HTMLChar of HTMLChars) {
-                    const name = HTMLChar.querySelectorAll('span')[0].innerText.replace(/\n/g, '');
-                    const value = (_b = (_a = HTMLChar.querySelector('a')) === null || _a === void 0 ? void 0 : _a.innerText) !== null && _b !== void 0 ? _b : HTMLChar.querySelectorAll('span')[1].innerText.replace(/\n/g, '');
+                    const name = HTMLChar.querySelectorAll('span')[0].innerText.replace(/\n/g, '').replace(/^\s+/, '').replace(/&nbsp;/, ' ').replace(/&quot;/, ' ');
+                    const value = (_b = (_a = HTMLChar.querySelector('a')) === null || _a === void 0 ? void 0 : _a.innerText) !== null && _b !== void 0 ? _b : HTMLChar.querySelectorAll('span')[1].innerText.replace(/\n/g, '').replace(/^\s+/, '').replace(/&nbsp;/, ' ').replace(/&quot;/, ' ');
                     // Ограничение по длинне
                     if (name && value && name.length <= 150 && value.length <= 255) {
                         attributes.push({ name, value });

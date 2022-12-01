@@ -81,6 +81,8 @@ class FiltersPresenter(val view: FiltersDialogView, val resourceProvider: Resour
         downloadJob = CoroutineScope(Dispatchers.Main).launch {
             try {
                 val filters = ComponentStore.getFilters()
+
+                ensureActive()
                 maxPrice = ComponentStore.components.maxByOrNull { it.price }?.price ?: 0
                 userChoice.chosenRangePrice = Pair(0, maxPrice)
 
