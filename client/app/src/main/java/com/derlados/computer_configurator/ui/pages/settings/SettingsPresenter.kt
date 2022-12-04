@@ -1,6 +1,7 @@
 package com.derlados.computer_configurator.ui.pages.settings
 
 import android.accounts.NetworkErrorException
+import com.derlados.computer_configurator.entities.User
 import com.derlados.computer_configurator.stores.UserStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import kotlinx.coroutines.*
@@ -14,6 +15,10 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
     private val validRegEx = Regex("([A-Z,a-z]|[А-Я,а-я]|[ІЇЄiїєЁё]|[0-9]|_)+") // Регулярка для проверки валидации
 
     fun init() {
+      this.setUserData()
+    }
+
+    private fun setUserData() {
         UserStore.currentUser?.let {
             view.updateUserData(it.username, it.photo, it.email)
         }
@@ -29,14 +34,11 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
     }
 
     /**
-     * Обновление изображения пользователя. Для обновления так же требуется передать username, который
-     * берется из установленного юзером
+     * Обновление изображения пользователя
      */
     fun uploadImage(file: File) {
         view.showImgLoadProgress()
-        UserStore.currentUser?.let { user ->
-            updateUser(user.username, file)
-        }
+        updateUserPhoto(file)
     }
 
     /**
@@ -54,30 +56,58 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
                 ensureActive()
                 errorHandle(e.message)
                 view.signOutGoogle()
-            }catch (e: SocketTimeoutException) {
-                if (isActive) {
-                    view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
-                }
-            }
-        }
-    }
-
-    private fun updateUser(username: String, img: File? = null) {
-        coroutineScope.launch {
-            try {
-                UserStore.updateData(username, img)
-            } catch (e: NetworkErrorException) {
-                ensureActive()
-                errorHandle(e.message)
             } catch (e: SocketTimeoutException) {
                 if (isActive) {
                     view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
                 }
+            } catch (e: Exception) {
+                ensureActive()
+                UserStore.logout()
+                view.showError(resourceProvider.getString(ResourceProvider.ResString.LOCAL_USER_NOT_FOUND))
+            }
+        }
+    }
+
+    private fun updateUser(username: String) {
+        coroutineScope.launch {
+            try {
+                UserStore.updateData(username)
+            } catch (e: NetworkErrorException) {
+                ensureActive()
+                errorHandle(e.message)
+            } catch (e: SocketTimeoutException) {
+                ensureActive()
+                view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
+            } catch (e: Exception) {
+                ensureActive()
+                UserStore.logout()
+                view.showError(resourceProvider.getString(ResourceProvider.ResString.LOCAL_USER_NOT_FOUND))
+            }
+
+            ensureActive()
+            view.closeUsernamePB()
+            setUserData()
+        }
+    }
+
+    private fun updateUserPhoto(img: File) {
+        coroutineScope.launch {
+            try {
+                UserStore.updatePhoto(img)
+            } catch (e: NetworkErrorException) {
+                ensureActive()
+                errorHandle(e.message)
+            } catch (e: SocketTimeoutException) {
+                ensureActive()
+                view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
+            } catch (e: Exception) {
+                ensureActive()
+                UserStore.logout()
+                view.showError(resourceProvider.getString(ResourceProvider.ResString.LOCAL_USER_NOT_FOUND))
             }
 
             ensureActive()
             view.closeImgLoadProgress()
-            view.closeUsernamePB()
         }
     }
 

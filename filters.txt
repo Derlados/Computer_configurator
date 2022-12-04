@@ -1,0 +1,52 @@
+1 - 271 - 
+1 - 272 - 
+1 - 273 - 2
+1 - 285 - 
+1 - 276 - 0.05
+1 - 277 - 
+
+2 - 302 - 
+2 - 305 -
+2 - 306 - 
+2 - 307 - 2
+2 - 308 -
+
+3 - 328 - 
+3 - 331 - 
+3 - 282 -
+3 - 332 -
+3 - 292 -
+3 - 303 -
+
+4 - 303 -
+4 - 358 -
+4 - 361 -
+4 - 362 -
+4 - 363 -
+
+5 - 371 -
+5 - 370 -
+5 - 372- 
+
+7 - 380 - 
+7 - 397 -
+7 - 385 -
+7 - 387 -
+7 - 381 -
+
+8 - 406 -
+8 - 408 -
+8 - 410 - 
+
+SELECT * FROM `components` 
+JOIN component_attributes ON component_attributes.component_id = components.id
+JOIN attributes ON attributes.id = component_attributes.attribute_id
+WHERE category_id=5
+
+SELECT * FROM `components` 
+JOIN component_attributes ON component_attributes.component_id = components.id
+JOIN attributes ON attributes.id = component_attributes.attribute_id
+WHERE components.id=2021
+
+
+

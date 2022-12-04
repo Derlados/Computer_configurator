@@ -79,9 +79,9 @@
     <string name="already_have_an_account">Уже есть аккаунт ?</string>
     <string name="invalid_auth_data">Поля должны содержать только буквы, цифры или символ нижнего подчеркивания</string>
     <string name="pass_do_not_match">Введенные пароли не совпадают</string>
-    <string name="username_exists">Пользователь с таким именем уже существует</string>
+    <string name="NICKNAME_TAKEN">Пользователь с таким именем уже существует</string>
     <string name="google_acc_already_used">Данный аккаунт Гугл уже используется</string>
-    <string name="incorrect_login_or_password">Неправильный логин или пароль</string>
+    <string name="LOGIN_USER_NOT_FOUND">Неправильный логин или пароль</string>
     <string name="no_connection">No connection to our server, try later</string>
     <string name="internal_server_error">Internal server error, try later</string>
     <string name="unexpected_error">Unexpected error</string>
@@ -97,7 +97,7 @@
     <string name="user">Пользователь :</string>
     <string name="creator">Создатель :</string>
     <string name="answer">Ответить</string>
-    <string name="comments">%1$d комментария</string>
+    <string name="comments">Комментарии (%1$d)</string>
     <string name="loading_comments">Загрузка комментариев…</string>
     <string name="compatibility_filter">Фильтр по совместимсоти</string>
     <string name="cannot_add_more">Невозможно добавить больше</string>
@@ -126,4 +126,5 @@
     <string name="shop">Магазин</string>
     <string name="component_link">Ссылка</string>
     <string name="online_shop">Онлайн-магазин</string>
+    <string name="local_user_not_found">Не найдены данные пользователя на устройстве</string>
 </resources>

@@ -78,7 +78,7 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
                             category,
                             currentBuild.isMultipleCategory(category),
                             buildComponents[i],
-                            true
+                            false
                         )
                     }
                 }

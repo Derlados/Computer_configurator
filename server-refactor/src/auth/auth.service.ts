@@ -1,6 +1,7 @@
 import { ConflictException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { Errors } from 'src/constants/Errors';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { GoogleSignInDto } from '../users/dto/google-sign-in-dto';
 import { LoginUserDto } from '../users/dto/login-user.dto';
@@ -21,16 +22,14 @@ export class AuthService {
             dto = { ...dto, password: hashPassword, secret: hashSecret };
         }
 
-        try {
-            const user = await this.usersService.createUser(dto);
-            return this.generateToken(user)
-        } catch (err) {
-            if (err.code == 'ER_DUP_ENTRY') {
-                throw new ConflictException("User with this username, already exist");
-            } else {
-                throw new InternalServerErrorException();
-            }
+
+        const candidate = await this.usersService.findByUserame(dto.username)
+        if (candidate) {
+            throw new ConflictException(Errors.NICKNAME_TAKEN);
         }
+
+        const user = await this.usersService.createUser(dto);
+        return this.generateToken(user)
     }
 
     async googleSignIn(dto: GoogleSignInDto) {
@@ -45,12 +44,12 @@ export class AuthService {
     async login(dto: LoginUserDto) {
         const user = await this.usersService.findByUserame(dto.username);
         if (!user) {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException(Errors.LOGIN_USER_NOT_FOUND);
         }
 
         const isAvailablePass = bcrypt.compareSync(dto.password, user.password);
         if (!isAvailablePass) {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException(Errors.LOGIN_USER_NOT_FOUND);
         }
 
         return this.generateToken(user)

@@ -24,27 +24,27 @@ interface BuildsApi {
     suspend fun getComments(@Path("buildId") buildId: Int): Response<ArrayList<Comment>>
 
     @GET("personal")
-    suspend fun getPersonalBuilds(@Header("token") token: String): Response<ArrayList<Build>>
+    suspend fun getPersonalBuilds(@Header("Authorization") token: String,): Response<ArrayList<Build>>
 
     @POST(BASE_URL)
-    suspend fun saveBuild(@Header("token") token: String, @Body dto: CreateBuildDto): Response<Build>
+    suspend fun saveBuild(@Header("Authorization") token: String, @Body dto: CreateBuildDto): Response<Build>
 
     @FormUrlEncoded
     @POST("{buildId}/comments")
-    suspend fun addComment(@Header("token") token: String, @Path("buildId") buildId: Int,
+    suspend fun addComment(@Header("Authorization") token: String, @Path("buildId") buildId: Int,
                            @Field("text") text: String): Response<Comment>
 
     @FormUrlEncoded
     @POST("{buildId}/comments/{parentId}/answer")
-    suspend fun answerComment(@Header("token") token: String, @Path("buildId") buildId: Int,
+    suspend fun answerComment(@Header("Authorization") token: String, @Path("buildId") buildId: Int,
                               @Field("text") text: String, @Path("parentId") parentId:Int): Response<Comment>
 
     @PUT("{buildId}")
-    suspend fun updateBuild(@Header("token") token: String, @Path("buildId") buildId: Int, @Body build: CreateBuildDto): Response<Unit>
+    suspend fun updateBuild(@Header("Authorization") token: String, @Path("buildId") buildId: Int, @Body build: CreateBuildDto): Response<Unit>
 
     @FormUrlEncoded
     @PUT("{buildId}/status")
-    suspend fun updatePublicStatus(@Header("token") token: String, @Path("buildId") buildId: Int,
+    suspend fun updatePublicStatus(@Header("Authorization") token: String, @Path("buildId") buildId: Int,
                                    @Field("isPublic") isPublic: Boolean): Response<Boolean>
 
     @DELETE("{buildId}")

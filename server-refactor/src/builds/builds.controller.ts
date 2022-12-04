@@ -11,11 +11,19 @@ import { UpdatePublishStatusDto } from './dto/update-publish-status.dto';
 export class BuildsController {
     constructor(private buildsService: BuildsService, private commentsService: CommentsService) { }
 
-    @Get('')
+    @Get()
     @SerializeOptions({ groups: [AccessGroups.ALL_USERS] })
     @UseInterceptors(ClassSerializerInterceptor)
     getPublicBuilds() {
         return this.buildsService.getPublicBuilds();
+    }
+
+    @Get('personal')
+    @UseGuards(JwtAuthGuard)
+    @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
+    @UseInterceptors(ClassSerializerInterceptor)
+    getPersonalBuilds(@Req() req) {
+        return this.buildsService.getBuldsByUserId(req.user.id);
     }
 
     @Get(':id([0-9]+)')
@@ -24,6 +32,7 @@ export class BuildsController {
     getBuildById(@Param('id') id: number) {
         return this.buildsService.getBuildByid(id);
     }
+
 
     @Get(':id([0-9]+)/comments')
     @SerializeOptions({ groups: [AccessGroups.ALL_USERS] })
@@ -34,7 +43,7 @@ export class BuildsController {
 
     @Post()
     @UseGuards(JwtAuthGuard)
-    @SerializeOptions({ groups: [AccessGroups.ALL_USERS] })
+    @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     @UseInterceptors(ClassSerializerInterceptor)
     createBuild(@Req() req, @Body() dto: CreateBuildDto) {
         return this.buildsService.createBuild(req.user.id, dto);
@@ -42,7 +51,7 @@ export class BuildsController {
 
     @Post(':id/comments')
     @UseGuards(JwtAuthGuard)
-    @SerializeOptions({ groups: [AccessGroups.ALL_USERS] })
+    @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     @UseInterceptors(ClassSerializerInterceptor)
     answerComment(@Param('id') id: number, @Req() req, @Body() dto: CreateCommentDto) {
         return this.commentsService.createComment(id, req.user.id, dto);
@@ -50,7 +59,7 @@ export class BuildsController {
 
     @Put(':id([0-9]+)')
     @UseGuards(JwtAuthGuard)
-    @SerializeOptions({ groups: [AccessGroups.ALL_USERS] })
+    @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     @UseInterceptors(ClassSerializerInterceptor)
     updateBuild(@Req() req, @Param('id') id: number, @Body() dto: CreateBuildDto) {
         return this.buildsService.updateBuild(id, req.user.id, dto);
@@ -58,6 +67,7 @@ export class BuildsController {
 
     @Put(':id([0-9]+)/status')
     @UseGuards(JwtAuthGuard)
+    @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     @UseInterceptors(ClassSerializerInterceptor)
     chengeStatus(@Req() req, @Param('id') id: number, @Body() dto: UpdatePublishStatusDto) {
         return this.buildsService.chengeStatus(id, req.user.id, dto);
@@ -65,6 +75,7 @@ export class BuildsController {
 
     @Delete(':id([0-9]+)')
     @UseGuards(JwtAuthGuard)
+    @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     deleteBuild(@Req() req, @Param('id') id: number) {
         return this.buildsService.deleteBuild(id, req.user.id)
     }

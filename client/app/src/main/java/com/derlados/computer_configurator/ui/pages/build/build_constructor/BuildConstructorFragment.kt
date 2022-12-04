@@ -21,6 +21,7 @@ import com.derlados.computer_configurator.ui.decorators.AnimOnTouchListener
 import com.derlados.computer_configurator.ui.pages.component_info.ComponentInfoFragment
 import com.derlados.computer_configurator.ui.pages.component_list.ComponentSearchFragment
 import com.derlados.computer_configurator.ui.OnFragmentInteractionListener
+import com.github.aakira.expandablelayout.ExpandableLinearLayout
 import kotlinx.android.synthetic.main.fragment_build.*
 import kotlinx.android.synthetic.main.inflate_build_section.view.*
 import kotlinx.android.synthetic.main.inflate_component_item.view.*
@@ -166,6 +167,16 @@ open class BuildConstructorFragment : BuildViewFragment(), TextWatcher, MainActi
         }
 
         return card
+    }
+
+    // TODO нужно пофиксить. Это временный костыль
+    override fun toggleCompListVisibility(btHeader: Button, container: ExpandableLinearLayout) {
+        val isExpand = container.isExpanded
+        container.setDuration(0)
+        updatedExpandLayout(container, !isExpand)
+        container.setDuration(200)
+
+        super.toggleCompListVisibility(btHeader, container)
     }
 
     ///////////////////////////////// Обработчики кнопок ///////////////////////////////////////////

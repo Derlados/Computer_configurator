@@ -59,8 +59,6 @@ class BrainParser extends Parser {
 
                 await this.timeout(this.TIMEOUT);
             }
-
-            console.log("parsed: " + category);
         }
     }
 
@@ -68,23 +66,18 @@ class BrainParser extends Parser {
         for (const [categoryId, category] of this.categories.entries()) {
             const DBProducts = await componentsService.getComponents(categoryId);
 
-            if (categoryId < 7) {
+            if (categoryId < 4) {
                 continue;
             }
 
             for (const product of DBProducts) {
                 const { id, ...productInfo } = product;
 
-                if (categoryId == 7 && id < 3079) {
-                    continue;
-                }
-
                 try {
                     console.log(`${product.id} - ${product.url}`);
                     const attributes = await this.parseAttributes(product.url);
                     await componentsService.updateComponent(id, {
                         ...productInfo,
-                        attributes,
                         categoryId
                     })
                 } catch (e) {

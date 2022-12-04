@@ -23,7 +23,7 @@ object CategoriesService: Service() {
         if (res.isSuccessful && filters != null) {
             return filters
         } else {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 }

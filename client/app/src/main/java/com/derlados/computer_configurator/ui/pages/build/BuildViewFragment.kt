@@ -105,12 +105,8 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBack
             val card = createComponentCard(category, isMultiple, buildComponent, expandContainer.getChildAt(0) as LinearLayout)
             componentContainer.addView(card, componentContainer.childCount - 1)
 
-            if (initExpand) {
-                updatedExpandLayout(expandContainer, true)
-                btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_up_36, 0)
-            } else {
-                btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0)
-            }
+            updatedExpandLayout(expandContainer, initExpand)
+            btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, if (initExpand) R.drawable.ic_arrow_up_36 else R.drawable.ic_arrow_down_36, 0)
 
             // Вместо перехода к поиску комплектующего, кнопка раскрывает список с комплектуюшими
             btHeader.setOnTouchListener { _, event ->
@@ -123,16 +119,18 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBack
         }
     }
 
-    override fun changeVisibilityAddMoreBt(isVisible: Boolean, category: ComponentCategory) {
+    override fun changeVisibilityAdditionalBt(isVisible: Boolean, category: ComponentCategory) {
         componentContainers[category]?.let {
             it.inflate_build_section_bt_add_more.visibility = View.VISIBLE
             if (isVisible) {
-                it.inflate_build_section_bt_add_more.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32f)
-                it.inflate_build_section_bt_add_more.text = "+"
+                it.inflate_build_section_bt_add_more.visibility = View.VISIBLE
+                it.inflate_build_section_bt_full.visibility = View.GONE
             } else {
-                it.inflate_build_section_bt_add_more.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
-                it.inflate_build_section_bt_add_more.text = "Все порты заняты !"
+                it.inflate_build_section_bt_add_more.visibility = View.GONE
+                it.inflate_build_section_bt_full.visibility = View.VISIBLE
             }
+
+
         }
     }
 
@@ -193,21 +191,27 @@ abstract class BuildViewFragment: Fragment(), BaseBuildView, MainActivity.OnBack
      * Открытие/скрытие списка комплектуюзих в определенной категории
      */
     protected open fun toggleCompListVisibility(btHeader: Button, container: ExpandableLinearLayout) {
+
         // Поворот стрелки на 180 градусов. Относительно текущего состояния
         if (container.isExpanded) {
             btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_36, 0)
         } else {
             btHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_up_36, 0)
         }
-
         container.toggle()
     }
 
-    //TODO пока что любой проинициализированный экспанд необходим открытым
+
     protected open fun updatedExpandLayout(ell: ExpandableLinearLayout, isExpanded: Boolean) {
         ell.initLayout()
         if (isExpanded) {
             ell.expand()
+        }
+    }
+
+    protected open fun updateAllExpands() {
+        componentContainers.map {
+            it.value.inflate_build_section_ell_components.initLayout()
         }
     }
 }

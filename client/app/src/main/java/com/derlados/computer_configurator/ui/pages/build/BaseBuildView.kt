@@ -8,5 +8,5 @@ interface BaseBuildView {
     fun setImage(url: String)
     fun addComponent(category: ComponentCategory, isMultiple: Boolean, buildComponent: BuildComponent, initExpand: Boolean)
     fun setPrice(price: Int)
-    fun changeVisibilityAddMoreBt(isVisible: Boolean, category: ComponentCategory)
+    fun changeVisibilityAdditionalBt(isVisible: Boolean, category: ComponentCategory)
 }

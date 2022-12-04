@@ -4,6 +4,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.entities.User
+import com.derlados.computer_configurator.services.auth.AuthService
 import com.derlados.computer_configurator.services.users.UsersService
 import java.io.File
 import java.util.*
@@ -27,17 +28,17 @@ object UserStore: Observable() {
     )
 
     suspend fun register(username: String, password: String, secret: String) {
-        token = UsersService.register(username, password, secret)
+        token = AuthService.register(username, password, secret)
         getPersonalData()
     }
 
     suspend fun login(username: String, password: String) {
-        token = UsersService.login(username, password)
+        token = AuthService.login(username, password)
         getPersonalData()
     }
 
     suspend fun googleSignIn(googleId: String, username: String, email: String, photoUrl: String?) {
-        token = UsersService.googleSignIn(googleId, username, email, photoUrl)
+        token = AuthService.googleSignIn(googleId, username, email, photoUrl)
         getPersonalData()
     }
 
@@ -45,10 +46,17 @@ object UserStore: Observable() {
         UsersService.restorePassword(username, secret, newPassword)
     }
 
-    suspend fun updateData(username: String, img: File?) {
+    suspend fun updateData(username: String) {
         val token = token ?: throw Exception("User not found")
 
-        currentUser = UsersService.update(token, username, img)
+        currentUser = UsersService.update(token, username)
+        getPersonalData()
+    }
+
+    suspend fun updatePhoto(img: File) {
+        val token = token ?: throw Exception("User not found")
+
+        currentUser = UsersService.updatePhoto(token, img)
         getPersonalData()
     }
 

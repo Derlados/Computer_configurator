@@ -7,13 +7,14 @@ import { UpdatePasswordDto } from "./dto/update-password.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./models/user.model";
 import * as bcrypt from 'bcrypt';
+import { Errors } from "src/constants/Errors";
 
 @Injectable()
 export class UsersService {
     constructor(@InjectRepository(User) private usersRepository: Repository<User>) { }
 
     async findUserById(id: number) {
-        return this.usersRepository.find({ where: { id: id }, relations: ["roles"] });
+        return this.usersRepository.findOne({ where: { id: id }, relations: ["roles"] });
     }
 
     async findUserByGoogleId(googleId: string) {
@@ -53,16 +54,13 @@ export class UsersService {
     }
 
     async updateUser(id: number, dto: UpdateUserDto) {
-        try {
-            await this.usersRepository.update({ id: id }, { ...dto })
-            return this.findUserById(id);
-        } catch (e) {
-            if (e.code == 'ER_DUP_ENTRY') {
-                throw new ConflictException()
-            } else {
-                throw new InternalServerErrorException()
-            }
+        const existUser = await this.findByUserame(dto.username);
+        if (existUser) {
+            throw new ConflictException(Errors.NICKNAME_TAKEN)
         }
+
+        await this.usersRepository.update({ id: id }, { ...dto })
+        return this.findUserById(id);
     }
 
     async deleteUser(id: number) {

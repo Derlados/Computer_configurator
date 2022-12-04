@@ -126,8 +126,8 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
             build.image?.let { image ->
                 view.setImage(image)
             }
-            view.changeVisibilityAddMoreBt(!build.isMax(ComponentCategory.HDD), ComponentCategory.HDD)
-            view.changeVisibilityAddMoreBt(!build.isMax(ComponentCategory.SSD), ComponentCategory.SSD)
+            view.changeVisibilityAdditionalBt(!build.isMax(ComponentCategory.HDD), ComponentCategory.HDD)
+            view.changeVisibilityAdditionalBt(!build.isMax(ComponentCategory.SSD), ComponentCategory.SSD)
 
             val compatibilityInfo = build.getCompatibilityInfo()
             when {

@@ -22,6 +22,10 @@ export class BuildsService {
         return await this.buildsRepository.find({ relations: ["user", "buildComponents", "buildComponents.component", "buildComponents.component.category"] });
     }
 
+    async getBuldsByUserId(userId: number) {
+        return this.buildsRepository.find({ userId: userId });
+    }
+
     async getBuildByid(buildId: number) {
         return await this.buildsRepository.findOne({
             where: { id: buildId },
@@ -36,8 +40,6 @@ export class BuildsService {
             ]
         });
     }
-
-
 
     async getBuildComments(buildId: number) {
         return await this.commentsRepository.find({ where: { buildId: buildId }, relations: ["user"] });

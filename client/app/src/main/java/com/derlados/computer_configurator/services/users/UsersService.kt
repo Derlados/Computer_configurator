@@ -23,83 +23,63 @@ object UsersService: Service() {
     }
 
     suspend fun getPersonal(token: String): User {
-        val res = api.getPersonal(token)
+        val res = api.getPersonal(getBearerToken(token))
         val user = res.body()
 
         if (res.isSuccessful && user != null) {
             return user
         } else {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 
-    suspend fun register(username: String, password: String, secret: String): String {
-        val body = CreateUserDto(username, password, secret)
-        val res = api.register(body)
-        val token = res.body()
+    suspend fun update(token: String, username: String): User  {
+        val body = UpdateUserDto(username)
+        val res = api.update(getBearerToken(token), body)
+        val user = res.body()
 
-        if (res.isSuccessful && token != null) {
-            return token
+        if (res.isSuccessful && user != null) {
+            return user
         } else {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 
-    suspend fun login(username: String, password: String): String {
-        val body = LoginUserDto(username, password)
-        val res = api.login(body)
-        val token = res.body()
-
-        if (res.isSuccessful && token != null) {
-            return token
-        } else {
-            throw this.errorHandle(res.code())
-        }
+    suspend fun updatePhoto(token: String, img: File): User {
+        return User(-1, "")
     }
 
-    suspend fun googleSignIn(googleId: String, username: String, email: String, photoUrl: String?): String {
-        val body = GoogleSignInDto(googleId, username, email, photoUrl)
-        val res = api.googleSignIn(body)
-        val token = res.body()
-
-        if (res.isSuccessful && token != null) {
-            return token
-        } else {
-            throw this.errorHandle(res.code())
-        }
-    }
-
-    suspend fun update(token: String, username: String, img: File?): User {
-        val usernameBody: RequestBody = RequestBody.create(MediaType.parse("text/plain"), username)
-        val body = UpdateUserDto(usernameBody)
-
-        var imgBody: MultipartBody.Part? = null
-        img?.let {
-            val url = img.toString()
-            val extension = MimeTypeMap.getFileExtensionFromUrl(url)
-            val imgRequestBody: RequestBody = RequestBody.create(MediaType.parse("image/${extension}"), img)
-            imgBody = MultipartBody.Part.createFormData("img", img.name, imgRequestBody)
-        }
-
-        val res = api.update(token, body, imgBody)
-        val updatedUser = res.body()
-
-        if (res.isSuccessful && updatedUser != null) {
-            return updatedUser
-        } else {
-            throw this.errorHandle(res.code())
-        }
-    }
+//    suspend fun update(token: String, username: String): User {
+//        val usernameBody: RequestBody = RequestBody.create(MediaType.parse("text/plain"), username)
+//        val body = UpdateUserDto(usernameBody)
+//
+//        var imgBody: MultipartBody.Part? = null
+//        img?.let {
+//            val url = img.toString()
+//            val extension = MimeTypeMap.getFileExtensionFromUrl(url)
+//            val imgRequestBody: RequestBody = RequestBody.create(MediaType.parse("image/${extension}"), img)
+//            imgBody = MultipartBody.Part.createFormData("img", img.name, imgRequestBody)
+//        }
+//
+//        val res = api.update(getBearerToken(token), body, imgBody)
+//        val updatedUser = res.body()
+//
+//        if (res.isSuccessful && updatedUser != null) {
+//            return updatedUser
+//        } else {
+//            throw this.errorHandle(res.code(), res.errorBody())
+//        }
+//    }
 
     suspend fun addGoogleAcc(token: String, googleId: String, username: String, email: String, photoUrl: String?): User {
         val body = GoogleSignInDto(googleId, username, email, photoUrl)
-        val res = api.addGoogleAcc(token, body)
+        val res = api.addGoogleAcc(getBearerToken(token), body)
         val user = res.body()
 
         if (res.isSuccessful && user != null) {
             return user
         } else {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 
@@ -108,7 +88,9 @@ object UsersService: Service() {
         val res = api.restore(body)
 
         if (!res.isSuccessful) {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
+
+
 }

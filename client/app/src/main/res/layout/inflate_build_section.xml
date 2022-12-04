@@ -11,7 +11,8 @@
 
     <com.github.aakira.expandablelayout.ExpandableLinearLayout
         android:id="@+id/inflate_build_section_ell_components"
-        style="@style/ExpandComponents">
+        style="@style/ExpandComponents"
+        >
 
         <LinearLayout
             android:id="@+id/inflate_build_section_ll_components_cont"
@@ -19,12 +20,24 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
         </LinearLayout>
 
         <android.widget.Button
             android:id="@+id/inflate_build_section_bt_add_more"
             android:visibility="gone"
+            android:text= "+"
+            android:textSize="20sp"
+            android:layout_height="36dp"
             style="@style/block_header_add_more"/>
+
+        <android.widget.Button
+            android:id="@+id/inflate_build_section_bt_full"
+            android:visibility="gone"
+            android:text= "Все порты заняты !"
+            android:layout_height="36dp"
+            style="@style/block_header_add_more"/>
+
 
     </com.github.aakira.expandablelayout.ExpandableLinearLayout>
 

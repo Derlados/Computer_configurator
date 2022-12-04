@@ -27,7 +27,7 @@ object ComponentsService: Service() {
         if (res.isSuccessful && components != null) {
             return components
         } else {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 

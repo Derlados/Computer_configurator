@@ -55,11 +55,8 @@ export class ComponentsService {
      * @param id - component id
      * @param dto - dto without attributes
      */
-    async updateComponent(id: number, dto: CreateComponentDto) {
-        const { attributes, ...component } = dto;
-
-        await this.componentRepository.update({ id: id }, { ...component });
-        await this.addAttributes(id, attributes);
+    async updateComponent(id: number, dto: ComponentDto) {
+        await this.componentRepository.update({ id: id }, { ...dto });
         return this.getComponentsById(id);
     }
 

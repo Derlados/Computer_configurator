@@ -33,7 +33,7 @@ object BuildsService: Service() {
         if (res.isSuccessful && builds != null) {
             return builds
         } else {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 
@@ -44,7 +44,7 @@ object BuildsService: Service() {
         if (res.isSuccessful && build != null) {
             return build
         } else {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 
@@ -61,7 +61,7 @@ object BuildsService: Service() {
         if (res.isSuccessful && comments != null) {
             return comments
         } else {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 
@@ -73,13 +73,13 @@ object BuildsService: Service() {
      * @return - id добавленого комментария с сервера
      */
     suspend fun addNewComment(token: String, buildId: Int, text: String): Comment {
-        val res: Response<Comment> = api.addComment(token, buildId, text)
+        val res: Response<Comment> = api.addComment(getBearerToken(token), buildId, text)
         val newComment = res.body()
 
         if (res.isSuccessful && newComment != null) {
             return newComment
         } else {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 
@@ -92,60 +92,56 @@ object BuildsService: Service() {
      * @return - id добавленого комментария с сервера
      */
     suspend fun answerComment(token: String, buildId: Int, text: String, parentId: Int): Comment {
-        val res: Response<Comment> = api.answerComment(token, buildId, text, parentId)
+        val res: Response<Comment> = api.answerComment(getBearerToken(token), buildId, text, parentId)
         val newComment = res.body()
 
         if (res.isSuccessful && newComment != null) {
             return newComment
         } else {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 
     /**
      * Восстановление сборок пользователя с сервера (после того как пользователь вошел в аккаунт)
      * @param token - токен пользователя
-     * @param idUser - id пользователя
      * */
     suspend fun restoreBuildsFromServer(token: String): ArrayList<Build> {
-        val res = api.getPersonalBuilds(token)
+        val res = api.getPersonalBuilds(getBearerToken(token))
         val builds = res.body()
 
         if (res.isSuccessful && builds != null) {
             return builds
         } else {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 
     /**
      * Сохранение сборки на сервер
      * @param token - токе пользователя
-     * @param idUser - id пользователя
-     * @param idBuild - локальное id сборки
-     * @param isPublic - начальный статус публикации
+     * @param dto - dto (объект сборки для создания в базе)
      * */
     suspend fun saveBuildOnServer(token: String, dto: CreateBuildDto): Build {
-        val res = api.saveBuild(token, dto)
+        val res = api.saveBuild(getBearerToken(token), dto)
         val savedBuild = res.body()
 
         if (res.isSuccessful && savedBuild != null) {
             return savedBuild
         } else {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 
     /** Удаление сборки с аккаунта
      * @param token - токе пользователя
-     * @param idUser - id пользователя
-     * @param idServerBuild - серверное id сборки
+     * @param buildId - id сборки
      * */
     suspend fun deleteBuildFromServer(token: String, buildId: Int) {
-        val res = api.deleteBuild(token, buildId)
+        val res = api.deleteBuild(getBearerToken(token), buildId)
 
         if (!res.isSuccessful) {
-            throw this.errorHandle(res.code())
+            throw this.errorHandle(res.code(), res.errorBody())
         }
     }
 }

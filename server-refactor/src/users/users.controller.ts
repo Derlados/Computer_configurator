@@ -30,8 +30,15 @@ export class UsersController {
     @Put('personal')
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(FileInterceptor('img'), ClassSerializerInterceptor)
-    update(@Req() req, @Body() dto: UpdateUserDto, @UploadedFile('img') img?: Express.Multer.File) {
+    update(@Req() req, @Body() dto: UpdateUserDto) {
         return this.usersService.updateUser(req.user.id, dto);
+    }
+
+    @Put('personal/photo')
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(FileInterceptor('img'), ClassSerializerInterceptor)
+    updatePhoto(@Req() req, @UploadedFile('img') img?: Express.Multer.File) {
+        // return this.usersService.updateUser(req.user.id, dto);
     }
 
     @Put('personal/google-sign')

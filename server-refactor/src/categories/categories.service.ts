@@ -24,7 +24,7 @@ export class CategoriesService {
      * @param categoryUrl 
      * @returns 
      */
-    //TODO сортировку перенести в клиент
+    //TODO сортировку перенести в клиент (функция с прошлой версии)
     async getFilters(categoryUrl: string): Promise<Map<number, FilterAttribute>> {
         const filters = await this.filtersRepository.find({
             where: { category: { url: categoryUrl } },

@@ -66,7 +66,6 @@ class BrainParser extends Parser_1.Parser {
                     }
                     yield this.timeout(this.TIMEOUT);
                 }
-                console.log("parsed: " + category);
             }
         });
     }
@@ -74,14 +73,11 @@ class BrainParser extends Parser_1.Parser {
         return __awaiter(this, void 0, void 0, function* () {
             for (const [categoryId, category] of this.categories.entries()) {
                 const DBProducts = yield components_service_1.default.getComponents(categoryId);
-                if (categoryId < 7) {
+                if (categoryId < 4) {
                     continue;
                 }
                 for (const product of DBProducts) {
                     const { id } = product, productInfo = __rest(product, ["id"]);
-                    if (categoryId == 7 && id < 3079) {
-                        continue;
-                    }
                     try {
                         console.log(`${product.id} - ${product.url}`);
                         const attributes = yield this.parseAttributes(product.url);

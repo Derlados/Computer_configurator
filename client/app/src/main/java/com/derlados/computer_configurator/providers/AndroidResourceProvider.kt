@@ -46,9 +46,9 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.SAVED -> context.getString(R.string.saved)
             ResourceProvider.ResString.INVALID_AUTH_DATA -> context.getString(R.string.invalid_auth_data)
             ResourceProvider.ResString.PASSWORD_DO_NOT_MATCH -> context.getString(R.string.pass_do_not_match)
-            ResourceProvider.ResString.USERNAME_EXISTS -> context.getString(R.string.username_exists)
+            ResourceProvider.ResString.NICKNAME_TAKEN -> context.getString(R.string.NICKNAME_TAKEN)
             ResourceProvider.ResString.GOOGLE_ACC_ALREADY_USED -> context.getString(R.string.google_acc_already_used)
-            ResourceProvider.ResString.INCORRECT_LOGIN_OR_PASSWORD -> context.getString(R.string.incorrect_login_or_password)
+            ResourceProvider.ResString.LOGIN_USER_NOT_FOUND -> context.getString(R.string.LOGIN_USER_NOT_FOUND)
             ResourceProvider.ResString.NO_CONNECTION -> context.getString(R.string.no_connection)
             ResourceProvider.ResString.INTERNAL_SERVER_ERROR -> context.getString(R.string.internal_server_error)
             ResourceProvider.ResString.UNEXPECTED_ERROR -> context.getString(R.string.unexpected_error)
@@ -65,6 +65,7 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.DELETE_FROM_BUILD -> context.getString(R.string.delete_from_build)
             ResourceProvider.ResString.BUILD_NOT_FOUND -> context.getString(R.string.build_not_found)
             ResourceProvider.ResString.YOU_MUST_BE_AUTHORIZED -> context.getString(R.string.you_must_be_authorized)
+            ResourceProvider.ResString.LOCAL_USER_NOT_FOUND -> context.getString(R.string.local_user_not_found)
         }
     }
 

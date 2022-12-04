@@ -21,9 +21,9 @@ interface ResourceProvider {
         INVALID_USERNAME,
         INVALID_AUTH_DATA,
         PASSWORD_DO_NOT_MATCH,
-        USERNAME_EXISTS,
+        NICKNAME_TAKEN,
         GOOGLE_ACC_ALREADY_USED,
-        INCORRECT_LOGIN_OR_PASSWORD,
+        LOGIN_USER_NOT_FOUND,
         NO_CONNECTION,
         INTERNAL_SERVER_ERROR,
         UNEXPECTED_ERROR,
@@ -37,7 +37,8 @@ interface ResourceProvider {
         ENTER_VALUE,
         SUCCESS_CHANGE_PASSWORD,
         BUILD_NOT_FOUND,
-        YOU_MUST_BE_AUTHORIZED
+        YOU_MUST_BE_AUTHORIZED,
+        LOCAL_USER_NOT_FOUND
     }
     fun getDefaultImageByCategory(category: ComponentCategory): Int
     fun getCompatibilityErrors(error: Build.Companion.CompatibilityError): String
