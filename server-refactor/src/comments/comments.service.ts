@@ -10,7 +10,7 @@ export class CommentsService {
     constructor(@InjectRepository(Comment) private commentsRepository: Repository<Comment>) { }
 
     async getById(id: number) {
-        return this.commentsRepository.find({ where: { id: id }, relations: ["user"] });
+        return this.commentsRepository.findOne({ where: { id: id }, relations: ["user"] });
     }
 
     async createComment(buildId: number, userId: number, dto: CreateCommentDto) {

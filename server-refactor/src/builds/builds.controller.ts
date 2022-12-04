@@ -53,8 +53,16 @@ export class BuildsController {
     @UseGuards(JwtAuthGuard)
     @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     @UseInterceptors(ClassSerializerInterceptor)
-    answerComment(@Param('id') id: number, @Req() req, @Body() dto: CreateCommentDto) {
+    createComment(@Param('id') id: number, @Req() req, @Body() dto: CreateCommentDto) {
         return this.commentsService.createComment(id, req.user.id, dto);
+    }
+
+    @Post(':id/comments/:parentId/answer')
+    @UseGuards(JwtAuthGuard)
+    @SerializeOptions({ groups: [AccessGroups.ALL_USERS] })
+    @UseInterceptors(ClassSerializerInterceptor)
+    answerComment(@Param('parentId') parentId: number, @Req() req, @Body() dto: CreateCommentDto) {
+        return this.commentsService.answerComment(parentId, req.user.id, dto);
     }
 
     @Put(':id([0-9]+)')

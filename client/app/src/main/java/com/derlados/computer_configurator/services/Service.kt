@@ -17,6 +17,8 @@ open class Service {
      * @return Ошибка, объект Throwable с необходимым сообщением
      */
     fun errorHandle(code: Int, errorBody: ResponseBody?): NetworkErrorException {
+
+
         apiError = if (code == 200 || code == 500 || errorBody == null) {
             ResourceProvider.ResString.INTERNAL_SERVER_ERROR.name
         } else {
