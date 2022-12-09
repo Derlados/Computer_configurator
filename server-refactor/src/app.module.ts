@@ -19,6 +19,9 @@ import { Comment } from "./comments/models/comment.model";
 import { CategoriesModule } from "./categories/categories.module";
 import { RolesModule } from "./roles/roles.module";
 import { Role } from "./roles/models/role.model";
+import { FilesModule } from "./files/files.module";
+import { join } from "path";
+import { ServeStaticModule } from "@nestjs/serve-static";
 
 @Module({
     controllers: [],
@@ -41,13 +44,18 @@ import { Role } from "./roles/models/role.model";
             synchronize: true,
             multipleStatements: true,
         }),
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', 'static'),
+            serveRoot: '/images'
+        }),
         AuthModule,
         UsersModule,
         BuildsModule,
         CategoriesModule,
         ComponentsModule,
         CommentsModule,
-        RolesModule
+        RolesModule,
+        FilesModule
     ]
 })
 export class AppModule { }

@@ -4,10 +4,12 @@ import com.derlados.computer_configurator.consts.Domain
 import com.derlados.computer_configurator.services.users.dto.CreateUserDto
 import com.derlados.computer_configurator.services.users.dto.GoogleSignInDto
 import com.derlados.computer_configurator.services.users.dto.LoginUserDto
+import com.derlados.computer_configurator.services.users.dto.RestoreDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface AuthApi {
     companion object {
@@ -23,4 +25,7 @@ interface AuthApi {
 
     @POST("google-sign")
     suspend fun googleSignIn(@Body dto: GoogleSignInDto): Response<String>
+
+    @PUT("restore")
+    suspend fun restore(@Body map: RestoreDto): Response<Unit>
 }

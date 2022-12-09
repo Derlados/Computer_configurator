@@ -18,9 +18,6 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
         LocalBuildsStore.setObserver(this)
         LocalBuildsStore.loadBuildsFromCache()
 
-        val localOnlineBuilds = LocalBuildsStore.localBuilds.filter { build -> build.isPublic }
-        PublicBuildsStore.publicBuilds = ArrayList(localOnlineBuilds)
-
         view.setBuildsData(LocalBuildsStore.localBuilds)
 
         UserStore.token?.let {
@@ -101,7 +98,7 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
     fun saveBuildOnServer(localId: String) {
         val selectedBuild = LocalBuildsStore.getBuildByLocalId(localId)
 
-        if (!selectedBuild.isCompatibility || !selectedBuild.isComplete) {
+        if (!selectedBuild.isCompatibility || !selectedBuild.isComplete || selectedBuild.name.isEmpty()) {
             view.showWarnDialog(resourceProvider.getString(ResourceProvider.ResString.BUILD_MUST_BE_COMPLETED))
             return
         }

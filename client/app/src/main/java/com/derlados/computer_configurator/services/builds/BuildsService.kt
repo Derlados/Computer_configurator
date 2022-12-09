@@ -1,13 +1,9 @@
 package com.derlados.computer_configurator.services.builds
 
-import android.accounts.NetworkErrorException
-import android.util.Log
 import com.derlados.computer_configurator.entities.build.Build
 import com.derlados.computer_configurator.entities.Comment
 import com.derlados.computer_configurator.services.Service
-import com.derlados.computer_configurator.services.users.UsersApi
-import com.derlados.computer_configurator.types.CreateBuildDto
-import kotlinx.coroutines.channels.consumesAll
+import com.derlados.computer_configurator.services.builds.dto.CreateBuildDto
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -122,8 +118,8 @@ object BuildsService: Service() {
      * @param token - токе пользователя
      * @param dto - dto (объект сборки для создания в базе)
      * */
-    suspend fun saveBuildOnServer(token: String, dto: CreateBuildDto): Build {
-        val res = api.saveBuild(getBearerToken(token), dto)
+    suspend fun saveBuildOnServer(token: String, build: Build): Build {
+        val res = api.saveBuild(getBearerToken(token), CreateBuildDto(build))
         val savedBuild = res.body()
 
         if (res.isSuccessful && savedBuild != null) {

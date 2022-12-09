@@ -2,10 +2,12 @@ package com.derlados.computer_configurator.stores
 
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.util.Log
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.entities.User
 import com.derlados.computer_configurator.services.auth.AuthService
 import com.derlados.computer_configurator.services.users.UsersService
+import com.google.gson.Gson
 import java.io.File
 import java.util.*
 
@@ -43,7 +45,7 @@ object UserStore: Observable() {
     }
 
     suspend fun restorePassword(username: String, secret: String, newPassword: String) {
-        UsersService.restorePassword(username, secret, newPassword)
+        AuthService.restorePassword(username, secret, newPassword)
     }
 
     suspend fun updateData(username: String) {
@@ -99,6 +101,7 @@ object UserStore: Observable() {
         token = null
         currentUser = null
         userPreferences.edit().clear().apply()
+        LocalBuildsStore.removeServerBuilds()
         setChanged()
         notifyObservers()
     }

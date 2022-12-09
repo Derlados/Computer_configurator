@@ -1,10 +1,10 @@
 package com.derlados.computer_configurator.stores
 
-import com.derlados.computer_configurator.types.CreateBuildDto
 import com.derlados.computer_configurator.services.builds.BuildsApi
 import com.derlados.computer_configurator.managers.FileManager
 import com.derlados.computer_configurator.entities.build.Build
 import com.derlados.computer_configurator.services.builds.BuildsService
+import com.derlados.computer_configurator.services.builds.dto.CreateBuildDto
 import com.google.gson.Gson
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -62,7 +62,7 @@ object LocalBuildsStore: Observable() {
      * @param isPublic - начальный статус публикации
      * */
     suspend fun saveBuildOnServer(token: String, build: Build): Build {
-        val savedBuild = BuildsService.saveBuildOnServer(token, CreateBuildDto(build))
+        val savedBuild = BuildsService.saveBuildOnServer(token, build)
         savedBuild.localId = build.localId
         localBuilds[localBuilds.indexOf(build)] = savedBuild
 

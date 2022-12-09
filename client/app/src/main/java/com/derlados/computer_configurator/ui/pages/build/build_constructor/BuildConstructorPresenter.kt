@@ -71,8 +71,9 @@ class BuildConstructorPresenter(private val view: BuildConstructorView, private 
     fun increaseComponent(category: ComponentCategory, component: Component) {
         LocalBuildsStore.editableBuild?.let {
             it.increaseComponents(category, component.id)
+            val buildComponent = it.components[category]
 
-            if (it.checkCompatibility(category, component) == Build.Companion.CompatibilityError.OK) {
+            if (buildComponent != null && it.checkCompatibility(category, buildComponent) == Build.Companion.CompatibilityError.OK) {
                 it.getBuildComponent(category, component.id)?.count?.let { count ->
                     view.setCountComponents(component.id, count)
                 }

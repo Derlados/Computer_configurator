@@ -19,7 +19,7 @@ class GoogleSign(context: Context) {
     init {
         // Инициализация клиента
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-               .requestIdToken("547509922422-6olq3scj6i3e3fbenoe49bb095tdq1dk.apps.googleusercontent.com")
+                .requestIdToken("547509922422-6olq3scj6i3e3fbenoe49bb095tdq1dk.apps.googleusercontent.com")
                 .requestEmail()
                 .build()
         mGoogleSignInClient = GoogleSignIn.getClient(context, gso)

@@ -1,15 +1,15 @@
 package com.derlados.computer_configurator.services.users
 
-import android.webkit.MimeTypeMap
+import com.derlados.computer_configurator.entities.User
 import com.derlados.computer_configurator.services.Service
 import com.derlados.computer_configurator.services.users.dto.*
-import com.derlados.computer_configurator.entities.User
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+
 
 object UsersService: Service() {
     private val api: UsersApi
@@ -46,7 +46,17 @@ object UsersService: Service() {
     }
 
     suspend fun updatePhoto(token: String, img: File): User {
-        return User(-1, "")
+        val requestFile: RequestBody = RequestBody.create(MediaType.parse("image/${img.extension}"), img)
+        val body = MultipartBody.Part.createFormData("image", img.name, requestFile)
+
+        val res = api.updatePhoto(getBearerToken(token), body)
+        val photo = res.body()
+
+        if (res.isSuccessful && photo != null) {
+            return photo
+        } else {
+            throw this.errorHandle(res.code(), res.errorBody())
+        }
     }
 
 //    suspend fun update(token: String, username: String): User {
@@ -82,15 +92,4 @@ object UsersService: Service() {
             throw this.errorHandle(res.code(), res.errorBody())
         }
     }
-
-    suspend  fun restorePassword(username: String, secret: String, newPassword: String): Unit {
-        val body = RestoreDto(username, secret, newPassword)
-        val res = api.restore(body)
-
-        if (!res.isSuccessful) {
-            throw this.errorHandle(res.code(), res.errorBody())
-        }
-    }
-
-
 }

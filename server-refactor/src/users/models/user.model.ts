@@ -2,7 +2,7 @@ import { Exclude, Expose } from "class-transformer";
 import { Build } from "src/builds/models/build.model";
 import { AccessGroups } from "src/constants/AccessGroups";
 import { Role } from "src/roles/models/role.model";
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AfterLoad, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Comment } from "../../comments/models/comment.model";
 
 @Entity('users')
@@ -47,8 +47,15 @@ export class User {
     @Exclude()
     comments: Comment[];
 
-    @ManyToMany(() => Role, roles => roles.users)
+    @ManyToMany(() => Role, roles => roles.users, { onUpdate: "CASCADE", onDelete: "CASCADE" })
     @JoinTable()
     @Exclude()
     roles: Role[];
+
+    @AfterLoad()
+    getPhoto() {
+        if (this.photo && !this.photo.includes('http')) {
+            this.photo = `${process.env.STATIC_API}/${this.photo}`
+        }
+    }
 }

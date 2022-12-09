@@ -1,6 +1,7 @@
 package com.derlados.computer_configurator.ui.pages.settings
 
 import android.accounts.NetworkErrorException
+import android.util.Log
 import com.derlados.computer_configurator.entities.User
 import com.derlados.computer_configurator.stores.UserStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
@@ -38,7 +39,25 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
      */
     fun uploadImage(file: File) {
         view.showImgLoadProgress()
-        updateUserPhoto(file)
+
+        coroutineScope.launch {
+            try {
+                UserStore.updatePhoto(file)
+            } catch (e: NetworkErrorException) {
+                ensureActive()
+                errorHandle(e.message)
+            } catch (e: SocketTimeoutException) {
+                ensureActive()
+                view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
+            } catch (e: Exception) {
+                ensureActive()
+                UserStore.logout()
+                view.showError(resourceProvider.getString(ResourceProvider.ResString.LOCAL_USER_NOT_FOUND))
+            }
+
+            ensureActive()
+            view.closeImgLoadProgress()
+        }
     }
 
     /**
@@ -87,27 +106,6 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
             ensureActive()
             view.closeUsernamePB()
             setUserData()
-        }
-    }
-
-    private fun updateUserPhoto(img: File) {
-        coroutineScope.launch {
-            try {
-                UserStore.updatePhoto(img)
-            } catch (e: NetworkErrorException) {
-                ensureActive()
-                errorHandle(e.message)
-            } catch (e: SocketTimeoutException) {
-                ensureActive()
-                view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
-            } catch (e: Exception) {
-                ensureActive()
-                UserStore.logout()
-                view.showError(resourceProvider.getString(ResourceProvider.ResString.LOCAL_USER_NOT_FOUND))
-            }
-
-            ensureActive()
-            view.closeImgLoadProgress()
         }
     }
 

@@ -1,9 +1,9 @@
 import { BadRequestException, Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ChangePasswordDto } from 'src/users/dto/change-password.dto';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { GoogleSignInDto } from '../users/dto/google-sign-in-dto';
 import { LoginUserDto } from '../users/dto/login-user.dto';
-import { UpdatePasswordDto } from '../users/dto/update-password.dto';
 
 import { AuthService } from './auth.service';
 
@@ -32,5 +32,10 @@ export class AuthController {
     @Post('/google-sign-in')
     async googleSingIn(@Body() dto: GoogleSignInDto) {
         return this.authService.googleSignIn(dto);
+    }
+
+    @Put('/restore')
+    async changePassword(@Body() dto: ChangePasswordDto) {
+        return this.authService.changePassword(dto);
     }
 }

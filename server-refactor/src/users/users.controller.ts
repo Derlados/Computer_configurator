@@ -3,7 +3,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { AccessGroups } from 'src/constants/AccessGroups';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { GoogleSignInDto } from './dto/google-sign-in-dto';
-import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
@@ -29,16 +28,16 @@ export class UsersController {
 
     @Put('personal')
     @UseGuards(JwtAuthGuard)
-    @UseInterceptors(FileInterceptor('img'), ClassSerializerInterceptor)
+    @UseInterceptors(ClassSerializerInterceptor)
     update(@Req() req, @Body() dto: UpdateUserDto) {
         return this.usersService.updateUser(req.user.id, dto);
     }
 
     @Put('personal/photo')
     @UseGuards(JwtAuthGuard)
-    @UseInterceptors(FileInterceptor('img'), ClassSerializerInterceptor)
-    updatePhoto(@Req() req, @UploadedFile('img') img?: Express.Multer.File) {
-        // return this.usersService.updateUser(req.user.id, dto);
+    @UseInterceptors(FileInterceptor('image'), ClassSerializerInterceptor)
+    updatePhoto(@Req() req, @UploadedFile() img: Express.Multer.File) {
+        return this.usersService.updatePhoto(req.user.id, img);
     }
 
     @Put('personal/google-sign')
@@ -46,13 +45,6 @@ export class UsersController {
     @UseInterceptors(ClassSerializerInterceptor)
     addGoogleAcc(@Req() req, @Body() dto: GoogleSignInDto) {
         return this.usersService.addGoogleAccout(req.user.id, dto);
-    }
-
-    @Put('personal/restore')
-    @UseGuards(JwtAuthGuard)
-    @UseInterceptors(ClassSerializerInterceptor)
-    restorePassword(@Req() req, @Body() dto: UpdatePasswordDto) {
-        return this.usersService.updatePassword(req.user.id, dto)
     }
 
     @Delete('personal')

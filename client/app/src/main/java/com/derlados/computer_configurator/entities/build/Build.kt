@@ -124,10 +124,10 @@ class Build : Cloneable, IEditableBuild {
     /**
      * Проверка совместимости комплектующих
      * @param category - категория комплектующего
-     * @param buildComponents - список комплектующих в категории, которые необходимо проверить на совместимсоть
+     * @param buildComponents - список комплектующих в категории, которые необходимо проверить на совместимсоть (подставной массив категории)
      * @return - ошибка (CompatibilityError) или подтверджение совместимости (CompatibilityError.OK)
      */
-    private fun checkCompatibility(category: ComponentCategory, buildComponents: ArrayList<BuildComponent>): CompatibilityError {
+    fun checkCompatibility(category: ComponentCategory, buildComponents: ArrayList<BuildComponent>): CompatibilityError {
         when (category) {
             ComponentCategory.CPU -> {
                 val motherboard = components[ComponentCategory.MOTHERBOARD]?.getOrNull(0)?.component
@@ -200,7 +200,7 @@ class Build : Cloneable, IEditableBuild {
                     var m2Count = 0
                     var sataCount = 0
 
-                    val m2Matches = Regex ("([0-9]+ x m.2)").findAll( ports.toLowerCase(Locale.ROOT))
+                    val m2Matches = Regex ("([0-9]+ x m.2)").findAll(ports.lowercase(Locale.ROOT))
                     m2Matches.forEach {
                         val countMatch = Regex("([0-9]+)").find(it.groupValues[1])?.value
                         countMatch?.let {
@@ -208,7 +208,7 @@ class Build : Cloneable, IEditableBuild {
                         }
                     }
 
-                    val sataMatches =  Regex ("([0-9]+ x sata)").findAll(ports.toLowerCase(Locale.ROOT))
+                    val sataMatches =  Regex ("([0-9]+ x sata)").findAll(ports.lowercase(Locale.ROOT))
                     sataMatches.forEach {
                         val countMatch = Regex("([0-9]+)").find(it.groupValues[1])?.value
                         countMatch?.let {
@@ -220,7 +220,7 @@ class Build : Cloneable, IEditableBuild {
                         val count = it.count
                         val formFactor = it.component.getAttrById(SSD_FORM_FACTOR_ATTR_ID)?.value
                         formFactor?.let {
-                            if (formFactor.toLowerCase(Locale.ROOT).contains("m.2")) {
+                            if (formFactor.lowercase().contains("m.2")) {
                                 m2Count += count
                             } else {
                                 sataCount += count

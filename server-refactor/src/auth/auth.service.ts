@@ -2,10 +2,10 @@ import { ConflictException, ForbiddenException, Injectable, InternalServerErrorE
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Errors } from 'src/constants/Errors';
+import { ChangePasswordDto } from 'src/users/dto/change-password.dto';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { GoogleSignInDto } from '../users/dto/google-sign-in-dto';
 import { LoginUserDto } from '../users/dto/login-user.dto';
-import { UpdatePasswordDto } from '../users/dto/update-password.dto';
 import { User } from '../users/models/user.model';
 import { UsersService } from '../users/users.service';
 
@@ -53,6 +53,21 @@ export class AuthService {
         }
 
         return this.generateToken(user)
+    }
+
+    async changePassword(dto: ChangePasswordDto) {
+        const user = await this.usersService.findByUserame(dto.username);
+        if (!user) {
+            throw new NotFoundException(Errors.LOGIN_USER_NOT_FOUND);
+        }
+
+        const isAvailableSecret = bcrypt.compareSync(dto.secret, user.secret);
+        if (!isAvailableSecret) {
+            throw new NotFoundException(Errors.LOGIN_USER_NOT_FOUND);
+        }
+
+        const hashNewPassword = bcrypt.hashSync(dto.newPassword, AuthService.HASH_SALT);
+        this.usersService.updatePassword(user.id, hashNewPassword);
     }
 
     private generateToken(user: User) {

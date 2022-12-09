@@ -1,9 +1,8 @@
 package com.derlados.computer_configurator.services.builds
 
-import com.derlados.computer_configurator.consts.Domain
-import com.derlados.computer_configurator.types.CreateBuildDto
 import com.derlados.computer_configurator.entities.build.Build
 import com.derlados.computer_configurator.entities.Comment
+import com.derlados.computer_configurator.services.builds.dto.CreateBuildDto
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -48,5 +47,5 @@ interface BuildsApi {
                                    @Field("isPublic") isPublic: Boolean): Response<Boolean>
 
     @DELETE("{buildId}")
-    suspend fun deleteBuild(@Header("token") token: String, @Path("buildId") buildId: Int): Response<Unit>
+    suspend fun deleteBuild(@Header("Authorization") token: String, @Path("buildId") buildId: Int): Response<Unit>
 }

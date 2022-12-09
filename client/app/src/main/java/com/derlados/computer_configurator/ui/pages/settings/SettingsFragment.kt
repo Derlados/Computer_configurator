@@ -8,6 +8,7 @@ import android.graphics.drawable.InsetDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.method.KeyListener
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ import com.derlados.computer_configurator.consts.BackStackTag
 import com.derlados.computer_configurator.ui.pages.main.MainView
 import com.derlados.computer_configurator.ui.OnFragmentInteractionListener
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.fragment_settings.view.*
@@ -85,7 +87,14 @@ class SettingsFragment: Fragment(), SettingsView, MainActivity.OnBackPressedList
     override fun updateUserData(username: String, photoUrl: String?, email: String?) {
         currentFragment.fragment_settings_et_username.setText(username)
         photoUrl?.let {
-            Picasso.get().load(photoUrl).into(currentFragment.fragment_settings_img)
+            Picasso.get().load(photoUrl).into(currentFragment.fragment_settings_img, object : Callback {
+                override fun onSuccess() {
+                }
+
+                override fun onError(e: Exception) {
+                    Log.d("ERROR_PICASSO", e.message.toString())
+                }
+            })
         }
         email?.let {
             currentFragment.fragment_settings_ll_google_acc.visibility = View.VISIBLE

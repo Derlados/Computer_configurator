@@ -1,4 +1,4 @@
-package com.derlados.computer_configurator.types
+package com.derlados.computer_configurator.services.builds.dto
 
 import com.derlados.computer_configurator.entities.build.Build
 
@@ -9,20 +9,20 @@ import com.derlados.computer_configurator.entities.build.Build
  * components - массив пар <id комлпектующего, количество комплектующих>
  */
 class CreateBuildDto(build: Build) {
-    private val name: String
-    private val desc: String
-    private val isPublic: Boolean
-    private val components: ArrayList<Pair<Int, Int>>
+    val name: String
+    val description: String
+    val isPublic: Boolean
+    val components: ArrayList<CreateBuildComponentDto>
 
     init {
         this.name = build.name
-        this.desc = build.description
+        this.description = build.description
         this.isPublic = true
 
         this.components = ArrayList()
         for ((_, buildComponents) in build.components) {
             for (buildComponent in buildComponents) {
-                this.components.add(Pair(buildComponent.component.id, buildComponent.count))
+                this.components.add(CreateBuildComponentDto(buildComponent.component.id, buildComponent.count))
             }
         }
     }

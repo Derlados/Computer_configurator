@@ -3,15 +3,16 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Like } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { GoogleSignInDto } from "./dto/google-sign-in-dto";
-import { UpdatePasswordDto } from "./dto/update-password.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./models/user.model";
 import * as bcrypt from 'bcrypt';
 import { Errors } from "src/constants/Errors";
+import { FilesService } from "src/files/files.service";
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectRepository(User) private usersRepository: Repository<User>) { }
+    constructor(@InjectRepository(User) private usersRepository: Repository<User>,
+        private fileService: FilesService) { }
 
     async findUserById(id: number) {
         return this.usersRepository.findOne({ where: { id: id }, relations: ["roles"] });
@@ -39,18 +40,8 @@ export class UsersService {
         return await this.usersRepository.update({ id: id }, { ...googleInfo });
     }
 
-    async updatePassword(id: number, dto: UpdatePasswordDto) {
-        const user = await this.findByUserame(dto.username);
-        if (!user) {
-            throw new NotFoundException("User not found");
-        }
-
-        const isAvailablePass = bcrypt.compareSync(dto.secret, user.secret);
-        if (!isAvailablePass) {
-            throw new ForbiddenException();
-        }
-
-        return this.usersRepository.update({ id: id }, { password: dto.newPassword });
+    async updatePassword(id: number, newPassword: string) {
+        return this.usersRepository.update({ id: id }, { password: newPassword });
     }
 
     async updateUser(id: number, dto: UpdateUserDto) {
@@ -63,13 +54,15 @@ export class UsersService {
         return this.findUserById(id);
     }
 
-    async deleteUser(id: number) {
-        await this.usersRepository.delete({ id: id });
+    async updatePhoto(id: number, img: Express.Multer.File) {
+        const filename = await this.fileService.createFile(img);
+        await this.usersRepository.update({ id: id }, { photo: filename });
+
+        return this.findUserById(id);
     }
 
-    //TODO
-    saveImage() {
-
+    async deleteUser(id: number) {
+        await this.usersRepository.delete({ id: id });
     }
 
 }

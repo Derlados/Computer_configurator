@@ -30,9 +30,7 @@ object PublicBuildsStore {
      * Получение всех опубликованных сборок сборок
      * */
     suspend fun getPublicBuilds(): ArrayList<Build> {
-        if (publicBuilds.isEmpty()) {
-            publicBuilds = BuildsService.getPublicBuilds()
-        }
+        publicBuilds = BuildsService.getPublicBuilds()
 
         return publicBuilds
     }

@@ -2,9 +2,11 @@ package com.derlados.computer_configurator.services.auth
 
 import android.util.Log
 import com.derlados.computer_configurator.services.Service
+import com.derlados.computer_configurator.services.users.UsersService
 import com.derlados.computer_configurator.services.users.dto.CreateUserDto
 import com.derlados.computer_configurator.services.users.dto.GoogleSignInDto
 import com.derlados.computer_configurator.services.users.dto.LoginUserDto
+import com.derlados.computer_configurator.services.users.dto.RestoreDto
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -58,6 +60,15 @@ object AuthService: Service() {
         if (res.isSuccessful && token != null) {
             return token
         } else {
+            throw this.errorHandle(res.code(), res.errorBody())
+        }
+    }
+
+    suspend  fun restorePassword(username: String, secret: String, newPassword: String): Unit {
+        val body = RestoreDto(username, secret, newPassword)
+        val res = api.restore(body)
+
+        if (!res.isSuccessful) {
             throw this.errorHandle(res.code(), res.errorBody())
         }
     }

@@ -33,7 +33,7 @@ export class Build {
 
     components: Map<string, BuildComponent[]>
 
-    @ManyToOne(() => User, user => user.builds)
+    @ManyToOne(() => User, user => user.builds, { onUpdate: "CASCADE", onDelete: "CASCADE" })
     @JoinColumn({ name: "user_id" })
     user: User;
 
@@ -47,6 +47,7 @@ export class Build {
     @AfterLoad()
     getPrice() {
         this.price = 0;
+
         this.buildComponents.forEach(c => {
             this.price += c.component.price * c.count
         })

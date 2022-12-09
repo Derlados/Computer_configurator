@@ -19,14 +19,12 @@ interface UsersApi {
     @PUT("personal")
     suspend fun update(@Header("Authorization") token: String, @Body dto: UpdateUserDto): Response<User>
 
+    @Multipart
     @PUT("personal/photo")
-    suspend fun updatePhoto(@Header("Authorization") token: String, @Body dto: UpdateUserDto): Response<User>
+    suspend fun updatePhoto(@Header("Authorization") token: String, @Part image: MultipartBody.Part): Response<User>
 
     @PUT("personal/google-sign")
     suspend fun addGoogleAcc(@Header("Authorization") token: String, @Body dto: GoogleSignInDto): Response<User>
-
-    @PUT("restore")
-    suspend fun restore(@Body map: RestoreDto): Response<Unit>
 
     @DELETE("personal")
     suspend fun removeAccount(@Header("Authorization") token: String): Response<Unit>
