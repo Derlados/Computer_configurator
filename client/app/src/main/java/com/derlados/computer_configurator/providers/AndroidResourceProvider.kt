@@ -47,7 +47,7 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.INVALID_AUTH_DATA -> context.getString(R.string.invalid_auth_data)
             ResourceProvider.ResString.PASSWORD_DO_NOT_MATCH -> context.getString(R.string.pass_do_not_match)
             ResourceProvider.ResString.NICKNAME_TAKEN -> context.getString(R.string.NICKNAME_TAKEN)
-            ResourceProvider.ResString.GOOGLE_ACC_ALREADY_USED -> context.getString(R.string.google_acc_already_used)
+            ResourceProvider.ResString.GOOGLE_ACCOUNT_ALREADY_USED -> context.getString(R.string.GOOGLE_ACCOUNT_ALREADY_USED)
             ResourceProvider.ResString.LOGIN_USER_NOT_FOUND -> context.getString(R.string.LOGIN_USER_NOT_FOUND)
             ResourceProvider.ResString.NO_CONNECTION -> context.getString(R.string.no_connection)
             ResourceProvider.ResString.INTERNAL_SERVER_ERROR -> context.getString(R.string.internal_server_error)

@@ -1,4 +1,4 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req, SerializeOptions, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, ForbiddenException, Get, Param, Patch, Post, Put, Req, SerializeOptions, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AccessGroups } from 'src/constants/AccessGroups';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -10,6 +10,7 @@ import { UsersService } from './users.service';
 export class UsersController {
 
     constructor(private usersService: UsersService) { }
+
 
     @Get(':id([0-9]+)')
     @SerializeOptions({ groups: [AccessGroups.ALL_USERS] })
@@ -29,6 +30,7 @@ export class UsersController {
     @Put('personal')
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(ClassSerializerInterceptor)
+    @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     update(@Req() req, @Body() dto: UpdateUserDto) {
         return this.usersService.updateUser(req.user.id, dto);
     }
@@ -36,6 +38,7 @@ export class UsersController {
     @Put('personal/photo')
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(FileInterceptor('image'), ClassSerializerInterceptor)
+    @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     updatePhoto(@Req() req, @UploadedFile() img: Express.Multer.File) {
         return this.usersService.updatePhoto(req.user.id, img);
     }
@@ -43,6 +46,7 @@ export class UsersController {
     @Put('personal/google-sign')
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(ClassSerializerInterceptor)
+    @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     addGoogleAcc(@Req() req, @Body() dto: GoogleSignInDto) {
         return this.usersService.addGoogleAccout(req.user.id, dto);
     }

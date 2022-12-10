@@ -23,7 +23,7 @@ interface AuthApi {
     @POST("login")
     suspend fun login(@Body map: LoginUserDto): Response<String>
 
-    @POST("google-sign")
+    @POST("google-sign-in")
     suspend fun googleSignIn(@Body dto: GoogleSignInDto): Response<String>
 
     @PUT("restore")

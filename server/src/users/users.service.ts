@@ -1,13 +1,13 @@
 import { Injectable, ConflictException, InternalServerErrorException, NotFoundException, ForbiddenException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, Like } from "typeorm";
+import { Repository, Like, IsNull, Not } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { GoogleSignInDto } from "./dto/google-sign-in-dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./models/user.model";
-import * as bcrypt from 'bcrypt';
 import { Errors } from "src/constants/Errors";
 import { FilesService } from "src/files/files.service";
+import * as uuid from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -15,6 +15,7 @@ export class UsersService {
         private fileService: FilesService) { }
 
     async findUserById(id: number) {
+
         return this.usersRepository.findOne({ where: { id: id }, relations: ["roles"] });
     }
 
@@ -31,13 +32,22 @@ export class UsersService {
     }
 
     async createUser(dto: CreateUserDto | GoogleSignInDto) {
-        const user = this.usersRepository.create({ ...dto });
-        return this.usersRepository.save(user);
+        const insertId = (await this.usersRepository.insert({ ...dto })).raw.insertId;
+        return this.findUserById(insertId);
     }
 
     async addGoogleAccout(id: number, dto: GoogleSignInDto) {
-        const { username, ...googleInfo } = dto;
-        return await this.usersRepository.update({ id: id }, { ...googleInfo });
+        const user = await this.findUserById(id);
+        const existGoogleId = await this.findUserByGoogleId(dto.googleId);
+
+        if (existGoogleId) {
+            throw new ConflictException(Errors.GOOGLE_ACCOUNT_ALREADY_USED)
+        }
+
+        dto.photo = user.photo ? user.photo : dto.photo;
+        await this.usersRepository.update({ id: id }, { ...dto, username: user.username });
+
+        return this.findUserById(id);
     }
 
     async updatePassword(id: number, newPassword: string) {

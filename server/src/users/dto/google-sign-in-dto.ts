@@ -17,5 +17,5 @@ export class GoogleSignInDto {
     @IsNotEmpty()
     @IsString()
     @IsOptional()
-    photoUrl: string;
+    photo: string;
 }

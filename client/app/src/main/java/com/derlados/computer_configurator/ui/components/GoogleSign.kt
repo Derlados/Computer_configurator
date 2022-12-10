@@ -1,6 +1,5 @@
 package com.derlados.computer_configurator.ui.components
 
-import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
@@ -10,7 +9,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-
+import android.content.Context
+import com.derlados.computer_configurator.R
 
 class GoogleSign(context: Context) {
     private val signInIntent: Intent;
@@ -19,9 +19,10 @@ class GoogleSign(context: Context) {
     init {
         // Инициализация клиента
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("547509922422-6olq3scj6i3e3fbenoe49bb095tdq1dk.apps.googleusercontent.com")
-                .requestEmail()
-                .build()
+            .requestIdToken(context.getString(R.string.server_client_id))
+            .requestEmail()
+            .build()
+
         mGoogleSignInClient = GoogleSignIn.getClient(context, gso)
 
         // Интент для запуска активити с выбором гугл аккаунта

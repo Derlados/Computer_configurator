@@ -2,7 +2,7 @@ import { Exclude, Expose } from "class-transformer";
 import { Build } from "src/builds/models/build.model";
 import { AccessGroups } from "src/constants/AccessGroups";
 import { Role } from "src/roles/models/role.model";
-import { AfterLoad, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AfterLoad, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Comment } from "../../comments/models/comment.model";
 
 @Entity('users')
@@ -11,7 +11,7 @@ export class User {
     @Expose({ groups: [AccessGroups.ALL_USERS] })
     id: number;
 
-    @Column({ type: "varchar", length: 50, nullable: true })
+    @Column({ type: "varchar", length: 120, nullable: true })
     @Expose({ groups: [AccessGroups.USER_OWNER, AccessGroups.ALL_USERS] })
     username: string;
 
@@ -53,9 +53,20 @@ export class User {
     roles: Role[];
 
     @AfterLoad()
+    @Expose({ groups: [AccessGroups.USER_OWNER, AccessGroups.ALL_USERS] })
     getPhoto() {
         if (this.photo && !this.photo.includes('http')) {
             this.photo = `${process.env.STATIC_API}/${this.photo}`
+        }
+    }
+
+    @AfterLoad()
+    getUsername() {
+        if (this.username.includes(process.env.GOOGLE_ADD_NICKNAME_SPEC_SYMBOLS)) {
+            const usernameParts = this.username.split('-');
+            usernameParts.splice(0, Number(process.env.GOOGLE_ADD_NICKNAME_SPEC_SYMBOLS));
+
+            this.username = usernameParts.join('-');
         }
     }
 }

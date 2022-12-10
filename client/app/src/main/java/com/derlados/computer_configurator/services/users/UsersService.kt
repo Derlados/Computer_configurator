@@ -1,8 +1,10 @@
 package com.derlados.computer_configurator.services.users
 
+import android.util.Log
 import com.derlados.computer_configurator.entities.User
 import com.derlados.computer_configurator.services.Service
 import com.derlados.computer_configurator.services.users.dto.*
+import com.google.gson.Gson
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -85,6 +87,8 @@ object UsersService: Service() {
         val body = GoogleSignInDto(googleId, username, email, photoUrl)
         val res = api.addGoogleAcc(getBearerToken(token), body)
         val user = res.body()
+        Log.d("USER_INFO", (Gson()).toJson(user))
+
 
         if (res.isSuccessful && user != null) {
             return user

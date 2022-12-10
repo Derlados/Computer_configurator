@@ -128,7 +128,7 @@ class LoginFragment: Fragment(), AuthView, MainActivity.OnBackPressedListener {
                 presenter.tryGoogleSingIn(id, username, email, account.photoUrl?.toString())
             }
         } else {
-            Toast.makeText(requireContext(),"Login failed: " +  Gson().toJson(result), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Login failed: $result", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -1,4 +1,0 @@
-export enum Errors {
-    LOGIN_USER_NOT_FOUND = "LOGIN_USER_NOT_FOUND",
-    NICKNAME_TAKEN = "NICKNAME_TAKEN"
-}

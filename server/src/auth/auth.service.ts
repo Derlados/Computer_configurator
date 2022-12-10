@@ -8,6 +8,7 @@ import { GoogleSignInDto } from '../users/dto/google-sign-in-dto';
 import { LoginUserDto } from '../users/dto/login-user.dto';
 import { User } from '../users/models/user.model';
 import { UsersService } from '../users/users.service';
+import * as uuid from 'uuid';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,8 @@ export class AuthService {
             const hashPassword = bcrypt.hashSync(dto.password, AuthService.HASH_SALT);
             const hashSecret = bcrypt.hashSync(dto.secret, AuthService.HASH_SALT);
             dto = { ...dto, password: hashPassword, secret: hashSecret };
+        } else {
+            dto.username = `${process.env.GOOGLE_ADD_NICKNAME}-${uuid.v4().replace(/(-)+/g, '_')}-${dto.username}`
         }
 
 

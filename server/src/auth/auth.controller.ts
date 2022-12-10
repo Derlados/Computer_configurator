@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ChangePasswordDto } from 'src/users/dto/change-password.dto';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 export class AuthController {
 
     constructor(private authService: AuthService) { }
+
 
     @ApiOperation({ summary: "Логин пользователя" })
     @ApiResponse({ status: 200, type: String, description: "Токен пользователя" })

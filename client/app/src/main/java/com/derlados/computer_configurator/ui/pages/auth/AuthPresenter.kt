@@ -10,7 +10,7 @@ import java.net.SocketTimeoutException
 
 class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) {
     private val MIN_FIELD_LENGTH = 6
-    private val validRegEx = Regex("([A-Z,a-z]|[А-Я,а-я]|[ІЇЄiїєЁё]|[0-9]|_)+") // Регулярка для проверки валидации
+    private val validRegEx = Regex("([A-Z,a-z]|[А-Я,а-я]|[ІЇЄiїєЁё]|[0-9]|_| )+") // Регулярка для проверки валидации
 
     private var networkJob: Job? = null
     private var restoreDataJob: Job? = null

@@ -23,7 +23,18 @@ export class BuildsService {
     }
 
     async getBuldsByUserId(userId: number) {
-        return this.buildsRepository.find({ where: { userId: userId }, relations: ["user", "buildComponents", "buildComponents.component", "buildComponents.component.category"] });
+        return this.buildsRepository.find({
+            where: { userId: userId },
+            relations: [
+                "user",
+                "buildComponents",
+                "buildComponents.component",
+                "buildComponents.component.componentAttributes",
+                "buildComponents.component.componentAttributes.attribute",
+                "buildComponents.component.componentAttributes.value",
+                "buildComponents.component.category"
+            ]
+        });
     }
 
     async getBuildByid(buildId: number) {

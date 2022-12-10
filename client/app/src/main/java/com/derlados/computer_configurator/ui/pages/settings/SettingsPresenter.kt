@@ -81,8 +81,8 @@ class SettingsPresenter(val view: SettingsView, val resourceProvider: ResourcePr
                 }
             } catch (e: Exception) {
                 ensureActive()
-                UserStore.logout()
-                view.showError(resourceProvider.getString(ResourceProvider.ResString.LOCAL_USER_NOT_FOUND))
+//                UserStore.logout()
+//                view.showError(resourceProvider.getString(ResourceProvider.ResString.LOCAL_USER_NOT_FOUND))
             }
         }
     }

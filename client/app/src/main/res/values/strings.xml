@@ -1,4 +1,7 @@
 <resources>
+    <string name="server_client_id_debug">547509922422-jvlog2cdmo6r0a9vj2egp412ctkbnefa.apps.googleusercontent.com</string>
+    <string name="server_client_id">547509922422-fta3m45j67ehe63dt62k9gbd132mt20l.apps.googleusercontent.com</string>
+
     <string name="app_name">Конфигуратор ПК</string>
     <string name="builds">Ваши сборки</string>
     <string name="info">Информация</string>
@@ -81,7 +84,7 @@
     <string name="invalid_auth_data">Поля должны содержать только буквы, цифры или символ нижнего подчеркивания</string>
     <string name="pass_do_not_match">Введенные пароли не совпадают</string>
     <string name="NICKNAME_TAKEN">Пользователь с таким именем уже существует</string>
-    <string name="google_acc_already_used">Данный аккаунт Гугл уже используется</string>
+    <string name="GOOGLE_ACCOUNT_ALREADY_USED">Данный аккаунт Гугл уже используется</string>
     <string name="LOGIN_USER_NOT_FOUND">Неправильный логин или пароль</string>
     <string name="no_connection">No connection to our server, try later</string>
     <string name="internal_server_error">Internal server error, try later</string>
