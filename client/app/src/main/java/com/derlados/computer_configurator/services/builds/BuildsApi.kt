@@ -1,5 +1,6 @@
 package com.derlados.computer_configurator.services.builds
 
+import com.derlados.computer_configurator.consts.Domain
 import com.derlados.computer_configurator.entities.build.Build
 import com.derlados.computer_configurator.entities.Comment
 import com.derlados.computer_configurator.services.builds.dto.CreateBuildDto
@@ -9,8 +10,8 @@ import retrofit2.http.*
 interface BuildsApi {
     companion object {
         const val BASE_URL_IGNORED = "http://localhost/"
-        const val BASE_URL: String = "http://192.168.42.176:5000/api/builds/"
-//        const val BASE_URL_BUILDS: String = "${Domain.APP_DOMAIN}/api/builds/"
+//        const val BASE_URL: String = "${Domain.TEST_APP_DOMAIN}/api/builds/"
+        const val BASE_URL: String = "${Domain.APP_DOMAIN}/api/builds/"
     }
 
     @GET(BASE_URL)

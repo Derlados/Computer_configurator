@@ -14,7 +14,7 @@ class InfoFragment: Fragment(), MainActivity.OnBackPressedListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         fragment = inflater.inflate(R.layout.fragment_info, container, false)
-        activity?.title = getString(R.string.info)
+        activity?.title = getString(R.string.updates)
         return fragment
     }
 

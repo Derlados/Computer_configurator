@@ -1,10 +1,9 @@
 <resources>
-    <string name="server_client_id_debug">547509922422-jvlog2cdmo6r0a9vj2egp412ctkbnefa.apps.googleusercontent.com</string>
-    <string name="server_client_id">547509922422-fta3m45j67ehe63dt62k9gbd132mt20l.apps.googleusercontent.com</string>
+    <string name="server_client_id">547509922422-jvlog2cdmo6r0a9vj2egp412ctkbnefa.apps.googleusercontent.com</string>
 
     <string name="app_name">Конфигуратор ПК</string>
     <string name="builds">Ваши сборки</string>
-    <string name="info">Информация</string>
+    <string name="updates">Обновления</string>
     <string name="motherboards">Материнские платы</string>
     <string name="CPUs">Процессоры</string>
     <string name="GPUs">Видеокарты</string>

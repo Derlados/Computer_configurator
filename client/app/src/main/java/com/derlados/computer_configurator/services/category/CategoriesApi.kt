@@ -8,8 +8,8 @@ import retrofit2.http.Path
 
 interface CategoriesApi {
     companion object {
-        const val BASE_URL: String = "${Domain.TEST_APP_DOMAIN}/api/categories/"
-//        const val BASE_URL: String = "${Domain.APP_DOMAIN}/api/categories/"
+//        const val BASE_URL: String = "${Domain.TEST_APP_DOMAIN}/api/categories/"
+        const val BASE_URL: String = "${Domain.APP_DOMAIN}/api/categories/"
     }
 
     @GET("{category}/filters")

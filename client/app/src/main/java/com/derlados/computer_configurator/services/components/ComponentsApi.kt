@@ -10,8 +10,8 @@ import kotlin.collections.ArrayList
 
 interface ComponentsApi {
     companion object {
-      const val BASE_URL: String = "${Domain.TEST_APP_DOMAIN}/api/components/"
-//        const val BASE_URL: String = "${Domain.APP_DOMAIN}/api/components/"
+//      const val BASE_URL: String = "${Domain.TEST_APP_DOMAIN}/api/components/"
+        const val BASE_URL: String = "${Domain.APP_DOMAIN}/api/components/"
     }
 
     @GET("category={category}")
