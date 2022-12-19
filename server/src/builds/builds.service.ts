@@ -66,6 +66,13 @@ export class BuildsService {
         return this.getBuildByid(buildId);
     }
 
+    async reportBuild(userId: number, buildId: number) {
+        const build = await this.buildsRepository.findOne({ id: buildId });
+        if (build) {
+            await this.buildsRepository.update({ id: build.id }, { reports: build.reports + 1 })
+        }
+    }
+
     async updateBuild(buildId: number, userId: number, dto: CreateBuildDto) {
         const { components: buildComponents, ...buildData } = dto;
         const res = await this.buildsRepository.update({ id: buildId, userId: userId }, { ...buildData });

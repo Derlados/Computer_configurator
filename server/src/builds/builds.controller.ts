@@ -49,6 +49,13 @@ export class BuildsController {
         return this.buildsService.createBuild(req.user.id, dto);
     }
 
+    @Post(':id/report')
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(ClassSerializerInterceptor)
+    reportBuild(@Req() req, @Param('id') id: number) {
+        return this.buildsService.reportBuild(req.user.id, id);
+    }
+
     @Post(':id/comments')
     @UseGuards(JwtAuthGuard)
     @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })

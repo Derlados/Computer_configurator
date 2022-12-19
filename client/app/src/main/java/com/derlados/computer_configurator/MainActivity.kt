@@ -18,6 +18,7 @@ import com.derlados.computer_configurator.ui.pages.info.InfoFragment
 import com.derlados.computer_configurator.ui.pages.main.MainMenuFragment
 import com.derlados.computer_configurator.ui.pages.settings.SettingsFragment
 import com.derlados.computer_configurator.ui.pages.auth.LoginFragment
+import com.derlados.computer_configurator.ui.pages.rules.RulesFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -122,6 +123,10 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, PopupMe
             R.id.app_menu_info -> {
                 tag = BackStackTag.INFO
                 fragment = InfoFragment()
+            }
+            R.id.app_menu_rules -> {
+                tag = BackStackTag.RULES
+                fragment = RulesFragment()
             }
             R.id.app_menu_settings -> {
                 tag = BackStackTag.SETTINGS

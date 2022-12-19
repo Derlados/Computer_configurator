@@ -13,7 +13,6 @@ import retrofit2.http.PUT
 
 interface AuthApi {
     companion object {
-//        const val BASE_URL: String = "${Domain.TEST_APP_DOMAIN}/api/auth/"
         const val BASE_URL: String = "${Domain.APP_DOMAIN}/api/auth/"
     }
 

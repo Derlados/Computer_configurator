@@ -129,6 +129,14 @@ object BuildsService: Service() {
         }
     }
 
+    suspend fun reportBuild(token: String, buildId: Int) {
+        val res = api.reportBuild(getBearerToken(token), buildId)
+
+        if (!res.isSuccessful) {
+            throw this.errorHandle(res.code(), res.errorBody())
+        }
+    }
+
     /** Удаление сборки с аккаунта
      * @param token - токе пользователя
      * @param buildId - id сборки

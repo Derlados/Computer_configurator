@@ -77,6 +77,43 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/fragment_registration_cb_agree"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:buttonTint="@color/light_blue"
+            android:layout_marginStart="20dp"
+            android:lines="2"/>
+
+        <TextView
+            android:id="@+id/fragment_registration_tv_terms_links"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/i_agree_to_the_terms_and_conditions_and_the_privacy_policy"/>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/fragment_registration_tv_agree_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="20dp"
+        android:textSize="12sp"
+        android:textColor="@color/red"
+        android:text="@string/terms_error"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:weightSum="1"

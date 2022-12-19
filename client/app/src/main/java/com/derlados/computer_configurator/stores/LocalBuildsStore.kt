@@ -18,16 +18,6 @@ object LocalBuildsStore: Observable() {
 
     var localBuilds = ArrayList<Build>() // Список всех сборок пользователя
     var editableBuild: Build? = null // Выбранная сборка, должна являться клоном из списка
-    private val retrofit: Retrofit
-    private val api: BuildsApi
-
-    init {
-        retrofit = Retrofit.Builder()
-                .baseUrl(BuildsApi.BASE_URL_IGNORED)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        api = retrofit.create(BuildsApi::class.java)
-    }
 
     fun setObserver(presenterObserver: Observer) {
         addObserver(presenterObserver)
@@ -69,6 +59,10 @@ object LocalBuildsStore: Observable() {
         FileManager.saveJsonData(FileManager.Entity.BUILD, savedBuild.localId, Gson().toJson(savedBuild))
 
         return savedBuild
+    }
+
+    suspend fun reportBuild(token: String, buildId: Int) {
+        BuildsService.reportBuild(token, buildId)
     }
 
     /** Удаление сборки с аккаунта

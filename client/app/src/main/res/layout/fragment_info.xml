@@ -62,6 +62,23 @@
             android:textColor="@color/white"
             android:text="\t\tСпустя долгое время разраб вернулся и переписал кодовую базу для себя, чтобы можно было легче вносить изменения. Итого создано новое API и исправлены некоторые баги, некоторые новые появились. Дальше если ничего не произойдет, буду добавлять новый функционал"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Релиз 1.0.4:"
+            android:textColor="@color/turquoise"
+            android:paddingTop="30dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="0dp"
+            android:textStyle="bold"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:text="\t\tВнеплановое обновление, согласно новой политике UGC Google была добавлена система жалоб на нарушающий правила контент. Так же каждый пользователь обязан принимать политику пользования (добавлена галочка в регистрации)"/>
     </LinearLayout>
 
 </ScrollView>

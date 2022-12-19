@@ -1,6 +1,7 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Build } from "../../builds/models/build.model";
 import { User } from "../../users/models/user.model";
+import { ReportedComment } from "./reported-comment.model";
 
 @Entity('build_comments')
 export class Comment {
@@ -36,4 +37,7 @@ export class Comment {
 
     @OneToMany(() => Comment, comment => comment.parent)
     children: Comment[];
+
+    @OneToMany(() => ReportedComment, bc => bc.comment)
+    reportedByUsers: ReportedComment[];
 }

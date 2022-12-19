@@ -16,6 +16,7 @@ object CategoriesService: Service() {
             .build()
             .create(CategoriesApi::class.java)
     }
+
     suspend fun getFilters(category: ComponentCategory): HashMap<Int, FilterAttribute> {
         val res = api.getFilters(category.name)
         val filters = res.body()

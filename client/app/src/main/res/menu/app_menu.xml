@@ -8,6 +8,11 @@
         android:enabled="true"/>
 
     <item
+        android:id="@+id/app_menu_rules"
+        android:title="@string/rules"
+        android:enabled="true"/>
+
+    <item
         android:id="@+id/app_menu_auth"
         android:title="@string/authorization"
         android:enabled="true"/>

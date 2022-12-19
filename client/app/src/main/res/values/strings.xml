@@ -4,6 +4,7 @@
     <string name="app_name">Конфигуратор ПК</string>
     <string name="builds">Ваши сборки</string>
     <string name="updates">Обновления</string>
+    <string name="rules">Правила</string>
     <string name="motherboards">Материнские платы</string>
     <string name="CPUs">Процессоры</string>
     <string name="GPUs">Видеокарты</string>
@@ -130,4 +131,8 @@
     <string name="component_link">Ссылка</string>
     <string name="online_shop">Онлайн-магазин</string>
     <string name="local_user_not_found">Не найдены данные пользователя на устройстве</string>
+    <string name="i_agree_to_the_terms_and_conditions_and_the_privacy_policy">I agree to the <a href="http://f0502134.xsph.ru/TandA.html"><font color='#08CEFF'>terms and conditions</font></a> and <a href="http://f0502134.xsph.ru/"><font color='#08CEFF'>the privacy policy</font></a></string>
+    <string name="terms_error">Вы должны согласиться с правилами пользования</string>
+    <string name="only_for_authorized">Только для авторизованных пользователей</string>
+    <string name="report_was_sended">Жалоба отправлена</string>
 </resources>

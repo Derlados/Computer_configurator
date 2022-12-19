@@ -89,6 +89,15 @@
                         android:visibility="gone"
                         android:background="@color/invisible"/>
 
+                    <ImageButton
+                        android:id="@+id/inflate_build_item_ibt_report"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:padding="4dp"
+                        android:src="@drawable/flag_24"
+                        android:background="@color/invisible"
+                        android:visibility="gone"/>
+
                 </LinearLayout>
 
             </LinearLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Правила коммьюнити"
+        android:textColor="@color/turquoise"
+        android:paddingStart="15dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="10dp"
+        android:textStyle="bold"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:paddingStart="15dp"
+        android:paddingEnd="0dp"
+        android:textColor="@color/white"
+        android:text="1. Не использовать нецензурную лексику в названии/описании сборок и комментариях\n2. Не спамить\n3. Не разжигать конфликты и дискусы на отвлеченные темы (религия, политика и т.п.)"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:paddingTop="5dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="0dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:text="За нарушение правил соответсвующий контент будет либо редактироваться, либо вообще удаляться"/>
+
+
+</LinearLayout>

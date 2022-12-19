@@ -22,6 +22,7 @@ import { Role } from "./roles/models/role.model";
 import { FilesModule } from "./files/files.module";
 import { join } from "path";
 import { ServeStaticModule } from "@nestjs/serve-static";
+import { ReportedComment } from "./comments/models/reported-comment.model";
 
 @Module({
     controllers: [],
@@ -38,7 +39,7 @@ import { ServeStaticModule } from "@nestjs/serve-static";
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DATABASE,
-            entities: [User, Category, Component, Attribute, ComponentAttribute, Value, Filter, Build, BuildComponent, Comment, Role],
+            entities: [User, Category, Component, Attribute, ComponentAttribute, Value, Filter, Build, BuildComponent, Comment, Role, ReportedComment],
             migrations: ["dist/migrations/*{.ts,.js}"],
             migrationsRun: false,
             synchronize: true,

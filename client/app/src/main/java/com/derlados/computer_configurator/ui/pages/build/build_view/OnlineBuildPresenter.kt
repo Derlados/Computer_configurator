@@ -8,6 +8,7 @@ import com.derlados.computer_configurator.stores.PublicBuildsStore
 import com.derlados.computer_configurator.stores.UserStore
 import com.derlados.computer_configurator.entities.build.Build
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
+import com.derlados.computer_configurator.stores.LocalBuildsStore
 import kotlinx.coroutines.*
 import java.net.SocketTimeoutException
 
@@ -47,14 +48,42 @@ class OnlineBuildPresenter(private val view: BuildOnlineView, private val resour
                 } catch (e: NetworkErrorException) {
                     ensureActive()
                     errorHandle(e.message)
+                } catch (e: SocketTimeoutException) {
+                    ensureActive()
+                    view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
                 }
             }
         }
     }
 
+    fun reportComment (commentId: Int, indexToReport: Int) {
+        coroutineScope.launch {
+            UserStore.token?.let {
+                try {
+                    PublicBuildsStore.reportComment(it, commentId)
+                    ensureActive()
+                    view.hideComment(indexToReport)
+                } catch (e: NetworkErrorException) {
+                    ensureActive()
+                    errorHandle(e.message)
+                } catch (e: SocketTimeoutException) {
+                    ensureActive()
+                    view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
+                }
+            }
+        }
+    }
+
+
+
+
     fun selectComponentToVIew(category: ComponentCategory, component: Component) {
         ComponentStore.chosenCategory = category
         ComponentStore.chosenComponent = component
+    }
+
+    fun isAuth(): Boolean {
+        return UserStore.token != null
     }
 
     private fun downloadBuild(id: Int) {

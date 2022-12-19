@@ -39,7 +39,12 @@ class AuthPresenter(val view: AuthView, val resourceProvider: ResourceProvider) 
         }
     }
 
-    fun tryReg(username: String, password: String, confirmPass: String, secret: String) {
+    fun tryReg(username: String, password: String, confirmPass: String, secret: String, isAcceptTerms: Boolean) {
+        if (!isAcceptTerms) {
+            view.showAcceptTermsError()
+            return
+        }
+
         if (checkValidField(username, AuthView.Field.USERNAME) && checkValidField(password, AuthView.Field.PASSWORD) && checkValidField(secret, AuthView.Field.SECRET)) {
             if (password != confirmPass) {
                 view.showMessage(resourceProvider.getString(ResourceProvider.ResString.PASSWORD_DO_NOT_MATCH))

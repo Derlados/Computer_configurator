@@ -2,9 +2,12 @@ package com.derlados.computer_configurator.ui.pages.auth
 
 import android.content.Context
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -24,6 +27,9 @@ class RegFragment: Fragment(), AuthView, MainActivity.OnBackPressedListener {
     private lateinit var etPassword: TextInputLayout
     private lateinit var etConfirmPassword: TextInputLayout
     private lateinit var etSecret: TextInputLayout
+    private lateinit var tvTermsError: TextView
+    private lateinit var tvTermsLinks: TextView
+    private lateinit var cbTerms: CheckBox
 
     private lateinit var presenter: AuthPresenter
 
@@ -41,6 +47,12 @@ class RegFragment: Fragment(), AuthView, MainActivity.OnBackPressedListener {
         etPassword = currentFragment.fragment_registration_et_password
         etConfirmPassword = currentFragment.fragment_registration_et_confirm_password
         etSecret = currentFragment.fragment_registration_et_secret
+        tvTermsError = currentFragment.fragment_registration_tv_agree_error
+        tvTermsLinks = currentFragment.fragment_registration_tv_terms_links
+        cbTerms = currentFragment.fragment_registration_cb_agree
+
+        tvTermsLinks.movementMethod = LinkMovementMethod.getInstance();
+        cbTerms.setOnCheckedChangeListener { _, _ -> tvTermsError.visibility = View.GONE }
 
         etUsername.editText?.doOnTextChanged { _, _, _, _ -> clearError(etUsername) }
         etPassword.editText?.doOnTextChanged { _, _, _, _ -> clearError(etPassword) }
@@ -92,8 +104,13 @@ class RegFragment: Fragment(), AuthView, MainActivity.OnBackPressedListener {
         }
     }
 
+    override fun showAcceptTermsError() {
+        tvTermsError.visibility = View.VISIBLE
+    }
+
     private fun register() {
-        presenter.tryReg(etUsername.editText?.text.toString(), etPassword.editText?.text.toString(), etConfirmPassword.editText?.text.toString(), etSecret.editText?.text.toString())
+        presenter.tryReg(etUsername.editText?.text.toString(), etPassword.editText?.text.toString(),
+            etConfirmPassword.editText?.text.toString(), etSecret.editText?.text.toString(), cbTerms.isChecked)
     }
 
     private fun changeToLogin() {

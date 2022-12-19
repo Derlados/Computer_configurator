@@ -36,21 +36,31 @@
                 <TextView
                     android:id="@+id/inflate_comment_tv_username"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textColor="@color/light_blue"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    android:textAlignment="textStart"/>
 
                 <TextView
                     android:id="@+id/inflate_comment_tv_date"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textAlignment="viewEnd"
                     android:paddingEnd="5dp"
                     android:paddingStart="0dp"/>
+
+                <ImageView
+                    android:id="@+id/inflate_comment_img_report"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="3dp"
+                    android:paddingStart="3dp"
+                    android:src="@drawable/flag_24"
+                    android:visibility="invisible"/>
 
             </LinearLayout>
 

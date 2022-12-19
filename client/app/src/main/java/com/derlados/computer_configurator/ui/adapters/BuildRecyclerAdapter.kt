@@ -47,6 +47,7 @@ open class  BuildRecyclerAdapter <T : Build> (protected open val builds: ArrayLi
         val btPublish: ImageView = itemView.inflate_build_item_ibt_publish
         val btDelete: ImageButton = itemView.inflate_build_item_ibt_delete
         val btShare: ImageButton = itemView.inflate_build_item_ibt_share
+        val btReport: ImageButton = itemView.inflate_build_item_ibt_report
         val tvPublishDate: TextView = itemView.inflate_build_item_tv_date
         val btComponentList: ImageButton = itemView.inflate_build_item_ibt_hide
         val llComponentList: ExpandableLinearLayout = itemView.inflate_build_item_component_list

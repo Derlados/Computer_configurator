@@ -2,7 +2,6 @@ package com.derlados.computer_configurator.services.auth
 
 import android.util.Log
 import com.derlados.computer_configurator.services.Service
-import com.derlados.computer_configurator.services.users.UsersService
 import com.derlados.computer_configurator.services.users.dto.CreateUserDto
 import com.derlados.computer_configurator.services.users.dto.GoogleSignInDto
 import com.derlados.computer_configurator.services.users.dto.LoginUserDto

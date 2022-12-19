@@ -24,6 +24,10 @@ export class Build {
     @Column({ name: "is_public", type: "boolean", default: false })
     isPublic: boolean;
 
+    @Column({ name: "reports", type: "int", default: 0 })
+    @Exclude()
+    reports: number;
+
     @Column({ name: "publish_date", type: "datetime", default: () => "CURRENT_TIMESTAMP()" })
     publishDate: Date;
 
@@ -48,14 +52,18 @@ export class Build {
     getPrice() {
         this.price = 0;
 
-        this.buildComponents.forEach(c => {
-            this.price += c.component.price * c.count
-        })
+        if (this.buildComponents) {
+            this.buildComponents.forEach(c => {
+                this.price += c.component.price * c.count
+            })
+        }
     }
 
     @AfterLoad()
     getImage() {
-        this.image = this.buildComponents.find(c => c.component.categoryId == Categories.CASE)?.component.img
+        if (this.buildComponents) {
+            this.image = this.buildComponents.find(c => c.component.categoryId == Categories.CASE)?.component.img
+        }
     }
 
     @AfterLoad()

@@ -66,6 +66,8 @@ class AndroidResourceProvider(private val context: Context): ResourceProvider {
             ResourceProvider.ResString.BUILD_NOT_FOUND -> context.getString(R.string.build_not_found)
             ResourceProvider.ResString.YOU_MUST_BE_AUTHORIZED -> context.getString(R.string.you_must_be_authorized)
             ResourceProvider.ResString.LOCAL_USER_NOT_FOUND -> context.getString(R.string.local_user_not_found)
+            ResourceProvider.ResString.ONLY_FOR_AUTHORIZED -> context.getString(R.string.only_for_authorized)
+            ResourceProvider.ResString.REPORT_WAS_SENDED -> context.getString(R.string.report_was_sended)
         }
     }
 

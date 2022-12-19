@@ -1,6 +1,7 @@
 package com.derlados.computer_configurator.ui.pages.build_list
 
 import android.accounts.NetworkErrorException
+import com.derlados.computer_configurator.entities.User
 import com.derlados.computer_configurator.stores.LocalBuildsStore
 import com.derlados.computer_configurator.stores.PublicBuildsStore
 import com.derlados.computer_configurator.stores.UserStore
@@ -124,6 +125,7 @@ class BuildListPresenter(private val view: BuildsListView, private val resourceP
             }
         }
     }
+
 
     private fun errorHandle(message: String?) {
         if (message == null) {

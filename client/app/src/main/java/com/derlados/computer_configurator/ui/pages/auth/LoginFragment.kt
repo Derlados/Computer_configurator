@@ -103,6 +103,10 @@ class LoginFragment: Fragment(), AuthView, MainActivity.OnBackPressedListener {
         }
     }
 
+    override fun showAcceptTermsError() {
+        return
+    }
+
     private fun clearError(textInputLayout: TextInputLayout) {
         textInputLayout.isErrorEnabled = false
         textInputLayout.error = null

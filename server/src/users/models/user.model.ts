@@ -1,5 +1,6 @@
 import { Exclude, Expose } from "class-transformer";
 import { Build } from "src/builds/models/build.model";
+import { ReportedComment } from "src/comments/models/reported-comment.model";
 import { AccessGroups } from "src/constants/AccessGroups";
 import { Role } from "src/roles/models/role.model";
 import { AfterLoad, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -69,4 +70,7 @@ export class User {
             this.username = usernameParts.join('-');
         }
     }
+
+    @OneToMany(() => ReportedComment, bc => bc.users)
+    reportedComments: ReportedComment[];
 }

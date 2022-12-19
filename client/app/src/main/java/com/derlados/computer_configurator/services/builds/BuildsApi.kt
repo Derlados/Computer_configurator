@@ -9,8 +9,6 @@ import retrofit2.http.*
 
 interface BuildsApi {
     companion object {
-        const val BASE_URL_IGNORED = "http://localhost/"
-//        const val BASE_URL: String = "${Domain.TEST_APP_DOMAIN}/api/builds/"
         const val BASE_URL: String = "${Domain.APP_DOMAIN}/api/builds/"
     }
 
@@ -38,6 +36,9 @@ interface BuildsApi {
     @POST("{buildId}/comments/{parentId}/answer")
     suspend fun answerComment(@Header("Authorization") token: String, @Path("buildId") buildId: Int,
                               @Field("text") text: String, @Path("parentId") parentId:Int): Response<Comment>
+
+    @POST("{id}/report")
+    suspend fun reportBuild(@Header("Authorization") token: String, @Path("id") id: Int): Response<Void>
 
     @PUT("{buildId}")
     suspend fun updateBuild(@Header("Authorization") token: String, @Path("buildId") buildId: Int, @Body build: CreateBuildDto): Response<Unit>

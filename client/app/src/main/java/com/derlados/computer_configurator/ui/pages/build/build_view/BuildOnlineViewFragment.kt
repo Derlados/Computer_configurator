@@ -1,6 +1,7 @@
 package com.derlados.computer_configurator.ui.pages.build.build_view
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
@@ -14,6 +15,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.view.marginStart
 import com.derlados.computer_configurator.App
 import com.derlados.computer_configurator.R
 import com.derlados.computer_configurator.consts.BackStackTag
@@ -231,6 +233,37 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
     }
 
     /**
+     * Диаологовое окно для подтверждения того, что сборка будет сохранена на сервере
+     */
+    private fun showDialogReportComment(commentId: Int, comment: View) {
+        val reportedCommentIndex = llComments.indexOfChild(comment)
+
+        val tvDialog = layoutInflater.inflate(R.layout.inflate_dialog_text, null) as TextView
+        tvDialog.text =  "Пожаловаться на нарушение правил ?"
+
+        AlertDialog.Builder(context, R.style.DarkAlert)
+            .setCustomTitle(tvDialog)
+            .setPositiveButton("Да") { _, _ -> presenter.reportComment(commentId, reportedCommentIndex) }
+            .setNegativeButton("Нет") { _, _ -> }
+            .show()
+    }
+
+    // TODO Удаление работает тупо, смотрит по отступу являет ли комментарий главным и удаляет его дочерние так же смотря по оступу
+    override fun hideComment(index: Int) {
+        val childMargin = dpToPx(CHILD_COMMENT_MARGIN)
+        val isParent = llComments.getChildAt(index).marginStart != childMargin
+        llComments.removeViewAt(index)
+
+        if (isParent) {
+            while (llComments.getChildAt(index) != null && llComments.getChildAt(index).marginStart == childMargin) {
+                llComments.removeViewAt(index)
+            }
+        }
+
+        Toast.makeText(context, R.string.report_was_sended, Toast.LENGTH_SHORT).show()
+    }
+
+    /**
      * Создание шаблона для ввода ответа на комментарий. Одновременно может существовать только один
      * шаблон, потому он удаляется если уже существует.
      * @param commentToAnswer - элемент комментария, к которому нужно прицепить ответ
@@ -278,12 +311,17 @@ class BuildOnlineViewFragment : BuildViewFragment(), BuildOnlineView {
         commentView.inflate_comment_tv_username.text = comment.user.username
         commentView.inflate_comment_tv_text.text = comment.text
 
-        val formatter = SimpleDateFormat("dd.MM.yy в HH:mm", Locale.getDefault())
+        val formatter = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
         commentView.inflate_comment_tv_date.text = formatter.format(comment.creationDate)
 
-        if (isActiveAddCommentsMode) {
+        if (presenter.isAuth()) {
             commentView.inflate_comment_tv_answer.setOnClickListener {
                 createAnswerTemplate(comment.id, commentView)
+            }
+
+            commentView.inflate_comment_img_report.visibility = View.VISIBLE
+            commentView.inflate_comment_img_report.setOnClickListener {
+                showDialogReportComment(comment.id, commentView)
             }
         } else {
             commentView.inflate_comment_tv_answer.visibility = View.GONE

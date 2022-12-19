@@ -6,6 +6,7 @@ import com.derlados.computer_configurator.entities.build.Build
 import com.derlados.computer_configurator.entities.Comment
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
 import com.derlados.computer_configurator.services.builds.BuildsService
+import com.derlados.computer_configurator.services.comments.CommentsService
 import java.net.SocketTimeoutException
 
 object PublicBuildsStore {
@@ -64,5 +65,9 @@ object PublicBuildsStore {
         } else {
             BuildsService.addNewComment(token, buildId, text)
         }
+    }
+
+    suspend fun reportComment(token: String, commentId: Int): Comment {
+        return CommentsService.reportComment(token, commentId)
     }
 }

@@ -9,7 +9,6 @@ import retrofit2.http.*
 
 interface UsersApi {
     companion object {
-//        const val BASE_URL: String = "${Domain.TEST_APP_DOMAIN}/api/users/"
         const val BASE_URL: String = "${Domain.APP_DOMAIN}/api/users/"
     }
 

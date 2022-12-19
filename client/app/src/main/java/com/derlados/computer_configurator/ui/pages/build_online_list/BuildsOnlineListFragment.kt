@@ -1,5 +1,6 @@
 package com.derlados.computer_configurator.ui.pages.build_online_list
 
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -68,7 +70,7 @@ class BuildsOnlineListFragment : PageFragment(), BuildsOnlineListView {
 
     override fun <T : Build> setBuildsData(buildsData: ArrayList<T>) {
         rvBuildRecycler.layoutManager = LinearLayoutManager(context)
-        rvBuildRecycler.adapter = BuildOnlineRecyclerAdapter(buildsData, ::selectBuild, ::onShareBuild)
+        rvBuildRecycler.adapter = BuildOnlineRecyclerAdapter(buildsData, ::selectBuild, ::onShareBuild, ::onReport)
     }
 
     private fun selectBuild(id: Int) {
@@ -77,6 +79,17 @@ class BuildsOnlineListFragment : PageFragment(), BuildsOnlineListView {
 
     private fun onShareBuild(id: Int) {
         presenter.share(id)
+    }
+
+    private fun onReport(id: Int) {
+        val tvDialog = layoutInflater.inflate(R.layout.inflate_dialog_text, null) as TextView
+        tvDialog.text =  "Пожаловаться на нарушение правил ?"
+
+        AlertDialog.Builder(context, R.style.DarkAlert)
+            .setCustomTitle(tvDialog)
+            .setPositiveButton("Да") { _, _ ->  presenter.report(id) }
+            .setNegativeButton("Нет") { _, _ -> }
+            .show()
     }
 
     override fun openBuildOnlineView() {

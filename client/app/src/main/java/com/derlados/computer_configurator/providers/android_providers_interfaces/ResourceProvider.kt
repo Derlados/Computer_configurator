@@ -38,7 +38,9 @@ interface ResourceProvider {
         SUCCESS_CHANGE_PASSWORD,
         BUILD_NOT_FOUND,
         YOU_MUST_BE_AUTHORIZED,
-        LOCAL_USER_NOT_FOUND
+        LOCAL_USER_NOT_FOUND,
+        ONLY_FOR_AUTHORIZED,
+        REPORT_WAS_SENDED
     }
     fun getDefaultImageByCategory(category: ComponentCategory): Int
     fun getCompatibilityErrors(error: Build.Companion.CompatibilityError): String

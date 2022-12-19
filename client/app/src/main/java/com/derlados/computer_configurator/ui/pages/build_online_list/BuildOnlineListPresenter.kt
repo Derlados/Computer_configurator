@@ -6,6 +6,8 @@ import android.os.Looper
 import com.derlados.computer_configurator.consts.Domain
 import com.derlados.computer_configurator.stores.PublicBuildsStore
 import com.derlados.computer_configurator.providers.android_providers_interfaces.ResourceProvider
+import com.derlados.computer_configurator.stores.LocalBuildsStore
+import com.derlados.computer_configurator.stores.UserStore
 import com.derlados.computer_configurator.ui.pages.main.MainView
 import kotlinx.coroutines.*
 import java.net.SocketTimeoutException
@@ -35,6 +37,30 @@ class BuildOnlineListPresenter(private val mainView: MainView, private val view:
             view.copyToClipboard(uri)
         }
     }
+
+    fun report(buildId: Int) {
+        if (UserStore.token == null) {
+            view.showError(resourceProvider.getString(ResourceProvider.ResString.ONLY_FOR_AUTHORIZED))
+            return
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+            UserStore.token?.let {
+                try {
+                    LocalBuildsStore.reportBuild(it, buildId)
+                    ensureActive()
+                    view.showError(resourceProvider.getString(ResourceProvider.ResString.REPORT_WAS_SENDED))
+                } catch (e: NetworkErrorException) {
+                    ensureActive()
+                    errorHandle(e.message)
+                } catch (e: SocketTimeoutException) {
+                    ensureActive()
+                    view.showError(resourceProvider.getString(ResourceProvider.ResString.NO_CONNECTION))
+                }
+            }
+        }
+    }
+
 
     private fun downloadBuilds() {
         downloadJob = CoroutineScope(Dispatchers.Main).launch {
