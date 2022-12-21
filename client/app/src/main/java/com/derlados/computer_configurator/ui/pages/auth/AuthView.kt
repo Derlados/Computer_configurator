@@ -12,5 +12,4 @@ interface AuthView {
     fun showMessage(message: String)
     fun returnBack()
     fun setInvalid(field: Field, message: String)
-    fun showAcceptTermsError()
 }

@@ -131,7 +131,7 @@
     <string name="component_link">Ссылка</string>
     <string name="online_shop">Онлайн-магазин</string>
     <string name="local_user_not_found">Не найдены данные пользователя на устройстве</string>
-    <string name="i_agree_to_the_terms_and_conditions_and_the_privacy_policy">I agree to the <a href="http://f0502134.xsph.ru/TandA.html"><font color='#08CEFF'>terms and conditions</font></a> and <a href="http://f0502134.xsph.ru/"><font color='#08CEFF'>the privacy policy</font></a></string>
+    <string name="i_agree_to_the_terms_and_conditions_and_the_privacy_policy">Ригистрируясь вы соглашаетесь с <a href="https://computer-configurator.herokuapp.com/policy/privacy.html"><font color='#08CEFF'>политикой конфиденциальности</font></a> и <a href="https://computer-configurator.herokuapp.com/policy/terms-and-cond.html"><font color='#08CEFF'>условиями использования</font></a></string>
     <string name="terms_error">Вы должны согласиться с правилами пользования</string>
     <string name="only_for_authorized">Только для авторизованных пользователей</string>
     <string name="report_was_sended">Жалоба отправлена</string>

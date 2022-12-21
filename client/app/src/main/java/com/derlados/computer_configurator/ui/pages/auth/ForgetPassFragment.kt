@@ -67,9 +67,6 @@ class ForgetPassFragment: Fragment(), AuthView {
         }
     }
 
-    override fun showAcceptTermsError() {
-        return
-    }
 
     private fun clearError(textInputLayout: TextInputLayout) {
         textInputLayout.isErrorEnabled = false

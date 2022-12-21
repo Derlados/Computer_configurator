@@ -27,9 +27,7 @@ class RegFragment: Fragment(), AuthView, MainActivity.OnBackPressedListener {
     private lateinit var etPassword: TextInputLayout
     private lateinit var etConfirmPassword: TextInputLayout
     private lateinit var etSecret: TextInputLayout
-    private lateinit var tvTermsError: TextView
     private lateinit var tvTermsLinks: TextView
-    private lateinit var cbTerms: CheckBox
 
     private lateinit var presenter: AuthPresenter
 
@@ -47,12 +45,9 @@ class RegFragment: Fragment(), AuthView, MainActivity.OnBackPressedListener {
         etPassword = currentFragment.fragment_registration_et_password
         etConfirmPassword = currentFragment.fragment_registration_et_confirm_password
         etSecret = currentFragment.fragment_registration_et_secret
-        tvTermsError = currentFragment.fragment_registration_tv_agree_error
         tvTermsLinks = currentFragment.fragment_registration_tv_terms_links
-        cbTerms = currentFragment.fragment_registration_cb_agree
 
         tvTermsLinks.movementMethod = LinkMovementMethod.getInstance();
-        cbTerms.setOnCheckedChangeListener { _, _ -> tvTermsError.visibility = View.GONE }
 
         etUsername.editText?.doOnTextChanged { _, _, _, _ -> clearError(etUsername) }
         etPassword.editText?.doOnTextChanged { _, _, _, _ -> clearError(etPassword) }
@@ -104,13 +99,9 @@ class RegFragment: Fragment(), AuthView, MainActivity.OnBackPressedListener {
         }
     }
 
-    override fun showAcceptTermsError() {
-        tvTermsError.visibility = View.VISIBLE
-    }
-
     private fun register() {
         presenter.tryReg(etUsername.editText?.text.toString(), etPassword.editText?.text.toString(),
-            etConfirmPassword.editText?.text.toString(), etSecret.editText?.text.toString(), cbTerms.isChecked)
+            etConfirmPassword.editText?.text.toString(), etSecret.editText?.text.toString())
     }
 
     private fun changeToLogin() {
