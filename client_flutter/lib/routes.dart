@@ -9,13 +9,9 @@ class Routes {
   static String root = '';
 }
 
-getRouter({required appMode, required isFirstEnter, required isAuth}) {
+getRouter({required isFirstLaunch}) {
   String getInitialRoute() {
-    if (!isAuth && isFirstEnter) {
-      return '/${Routes.signIn}';
-    }
-
-    if (!isAuth) {
+    if (!isFirstLaunch) {
       return '/${Routes.signIn}';
     }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pc_configurator_client/config/pc_builder_pallete.dart';
+import 'package:pc_configurator_client/config/pcb_pallete.dart';
 
 class PCBInputField extends StatefulWidget {
   const PCBInputField({Key? key, required this.controller, required this.hint, this.focusNode, this.prefixIcon, this.suffixIcon}) : super(key: key);

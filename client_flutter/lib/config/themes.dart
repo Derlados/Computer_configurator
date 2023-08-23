@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'package:pc_configurator_client/config/pc_builder_pallete.dart';
+import 'package:pc_configurator_client/config/pcb_pallete.dart';
 
 ThemeData getLightTheme() {
   ThemeData themeData = FlexThemeData.light(
