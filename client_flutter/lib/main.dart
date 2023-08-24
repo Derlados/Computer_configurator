@@ -9,6 +9,9 @@ import 'config/environment.dart';
 import 'config/themes.dart';
 import 'cubits/app_settings/app_settings_cubit.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 final logger = Logger();
 
 Future<void> main() async {
@@ -70,6 +73,16 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp.router(
             title: 'PC Configurator',
             theme: getLightTheme(),
+            supportedLocales: const [
+              Locale('en'),
+              Locale('ru'),
+              Locale('uk'),
+            ],
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
             routerConfig: getRouter(
               isFirstLaunch: isFirstLaunch(),
             ),
