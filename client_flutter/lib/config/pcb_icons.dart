@@ -18,7 +18,7 @@ import 'package:flutter/widgets.dart';
 class PcBuilderIcons {
   PcBuilderIcons._();
 
-  static const _kFontFam = 'pc-builder';
+  static const _kFontFam = 'PC-Builder';
   static const String? _kFontPkg = null;
 
   static const IconData gpu = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);

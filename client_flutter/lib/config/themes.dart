@@ -32,5 +32,6 @@ ThemeData getLightTheme() {
           bodySmall: TextStyle(fontSize: 12, color: PCBPalette.primaryText),
         )
     ),
+    scaffoldBackgroundColor: PCBPalette.primaryContainer,
   );
 }

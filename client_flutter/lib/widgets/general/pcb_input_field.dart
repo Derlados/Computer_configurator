@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:pc_configurator_client/config/pcb_pallete.dart';
 
 class PCBInputField extends StatefulWidget {
-  const PCBInputField({Key? key, required this.controller, required this.hint, this.focusNode, this.prefixIcon, this.suffixIcon}) : super(key: key);
+  const PCBInputField({Key? key, required this.controller, required this.hint, this.focusNode, this.prefixIcon, this.suffixIcon, this.obscureText}) : super(key: key);
 
   final TextEditingController controller;
   final String hint;
   final FocusNode? focusNode;
   final Icon? prefixIcon;
   final Icon? suffixIcon;
+  final bool? obscureText;
 
   @override
   State<PCBInputField> createState() => _PCBInputFieldState();
@@ -43,8 +44,9 @@ class _PCBInputFieldState extends State<PCBInputField> {
     return TextFormField(
         focusNode: _focusNode,
         controller: widget.controller,
+        obscureText: widget.obscureText ?? false,
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.zero,
+          contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           filled: true,
           fillColor: _isFocused ? PCBPalette.tertiaryContainer : PCBPalette.tertiaryContainer,
           hintText: widget.hint,
@@ -65,7 +67,7 @@ class _PCBInputFieldState extends State<PCBInputField> {
             child: widget.suffixIcon,
           ) : null,
         ),
-        style: const TextStyle(color: Colors.white, fontSize: 14)
+        style: const TextStyle(color: Colors.white, fontSize: 18)
     );
   }
 }

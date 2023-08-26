@@ -9,6 +9,9 @@ import 'config/environment.dart';
 import 'config/themes.dart';
 import 'cubits/app_settings/app_settings_cubit.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -26,6 +29,11 @@ Future<void> main() async {
   // Storage init
   WidgetsFlutterBinding.ensureInitialized();
   await Storage().init();
+
+  //Firebase init
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(const MyApp());
 }
@@ -71,7 +79,7 @@ class _MyAppState extends State<MyApp> {
           }
 
           return MaterialApp.router(
-            title: 'PC Configurator',
+            title: 'PC Builder - Component picker',
             theme: getLightTheme(),
             supportedLocales: const [
               Locale('en'),
