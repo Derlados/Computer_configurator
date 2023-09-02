@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:pc_configurator_client/config/pcb_icons.dart';
 import 'package:pc_configurator_client/screens/auth/widgets/auth_nav_text.dart';
 import 'package:pc_configurator_client/widgets/buttons/pcb_rounded_button.dart';
-import 'package:pc_configurator_client/widgets/buttons/pcb_social_button.dart';
 import 'package:pc_configurator_client/widgets/general/pcb_checkbox.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,6 +25,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
 
   late final AuthCubit _authCubit;
@@ -100,6 +100,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: passwordController,
                         hint: "Enter password",
                         prefixIcon: const Icon(PcBuilderIcons.topSecret, color: Colors.white),
+                      obscureText: true,
+                    ),
+                    const SizedBox(height: 16.0),
+                    PCBInputField(
+                      controller: confirmPasswordController,
+                      hint: "Repeat password",
+                      prefixIcon: const Icon(PcBuilderIcons.topSecret, color: Colors.white),
                       obscureText: true,
                     ),
                     const SizedBox(height: 16.0),

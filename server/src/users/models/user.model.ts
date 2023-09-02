@@ -16,21 +16,17 @@ export class User {
     @Expose({ groups: [AccessGroups.USER_OWNER, AccessGroups.ALL_USERS] })
     username: string;
 
-    @Column({ type: "varchar", length: 255, nullable: true, default: null })
+    @Column({ type: "varchar", length: 255, nullable: true, unique: true })
     @Exclude()
-    password?: string;
+    uid: string;
 
     @Column({ type: "varchar", length: 255, nullable: true, default: null })
     @Exclude()
-    secret?: string;
+    providerId: string;
 
-    @Column({ unique: true, type: "varchar", length: 255, nullable: true, default: null })
-    @Expose({ groups: [AccessGroups.USER_OWNER] })
-    email?: string;
-
-    @Column({ unique: true, type: "varchar", length: 255, nullable: true, default: null })
+    @Column({ type: "varchar", length: 255, nullable: true, default: null })
     @Exclude()
-    googleId?: string;
+    email: string;
 
     @Column({ default: null, type: "varchar", length: 255, nullable: true })
     @Expose({ groups: [AccessGroups.USER_OWNER, AccessGroups.ALL_USERS] })

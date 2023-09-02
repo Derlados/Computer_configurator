@@ -17,10 +17,10 @@ async function start() {
     );
 
     const config = new DocumentBuilder()
-        .setTitle("Android конфигуратор ПК - документация")
-        .setDescription("Документация к REST API Android приложения 'Конфигуратор ПК'")
+        .setTitle("Flutter PC build - Component picker - documentation")
+        .setDescription("Documentation for the REST API of the Flutter application 'PC Builder - Component picker'")
         .setVersion('1.0.0')
-        .addTag('BSL')
+        .addTag('TEN_HERALDS')
         .build()
     const doc = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/api/docs', app, doc);

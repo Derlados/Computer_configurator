@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -55,21 +57,25 @@ class AuthCubit extends Cubit<AuthState> {
         //     onSuccess: event.onSuccess,
         //     onAuthNotCompleted: event.onAuthNotCompleted
         // );
-        logger.w(userCredential);
         emit(state.copyWith(status: AuthStatus.success));
       }
     } on FirebaseAuthException catch (e) {
+      logger.e(e);
       if (e.code == 'user-not-found') {
         emit(state.copyWith(status: AuthStatus.userNotFoundFailure));
       } else if (e.code == 'wrong-password') {
         emit(state.copyWith(status: AuthStatus.wrongPasswordFailure));
       }
     } catch (e) {
+      logger.e(e);
       emit(state.copyWith(status: AuthStatus.unexpectedFailure));
     }
   }
 
-  onNewPasswordRequested({required String email, required Function() onSuccess}) async {
+  onNewPasswordRequested({
+    required String email,
+    required Function() onSuccess
+  }) async {
     emit(state.copyWith(status: AuthStatus.loading));
 
     try {
@@ -102,6 +108,7 @@ class AuthCubit extends Cubit<AuthState> {
         emit(state.copyWith(status: AuthStatus.unexpectedFailure));
       }
     } catch (e) {
+      logger.e(e);
       emit(state.copyWith(status: AuthStatus.unexpectedFailure));
     }
   }

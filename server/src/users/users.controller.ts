@@ -2,7 +2,6 @@ import { Body, ClassSerializerInterceptor, Controller, Delete, ForbiddenExceptio
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AccessGroups } from 'src/constants/AccessGroups';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { GoogleSignInDto } from './dto/google-sign-in-dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
@@ -41,14 +40,6 @@ export class UsersController {
     @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     updatePhoto(@Req() req, @UploadedFile() img: Express.Multer.File) {
         return this.usersService.updatePhoto(req.user.id, img);
-    }
-
-    @Put('personal/google-sign')
-    @UseGuards(JwtAuthGuard)
-    @UseInterceptors(ClassSerializerInterceptor)
-    @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
-    addGoogleAcc(@Req() req, @Body() dto: GoogleSignInDto) {
-        return this.usersService.addGoogleAccout(req.user.id, dto);
     }
 
     @Delete('personal')

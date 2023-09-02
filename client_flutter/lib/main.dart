@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:pc_configurator_client/helpers/storage.dart';
@@ -18,6 +19,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 final logger = Logger();
 
 Future<void> main() async {
+  // Set portrait orientation
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
+
   // Environment init
   WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
   await initEnvironment();
