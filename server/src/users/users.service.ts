@@ -6,19 +6,17 @@ import { User } from "./models/user.model";
 import { Errors } from "src/constants/Errors";
 import { FilesService } from "src/files/files.service";
 import { SignInUser } from "./dto/sign-in-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 
 @Injectable()
 export class UsersService {
     constructor(@InjectRepository(User) private usersRepository: Repository<User>,
         private fileService: FilesService) { }
 
-    async findUserById(id: number) {
+    async findUserById(id: string) {
         return this.usersRepository.findOne({ where: { id: id }, relations: ["roles"] });
     }
 
-    async findUserByUid(uid: string) {
-        return this.usersRepository.findOne({ where: { uid: uid }, relations: ["roles"] });
-    }
 
     async findByUserame(username: string) {
         return this.usersRepository.findOne({ where: { username: username }, relations: ["roles"] });
@@ -28,12 +26,12 @@ export class UsersService {
         return this.usersRepository.find({ where: { username: Like(`%${username}%`) }, relations: ["roles"] });
     }
 
-    async createUser(dto: SignInUser) {
+    async createUser(dto: CreateUserDto): Promise<User> {
         const insertId = (await this.usersRepository.insert({ ...dto })).raw.insertId;
         return this.findUserById(insertId);
     }
 
-    async updateUser(id: number, dto: UpdateUserDto) {
+    async updateUser(id: string, dto: UpdateUserDto) {
         const existUser = await this.findByUserame(dto.username);
         if (existUser) {
             throw new ConflictException(Errors.NICKNAME_TAKEN)
@@ -43,14 +41,14 @@ export class UsersService {
         return this.findUserById(id);
     }
 
-    async updatePhoto(id: number, img: Express.Multer.File) {
+    async updatePhoto(id: string, img: Express.Multer.File) {
         const filename = await this.fileService.createFile(img);
         await this.usersRepository.update({ id: id }, { photo: filename });
 
         return this.findUserById(id);
     }
 
-    async deleteUser(id: number) {
+    async deleteUser(id: string) {
         await this.usersRepository.delete({ id: id });
     }
 }

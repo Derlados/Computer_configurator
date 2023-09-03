@@ -1,7 +1,7 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, ForbiddenException, Get, Param, Patch, Post, Put, Req, SerializeOptions, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { FirebaseGuard } from 'src/auth/firebase-auth.guard';
 import { AccessGroups } from 'src/constants/AccessGroups';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
@@ -10,16 +10,15 @@ export class UsersController {
 
     constructor(private usersService: UsersService) { }
 
-
     @Get(':id([0-9]+)')
     @SerializeOptions({ groups: [AccessGroups.ALL_USERS] })
     @UseInterceptors(ClassSerializerInterceptor)
-    getPublicUserInfo(@Param('id') id: number) {
+    getPublicUserInfo(@Param('id') id: string) {
         return this.usersService.findUserById(id);
     }
 
     @Get('personal')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(FirebaseGuard)
     @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     @UseInterceptors(ClassSerializerInterceptor)
     getPrivateUserInfo(@Req() req) {
@@ -27,7 +26,7 @@ export class UsersController {
     }
 
     @Put('personal')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(FirebaseGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     update(@Req() req, @Body() dto: UpdateUserDto) {
@@ -35,7 +34,7 @@ export class UsersController {
     }
 
     @Put('personal/photo')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(FirebaseGuard)
     @UseInterceptors(FileInterceptor('image'), ClassSerializerInterceptor)
     @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     updatePhoto(@Req() req, @UploadedFile() img: Express.Multer.File) {
@@ -43,7 +42,7 @@ export class UsersController {
     }
 
     @Delete('personal')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(FirebaseGuard)
     deleteUser(@Req() req) {
         return this.usersService.deleteUser(req.user.id);
     }

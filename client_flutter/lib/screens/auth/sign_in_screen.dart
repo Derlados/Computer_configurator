@@ -2,21 +2,27 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pc_configurator_client/config/pcb_images.dart';
+import 'package:pc_configurator_client/cubits/account/account_cubit.dart';
 import 'package:pc_configurator_client/cubits/auth/auth_cubit.dart';
 import 'package:pc_configurator_client/helpers/firebase_helper.dart';
+import 'package:pc_configurator_client/helpers/storage.dart';
+import 'package:pc_configurator_client/models/PCBUser.dart';
 import 'package:pc_configurator_client/routes.dart';
 import 'package:pc_configurator_client/screens/auth/widgets/auth_nav_text.dart';
 import 'package:pc_configurator_client/widgets/general/pcb_input_field.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../config/pcb_icons.dart';
+import '../../services/api/auth/auth_service.dart';
+import '../../services/api/dio.dart';
 import '../../widgets/buttons/pcb_rounded_button.dart';
 import '../../widgets/buttons/pcb_social_button.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({Key? key, @visibleForTesting this.testAuthCubit}) : super(key: key);
+  const SignInScreen({Key? key, @visibleForTesting this.testAuthCubit, @visibleForTesting this.testAccountCubit}) : super(key: key);
 
   final AuthCubit? testAuthCubit;
+  final AccountCubit? testAccountCubit;
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -27,10 +33,18 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   late final AuthCubit _authCubit;
+  late final AccountCubit _accountCubit;
 
   @override
   initState() {
-    _authCubit = widget.testAuthCubit ?? AuthCubit(firebaseHelper: FirebaseAuthHelper());
+    _authCubit = widget.testAuthCubit ?? AuthCubit(
+        firebaseHelper: FirebaseAuthHelper(),
+        authService: AuthService(dio: Api().dio)
+    );
+    _accountCubit = widget.testAccountCubit ?? AccountCubit(
+        storage: Storage()
+    );
+
 
     super.initState();
   }
@@ -43,17 +57,18 @@ class _SignInScreenState extends State<SignInScreen> {
     _authCubit.onEmailSignInPressed(
       email: emailController.text,
       password: passwordController.text,
-      onSuccess: () => _onSuccess(context),
+      onSuccess: (user) => _onSuccess(context: context, user: user),
     );
   }
 
   _onGoogleSighInPressed(BuildContext context) {
     _authCubit.onGoogleSignInPressed(
-      onSuccess: () => _onSuccess(context),
+      onSuccess: (user) => _onSuccess(context: context, user: user),
     );
   }
 
-  _onSuccess(BuildContext context) {
+  _onSuccess({required BuildContext context, required PCBUser user}) {
+    _accountCubit.onUserSignedIn(user: user);
     context.goNamed(Routes.root);
   }
 

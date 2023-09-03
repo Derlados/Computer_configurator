@@ -15,7 +15,6 @@ class Api {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Charset': 'utf-8',
       },
       connectTimeout: config.timeout,
       receiveTimeout: config.timeout,

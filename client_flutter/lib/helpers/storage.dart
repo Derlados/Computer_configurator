@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum StorageKeys {
-  firstLaunch, tourCompleted
+  firstLaunch, tourCompleted, userInfo
 }
 
 class Storage {

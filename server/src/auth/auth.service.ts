@@ -4,6 +4,8 @@ import * as bcrypt from 'bcrypt';
 import { SignInUser } from 'src/users/dto/sign-in-user.dto';
 import { User } from '../users/models/user.model';
 import { UsersService } from '../users/users.service';
+import { getAuth, UserRecord } from 'firebase-admin/auth';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,19 +14,27 @@ export class AuthService {
     constructor(private usersService: UsersService, private jwtService: JwtService) { }
 
     async signIn(dto: SignInUser) {
-        dto.uid = await bcrypt.hash(dto.uid, AuthService.HASH_SALT);
+        const userInfo = await this.decodeUserInfo(dto.idToken);
+        userInfo.username = dto.username ?? userInfo.username;
 
-        const user = await this.usersService.findUserByUid(dto.uid);
+        const user = await this.usersService.findUserById(userInfo.id);
         if (user) {
-            return this.generateToken(user);
+            return user;
         }
 
-        const newUser = await this.usersService.createUser(dto);
-        return this.generateToken(newUser);
+        const newUser = await this.usersService.createUser(userInfo);
+        return newUser;
     }
 
-    private generateToken(user: User) {
-        const payload = { id: user.uid, username: user.username, roles: user.roles?.map(role => role.name) ?? ["user"] };
-        return this.jwtService.sign(payload);
+    private async decodeUserInfo(idToken: string): Promise<CreateUserDto> {
+        const decodedToken = await getAuth().verifyIdToken(idToken)
+        return {
+            id: decodedToken.uid,
+            email: decodedToken.email,
+            providerId: decodedToken.firebase.sign_in_provider,
+            username: decodedToken.name,
+            photo: decodedToken.picture
+        };
     }
+
 }

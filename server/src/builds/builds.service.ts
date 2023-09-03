@@ -22,7 +22,7 @@ export class BuildsService {
         return await this.buildsRepository.find({ relations: ["user", "buildComponents", "buildComponents.component", "buildComponents.component.category"] });
     }
 
-    async getBuldsByUserId(userId: number) {
+    async getBuldsByUserId(userId: string) {
         return this.buildsRepository.find({
             where: { userId: userId },
             relations: [
@@ -56,7 +56,7 @@ export class BuildsService {
         return await this.commentsRepository.find({ where: { buildId: buildId }, relations: ["user"] });
     }
 
-    async createBuild(userId: number, dto: CreateBuildDto) {
+    async createBuild(userId: string, dto: CreateBuildDto) {
         const { components: buildComponents, ...buildData } = dto;
         const buildId: number = (await this.buildsRepository.insert({ userId: userId, ...buildData })).raw.insertId;
 
@@ -66,14 +66,14 @@ export class BuildsService {
         return this.getBuildByid(buildId);
     }
 
-    async reportBuild(userId: number, buildId: number) {
+    async reportBuild(userId: string, buildId: number) {
         const build = await this.buildsRepository.findOne({ id: buildId });
         if (build) {
             await this.buildsRepository.update({ id: build.id }, { reports: build.reports + 1 })
         }
     }
 
-    async updateBuild(buildId: number, userId: number, dto: CreateBuildDto) {
+    async updateBuild(buildId: number, userId: string, dto: CreateBuildDto) {
         const { components: buildComponents, ...buildData } = dto;
         const res = await this.buildsRepository.update({ id: buildId, userId: userId }, { ...buildData });
         if (res.affected === 0) {
@@ -88,11 +88,11 @@ export class BuildsService {
         return this.getBuildByid(buildId);
     }
 
-    async chengeStatus(buildId: number, userId: number, dto: UpdatePublishStatusDto) {
+    async chengeStatus(buildId: number, userId: string, dto: UpdatePublishStatusDto) {
         await this.buildsRepository.update({ id: buildId, userId: userId }, { ...dto });
     }
 
-    async deleteBuild(buildId: number, userId: number) {
+    async deleteBuild(buildId: number, userId: string) {
         const res = await this.buildsRepository.delete({ id: buildId, userId: userId });
         if (res.affected === 0) {
             throw new NotFoundException("Build not found");

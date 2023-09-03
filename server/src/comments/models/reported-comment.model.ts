@@ -5,7 +5,7 @@ import { Comment } from "./comment.model";
 @Entity('reported_comments')
 export class ReportedComment {
     @PrimaryColumn({ name: "user_id" })
-    userId: number;
+    userId: string;
 
     @PrimaryColumn({ name: "comment_id" })
     commentId: number;

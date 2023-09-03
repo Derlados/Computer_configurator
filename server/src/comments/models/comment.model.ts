@@ -12,7 +12,7 @@ export class Comment {
     buildId: number;
 
     @Column({ name: "user_id", type: "int", nullable: false })
-    userId: number;
+    userId: string;
 
     @Column({ name: "text", type: "text", nullable: false })
     text: string;

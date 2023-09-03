@@ -1,4 +1,5 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, Req, SerializeOptions, UseGuards, UseInterceptors } from '@nestjs/common';
+import { FirebaseGuard } from 'src/auth/firebase-auth.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CommentsService } from 'src/comments/comments.service';
 import { CreateCommentDto } from 'src/comments/dto/create-comment.dto';
@@ -19,7 +20,7 @@ export class BuildsController {
     }
 
     @Get('personal')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(FirebaseGuard)
     @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     @UseInterceptors(ClassSerializerInterceptor)
     getPersonalBuilds(@Req() req) {
@@ -42,7 +43,7 @@ export class BuildsController {
     }
 
     @Post()
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(FirebaseGuard)
     @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     @UseInterceptors(ClassSerializerInterceptor)
     createBuild(@Req() req, @Body() dto: CreateBuildDto) {
@@ -50,14 +51,14 @@ export class BuildsController {
     }
 
     @Post(':id/report')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(FirebaseGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     reportBuild(@Req() req, @Param('id') id: number) {
         return this.buildsService.reportBuild(req.user.id, id);
     }
 
     @Post(':id/comments')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(FirebaseGuard)
     @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     @UseInterceptors(ClassSerializerInterceptor)
     createComment(@Param('id') id: number, @Req() req, @Body() dto: CreateCommentDto) {
@@ -65,7 +66,7 @@ export class BuildsController {
     }
 
     @Post(':id/comments/:parentId/answer')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(FirebaseGuard)
     @SerializeOptions({ groups: [AccessGroups.ALL_USERS] })
     @UseInterceptors(ClassSerializerInterceptor)
     answerComment(@Param('parentId') parentId: number, @Req() req, @Body() dto: CreateCommentDto) {
@@ -73,7 +74,7 @@ export class BuildsController {
     }
 
     @Put(':id([0-9]+)')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(FirebaseGuard)
     @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     @UseInterceptors(ClassSerializerInterceptor)
     updateBuild(@Req() req, @Param('id') id: number, @Body() dto: CreateBuildDto) {
@@ -81,7 +82,7 @@ export class BuildsController {
     }
 
     @Put(':id([0-9]+)/status')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(FirebaseGuard)
     @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     @UseInterceptors(ClassSerializerInterceptor)
     chengeStatus(@Req() req, @Param('id') id: number, @Body() dto: UpdatePublishStatusDto) {
@@ -89,7 +90,7 @@ export class BuildsController {
     }
 
     @Delete(':id([0-9]+)')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(FirebaseGuard)
     @SerializeOptions({ groups: [AccessGroups.USER_OWNER] })
     deleteBuild(@Req() req, @Param('id') id: number) {
         return this.buildsService.deleteBuild(id, req.user.id)

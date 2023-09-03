@@ -19,3 +19,5 @@ node_modules/
 .externalNativeBuild
 .cxx
 local.properties
+
+google-services.json

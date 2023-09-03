@@ -21,3 +21,8 @@ samples, guidance on mobile development, and a full API reference.
     flutter gen-l10n
 ```
 Note: For Android Studio "Restart Dart Analysis Server" after generating localization files if app_localizations.dart is not found
+
+# Generate json serialization files
+```
+flutter pub run build_runner build
+```

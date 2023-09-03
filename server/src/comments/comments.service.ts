@@ -16,12 +16,12 @@ export class CommentsService {
         return this.commentsRepository.findOne({ where: { id: id }, relations: ["user"] });
     }
 
-    async createComment(buildId: number, userId: number, dto: CreateCommentDto) {
+    async createComment(buildId: number, userId: string, dto: CreateCommentDto) {
         const insertId = (await this.commentsRepository.insert({ userId: userId, buildId: buildId, ...dto })).raw.insertId;
         return this.getById(insertId);
     }
 
-    async answerComment(parentId: number, userId: number, dto: CreateCommentDto) {
+    async answerComment(parentId: number, userId: string, dto: CreateCommentDto) {
         const comment = await this.commentsRepository.findOne({ id: parentId })
         if (!comment) {
             throw new NotFoundException()
@@ -31,7 +31,7 @@ export class CommentsService {
         return this.getById(insertId);
     }
 
-    async blockComment(userId: number, commentId: number) {
+    async blockComment(userId: string, commentId: number) {
         const blockedComment = await this.commentsRepository.findOne({ id: commentId });
         if (!blockedComment) {
             return new NotFoundException();

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pc_configurator_client/helpers/firebase_helper.dart';
+import 'package:pc_configurator_client/services/api/dio.dart';
 import 'package:pc_configurator_client/widgets/buttons/pcb_rounded_button.dart';
 
 import '../../config/pcb_icons.dart';
 import '../../config/pcb_images.dart';
 import '../../cubits/auth/auth_cubit.dart';
+import '../../services/api/auth/auth_service.dart';
 import '../../widgets/general/pcb_input_field.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -24,7 +26,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   initState() {
-    _authCubit = widget.testAuthCubit ?? AuthCubit(firebaseHelper: FirebaseAuthHelper());
+    _authCubit = widget.testAuthCubit ?? AuthCubit(
+        firebaseHelper: FirebaseAuthHelper(),
+        authService: AuthService(dio: Api().dio)
+    );
 
     super.initState();
   }
@@ -84,6 +89,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 left: 8,
                 top: 8,
                 child: TextButton(
+                  style: ButtonStyle(
+                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                  ),
                   child: Text("< Back", style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
                   onPressed: () => _onBack(context),
                 )

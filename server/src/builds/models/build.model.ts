@@ -13,7 +13,7 @@ export class Build {
 
     @Column({ name: "user_id", type: "int", nullable: false })
     @Exclude()
-    userId: number;
+    userId: string;
 
     @Column({ type: "varchar", length: 100, nullable: false })
     name: string;

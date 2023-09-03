@@ -3,22 +3,18 @@ import { Build } from "src/builds/models/build.model";
 import { ReportedComment } from "src/comments/models/reported-comment.model";
 import { AccessGroups } from "src/constants/AccessGroups";
 import { Role } from "src/roles/models/role.model";
-import { AfterLoad, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AfterLoad, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Comment } from "../../comments/models/comment.model";
 
 @Entity('users')
 export class User {
-    @PrimaryGeneratedColumn('increment')
-    @Expose({ groups: [AccessGroups.ALL_USERS] })
-    id: number;
+    @PrimaryColumn({ type: "varchar", length: 255 })
+    @Exclude()
+    id: string;
 
     @Column({ type: "varchar", length: 120, nullable: true })
     @Expose({ groups: [AccessGroups.USER_OWNER, AccessGroups.ALL_USERS] })
     username: string;
-
-    @Column({ type: "varchar", length: 255, nullable: true, unique: true })
-    @Exclude()
-    uid: string;
 
     @Column({ type: "varchar", length: 255, nullable: true, default: null })
     @Exclude()

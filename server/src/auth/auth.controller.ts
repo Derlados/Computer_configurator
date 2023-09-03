@@ -14,6 +14,7 @@ export class AuthController {
     @ApiResponse({ status: 200, type: String, description: "Токен пользователя" })
     @Post('/sign-in')
     async signIn(@Body() dto: SignInUser) {
+        console.log("AuthController: sign-in");
         return this.authService.signIn(dto);
     }
 }

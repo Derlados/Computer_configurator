@@ -1,4 +1,5 @@
 import { Body, ClassSerializerInterceptor, Controller, Get, NotFoundException, Param, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common';
+import { FirebaseGuard } from 'src/auth/firebase-auth.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/roles/roles.decorator';
 import { RoleValues } from 'src/roles/roles.enum';
@@ -27,7 +28,7 @@ export class ComponentsController {
 
     @Post()
     @Roles(RoleValues.ADMIN)
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(FirebaseGuard, RolesGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     createComponent(@Body() dto: CreateComponentDto) {
         return this.componentsService.createComponent(dto);
@@ -35,7 +36,7 @@ export class ComponentsController {
 
     @Put(':id')
     @Roles(RoleValues.ADMIN)
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(FirebaseGuard, RolesGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     updateComponent(@Param('id') id: number, @Body() dto: ComponentDto) {
         return this.componentsService.updateComponent(id, dto);
