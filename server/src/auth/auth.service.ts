@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { SignInUser } from 'src/users/dto/sign-in-user.dto';
@@ -6,6 +6,7 @@ import { User } from '../users/models/user.model';
 import { UsersService } from '../users/users.service';
 import { getAuth, UserRecord } from 'firebase-admin/auth';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CheckAuthStatusDto } from './dto/check-auth-status.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,21 +14,39 @@ export class AuthService {
 
     constructor(private usersService: UsersService, private jwtService: JwtService) { }
 
-    async signIn(dto: SignInUser) {
-        const userInfo = await this.decodeUserInfo(dto.idToken);
-        userInfo.username = dto.username ?? userInfo.username;
+    async checkAuthStatus(dto: CheckAuthStatusDto) {
+        try {
+            const userInfo = await this.decodeUserInfo(dto.idToken);
+            const user = await this.usersService.findUserById(userInfo.id);
+            if (!user) {
+                throw new NotFoundException();
+            }
 
-        const user = await this.usersService.findUserById(userInfo.id);
-        if (user) {
-            return user;
+            return true;
+        } catch (error) {
+            throw new UnauthorizedException();
         }
+    }
 
-        const newUser = await this.usersService.createUser(userInfo);
-        return newUser;
+    async signIn(dto: SignInUser) {
+        try {
+            const userInfo = await this.decodeUserInfo(dto.idToken);
+            userInfo.username = dto.username ?? userInfo.username;
+
+            const user = await this.usersService.findUserById(userInfo.id);
+            if (user) {
+                return user;
+            }
+
+            const newUser = await this.usersService.createUser(userInfo);
+            return newUser;
+        } catch (error) {
+            throw new UnauthorizedException();
+        }
     }
 
     private async decodeUserInfo(idToken: string): Promise<CreateUserDto> {
-        const decodedToken = await getAuth().verifyIdToken(idToken)
+        const decodedToken = await getAuth().verifyIdToken(idToken, true)
         return {
             id: decodedToken.uid,
             email: decodedToken.email,
@@ -36,5 +55,4 @@ export class AuthService {
             photo: decodedToken.picture
         };
     }
-
 }

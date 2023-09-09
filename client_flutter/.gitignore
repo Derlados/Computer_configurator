@@ -45,3 +45,4 @@ app.*.map.json
 
 firebase_options.dart
 google-services.json
+plan.txt

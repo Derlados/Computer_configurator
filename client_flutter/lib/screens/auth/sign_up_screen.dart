@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pc_configurator_client/config/pcb_icons.dart';
+import 'package:pc_configurator_client/helpers/validators/auth_validators.dart';
 import 'package:pc_configurator_client/models/PCBUser.dart';
 import 'package:pc_configurator_client/screens/auth/widgets/auth_nav_text.dart';
 import 'package:pc_configurator_client/services/api/auth/auth_service.dart';
@@ -29,10 +31,12 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-  final TextEditingController usernameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool _isFailureSubmit = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   late final AuthCubit _authCubit;
   late final AccountCubit _accountCubit;
@@ -50,13 +54,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.initState();
   }
 
+  _onFormChanged() async {
+    if (_isFailureSubmit) {
+      _formKey.currentState!.validate();
+    }
+  }
+
   _onEmailSignUpPressed(BuildContext context) {
-    _authCubit.onEmailSignUpPressed(
-      username: usernameController.text,
-      email: emailController.text,
-      password: passwordController.text,
-      onSuccess: (user) => _onSuccess(context: context, user: user)
-    );
+    if (_formKey.currentState!.validate()) {
+      _authCubit.onEmailSignUpPressed(
+          username: _usernameController.text,
+          email: _emailController.text,
+          password: _passwordController.text,
+          onSuccess: (user) => _onSuccess(context: context, user: user)
+      );
+      return;
+    } else {
+      setState(() {
+        _isFailureSubmit = true;
+      });
+    }
   }
 
   _onTermsToggled(bool checked) {
@@ -81,90 +98,105 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Image(
-                          image: PCBImages.appIcon,
-                          width: MediaQuery.of(context).size.width * 0.6
-                      ),
-                    ),
-                    const SizedBox(height: 32.0),
-                    PCBInputField(
-                        controller: usernameController,
-                        hint: "Enter username",
-                      prefixIcon: const Icon(PcBuilderIcons.user, color: Colors.white),
-                    ),
-                    const SizedBox(height: 16.0),
-                    PCBInputField(
-                        controller: emailController,
-                        hint: "Enter email",
-                      prefixIcon: const Icon(PcBuilderIcons.email, color: Colors.white),
-                    ),
-                    const SizedBox(height: 16.0),
-                    PCBInputField(
-                        controller: passwordController,
-                        hint: "Enter password",
-                        prefixIcon: const Icon(PcBuilderIcons.topSecret, color: Colors.white),
-                      obscureText: true,
-                    ),
-                    const SizedBox(height: 16.0),
-                    PCBInputField(
-                      controller: confirmPasswordController,
-                      hint: "Repeat password",
-                      prefixIcon: const Icon(PcBuilderIcons.topSecret, color: Colors.white),
-                      obscureText: true,
-                    ),
-                    const SizedBox(height: 16.0),
-                    PCBRoundedButton(
-                      text: "Sign Up",
-                      onTap: () => _onEmailSignUpPressed(context)
-                    ),
-                    const SizedBox(height: 16.0),
-                    PCBCheckBox(
-                      isAccepted: true,
-                      onChanged: _onTermsToggled,
-                      child: RichText(
-                        text: TextSpan(
-                            text: "I agree to the ",
-                            children: [
-                              TextSpan(
-                                  text: "Privacy policy",
-                                  style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    color: Theme.of(context).colorScheme.primary,
+    return BlocProvider(
+      create: (context) => _authCubit,
+      child: Scaffold(
+        body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: SingleChildScrollView(
+                    child: Form(
+                      key: _formKey,
+                      onChanged: _onFormChanged,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Image(
+                                image: PCBImages.appIcon,
+                                width: MediaQuery.of(context).size.width * 0.6
+                            ),
+                          ),
+                          const SizedBox(height: 32.0),
+                          PCBInputField(
+                            controller: _usernameController,
+                            validator: AuthValidators.usernameValidator,
+                            hint: "Enter username",
+                            prefixIcon: const Icon(PcBuilderIcons.user, color: Colors.white),
+                          ),
+                          const SizedBox(height: 16.0),
+                          PCBInputField(
+                            controller: _emailController,
+                            validator: AuthValidators.emailValidator,
+                            hint: "Enter email",
+                            prefixIcon: const Icon(PcBuilderIcons.email, color: Colors.white),
+                          ),
+                          const SizedBox(height: 16.0),
+                          PCBInputField(
+                            controller: _passwordController,
+                            validator: AuthValidators.passwordValidator,
+                            hint: "Enter password",
+                            prefixIcon: const Icon(PcBuilderIcons.topSecret, color: Colors.white),
+                            obscureText: true,
+                          ),
+                          const SizedBox(height: 16.0),
+                          PCBInputField(
+                            controller: _confirmPasswordController,
+                            validator: (confirmedPassword) => AuthValidators.confirmPasswordValidator(_passwordController.text, confirmedPassword),
+                            hint: "Repeat password",
+                            prefixIcon: const Icon(PcBuilderIcons.topSecret, color: Colors.white),
+                            obscureText: true,
+                          ),
+                          const SizedBox(height: 16.0),
+                          PCBRoundedButton(
+                              text: "Sign Up",
+                              onTap: () => _onEmailSignUpPressed(context)
+                          ),
+                          const SizedBox(height: 16.0),
+                          BlocBuilder<AuthCubit, AuthState>(
+                            builder: (context, state) {
+                              return PCBCheckBox(
+                                isAccepted: state.termsAccepted,
+                                onChanged: _onTermsToggled,
+                                child: RichText(
+                                  text: TextSpan(
+                                      text: "I agree to the ",
+                                      children: [
+                                        TextSpan(
+                                            text: "Privacy policy",
+                                            style: TextStyle(
+                                              decoration: TextDecoration.underline,
+                                              color: Theme.of(context).colorScheme.primary,
+                                            ),
+                                            recognizer: TapGestureRecognizer()..onTap = () => _onOpenLink(link: "https://www.google.com")
+                                        ),
+                                        const TextSpan(text: " and "),
+                                        TextSpan(
+                                            text: "Terms of service",
+                                            style: TextStyle(
+                                                decoration: TextDecoration.underline,
+                                                color: Theme.of(context).colorScheme.primary
+                                            ),
+                                            recognizer: TapGestureRecognizer()..onTap = () => _onOpenLink(link: "https://www.google.com")
+                                        )
+                                      ]
                                   ),
-                                  recognizer: TapGestureRecognizer()..onTap = () => _onOpenLink(link: "https://www.google.com")
-                              ),
-                              const TextSpan(text: " and "),
-                              TextSpan(
-                                  text: "Terms of service",
-                                  style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      color: Theme.of(context).colorScheme.primary
-                                  ),
-                                  recognizer: TapGestureRecognizer()..onTap = () => _onOpenLink(link: "https://www.google.com")
-                              )
-                            ]
-                        ),
 
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 32.0),
+                          AuthNavText(text: "Already have an account? ", linkText: "Sign In", onTap: () => _onSignInPressed(context)),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 32.0),
-                    AuthNavText(text: "Already have an account? ", linkText: "Sign In", onTap: () => _onSignInPressed(context)),
-                  ],
+                    )
                 ),
               ),
-            ),
-          )
+            )
+        ),
       ),
     );
   }

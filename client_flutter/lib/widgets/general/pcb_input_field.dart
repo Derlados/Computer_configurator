@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pc_configurator_client/config/pcb_pallete.dart';
 
 class PCBInputField extends StatefulWidget {
-  const PCBInputField({Key? key, required this.controller, required this.hint, this.focusNode, this.prefixIcon, this.suffixIcon, this.obscureText}) : super(key: key);
+  const PCBInputField({Key? key, required this.controller, required this.hint, this.focusNode, this.prefixIcon, this.suffixIcon, this.obscureText, this.validator, this.onFocusChanged}) : super(key: key);
 
   final TextEditingController controller;
   final String hint;
@@ -10,6 +10,8 @@ class PCBInputField extends StatefulWidget {
   final Icon? prefixIcon;
   final Icon? suffixIcon;
   final bool? obscureText;
+  final String? Function(String?)? validator;
+  final Function(bool)? onFocusChanged;
 
   @override
   State<PCBInputField> createState() => _PCBInputFieldState();
@@ -36,12 +38,14 @@ class _PCBInputFieldState extends State<PCBInputField> {
   void _onFocusChange() {
     setState(() {
       _isFocused = _focusNode.hasFocus;
+      widget.onFocusChanged?.call(_isFocused);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      validator:  widget.validator,
         focusNode: _focusNode,
         controller: widget.controller,
         obscureText: widget.obscureText ?? false,
@@ -51,12 +55,20 @@ class _PCBInputFieldState extends State<PCBInputField> {
           fillColor: _isFocused ? PCBPalette.tertiaryContainer : PCBPalette.tertiaryContainer,
           hintText: widget.hint,
           hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: PCBPalette.hintTextColor),
-          enabledBorder: OutlineInputBorder( // Граница при неактивном состоянии
-            borderRadius: BorderRadius.circular(60.0), // Радиус закругления краев
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(60.0),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 1.0, color: Theme.of(context).colorScheme.primary), // Граница при неактивном состоянии
-            borderRadius: BorderRadius.circular(60.0), // Радиус закругления краев
+            borderSide: BorderSide(width: 1.0, color: Theme.of(context).colorScheme.primary),
+            borderRadius: BorderRadius.circular(60.0),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: const BorderSide(width: 1.0, color: PCBPalette.errorColor),
+            borderRadius: BorderRadius.circular(60.0),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: const BorderSide(width: 1.0, color: PCBPalette.errorColor),
+            borderRadius: BorderRadius.circular(60.0),
           ),
           prefixIcon: widget.prefixIcon != null ? Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 12, top: 12, bottom: 12),

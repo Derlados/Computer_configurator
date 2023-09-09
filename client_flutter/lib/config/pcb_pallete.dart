@@ -9,4 +9,5 @@ class PCBPalette {
 
   static const Color primaryText = Color(0xFFffffff);
   static const Color hintTextColor = Colors.grey;
+  static const Color errorColor = Color(0xFFff0000);
 }
